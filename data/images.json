@@ -1,0 +1,82 @@
+{
+  "hero": [
+    "/uploads/hero_1779031640955.jpg",
+    "/uploads/hero_1779031645142.jpg",
+    "/uploads/hero_1779031647514.jpg",
+    "/uploads/hero_1779031649373.jpg",
+    "/uploads/hero_1779031651251.jpg",
+    "/uploads/hero_1779031653614.jpg",
+    "/uploads/hero_1779031655819.jpg",
+    "/uploads/hero_1779031660354.jpg",
+    "/uploads/hero_1779031663242.jpg",
+    "/uploads/hero_1779092572918.jpg"
+  ],
+  "product_1": [
+    "/uploads/product_1_1779032176583.jpg"
+  ],
+  "product_2": [
+    "/uploads/product_2_1779032428757.jpg"
+  ],
+  "product_3": [
+    "/uploads/product_3_1779032449922.jpg"
+  ],
+  "product_4": [
+    "/uploads/product_4_1779032479510.jpg"
+  ],
+  "product_5": [
+    "/uploads/product_5_1779032490165.jpg"
+  ],
+  "product_6": [
+    "/uploads/product_6_1779032499444.jpg"
+  ],
+  "product_7": [
+    "/uploads/product_7_1779033158671.jpg"
+  ],
+  "product_8": [
+    "/uploads/product_8_1779033168070.jpg"
+  ],
+  "product_9": [
+    "/uploads/product_9_1779251012823.jpg"
+  ],
+  "product_10": [
+    "/uploads/product_10_1779251205596.jpg"
+  ],
+  "product_11": [
+    "/uploads/product_11_1779251219042.jpg"
+  ],
+  "product_12": [
+    "/uploads/product_12_1779251257310.jpg"
+  ],
+  "magazine_new": [
+    "/uploads/magazine_new_1780489404464.jpg",
+    "/uploads/magazine_new_1780489849248.jpg",
+    "/uploads/magazine_new_1780490013634.jpg",
+    "/uploads/magazine_new_1780490551081.jpg",
+    "/uploads/magazine_new_1780490582716.jpg",
+    "/uploads/magazine_new_1780490902554.png",
+    "/uploads/magazine_new_1780490907528.png",
+    "/uploads/magazine_new_1780490912775.png",
+    "/uploads/magazine_new_1780491038513.png",
+    "/uploads/magazine_new_1780501124842.jpg"
+  ],
+  "magazine_detail_9": [
+    "/uploads/magazine_detail_9_1780500318289.png",
+    "/uploads/magazine_detail_9_1780500400713.png",
+    "/uploads/magazine_detail_9_1780500485926.png",
+    "/uploads/magazine_detail_9_1780500517225.png",
+    "/uploads/magazine_detail_9_1780500528022.png",
+    "/uploads/magazine_detail_9_1780500542337.png"
+  ],
+  "magazine_detail_new": [
+    "/uploads/magazine_detail_new_1780501124916.jpg"
+  ],
+  "magazine_14": [
+    "/uploads/magazine_14_1780577295227.jpg"
+  ],
+  "magazine_15": [
+    "/uploads/magazine_15_1780641290001.png"
+  ],
+  "product_13": [
+    "/uploads/product_13_1780648836752.webp"
+  ]
+}

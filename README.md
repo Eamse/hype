@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HYPE WEDDING
 
-## Getting Started
+서울·제주에서 웨딩 사진 촬영을 원스톱으로 예약할 수 있는 플랫폼입니다.
+사진작가 연결부터 항공권·호텔·차량 예약 대행까지, Next.js 풀스택 구조로 직접 설계하고 구현했습니다.
 
-First, run the development server:
+## 프로젝트 규모
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- 개발 기간: 개발 중 (2025.05 ~)
+- 참여 인원: 1명 (개인 프로젝트)
+- DB 테이블: 8개
+- API 엔드포인트: 15개+
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 시스템 아키텍처
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+![Architecture](architecture.html)
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 서비스 구조
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+유저가 사진작가 상품을 탐색하고 문의하는 흐름입니다.
+관리자는 어드민 패널에서 상품·히어로 이미지·매거진 콘텐츠를 관리합니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**권한 구조**
 
-## Deploy on Vercel
+일반 유저와 관리자는 완전히 분리된 테이블과 인증 방식을 사용합니다.
+일반 유저는 Google OAuth 또는 이메일/비밀번호로 로그인하고, 관리자는 별도 Admin 테이블의 ID/PW로 인증합니다.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**주요 도메인**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `User` → Google OAuth 또는 Credentials 인증 · 온보딩 정보 포함
+- `Product` → 섹션(서울/제주/캐주얼)별 사진작가 상품
+- `Magazine` → `MagazineImage` (Cascade Delete)
+- `Admin` → role(master/staff) 기반 관리자 계정
+
+---
+
+## 기술 스택
+
+| 구분            | 사용 기술                              | 선택 이유                                                                 |
+| --------------- | -------------------------------------- | ------------------------------------------------------------------------- |
+| Frontend        | Next.js 16 (App Router), React 19      | 풀스택 단일 프로젝트로 운영 가능하고, SSR·CSR을 라우트별로 유연하게 조합 |
+| Styling         | Tailwind CSS 4, shadcn/ui              | 유틸리티 클래스로 빠른 UI 구성, 재사용 가능한 컴포넌트 시스템            |
+| ORM             | Prisma + SQLite (Turso/LibSQL)         | 타입 안전한 쿼리와 마이그레이션 관리, 서버리스 환경 호환                 |
+| 이미지 스토리지 | Cloudflare R2 + AWS SDK                | S3 호환 API를 그대로 사용하면서 무료 이그레스 비용, CDN 내장             |
+| 이미지 처리     | sharp                                  | 업로드 시점에 WebP 변환·리사이즈를 서버에서 일관되게 처리                |
+| 인증            | NextAuth v5 (JWT · Google OAuth)       | 소셜 로그인과 Credentials를 하나의 라이브러리로 통합 관리                |
+
+---
+
+## 주요 기능
+
+**유저**
+
+- 서울 / 제주 웨딩·캐주얼 사진작가 탐색 및 상품 조회
+- Google OAuth · 이메일/비밀번호 회원가입 및 로그인
+- 온보딩 정보 입력 (이름·생년월일·성별·국가·전화번호)
+- 매거진 콘텐츠 열람 (촬영 스토리 / 가이드)
+
+**관리자**
+
+- 히어로 이미지 업로드·삭제 (R2 연동)
+- 사진작가 상품 CRUD · 순서 변경
+- 매거진 작성·발행·이미지 관리
+- 섹션별 상품 분류 (서울 / 제주 / 캐주얼)
+
+**보안**
+
+- JWT 세션 기반 인증 (NextAuth)
+- Proxy 미들웨어로 `/admin`, `/onboarding` 보호
+- 업로드 파일 MIME 타입 검증 · key 패턴 검사 (Path Traversal 방지)
+- 일반 유저 / 관리자 인증 완전 분리
+
+---
+
+<details>
+<summary><strong>개발하면서 겪은 문제들</strong></summary>
+
+### 01. 원본 이미지(44MB)를 그대로 올렸더니 페이지가 무한 로딩됐습니다
+
+이미지를 업로드할 때 원본 파일을 그대로 저장하는 구조였는데, 히어로 이미지 한 장이 44MB였습니다. 여러 장을 한 번에 최적화하려다 보니 페이지 첫 로딩이 극도로 느렸고, Next.js 이미지 캐시가 `LRUCache: calculateSize returned 0` 에러를 반복 발생시켰습니다.
+
+업로드 시점에 `sharp`로 WebP 변환(quality 80) + 최대 1920px 리사이즈를 적용하고, 로컬 저장 대신 Cloudflare R2에 올리도록 파이프라인을 바꿨습니다. 파일 크기가 약 95% 감소했고 이미지 캐시 에러도 사라졌습니다.
+
+---
+
+### 02. npm 패키지 재설치 후 관리자 페이지가 아무 반응 없이 멈췄습니다
+
+`node_modules`를 삭제하고 재설치한 뒤 `/admin`에 접근하면 브라우저가 아무 응답 없이 무한 대기 상태가 됐습니다. 에러 메시지도 없었고 터미널 로그에도 요청이 찍히지 않았습니다.
+
+`proxy.ts`(미들웨어)가 `/admin` 경로를 처리할 때 NextAuth를 초기화하는데, `auth.config.ts`에 크리덴셜 없는 Apple OAuth 프로바이더가 등록되어 있어서 초기화 중 멈추는 것이 원인이었습니다. Apple 프로바이더를 제거하고 Google OAuth만 유지하니 정상 접근됐습니다. 설정하지 않은 프로바이더가 아무 에러 없이 무응답을 만들 수 있다는 걸 이 때 알게 됐습니다.
+
+---
+
+### 03. 서버/클라이언트 컴포넌트를 분리하지 않았더니 SEO가 안 됐습니다
+
+처음에는 데이터 패칭도 하고 사용자 인터랙션도 처리하는 컴포넌트를 하나로 만들었는데, `use client`를 붙이면 SSR이 안 되어 초기 HTML에 콘텐츠가 비어있는 상태가 됐습니다. 검색 엔진이 크롤링할 때 페이지 내용을 읽지 못하는 문제였습니다.
+
+데이터 패칭은 서버 컴포넌트에서 처리하고, 인터랙션이 필요한 부분만 클라이언트 컴포넌트로 분리했습니다. 상품 목록·매거진 페이지는 서버에서 데이터를 받아 초기 HTML에 포함시키고, 헤더·캐러셀처럼 상태가 필요한 부분만 클라이언트 컴포넌트로 구성했습니다.
+
+</details>

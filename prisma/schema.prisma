@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── 사이트 설정 ──────────────────────────────────────────
+
+model SiteConfig {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+// ─── 상품 ─────────────────────────────────────────────────
+
+model Product {
+  id        Int      @id @default(autoincrement())
+  section   String
+  title     String
+  brand     String
+  price     Int
+  imageUrl  String?
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ─── 일반 유저 (구글 로그인) ──────────────────────────────
+
+model User {
+  id               String    @id @default(cuid())
+  password         String? // 일반 가입 유저만 사용, 소셜은 null
+  // 구글에서 받는 것 
+  name             String?
+  email            String    @unique
+  emailVerified    DateTime?
+  image            String?
+
+  // 온보딩에서 입력하는 것 (DB는 nullable, 앱에서 필수 검증)
+  firstName        String?
+  middleName       String?
+  lastName         String?
+  birthYear        Int?
+  birthMonth       Int?
+  birthDay         Int?
+  gender           String?
+  country          String?
+  phoneCountryCode String?
+  phone            String?
+  termsAgreedAt    DateTime?
+
+  // 온보딩 완료 여부
+  isOnboarded      Boolean   @default(false)
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  accounts         Account[]
+  sessions         Session[]
+}
+
+// ─── NextAuth (구글 OAuth 내부용) ─────────────────────────
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ─── Admin (ID/PW 로그인) ────────────────────────────────
+// role: "master" = 마스터 계정 (master, dev, master0)
+// role: "staff"  = 직원 계정 (마스터가 생성)
+
+model Admin {
+  id                String   @id @default(cuid())
+  loginId           String   @unique
+  password          String
+  name              String
+  phone             String
+  role              String   @default("staff")
+  isActive          Boolean  @default(true)
+  isPasswordChanged Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+
+// Magazine
+  model Magazine {                                                                                
+    id          Int      @id @default(autoincrement())                                  
+    title       String                                                                            
+    content     String
+    imageUrl    String?                                                                
+    published   Boolean  @default(false)                    
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    images MagazineImage[]
+  }
+
+model MagazineImage {
+  id Int @id @default(autoincrement())
+  magazineId Int
+  url String
+  order Int @default(0)
+  magazine Magazine @relation(fields: [magazineId], references: [id], onDelete: Cascade)
+}

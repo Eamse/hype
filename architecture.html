@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>HYPE WEDDING — Architecture Diagram</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background: #f0f2f5;
+        padding: 40px;
+        min-width: 1100px;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 22px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 36px;
+        letter-spacing: 1px;
+      }
+
+      .diagram {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+      }
+
+      .box {
+        border-radius: 10px;
+        padding: 10px 16px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.4;
+        min-width: 110px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+
+      .icon {
+        font-size: 22px;
+        display: block;
+        margin-bottom: 4px;
+      }
+      .label {
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .sublabel {
+        font-size: 10px;
+        font-weight: 400;
+        color: rgba(255, 255, 255, 0.85);
+        margin-top: 2px;
+      }
+      .sublabel-dark {
+        font-size: 10px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.5);
+        margin-top: 2px;
+      }
+
+      .blue { background: #2563eb; color: #fff; }
+      .indigo { background: #4f46e5; color: #fff; }
+      .violet { background: #7c3aed; color: #fff; }
+      .red { background: #dc2626; color: #fff; }
+      .orange { background: #ea580c; color: #fff; }
+      .green { background: #16a34a; color: #fff; }
+      .teal { background: #0d9488; color: #fff; }
+      .slate { background: #475569; color: #fff; }
+      .pink { background: #db2777; color: #fff; }
+      .gray {
+        background: #e2e8f0;
+        color: #1e293b;
+        border: 1.5px solid #cbd5e1;
+      }
+
+      .section {
+        border-radius: 14px;
+        padding: 18px 24px 20px;
+        position: relative;
+        width: 100%;
+        max-width: 960px;
+      }
+
+      .section-title {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 14px;
+      }
+
+      .section-client {
+        background: #dbeafe;
+        border: 2px solid #93c5fd;
+      }
+      .section-client .section-title { color: #1d4ed8; }
+
+      .section-nextjs {
+        background: #ede9fe;
+        border: 2px dashed #a78bfa;
+      }
+      .section-nextjs .section-title { color: #5b21b6; }
+
+      .section-security {
+        background: #fee2e2;
+        border: 2px dashed #fca5a5;
+      }
+      .section-security .section-title { color: #b91c1c; }
+
+      .section-services {
+        background: #d1fae5;
+        border: 2px dashed #6ee7b7;
+      }
+      .section-services .section-title { color: #065f46; }
+
+      .section-external {
+        background: #fef3c7;
+        border: 2px solid #fcd34d;
+      }
+      .section-external .section-title { color: #92400e; }
+
+      .row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .arrow-down {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 2px 0;
+      }
+
+      .arrow-down .line {
+        width: 2px;
+        height: 24px;
+        background: #94a3b8;
+      }
+
+      .arrow-down .head {
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 8px solid #94a3b8;
+      }
+
+      .arrow-label {
+        font-size: 10px;
+        color: #64748b;
+        margin: 2px 0 0;
+        font-style: italic;
+      }
+
+      .subsection {
+        border-radius: 8px;
+        padding: 10px 14px;
+        flex: 1;
+      }
+
+      .subsection-title {
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 10px;
+      }
+
+      .sub-pages {
+        background: #c7d2fe;
+        border: 1.5px solid #818cf8;
+      }
+      .sub-pages .subsection-title { color: #3730a3; }
+
+      .sub-api {
+        background: #bfdbfe;
+        border: 1.5px solid #60a5fa;
+      }
+      .sub-api .subsection-title { color: #1e40af; }
+
+      .tag {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 4px;
+        padding: 2px 7px;
+        font-size: 10px;
+        margin: 2px 3px;
+        font-weight: 500;
+      }
+
+      .divider {
+        width: 2px;
+        height: 40px;
+        background: #cbd5e1;
+        margin: 0 12px;
+      }
+
+      .legend {
+        margin-top: 28px;
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+        font-size: 11px;
+        color: #64748b;
+      }
+
+      .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .legend-line {
+        width: 28px;
+        height: 2px;
+      }
+
+      .legend-line.solid { background: #94a3b8; }
+      .legend-line.dashed {
+        background: repeating-linear-gradient(
+          90deg,
+          #94a3b8 0,
+          #94a3b8 4px,
+          transparent 4px,
+          transparent 8px
+        );
+      }
+
+      .psr-section {
+        max-width: 960px;
+        margin: 48px auto 0;
+      }
+
+      .psr-heading {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin-bottom: 24px;
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+
+      .psr-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .psr-card {
+        background: #fff;
+        border-radius: 12px;
+        border: 1.5px solid #e2e8f0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+        padding: 20px 24px;
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      .psr-number {
+        font-size: 28px;
+        font-weight: 800;
+        color: #cbd5e1;
+        min-width: 36px;
+        line-height: 1;
+        padding-top: 2px;
+      }
+
+      .psr-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .psr-row {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .psr-badge {
+        display: inline-block;
+        border-radius: 5px;
+        padding: 3px 10px;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+        margin-top: 2px;
+      }
+
+      .psr-badge.problem { background: #fee2e2; color: #b91c1c; }
+      .psr-badge.solution { background: #dbeafe; color: #1d4ed8; }
+      .psr-badge.result { background: #d1fae5; color: #065f46; }
+
+      .psr-body p {
+        font-size: 12px;
+        color: #334155;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      .psr-body code {
+        background: #f1f5f9;
+        border-radius: 3px;
+        padding: 1px 5px;
+        font-size: 11px;
+        color: #7c3aed;
+        font-family: 'Consolas', monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>HYPE WEDDING — System Architecture</h1>
+
+    <div class="diagram">
+      <!-- 1. CLIENT -->
+      <div class="section section-client" style="max-width: 380px; text-align: center">
+        <div class="section-title">Client</div>
+        <div class="row" style="justify-content: center">
+          <div class="box blue" style="min-width: 240px">
+            <span class="icon">🖥️</span>
+            <div class="label">Browser</div>
+            <div class="sublabel">React 19 · Next.js 16 · Tailwind CSS</div>
+            <div style="margin-top: 6px">
+              <span class="tag">SSR / CSR 혼합</span>
+              <span class="tag">shadcn/ui</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- arrow -->
+      <div class="arrow-down">
+        <div class="line"></div>
+        <div class="head"></div>
+        <div class="arrow-label">HTTP Request / API Call</div>
+      </div>
+
+      <!-- 2. NEXT.JS APP SERVER -->
+      <div class="section section-nextjs" style="max-width: 960px">
+        <div class="section-title">⚙️ Next.js App Server (Full-stack)</div>
+        <div class="row" style="align-items: stretch; gap: 20px">
+          <!-- Pages -->
+          <div class="subsection sub-pages" style="min-width: 280px">
+            <div class="subsection-title">📄 Pages (Server & Client Components)</div>
+            <div class="row" style="gap: 8px; justify-content: flex-start; flex-wrap: wrap">
+              <div class="box indigo" style="min-width: 90px; font-size: 11px">
+                <span class="icon">🏠</span>
+                <div class="label">홈 / 상품</div>
+                <div class="sublabel">/ · /products<br />/product/[id]</div>
+              </div>
+              <div class="box blue" style="min-width: 90px; font-size: 11px">
+                <span class="icon">💍</span>
+                <div class="label">Wedding</div>
+                <div class="sublabel">/wedding<br />/hype-snap · /casual</div>
+              </div>
+              <div class="box violet" style="min-width: 90px; font-size: 11px">
+                <span class="icon">👤</span>
+                <div class="label">Account</div>
+                <div class="sublabel">/signup<br />/onboarding</div>
+              </div>
+              <div class="box pink" style="min-width: 90px; font-size: 11px">
+                <span class="icon">📰</span>
+                <div class="label">Magazine</div>
+                <div class="sublabel">/magazine<br />/magazine/[id]</div>
+              </div>
+              <div class="box slate" style="min-width: 90px; font-size: 11px">
+                <span class="icon">🔧</span>
+                <div class="label">Admin Panel</div>
+                <div class="sublabel">Hero · 상품<br />매거진 관리</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- API Routes -->
+          <div class="subsection sub-api" style="min-width: 280px">
+            <div class="subsection-title">🔌 API Routes</div>
+            <div class="row" style="gap: 8px; justify-content: flex-start; flex-wrap: wrap">
+              <div class="box blue" style="min-width: 90px; font-size: 11px">
+                <span class="icon">📦</span>
+                <div class="label">Products API</div>
+                <div class="sublabel">/api/products<br />상품 CRUD</div>
+              </div>
+              <div class="box indigo" style="min-width: 90px; font-size: 11px">
+                <span class="icon">🔑</span>
+                <div class="label">Auth API</div>
+                <div class="sublabel">/api/auth<br />OAuth · Credentials</div>
+              </div>
+              <div class="box teal" style="min-width: 90px; font-size: 11px">
+                <span class="icon">🖼️</span>
+                <div class="label">Images API</div>
+                <div class="sublabel">/api/images<br />R2 업로드</div>
+              </div>
+              <div class="box pink" style="min-width: 90px; font-size: 11px">
+                <span class="icon">📰</span>
+                <div class="label">Magazine API</div>
+                <div class="sublabel">/api/magazine<br />/api/admin/magazine</div>
+              </div>
+              <div class="box violet" style="min-width: 90px; font-size: 11px">
+                <span class="icon">👤</span>
+                <div class="label">User API</div>
+                <div class="sublabel">/api/user<br />온보딩 저장</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- arrow -->
+      <div class="arrow-down">
+        <div class="line"></div>
+        <div class="head"></div>
+        <div class="arrow-label">요청 통과 전 검증</div>
+      </div>
+
+      <!-- 3. SECURITY LAYER -->
+      <div class="section section-security" style="max-width: 960px">
+        <div class="section-title">🔒 Security Layer</div>
+        <div class="row" style="justify-content: center; gap: 12px">
+          <div class="box red" style="min-width: 110px">
+            <span class="icon">🪙</span>
+            <div class="label">JWT Auth</div>
+            <div class="sublabel">NextAuth v5<br />세션 전략</div>
+          </div>
+          <div class="box red" style="min-width: 110px">
+            <span class="icon">🛡️</span>
+            <div class="label">Proxy</div>
+            <div class="sublabel">proxy.ts<br />라우트 보호</div>
+          </div>
+          <div class="box red" style="min-width: 110px">
+            <span class="icon">✅</span>
+            <div class="label">Onboarding Gate</div>
+            <div class="sublabel">미완료 시<br />접근 차단</div>
+          </div>
+          <div class="box red" style="min-width: 110px">
+            <span class="icon">🔐</span>
+            <div class="label">Dual Auth</div>
+            <div class="sublabel">일반 유저 (OAuth)<br />관리자 (ID/PW)</div>
+          </div>
+          <div class="box red" style="min-width: 110px">
+            <span class="icon">📋</span>
+            <div class="label">Input Validation</div>
+            <div class="sublabel">Key RE 검증<br />MIME 타입 검사</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- arrow -->
+      <div class="arrow-down">
+        <div class="line"></div>
+        <div class="head"></div>
+        <div class="arrow-label">비즈니스 로직 처리</div>
+      </div>
+
+      <!-- 4. SERVICE LAYER -->
+      <div class="section section-services" style="max-width: 960px">
+        <div class="section-title">🧩 Core Logic</div>
+        <div class="row" style="justify-content: center; gap: 12px">
+          <div class="box green" style="min-width: 140px">
+            <span class="icon">🖼️</span>
+            <div class="label">Image Pipeline</div>
+            <div class="sublabel">sharp → WebP 변환<br />1920px 리사이즈<br />R2 업로드</div>
+          </div>
+          <div class="box green" style="min-width: 140px">
+            <span class="icon">👤</span>
+            <div class="label">User Auth</div>
+            <div class="sublabel">NextAuth 세션<br />Bcrypt 해싱<br />온보딩 플로우</div>
+          </div>
+          <div class="box green" style="min-width: 140px">
+            <span class="icon">📦</span>
+            <div class="label">Product Service</div>
+            <div class="sublabel">섹션별 상품 관리<br />순서 정렬<br />이미지 연동</div>
+          </div>
+          <div class="box green" style="min-width: 140px">
+            <span class="icon">📰</span>
+            <div class="label">Magazine Service</div>
+            <div class="sublabel">초안 / 발행 관리<br />이미지 업로드<br />Cascade Delete</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- arrow -->
+      <div class="arrow-down">
+        <div class="line"></div>
+        <div class="head"></div>
+        <div class="arrow-label">외부 서비스 연동</div>
+      </div>
+
+      <!-- 5. EXTERNAL SERVICES -->
+      <div class="section section-external" style="max-width: 960px">
+        <div class="section-title">☁️ External Services</div>
+        <div class="row" style="justify-content: center; gap: 16px">
+          <div class="box" style="background: #0f172a; color: #fff; min-width: 140px">
+            <span class="icon">🗄️</span>
+            <div class="label">SQLite (Turso)</div>
+            <div class="sublabel">Prisma ORM<br />LibSQL 어댑터</div>
+          </div>
+
+          <div class="box orange" style="min-width: 140px">
+            <span class="icon">🖼️</span>
+            <div class="label">Cloudflare R2</div>
+            <div class="sublabel">이미지 스토리지<br />S3 호환 · CDN 내장</div>
+          </div>
+
+          <div class="box" style="background: #1e3a8a; color: #fff; min-width: 140px">
+            <span class="icon">🔑</span>
+            <div class="label">Google OAuth</div>
+            <div class="sublabel">NextAuth Provider<br />소셜 로그인</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-line solid"></div>
+        <span>데이터 흐름</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-line dashed"></div>
+        <span>논리적 그룹 경계</span>
+      </div>
+      <div class="legend-item">🔵 Frontend</div>
+      <div class="legend-item">🟣 Backend API</div>
+      <div class="legend-item">🔴 Security</div>
+      <div class="legend-item">🟢 Business Logic</div>
+      <div class="legend-item">🟡 External</div>
+    </div>
+
+    <!-- Problem → Solution → Result -->
+    <div class="psr-section">
+      <div class="psr-heading">Problem → Solution → Result</div>
+      <div class="psr-grid">
+
+        <div class="psr-card">
+          <div class="psr-number">01</div>
+          <div class="psr-body">
+            <div class="psr-row">
+              <span class="psr-badge problem">Problem</span>
+              <p>원본 이미지(최대 44MB)를 그대로 저장해 페이지 로딩이 극도로 느리고, Next.js 이미지 캐시가 <code>LRUCache: calculateSize returned 0</code> 에러를 반복 발생시켰다.</p>
+            </div>
+            <div class="psr-row">
+              <span class="psr-badge solution">Solution</span>
+              <p>업로드 시점에 <code>sharp</code>로 WebP 변환 + 최대 1920px 리사이즈(quality 80)를 적용하고, Cloudflare R2에 저장하도록 파이프라인을 구성했다.</p>
+            </div>
+            <div class="psr-row">
+              <span class="psr-badge result">Result</span>
+              <p>파일 크기 약 95% 감소(44MB → ~300KB), 이미지 캐시 에러 제거, 페이지 초기 로딩 속도 대폭 개선.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="psr-card">
+          <div class="psr-number">02</div>
+          <div class="psr-body">
+            <div class="psr-row">
+              <span class="psr-badge problem">Problem</span>
+              <p>npm 패키지 재설치 후 Apple OAuth 프로바이더가 크리덴셜 없이 초기화되면서 <code>proxy.ts</code>가 <code>/admin</code> 경로 처리 중 무응답 상태가 됐다.</p>
+            </div>
+            <div class="psr-row">
+              <span class="psr-badge solution">Solution</span>
+              <p><code>auth.config.ts</code>에서 미설정 Apple 프로바이더를 제거하고 Google OAuth만 유지했다.</p>
+            </div>
+            <div class="psr-row">
+              <span class="psr-badge result">Result</span>
+              <p>관리자 페이지 정상 접근 복구, 불필요한 프로바이더 제거로 인증 설정 단순화.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="psr-card">
+          <div class="psr-number">03</div>
+          <div class="psr-body">
+            <div class="psr-row">
+              <span class="psr-badge problem">Problem</span>
+              <p>일반 유저와 관리자 모두 같은 인증 흐름을 사용하면 권한 분리가 어렵고 보안 취약점이 생길 수 있다.</p>
+            </div>
+            <div class="psr-row">
+              <span class="psr-badge solution">Solution</span>
+              <p>일반 유저는 Google OAuth + Credentials(이메일/비밀번호), 관리자는 별도 <code>Admin</code> 테이블과 ID/PW Credentials로 인증을 분리했다. <code>proxy.ts</code>에서 <code>/admin</code> 경로를 별도 보호.</p>
+            </div>
+            <div class="psr-row">
+              <span class="psr-badge result">Result</span>
+              <p>유저/관리자 권한 명확히 분리, 역할(master/staff) 기반 접근 제어 가능.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </body>
+</html>
