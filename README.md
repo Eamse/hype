@@ -43,7 +43,7 @@
 | --------------- | -------------------------------------- | ------------------------------------------------------------------------- |
 | Frontend        | Next.js 16 (App Router), React 19      | 풀스택 단일 프로젝트로 운영 가능하고, SSR·CSR을 라우트별로 유연하게 조합 |
 | Styling         | Tailwind CSS 4, shadcn/ui              | 유틸리티 클래스로 빠른 UI 구성, 재사용 가능한 컴포넌트 시스템            |
-| ORM             | Prisma + SQLite (Turso/LibSQL)         | 타입 안전한 쿼리와 마이그레이션 관리, 서버리스 환경 호환                 |
+| ORM             |  Prisma + PostgreSQL        | 타입 안전한 쿼리와 마이그레이션 관리, 동시 접속 및 대용량 데이터 처리 호환                 |
 | 이미지 스토리지 | Cloudflare R2 + AWS SDK                | S3 호환 API를 그대로 사용하면서 무료 이그레스 비용, CDN 내장             |
 | 이미지 처리     | sharp                                  | 업로드 시점에 WebP 변환·리사이즈를 서버에서 일관되게 처리                |
 | 인증            | NextAuth v5 (JWT · Google OAuth)       | 소셜 로그인과 Credentials를 하나의 라이브러리로 통합 관리                |
