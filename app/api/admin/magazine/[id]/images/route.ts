@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { writeFile } from 'fs/promises';
-import path from 'path';
+import { uploadToR2, deleteFileFromR2 } from '@/lib/r2';
+import sharp from 'sharp';
+
+const { R2_PUBLIC_BASE_URL } = process.env;
 
 function parseId(id: string): number | null {
   const n = Number(id);
@@ -32,11 +34,14 @@ export async function POST(
   for (const file of files) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
+    const compress = await sharp(buffer)
+      .resize(1920)
+      .webp({ quality: 80 })
+      .toBuffer();
     // Date.now()로 파일명 중복 방지
-    const filename = `magazine_detail_${idNum}_${Date.now()}.png`;
-    const filePath = path.join(process.cwd(), 'public', 'uploads', filename);
-    await writeFile(filePath, buffer);
-    const url = `/uploads/${filename}`;
+    const filename = `magazine_detail_${idNum}_${Date.now()}.webp`;
+    await uploadToR2(filename, compress);
+    const url = `${R2_PUBLIC_BASE_URL}/${filename}`;
 
     const image = await prisma.magazineImage.create({
       data: { magazineId: idNum, url, order: 0 },
@@ -74,10 +79,7 @@ export async function DELETE(
     });
 
     // 디스크에서 파일 삭제
-    const filepath = path.join(process.cwd(), 'public', image.url);
-    await import('fs/promises').then((fs) =>
-      fs.unlink(filepath).catch(() => {}),
-    );
+    await deleteFileFromR2(image.url).catch(() => {});
 
     return NextResponse.json({ ok: true });
   } catch (e) {
@@ -90,6 +92,9 @@ export async function DELETE(
       return NextResponse.json({ error: 'Image not found' }, { status: 404 });
     }
     console.error('[DELETE /api/admin/magazine/:id/images]', e);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }

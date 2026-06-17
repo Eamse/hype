@@ -38,6 +38,10 @@ yarn-error.log*
 *.db-shm
 *.db-wal
 
+# claude
+AGENTS.md
+CLAUDE.md
+
 # vercel
 .vercel
 

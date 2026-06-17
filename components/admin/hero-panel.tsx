@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { btnStyle } from './types';
 
 const MAX_HERO = 10;
 
@@ -84,12 +83,57 @@ export default function HeroPanel() {
 
   return (
     <div>
-      <h2 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>
-        Hero Images
-      </h2>
-      <p style={{ fontSize: 13, color: '#888', marginBottom: 24 }}>
-        Up to {MAX_HERO} images · shown as swipe carousel on main page
-      </p>
+      {/* 섹션 헤더 */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+          marginBottom: 28,
+          paddingBottom: 20,
+          borderBottom: '1px solid #ede8de',
+        }}
+      >
+        <div>
+          <p
+            style={{
+              fontSize: 10,
+              letterSpacing: '2px',
+              color: '#c9a96e',
+              fontWeight: 600,
+              marginBottom: 6,
+            }}
+          >
+            HERO IMAGE
+          </p>
+          <h2
+            style={{
+              fontSize: 22,
+              fontWeight: 700,
+              color: '#1a1a1a',
+              letterSpacing: '-0.3px',
+            }}
+          >
+            Hero Images
+          </h2>
+          <p style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>
+            Up to {MAX_HERO} images · shown as swipe carousel on main page
+          </p>
+        </div>
+        <span
+          style={{
+            fontSize: 12,
+            color: '#c9a96e',
+            fontWeight: 600,
+            background: '#faf7f0',
+            border: '1px solid #e8d9b8',
+            borderRadius: 20,
+            padding: '4px 14px',
+          }}
+        >
+          {images.length} / {MAX_HERO}
+        </span>
+      </div>
 
       {error && (
         <div
@@ -98,7 +142,7 @@ export default function HeroPanel() {
             border: '1px solid #fecaca',
             borderRadius: 8,
             padding: '10px 14px',
-            marginBottom: 16,
+            marginBottom: 20,
             fontSize: 13,
             color: '#dc2626',
           }}
@@ -110,10 +154,10 @@ export default function HeroPanel() {
       {/* 이미지 그리드 */}
       <div
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          gap: 12,
-          marginBottom: 20,
+          display: 'grid',
+          gridTemplateColumns: 'repeat(5, 1fr)',
+          gap: 14,
+          marginBottom: 24,
         }}
       >
         {Array.from({ length: MAX_HERO }).map((_, i) => {
@@ -123,42 +167,44 @@ export default function HeroPanel() {
               key={i}
               style={{
                 position: 'relative',
-                width: 120,
                 aspectRatio: '3/4',
-                borderRadius: 8,
+                borderRadius: 10,
                 overflow: 'hidden',
-                backgroundColor: '#f5f5f5',
-                border: '1.5px dashed #ddd',
-                flexShrink: 0,
+                backgroundColor: '#f5f2ec',
+                border: url ? '1.5px solid #e8d9b8' : '1.5px dashed #ddd5c5',
+                boxShadow: url ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
               }}
             >
               {url && typeof url === 'string' ? (
                 <>
-                  <Image
-                    src={url}
-                    alt={`hero-${i}`}
-                    fill
-                    sizes="120px"
-                    style={{ objectFit: 'cover' }}
-                  />
+                  {URL.canParse(url) && (
+                    <Image
+                      src={url}
+                      alt={`hero-${i}`}
+                      fill
+                      sizes="200px"
+                      style={{ objectFit: 'cover' }}
+                    />
+                  )}
                   <button
                     onClick={() => handleDelete(i)}
                     style={{
                       position: 'absolute',
-                      top: 4,
-                      right: 4,
-                      width: 22,
-                      height: 22,
+                      top: 6,
+                      right: 6,
+                      width: 24,
+                      height: 24,
                       borderRadius: '50%',
-                      background: 'rgba(0,0,0,0.55)',
+                      background: 'rgba(0,0,0,0.6)',
                       color: '#fff',
-                      fontSize: 12,
+                      fontSize: 13,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       cursor: 'pointer',
                       border: 'none',
                       fontFamily: 'inherit',
+                      backdropFilter: 'blur(4px)',
                     }}
                   >
                     ×
@@ -170,10 +216,11 @@ export default function HeroPanel() {
                     width: '100%',
                     height: '100%',
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
+                    gap: 6,
                     color: '#ccc',
-                    fontSize: 11,
                   }}
                 >
                   {i < images.length || uploading ? (
@@ -183,12 +230,17 @@ export default function HeroPanel() {
                         height: 18,
                         borderRadius: '50%',
                         border: '2px solid #e0e0e0',
-                        borderTopColor: '#191919',
+                        borderTopColor: '#c9a96e',
                         animation: 'spin 0.7s linear infinite',
                       }}
                     />
                   ) : (
-                    'Empty'
+                    <>
+                      <span style={{ fontSize: 18, opacity: 0.3 }}>+</span>
+                      <span style={{ fontSize: 10, letterSpacing: '0.5px' }}>
+                        Empty
+                      </span>
+                    </>
                   )}
                 </div>
               )}
@@ -209,16 +261,27 @@ export default function HeroPanel() {
           e.target.value = '';
         }}
       />
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
         <button
           onClick={() => inputRef.current?.click()}
           disabled={uploading || images.length >= MAX_HERO}
-          style={btnStyle('#191919', '#fff')}
+          style={{
+            padding: '10px 22px',
+            background: 'linear-gradient(135deg, #c9a96e, #b8965a)',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 8,
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: 'pointer',
+            letterSpacing: '0.5px',
+            boxShadow: '0 2px 8px rgba(201,169,110,0.3)',
+          }}
         >
           {uploading ? 'Uploading...' : '+ Add Images'}
         </button>
-        <span style={{ fontSize: 12, color: '#aaa' }}>
-          {images.length} / {MAX_HERO} · JPG, PNG, WEBP, GIF (max 50 MB)
+        <span style={{ fontSize: 12, color: '#bbb' }}>
+          JPG, PNG, WEBP, GIF · max 50 MB
         </span>
       </div>
     </div>

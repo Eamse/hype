@@ -1,15 +1,15 @@
 {
   "hero": [
-    "/uploads/hero_1779031640955.jpg",
-    "/uploads/hero_1779031645142.jpg",
-    "/uploads/hero_1779031647514.jpg",
-    "/uploads/hero_1779031649373.jpg",
-    "/uploads/hero_1779031651251.jpg",
-    "/uploads/hero_1779031653614.jpg",
-    "/uploads/hero_1779031655819.jpg",
-    "/uploads/hero_1779031660354.jpg",
-    "/uploads/hero_1779031663242.jpg",
-    "/uploads/hero_1779092572918.jpg"
+    "https://pub-c271b5fcdcc34eca9be592092db31905.r2.dev/hero_1781622535853.webp",
+    "https://pub-c271b5fcdcc34eca9be592092db31905.r2.dev/hero_1781622542797.webp",
+    "https://pub-c271b5fcdcc34eca9be592092db31905.r2.dev/hero_1781622547389.webp",
+    "https://pub-c271b5fcdcc34eca9be592092db31905.r2.dev/hero_1781622551551.webp",
+    "https://pub-c271b5fcdcc34eca9be592092db31905.r2.dev/hero_1781622555306.webp",
+    "https://pub-c271b5fcdcc34eca9be592092db31905.r2.dev/hero_1781622561036.webp",
+    "https://pub-c271b5fcdcc34eca9be592092db31905.r2.dev/hero_1781622565893.webp",
+    "https://pub-c271b5fcdcc34eca9be592092db31905.r2.dev/hero_1781622570215.webp",
+    "https://pub-c271b5fcdcc34eca9be592092db31905.r2.dev/hero_1781622578517.webp",
+    "https://pub-c271b5fcdcc34eca9be592092db31905.r2.dev/hero_1781622593287.webp"
   ],
   "product_1": [
     "/uploads/product_1_1779032176583.jpg"

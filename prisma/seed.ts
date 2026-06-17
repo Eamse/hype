@@ -7,19 +7,15 @@ import { config } from 'dotenv';
 config();
 
 const adapter = new PrismaLibSql({
-  url: `file:${path.join(process.cwd(), 'prisma', 'dev.db')}`,
+  url: `file:${path.join(process.cwd(), 'dev.db')}`,
 });
 const prisma = new PrismaClient({ adapter } as never);
 
 // 마스터 계정 목록 (.env에서 비밀번호 주입)
 const MASTERS = [
-  { loginId: 'master', password: process.env.MASTER_PASSWORD, name: 'Master' },
-  { loginId: 'dev', password: process.env.DEV_PASSWORD, name: 'Dev' },
-  {
-    loginId: 'master0',
-    password: process.env.MASTER0_PASSWORD,
-    name: 'Master0',
-  },
+  { loginId: 'Minju', password: process.env.MINJU_PASSWORD, name: 'Minju' },
+  { loginId: 'Morgan', password: process.env.MORGAN_PASSWORD, name: 'Morgan' },
+  { loginId: 'dev', password: process.env.DEV_PASSWORD, name: 'dev' },
 ];
 
 async function main() {

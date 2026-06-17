@@ -151,12 +151,22 @@ export default function MagazinePanel() {
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-end',
               justifyContent: 'space-between',
-              marginBottom: 24,
+              marginBottom: 28,
+              paddingBottom: 20,
+              borderBottom: '1px solid #ede8de',
             }}
           >
-            <h2 style={{ fontSize: 18, fontWeight: 700 }}>Magazine</h2>
+            <div>
+              <p style={{ fontSize: 10, letterSpacing: '2px', color: '#c9a96e', fontWeight: 600, marginBottom: 6 }}>
+                MAGAZINE
+              </p>
+              <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', letterSpacing: '-0.3px' }}>Magazine</h2>
+              <p style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>
+                {magazines.length} articles
+              </p>
+            </div>
             <button
               onClick={() => {
                 resetForm();
@@ -186,12 +196,13 @@ export default function MagazinePanel() {
                   key={m.id}
                   style={{
                     background: '#fff',
-                    border: '1px solid #e8e8e8',
-                    borderRadius: 10,
-                    padding: '14px 18px',
+                    border: '1px solid #ede8de',
+                    borderRadius: 12,
+                    padding: '16px 20px',
                     display: 'flex',
                     alignItems: 'center',
                     gap: 16,
+                    boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
                   }}
                 >
                   {/* 썸네일 */}
@@ -261,17 +272,24 @@ export default function MagazinePanel() {
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'flex-end',
               justifyContent: 'space-between',
-              marginBottom: 24,
+              marginBottom: 28,
+              paddingBottom: 20,
+              borderBottom: '1px solid #ede8de',
             }}
           >
-            <h2 style={{ fontSize: 18, fontWeight: 700 }}>
-              {selected ? '글 수정' : '글 작성'}
-            </h2>
+            <div>
+              <p style={{ fontSize: 10, letterSpacing: '2px', color: '#c9a96e', fontWeight: 600, marginBottom: 6 }}>
+                MAGAZINE
+              </p>
+              <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', letterSpacing: '-0.3px' }}>
+                {selected ? '글 수정' : '글 작성'}
+              </h2>
+            </div>
             <button
               onClick={() => setView('list')}
-              style={btnStyle('transparent', '#555', '#ddd')}
+              style={btnStyle('transparent', '#888', '#e0d8c8')}
             >
               ← 목록으로
             </button>
@@ -511,11 +529,15 @@ export default function MagazinePanel() {
 
       {/* ── 완료 화면 ── */}
       {view === 'done' && (
-        <div style={{ padding: '60px 0', textAlign: 'center' }}>
-          <p style={{ fontSize: 18, fontWeight: 700, marginBottom: 8 }}>
+        <div style={{ padding: '80px 0', textAlign: 'center' }}>
+          <p style={{ fontSize: 32, marginBottom: 16 }}>✦</p>
+          <p style={{ fontSize: 10, letterSpacing: '3px', color: '#c9a96e', fontWeight: 600, marginBottom: 12 }}>
+            COMPLETE
+          </p>
+          <p style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a', marginBottom: 8 }}>
             등록이 완료되었습니다
           </p>
-          <p style={{ fontSize: 13, color: '#888', marginBottom: 32 }}>
+          <p style={{ fontSize: 13, color: '#aaa', marginBottom: 36 }}>
             매거진이 성공적으로 저장되었습니다.
           </p>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>

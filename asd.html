@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>차재인 — 미래이력서 | Likelion</title>
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1a1a1a;
+    background: #f0f0f0;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+}
+
+.resume {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #fff;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* ── Header ── */
+.header {
+    background: linear-gradient(135deg, #FF7816 0%, #e06510 100%);
+    color: #fff;
+    padding: 48px 56px 40px;
+    position: relative;
+}
+.header::after {
+    content: 'FUTURE RESUME';
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    opacity: 0.5;
+}
+.header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+}
+.header .headline {
+    font-size: 16px;
+    font-weight: 400;
+    opacity: 0.9;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+.header .contact {
+    font-size: 14px;
+    opacity: 0.85;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.header .contact span::before {
+    margin-right: 4px;
+}
+.bootcamp-badge {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* ── Body ── */
+.body {
+    padding: 40px 56px 48px;
+}
+
+/* Summary */
+.summary {
+    border-left: 4px solid #FF7816;
+    padding: 20px 24px;
+    background: #fef7f2;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 36px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #333;
+}
+
+/* Skills */
+.skills-section {
+    margin-bottom: 36px;
+}
+.skills-section > h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #FF7816;
+    margin-bottom: 20px;
+}
+.skill-group {
+    margin-bottom: 16px;
+}
+.skill-group h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+}
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.skill-tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+.skill-tag.existing {
+    background: #FF7816;
+    color: #fff;
+}
+.skill-tag.projected {
+    background: #fff3eb;
+    color: #d45a00;
+    border: 1px solid #ffd4b3;
+}
+.skill-tag.soft {
+    background: #f0f0f0;
+    color: #555;
+}
+
+/* Sections */
+section {
+    margin-bottom: 32px;
+}
+section h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1a1a;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #FF7816;
+    margin-bottom: 16px;
+}
+section h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin: 16px 0 8px;
+}
+section h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    margin: 12px 0 6px;
+}
+section p {
+    font-size: 14.5px;
+    color: #444;
+    margin-bottom: 8px;
+    line-height: 1.8;
+}
+section ul {
+    margin: 8px 0 12px 20px;
+    font-size: 14.5px;
+    color: #444;
+}
+section li {
+    margin-bottom: 6px;
+    line-height: 1.7;
+}
+section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 13.5px;
+}
+section th {
+    background: #f8f8f8;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+}
+section td {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eee;
+    color: #444;
+    vertical-align: top;
+}
+section th:first-child,
+section td:first-child {
+    white-space: nowrap;
+    min-width: 56px;
+}
+section blockquote {
+    border-left: 3px solid #FF7816;
+    padding: 12px 16px;
+    background: #fef7f2;
+    border-radius: 0 6px 6px 0;
+    margin: 12px 0;
+    font-size: 14px;
+    color: #555;
+}
+.badge {
+    display: inline-block;
+    background: #fff3eb;
+    color: #d45a00;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 12px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* ── Footer ── */
+.footer {
+    background: #fafafa;
+    border-top: 1px solid #eee;
+    padding: 24px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #999;
+}
+.footer .likelion {
+    font-weight: 700;
+    color: #FF7816;
+}
+
+@media print {
+    body { background: #fff; }
+    .resume { box-shadow: none; margin: 0; border-radius: 0; }
+    .header { padding: 32px 40px; }
+    .body { padding: 24px 40px; }
+    .footer { padding: 16px 40px; }
+}
+</style>
+</head>
+<body>
+<div class="resume">
+    <div class="header">
+        <h1>차재인</h1>
+        <div class="headline">해외 서비스 운영 경험 기반 Java 백엔드 개발자</div>
+        <div class="contact">
+            <span>wodls9412@gmail.com</span>
+            <span>010-6358-9413</span>
+        </div>
+        <div class="bootcamp-badge">
+            KDT 백엔드 자바 부트캠프 26기 &mdash; 백엔드 (6개월)
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="summary">
+            해외 서비스 운영 현장에서 사용자 불편과 버그를 누구보다 먼저 발견하면서도 직접 해결할 수 없었던 한계를 깊이 체감하였습니다. 비즈니스 흐름을 이해하는 사람이 개발 역량까지 갖추면 문제를 더 빠르고 정확하게 해결할 수 있다는 확신을 바탕으로, KDT 백엔드 자바 부트캠프에서 Spring Boot·Docker·Kubernetes 기반의 백엔드 개발 역량을 체계적으로 습득하였습니다. 운영 현장의 문제 발견 감각과 다국적 팀 협업 경험 위에 백엔드 기술 역량을 결합하여, 문제 발견부터 구조적 해결까지 주도할 수 있는 백엔드 개발자로 성장하였습니다.
+        </div>
+
+        <div class="skills-section">
+            <h2>Skills</h2>
+            
+            <div class="skill-group">
+                <h3>보유 역량</h3>
+                <div class="skill-tags"><span class="skill-tag existing">서비스 운영 및 품질 관리</span><span class="skill-tag existing">버그 및 사용자 불편 사항 발견·문서화·전달</span><span class="skill-tag existing">개발팀과의 협업 및 요구사항 커뮤니케이션</span><span class="skill-tag existing">운영 효율 개선 프로세스 참여</span><span class="skill-tag existing">다국적 팀 협업 기준 수립 및 문서화</span><span class="skill-tag existing">데이터 기반 의사결정</span><span class="skill-tag existing">비즈니스 도메인 이해 및 서비스 흐름 파악</span></div>
+            </div>
+            <div class="skill-group">
+                <h3>습득 역량</h3>
+                <div class="skill-tags"><span class="skill-tag projected">Java 기반 객체지향 프로그래밍 (캡슐화·상속·인터페이스·SOLID)</span><span class="skill-tag projected">Spring Boot 백엔드 개발 (MVC·DI/IoC·트랜잭션)</span><span class="skill-tag projected">REST API 설계 및 구현 (Postman·Swagger)</span><span class="skill-tag projected">JPA·Hibernate·QueryDSL 기반 데이터 접근 계층 구현</span><span class="skill-tag projected">Spring Security 인증·인가 구현</span><span class="skill-tag projected">MySQL 데이터베이스 설계 및 SQL 최적화 (인덱스·조인·서브쿼리)</span><span class="skill-tag projected">React·Next.js 프론트엔드 기초</span><span class="skill-tag projected">Docker·Kubernetes 기반 컨테이너 운영</span><span class="skill-tag projected">GitHub Actions CI/CD 파이프라인 구축</span><span class="skill-tag projected">AWS·Nginx 기반 무중단 배포</span><span class="skill-tag projected">클린·헥사고날 아키텍처 설계</span><span class="skill-tag projected">Spring Batch·PG 결제 모듈 연동</span><span class="skill-tag projected">실서비스 수준 팀 프로젝트 3회 (기초·응용·심화)</span></div>
+            </div>
+            <div class="skill-group">
+                <h3>Soft Skills</h3>
+                <div class="skill-tags"><span class="skill-tag soft">갈등 조율 및 중재 능력</span><span class="skill-tag soft">목표·데이터 중심의 객관적 판단력</span><span class="skill-tag soft">협업 구조 개선 주도 경험</span><span class="skill-tag soft">다국적·다기능 팀 내 커뮤니케이션</span><span class="skill-tag soft">문제 발견 및 구조적 원인 분석 성향</span><span class="skill-tag soft">주도적 협업 프로세스 설계</span></div>
+            </div>
+        </div>
+
+        
+        <section>
+            <h2>커리어 전환 스토리</h2>
+            <h3>운영 현장의 한계에서 시작된 개발자 전환</h3>
+<p>해외 서비스 운영 업무를 수행하며 서비스 구조가 비즈니스 성과에 미치는 직접적인 영향을 체감하였습니다. 사용자 불편을 유발하는 버그를 발견해도 개발팀에 전달하는 것 외에 할 수 있는 일이 없었고, 운영 효율을 높이기 위한 기능 하나를 추가하는 데 수개월을 기다려야 하는 상황이 반복되었습니다. 이러한 경험이 쌓이며, 문제를 전달하는 역할을 넘어 서비스 구조를 직접 이해하고 수정할 수 있는 백엔드 개발자로 전환하였습니다.</p>
+<p><strong>전환의 핵심 동기</strong></p>
+<ul>
+<li>문제를 누구보다 먼저 발견하면서도 직접 해결할 수 없는 구조적 한계를 반복적으로 경험하였습니다</li>
+<li>비즈니스 흐름을 이해하는 사람이 개발 역량까지 갖추면 더 빠르고 정확한 문제 해결이 가능하다는 확신을 얻었습니다</li>
+</ul>
+<p><strong>운영 경험이 개발에 가져오는 강점</strong></p>
+<ul>
+<li>실제 서비스 운영 경험을 통해 사용자 관점에서 문제를 정의하고 우선순위를 판단할 수 있습니다</li>
+<li>개발팀과의 협업 이력으로 개발 프로세스·용어·의사결정 구조에 대한 사전 이해를 보유하고 있습니다</li>
+<li>다국적 팀 갈등 조율 경험을 바탕으로 팀 프로젝트에서 협업 구조를 설계하고 주도할 수 있습니다</li>
+</ul>
+        </section>
+        <section>
+            <h2>기존 직무 경험</h2>
+            <h3>해외 서비스 운영 직무 경험</h3>
+<p><strong>서비스 운영 및 품질 관리</strong></p>
+<ul>
+<li>해외 서비스 운영 현장에서 사용자 불편 사항과 버그를 발견하고, 원인을 분석하여 개발팀에 구조적으로 전달하는 업무를 수행하였습니다</li>
+<li>운영 효율 개선 프로세스에 참여하여 서비스 품질 향상에 기여하였습니다</li>
+<li>서비스 흐름 전반에 대한 이해를 바탕으로 비즈니스 도메인 관점의 요구사항을 정리하고 전달하였습니다</li>
+</ul>
+<p><strong>개발팀 협업 및 커뮤니케이션</strong></p>
+<ul>
+<li>운영팀과 개발팀 사이에서 전달 기준의 차이를 파악하고, 양쪽 관점을 정리하여 공통 기준을 수립하였습니다</li>
+<li>기능 요청·버그 리포트 시 비즈니스 맥락과 사용자 영향도를 함께 전달하여 개발 우선순위 결정에 기여하였습니다</li>
+</ul>
+<p><strong>다국적 팀 협업 및 갈등 조율</strong></p>
+<ul>
+<li>다양한 국적의 팀원들과 협업하며, 의견 충돌의 원인이 개인의 문제가 아닌 서로 다른 기준과 정보 차이에서 비롯된다는 것을 체득하였습니다</li>
+<li>감정이 아닌 목표와 데이터 기준으로 판단하는 접근 방식을 통해 팀 내 갈등을 조율하고 협업 구조를 개선하였습니다</li>
+</ul>
+        </section>
+        <section>
+            <h2>부트캠프 교육 이수 내역</h2>
+            <h3>KDT 백엔드 자바 부트캠프 26기 (6개월)</h3>
+<table>
+<tr><th>과정</th><th>교육 내용</th><th>핵심 역량</th></tr>
+<tr><td><strong>1개월차</strong> — Java 기초 & 1차 프로젝트</td><td>웹 서버 구축(Tomcat·Nginx), Linux 환경, Git 버전 관리, AI 활용 서비스 구현, Supabase 기반 DB 설계(ERD·SQL), Java 기초(변수·제어구조·배열·파일 입출력)</td><td>웹 서비스 구조 이해, 개발 환경 구성, 기초 프로그래밍</td></tr>
+<tr><td><strong>2개월차</strong> — 객체지향 & 관계형 DB</td><td>캡슐화·상속·인터페이스, SOLID 원칙(OCP·DI·IoC), 컬렉션·제네릭, Stream API, 3계층 아키텍처·REST API, JDBC·조인·서브쿼리, 인덱스 및 DB 성능 최적화</td><td>객체지향 설계 역량, 데이터베이스 설계·최적화</td></tr>
+<tr><td><strong>3개월차</strong> — 프론트엔드 프로그래밍</td><td>HTML 시멘틱 태그, CSS 셀렉터·애니메이션, JavaScript(ES6·클로저·DOM·이벤트), React(컴포넌트·상태관리), Next.js(CSR/SSR·App Router), Node.js·웹팩 빌드·배포</td><td>프론트엔드 기초, 풀스택 이해</td></tr>
+<tr><td><strong>4개월차</strong> — Spring Boot 백엔드</td><td>Maven·Gradle, Spring Boot·Web MVC, DI/IoC·트랜잭션, REST API·Postman·Swagger, JPA·Hibernate·JPQL·Fetch 전략, Spring Security, 클린·헥사고날 아키텍처, QueryDSL</td><td>엔터프라이즈급 백엔드 개발, 보안·아키텍처 설계</td></tr>
+<tr><td><strong>5개월차</strong> — DevOps & 2차 프로젝트</td><td>Docker(이미지·컨테이너·네트워크·Compose), Kubernetes(kubectl·StatefulSet·Helm), CI/CD(GitHub Actions), Nginx(리버스 프록시·로드밸런싱), 응용 프로젝트 종합 실습</td><td>컨테이너 운영, 배포 자동화, 인프라 구축</td></tr>
+<tr><td><strong>6개월차</strong> — 3차 심화 프로젝트 & 취업 지원</td><td>요구사항 정의·도메인 분석·아키텍처 설계, 백엔드 전 과정 종합 구현, Docker·Kubernetes·CI/CD 실서비스 배포, 결과물 발표·코드 리뷰·회고</td><td>실서비스 수준 프로젝트 수행, 기업 연계 실무 경험</td></tr>
+</table>
+<p><strong>교육 특징</strong></p>
+<ul>
+<li>기초·응용 프로젝트 기간 중 <strong>주 2회 현직 개발자 멘토링</strong>을 통해 실무 관점의 코드 리뷰와 기술 피드백을 받았습니다</li>
+<li><strong>1차 기초 → 2차 응용 → 3차 심화(기업 연계)</strong> 3단계 프로젝트 구조로 단계적으로 실무 역량을 축적하였습니다</li>
+<li>3차 심화 프로젝트는 <strong>하들소프트 기업 연계</strong>로 진행되어 실제 기업의 요구사항을 기반으로 한 실서비스 수준의 개발 경험을 갖추었습니다</li>
+</ul>
+        </section>
+        <section>
+            <h2>기술 스택</h2>
+            <h3>기술 스택</h3>
+<p><strong>Backend</strong></p>
+<ul>
+<li>Java, Spring Boot, Spring MVC, Spring Security, Spring Batch</li>
+<li>JPA, Hibernate, JPQL, QueryDSL, JDBC</li>
+<li>REST API, Postman, Swagger</li>
+<li>클린 아키텍처, 헥사고날 아키텍처</li>
+</ul>
+<p><strong>Frontend</strong></p>
+<ul>
+<li>HTML5, CSS3, JavaScript (ES6+)</li>
+<li>React (컴포넌트·상태관리·생명주기)</li>
+<li>Next.js (CSR/SSR·App Router)</li>
+<li>Node.js, Webpack</li>
+</ul>
+<p><strong>Database</strong></p>
+<ul>
+<li>MySQL (설계·인덱스·조인·서브쿼리·성능 최적화)</li>
+<li>Supabase</li>
+<li>Redis</li>
+</ul>
+<p><strong>DevOps & Infra</strong></p>
+<ul>
+<li>Docker (이미지·컨테이너·네트워크·Compose)</li>
+<li>Kubernetes (kubectl·StatefulSet·Helm)</li>
+<li>GitHub Actions (CI/CD 파이프라인)</li>
+<li>Nginx (리버스 프록시·로드밸런싱)</li>
+<li>AWS (클라우드 인프라·무중단 배포)</li>
+</ul>
+<p><strong>Monitoring</strong></p>
+<ul>
+<li>Grafana</li>
+<li>Prometheus</li>
+</ul>
+<p><strong>Tools</strong></p>
+<ul>
+<li>Git, GitHub</li>
+<li>IntelliJ IDEA, VSCode</li>
+<li>Linux (Shell·CLI)</li>
+<li>Maven, Gradle</li>
+</ul>
+        </section>
+        <section>
+            <h2>프로젝트 포트폴리오</h2>
+            <h3>프로젝트 포트폴리오</h3>
+<p>---</p>
+<h4>1차 기초 프로젝트 — 바이브코딩 활용 Q&A 카페 서비스</h4>
+<ul>
+<li><strong>개요:</strong> AI 바이브코딩을 활용하여 Q&A 기능이 포함된 카페 서비스를 구현한 CRUD 웹 애플리케이션입니다</li>
+<li><strong>역할:</strong> 웹 서비스 전체 구조 설계 및 CRUD 기능 구현, Git 기반 버전 관리, 홈 서버 구축 및 Linux Shell·OnPremise 배포를 담당하였습니다</li>
+<li><strong>기술:</strong> Java, Tomcat, Nginx, Linux Shell, Git, Supabase, ERD·SQL</li>
+<li><strong>성과:</strong> 웹 서비스의 기본 구조(서버·DB·클라이언트)를 이해하고 직접 구축·배포하는 역량을 확보하였습니다. 서비스 운영 경험을 바탕으로 사용자 관점의 Q&A 기능 흐름을 설계하였습니다</li>
+</ul>
+<p>---</p>
+<h4>2차 응용 프로젝트 — 유료 구독 SNS 플랫폼</h4>
+<ul>
+<li><strong>개요:</strong> Spring Boot 백엔드와 React 프론트엔드를 결합한 유료 구독형 SNS 서비스로, PG 결제 모듈과 Spring Batch 정산 기능을 포함한 풀스택 프로젝트입니다</li>
+<li><strong>역할:</strong> Spring Boot 기반 백엔드 API 설계·구현, PG 결제 모듈 연동, Spring Batch 정산 로직 개발, Docker 기반 AWS 무중단 CI/CD 배포 파이프라인 구축을 담당하였습니다</li>
+<li><strong>기술:</strong> Spring Boot, React, JPA, Spring Security, Spring Batch, PG 결제, Docker, AWS, GitHub Actions, MySQL</li>
+<li><strong>성과:</strong> 결제·정산이라는 비즈니스 핵심 로직을 직접 구현하며 도메인 이해력과 백엔드 설계 역량을 동시에 발휘하였습니다. Docker 기반 무중단 배포 파이프라인을 구축하여 DevOps 역량을 습득하였습니다</li>
+</ul>
+<p>---</p>
+<h4>⭐ 3차 심화 프로젝트 — 서비스 Management System 구축 (하들소프트 기업 연계)</h4>
+<ul>
+<li><strong>개요:</strong> 하들소프트와 기업 연계로 진행된 실서비스 수준의 Management System으로, 요구사항 정의부터 도메인 분석·아키텍처 설계·구현·배포까지 전 과정을 수행한 심화 프로젝트입니다</li>
+<li><strong>역할:</strong> 요구사항 정의 및 도메인 분석 주도, Spring Boot 백엔드 핵심 모듈 설계·구현, QueryDSL 기반 복합 조건 쿼리 최적화, Kubernetes 기반 무중단 배포 환경 구성을 담당하였습니다. 해외 운영 경험을 바탕으로 팀 내 협업 구조 설계 및 커뮤니케이션 기준 수립에 기여하였습니다</li>
+<li><strong>기술:</strong> Spring Boot, React, QueryDSL, JPA, Spring Security, Docker, Kubernetes, GitHub Actions, MySQL, Nginx</li>
+<li><strong>성과:</strong> 기업의 실제 요구사항을 기반으로 서비스를 설계·구현·배포하며 실무 수준의 프로젝트 경험을 갖추었습니다. 운영 직무에서 쌓은 도메인 분석 역량을 기술 구현과 결합하여 비즈니스 요구사항을 정확히 반영하는 시스템을 구축하였습니다</li>
+</ul>
+        </section>
+        <section>
+            <h2>기업 연계 프로젝트 경험</h2>
+            <h3>기업 연계 프로젝트 경험 — 하들소프트</h3>
+<p>3차 심화 프로젝트로 <strong>하들소프트</strong>와 기업 연계 프로젝트를 수행하였습니다. 기업이 제시한 실제 요구사항을 기반으로 서비스 Management System을 설계·구현·배포하는 전 과정을 경험하였습니다.</p>
+<p><strong>프로젝트 수행 과정</strong></p>
+<ul>
+<li>기업 요구사항을 분석하여 도메인 모델을 정의하고, 아키텍처 설계 단계부터 참여하였습니다</li>
+<li>스크럼 방식(09:00~10:00 팀 스크럼, 10:00~19:00 프로젝트 몰입)으로 스프린트 단위 작업을 수행하며 실무형 개발 프로세스를 체득하였습니다</li>
+<li>기업 담당 멘토로부터 실무 관점의 코드 리뷰와 기술 피드백을 받으며 코드 품질을 개선하였습니다</li>
+</ul>
+<p><strong>습득 역량</strong></p>
+<ul>
+<li>기업의 비즈니스 요구사항을 기술 요구사항으로 변환하는 분석·설계 역량을 갖추었습니다</li>
+<li>Spring Boot·QueryDSL·Kubernetes를 활용한 실서비스 수준의 백엔드 시스템 구축 경험을 보유하고 있습니다</li>
+<li>스프린트 기반 팀 개발 프로세스에서 일정 관리·역할 분담·코드 리뷰 문화를 체득하였습니다</li>
+<li>결과물 발표·코드 리뷰·회고를 통해 기술적 의사결정을 논리적으로 전달하는 커뮤니케이션 역량을 습득하였습니다</li>
+</ul>
+        </section>
+        <section>
+            <h2>멘토링 및 지원 프로그램</h2>
+            <h3>멘토링 및 지원 프로그램</h3>
+<p><strong>현직자 멘토링</strong></p>
+<ul>
+<li>1차 기초·2차 응용 프로젝트 기간 중 <strong>주 2회 현직 개발자 멘토링</strong>을 받았습니다</li>
+<li>코드 리뷰·설계 패턴·실무 관례에 대한 피드백을 통해 현업 수준의 코드 품질 기준을 체득하였습니다</li>
+</ul>
+<p><strong>기업 연계 멘토링</strong></p>
+<ul>
+<li>3차 심화 프로젝트 기간 중 <strong>하들소프트 기업 멘토링</strong>을 받았습니다</li>
+<li>기업 현직자가 프로젝트 진행 과정에서 기술 선택·아키텍처 설계·코드 품질에 대한 실무 가이드를 제공하였습니다</li>
+</ul>
+<p><strong>취업 지원 프로그램</strong></p>
+<ul>
+<li>포트폴리오 정비, 이력서·자기소개서 첨삭, 모의 면접 프로그램에 참여하여 취업 준비 역량을 갖추었습니다</li>
+<li>프로젝트 경험과 기술 역량을 효과적으로 전달하는 포트폴리오를 구성하였습니다</li>
+</ul>
+<p><strong>프로젝트 심사 평가서</strong></p>
+<ul>
+<li>3차 프로젝트 완료 시 현직 실무자가 직접 작성한 <strong>프로젝트 심사 평가서</strong>를 제공받았습니다</li>
+<li>기획·구현·협업·기술 완성도 항목별 평가가 포함되어 있으며, 취업 증빙 자료로 활용할 수 있습니다</li>
+</ul>
+        </section>
+        <section>
+            <h2>핵심 역량 및 활동</h2>
+            <h3>핵심 역량 및 활동</h3>
+<p><strong>소프트 스킬</strong></p>
+<p><strong>1. 데이터 기반 갈등 조율 및 협업 구조 설계</strong></p>
+<p>다국적 팀 환경에서 의견 충돌의 원인이 개인이 아닌 서로 다른 기준과 정보 차이에 있다는 것을 체득하였습니다. 감정이 아닌 목표와 데이터 기준으로 판단하는 접근 방식을 활용하여, 개발팀과 운영팀 사이의 전달 기준 차이를 조율하고 공통 협업 구조를 수립한 경험을 보유하고 있습니다.</p>
+<p><strong>2. 문제 발견 및 구조적 원인 분석</strong></p>
+<p>해외 서비스 운영 현장에서 사용자 불편과 버그를 선제적으로 발견하고, 단순 현상이 아닌 구조적 원인을 분석하여 개발팀에 전달하는 역할을 수행하였습니다. 이 경험을 통해 사용자 관점의 문제 정의 역량과 서비스 흐름 전반을 파악하는 시야를 갖추었습니다.</p>
+<p><strong>프로젝트 활동</strong></p>
+<table>
+<tr><th>프로젝트</th><th>유형</th><th>핵심 활동</th></tr>
+<tr><td>Q&A 카페 서비스</td><td>1차 기초</td><td>CRUD 웹 서비스 구축, 홈 서버 배포, Git 버전 관리</td></tr>
+<tr><td>유료 구독 SNS</td><td>2차 응용</td><td>Spring Boot 백엔드, PG 결제·Spring Batch 정산, Docker AWS CI/CD</td></tr>
+<tr><td>⭐ 서비스 MS 구축</td><td>3차 심화 (하들소프트)</td><td>요구사항 분석·도메인 설계, QueryDSL·Kubernetes 기반 실서비스 배포</td></tr>
+</table>
+        </section>
+        <section>
+            <h2>교육 이력</h2>
+            <h3>교육 이력</h3>
+<p><strong>KDT 백엔드 자바 부트캠프 26기</strong> — 멋쟁이사자처럼</p>
+<ul>
+<li>과정: Java 기반 백엔드 개발 집중 교육 (6개월, 오프라인)</li>
+<li>핵심 기술: Spring Boot, JPA, QueryDSL, Docker, Kubernetes, CI/CD, AWS</li>
+<li>프로젝트: 기초·응용·심화(하들소프트 기업 연계) 3단계 실전 프로젝트 수행</li>
+<li>운영 방식: 스크럼 기반 스프린트 단위 작업 루틴으로 실무형 개발 프로세스를 체득하였습니다</li>
+</ul>
+        </section>
+    </div>
+
+    <div class="footer">
+        <div>본 이력서는 자바 백엔드 부트캠프 26기 수료 후 예상 역량을 기반으로 작성되었습니다.</div>
+        <div>Edited by <span class="likelion">Likelion</span></div>
+    </div>
+</div>
+</body>
+</html>

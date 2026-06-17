@@ -11,6 +11,7 @@ export type Product = {
 };
 
 export type Section =
+  | 'dashboard'
   | 'hero'
   | 'Meet our Photographers in Jeju'
   | 'Meet our Photographer in Seoul'
@@ -34,39 +35,43 @@ export function btnStyle(
   color: string,
   border?: string,
 ): React.CSSProperties {
+  const isPrimary = bg === '#191919';
   return {
-    padding: '7px 14px',
-    borderRadius: 7,
+    padding: '8px 18px',
+    borderRadius: 8,
     fontSize: 12,
     fontWeight: 600,
-    background: bg,
-    color,
+    background: isPrimary ? 'linear-gradient(135deg, #c9a96e, #b8965a)' : bg,
+    color: isPrimary ? '#fff' : color,
     cursor: 'pointer',
     fontFamily: 'inherit',
     border: border ? `1px solid ${border}` : 'none',
     whiteSpace: 'nowrap' as const,
+    boxShadow: isPrimary ? '0 2px 8px rgba(201,169,110,0.3)' : 'none',
+    letterSpacing: '0.3px',
   };
 }
 
 export const labelStyle: React.CSSProperties = {
   display: 'block',
-  fontSize: 11,
-  fontWeight: 600,
-  color: '#888',
-  marginBottom: 4,
+  fontSize: 10,
+  fontWeight: 700,
+  color: '#c9a96e',
+  marginBottom: 6,
   textTransform: 'uppercase',
-  letterSpacing: '0.5px',
+  letterSpacing: '1.5px',
 };
 
 export const inputStyle: React.CSSProperties = {
   width: '100%',
-  padding: '8px 10px',
-  borderRadius: 7,
-  border: '1px solid #e0e0e0',
+  padding: '10px 12px',
+  borderRadius: 8,
+  border: '1px solid #e8e0d0',
   fontSize: 13,
   fontFamily: 'inherit',
   outline: 'none',
-  color: '#191919',
+  color: '#1a1a1a',
+  backgroundColor: '#fdfcfa',
 };
 
 export function isProductArray(data: unknown): data is Product[] {

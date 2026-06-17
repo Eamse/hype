@@ -20,7 +20,12 @@ export default function HeroCarousel() {
         if (!res.ok) return;
         const data: unknown = await res.json();
         const hero = (data as Record<string, unknown>)['hero'];
-        if (Array.isArray(hero)) setHeroImages(hero as string[]);
+        if (Array.isArray(hero)) {
+          const valid = (hero as string[]).filter((url) => {
+            try { new URL(url); return true; } catch { return false; }
+          });
+          setHeroImages(valid);
+        }
       } catch (e) {
         if (e instanceof Error && e.name !== 'AbortError') {
           console.error('[hero-carousel] 로딩 실패:', e);

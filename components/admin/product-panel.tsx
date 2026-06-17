@@ -129,12 +129,22 @@ export default function ProductPanel({
       <div
         style={{
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-end',
           justifyContent: 'space-between',
-          marginBottom: 6,
+          marginBottom: 28,
+          paddingBottom: 20,
+          borderBottom: '1px solid #ede8de',
         }}
       >
-        <h2 style={{ fontSize: 18, fontWeight: 700 }}>{label}</h2>
+        <div>
+          <p style={{ fontSize: 10, letterSpacing: '2px', color: '#c9a96e', fontWeight: 600, marginBottom: 6 }}>
+            PRODUCTS
+          </p>
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', letterSpacing: '-0.3px' }}>{label}</h2>
+          <p style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>
+            {products.length} {isSlides ? 'slides' : 'products'}
+          </p>
+        </div>
         <button
           onClick={() => {
             setAdding(true);
@@ -145,25 +155,23 @@ export default function ProductPanel({
           {isSlides ? '+ Add Slide' : '+ Add Product'}
         </button>
       </div>
-      <p style={{ fontSize: 13, color: '#888', marginBottom: 24 }}>
-        {products.length} {isSlides ? 'slides' : 'products'}
-      </p>
 
       {/* 추가 폼 */}
       {adding && (
         <div
           style={{
-            background: '#f9f9f9',
-            border: '1px solid #e8e8e8',
-            borderRadius: 10,
-            padding: 20,
-            marginBottom: 20,
+            background: '#fdfcfa',
+            border: '1px solid #e8d9b8',
+            borderRadius: 12,
+            padding: 24,
+            marginBottom: 24,
             display: 'flex',
             flexDirection: 'column',
-            gap: 12,
+            gap: 14,
+            boxShadow: '0 2px 12px rgba(201,169,110,0.08)',
           }}
         >
-          <p style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: '#c9a96e', letterSpacing: '2px', textTransform: 'uppercase' }}>
             {isSlides ? 'New Slide' : 'New Product'}
           </p>
           {addError && (
@@ -360,7 +368,7 @@ export default function ProductPanel({
             : 'No products yet. Click "+ Add Product" to get started.'}
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
           {products.map((p) => (
             <ProductRow
               key={p.id}

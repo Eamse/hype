@@ -137,260 +137,90 @@ export default function ProductRow({
     <div
       style={{
         background: '#fff',
-        border: '1px solid #e8e8e8',
-        borderRadius: 10,
-        padding: '14px 18px',
+        border: '1px solid #ede8de',
+        borderRadius: 14,
+        overflow: 'hidden',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
         display: 'flex',
         flexDirection: 'column',
-        gap: 8,
       }}
     >
-      <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-        {/* 이미지 */}
-        <div
-          style={{
-            position: 'relative',
-            width: 72,
-            height: 72,
-            borderRadius: 8,
-            overflow: 'hidden',
-            backgroundColor: '#f5f5f5',
-            flexShrink: 0,
-            border: '1px solid #eee',
-            cursor: 'pointer',
-          }}
-          onClick={() => imgInputRef.current?.click()}
-          title="Click to change image"
-        >
-          {product.imageUrl ? (
-            <Image
-              src={product.imageUrl}
-              alt={product.title}
-              fill
-              sizes="72px"
-              style={{ objectFit: 'cover' }}
-            />
-          ) : (
-            <div
-              style={{
-                width: '100%',
-                height: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ccc',
-              }}
-            >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.3"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <circle cx="8.5" cy="8.5" r="1.5" />
-                <polyline points="21 15 16 10 5 21" />
-              </svg>
-            </div>
-          )}
-          {uploading && (
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'rgba(255,255,255,0.8)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <div
-                style={{
-                  width: 16,
-                  height: 16,
-                  borderRadius: '50%',
-                  border: '2px solid #ddd',
-                  borderTopColor: '#191919',
-                  animation: 'spin 0.7s linear infinite',
-                }}
-              />
-            </div>
-          )}
-          {imgSaved && (
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'rgba(34,197,94,0.85)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-                fontSize: 16,
-              }}
-            >
-              ✓
-            </div>
-          )}
-          <input
-            ref={imgInputRef}
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            style={{ display: 'none' }}
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) handleImgUpload(f);
-              e.target.value = '';
-            }}
+      {/* 이미지 영역 */}
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          aspectRatio: '3/4',
+          backgroundColor: '#f5f2ec',
+          cursor: 'pointer',
+        }}
+        onClick={() => !editing && imgInputRef.current?.click()}
+        title="Click to change image"
+      >
+        {product.imageUrl ? (
+          <Image
+            src={product.imageUrl}
+            alt={product.title}
+            fill
+            sizes="240px"
+            style={{ objectFit: 'cover' }}
           />
-        </div>
-
-        {/* 정보 */}
-        <div style={{ flex: 1 }}>
-          {editing ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {saveError && (
-                <div
-                  style={{
-                    fontSize: 11,
-                    color: '#dc2626',
-                    background: '#fef2f2',
-                    padding: '6px 10px',
-                    borderRadius: 5,
-                  }}
-                >
-                  {saveError}
-                </div>
-              )}
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: isSlide ? '1fr' : '1fr 1fr 1fr',
-                  gap: 8,
-                }}
-              >
-                <input
-                  value={form.title}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, title: e.target.value }))
-                  }
-                  placeholder={isSlide ? 'Slide Caption' : 'Title'}
-                  style={inputStyle}
-                />
-                {!isSlide && (
-                  <>
-                    <input
-                      value={form.brand}
-                      onChange={(e) =>
-                        setForm((p) => ({ ...p, brand: e.target.value }))
-                      }
-                      placeholder="Brand"
-                      style={inputStyle}
-                    />
-                    <input
-                      value={form.price}
-                      onChange={(e) =>
-                        setForm((p) => ({ ...p, price: e.target.value }))
-                      }
-                      placeholder="Price"
-                      type="number"
-                      min="0"
-                      style={inputStyle}
-                    />
-                  </>
-                )}
-              </div>
-              <div style={{ display: 'flex', gap: 6 }}>
-                <button
-                  onClick={handleSave}
-                  disabled={saving}
-                  style={btnStyle('#191919', '#fff')}
-                >
-                  {saving ? 'Saving...' : 'Save'}
-                </button>
-                <button
-                  onClick={cancelEdit}
-                  disabled={saving}
-                  style={btnStyle('transparent', '#555', '#ddd')}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          ) : (
-            <>
-              <p
-                style={{
-                  fontSize: 14,
-                  fontWeight: 600,
-                  color: '#191919',
-                  marginBottom: 2,
-                }}
-              >
-                {product.title}
-              </p>
-              {!isSlide && (
-                <>
-                  <p style={{ fontSize: 12, color: '#888', marginBottom: 2 }}>
-                    {product.brand}
-                  </p>
-                  <p
-                    style={{ fontSize: 13, fontWeight: 700, color: '#191919' }}
-                  >
-                    ₩{product.price.toLocaleString()}
-                  </p>
-                </>
-              )}
-            </>
-          )}
-        </div>
-
-        {/* 액션 */}
-        {!editing && (
-          <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
-            <button
-              onClick={() => {
-                setEditing(true);
-                setSaveError(null);
-              }}
-              style={btnStyle('transparent', '#191919', '#191919')}
-            >
-              Edit
-            </button>
-            {product.imageUrl && (
-              <button
-                onClick={handleImgDelete}
-                style={btnStyle('transparent', '#888', '#ddd')}
-              >
-                Remove Img
-              </button>
-            )}
-            <button
-              onClick={onDeleted}
-              style={btnStyle('transparent', '#ef4444', '#ef4444')}
-            >
-              Delete
-            </button>
+        ) : (
+          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#ccc' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <circle cx="8.5" cy="8.5" r="1.5" />
+              <polyline points="21 15 16 10 5 21" />
+            </svg>
+            <span style={{ fontSize: 10, letterSpacing: '1px' }}>No Image</span>
           </div>
         )}
+        {uploading && (
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #e8d9b8', borderTopColor: '#c9a96e', animation: 'spin 0.7s linear infinite' }} />
+          </div>
+        )}
+        {imgSaved && (
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(201,169,110,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 20 }}>✓</div>
+        )}
+        <input ref={imgInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" style={{ display: 'none' }} onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImgUpload(f); e.target.value = ''; }} />
       </div>
 
-      {/* 이미지 에러 */}
-      {imgError && (
-        <div
-          style={{
-            fontSize: 11,
-            color: '#dc2626',
-            background: '#fef2f2',
-            padding: '6px 10px',
-            borderRadius: 5,
-          }}
-        >
-          {imgError}
-        </div>
-      )}
+      {/* 정보 영역 */}
+      <div style={{ padding: '14px 16px', flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {editing ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {saveError && <div style={{ fontSize: 11, color: '#dc2626', background: '#fef2f2', padding: '6px 10px', borderRadius: 5 }}>{saveError}</div>}
+            <input value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} placeholder="Title" style={inputStyle} />
+            {!isSlide && (
+              <>
+                <input value={form.brand} onChange={(e) => setForm((p) => ({ ...p, brand: e.target.value }))} placeholder="Brand" style={inputStyle} />
+                <input value={form.price} onChange={(e) => setForm((p) => ({ ...p, price: e.target.value }))} placeholder="Price" type="number" min="0" style={inputStyle} />
+              </>
+            )}
+            <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+              <button onClick={handleSave} disabled={saving} style={btnStyle('#191919', '#fff')}>{saving ? 'Saving...' : 'Save'}</button>
+              <button onClick={cancelEdit} disabled={saving} style={btnStyle('transparent', '#888', '#e0d8c8')}>Cancel</button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', lineHeight: 1.4 }}>{product.title}</p>
+            {!isSlide && (
+              <>
+                <p style={{ fontSize: 11, color: '#aaa' }}>{product.brand}</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#c9a96e' }}>₩{product.price.toLocaleString()}</p>
+              </>
+            )}
+            <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
+              <button onClick={() => { setEditing(true); setSaveError(null); }} style={btnStyle('transparent', '#888', '#e0d8c8')}>Edit</button>
+              {product.imageUrl && <button onClick={handleImgDelete} style={btnStyle('transparent', '#888', '#e0d8c8')}>Remove Img</button>}
+              <button onClick={onDeleted} style={{ ...btnStyle('transparent', '#ef4444', '#ef4444') }}>Delete</button>
+            </div>
+          </>
+        )}
+        {imgError && <div style={{ fontSize: 11, color: '#dc2626', background: '#fef2f2', padding: '6px 10px', borderRadius: 5 }}>{imgError}</div>}
+      </div>
     </div>
   );
 }
