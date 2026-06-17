@@ -1,9 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
-  const { email, password } = await req.json();
+  const ip = getClientIp(req);
+  if (!checkRateLimit(`signup:${ip}`, 5, 10 * 60 * 1000)) {
+    return NextResponse.json({ message: 'Too many requests' }, { status: 429 });
+  }
+
+  let email: string, password: string;
+  try {
+    const body = await req.json();
+    email = body.email;
+    password = body.password;
+  } catch {
+    return NextResponse.json({ success: false, message: 'Invalid request body' }, { status: 400 });
+  }
 
   if (!email || !password) {
     return NextResponse.json(

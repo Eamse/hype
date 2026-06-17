@@ -1,14 +1,13 @@
 import { PrismaClient } from '../app/generated/prisma/client';
-import { PrismaLibSql } from '@prisma/adapter-libsql';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcryptjs';
-import path from 'path';
 import { config } from 'dotenv';
 
 config();
 
-const adapter = new PrismaLibSql({
-  url: `file:${path.join(process.cwd(), 'dev.db')}`,
-});
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter } as never);
 
 // 마스터 계정 목록 (.env에서 비밀번호 주입)

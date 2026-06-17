@@ -39,7 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           where: { id: token.id as string },
           select: { isOnboarded: true },
         });
-        token.isOnboarding = dbUser?.isOnboarded ?? false;
+        token.isOnboarded = dbUser?.isOnboarded ?? false;
       }
       return token;
     },

@@ -43,9 +43,8 @@ export const uploadToR2 = async (urlOrKey: string, buffer: Buffer) => {
   });
   try {
     await s3Client.send(commend);
-    console.log('Upload successful');
   } catch (error) {
-    console.error('Upload Error', error);
+    throw error;
   }
 };
 
@@ -53,23 +52,17 @@ export const deleteFileFromR2 = async (urlOrKey: string) => {
   if (!urlOrKey) return;
 
   let key = urlOrKey;
-  if (key.includes(R2_PUBLIC_URL)) {
-    key = key.replace(`${R2_PUBLIC_URL}/`, '');
+  const R2_PUBLIC_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
+  if (R2_PUBLIC_URL && key.startsWith(R2_PUBLIC_URL)) {
+    key = key.slice(R2_PUBLIC_URL.length).replace(/^\//, '');
   }
-
-  if (key.startsWith('/')) key = key.slice(1);
 
   const command = new DeleteObjectCommand({
     Bucket: R2_BUCKET_NAME,
     Key: key,
   });
 
-  try {
-    await s3Client.send(command);
-    console.log('Delete 삭제 성공');
-  } catch (error) {
-    console.error('Delete Error', error);
-  }
+  await s3Client.send(command);
 };
 
 export { s3Client };

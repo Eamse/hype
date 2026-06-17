@@ -1,14 +1,14 @@
 import { PrismaClient } from '@/app/generated/prisma/client';
-import { PrismaLibSql } from '@prisma/adapter-libsql';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
 
 function createPrisma() {
-  // DATABASE_URL 기준으로 연결 (prisma.config.ts와 동일한 파일 사용)
-  const url = process.env.DATABASE_URL;
-  if (!url) throw new Error('DATABASE_URL is not set');
-
-  const adapter = new PrismaLibSql({ url });
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) throw new Error('DATABASE_URL is not set');
+  const pool = new Pool({ connectionString });
+  const adapter = new PrismaPg(pool);
   return new PrismaClient({ adapter } as never);
 }
 
