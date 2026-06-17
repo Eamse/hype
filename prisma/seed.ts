@@ -1,13 +1,13 @@
 import { PrismaClient } from '../app/generated/prisma/client';
-import { Pool } from 'pg';
-import { PrismaPg } from '@prisma/adapter-pg';
+import { neon } from '@neondatabase/serverless';
+import { PrismaNeon } from '@prisma/adapter-neon';
 import bcrypt from 'bcryptjs';
 import { config } from 'dotenv';
 
 config();
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-const adapter = new PrismaPg(pool);
+const sql = neon(process.env.DATABASE_URL!);
+const adapter = new PrismaNeon(sql);
 const prisma = new PrismaClient({ adapter } as never);
 
 // 마스터 계정 목록 (.env에서 비밀번호 주입)
