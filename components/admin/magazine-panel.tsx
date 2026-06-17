@@ -159,11 +159,11 @@ export default function MagazinePanel() {
             }}
           >
             <div>
-              <p style={{ fontSize: 10, letterSpacing: '2px', color: '#c9a96e', fontWeight: 600, marginBottom: 6 }}>
+              <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>
                 MAGAZINE
               </p>
               <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', letterSpacing: '-0.3px' }}>Magazine</h2>
-              <p style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>
+              <p style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
                 {magazines.length} articles
               </p>
             </div>
@@ -239,7 +239,7 @@ export default function MagazinePanel() {
                     >
                       {m.title}
                     </p>
-                    <p style={{ fontSize: 12, color: '#aaa' }}>
+                    <p style={{ fontSize: 12, color: '#666' }}>
                       {new Date(m.createdAt).toLocaleDateString()}
                     </p>
                   </div>
@@ -280,7 +280,7 @@ export default function MagazinePanel() {
             }}
           >
             <div>
-              <p style={{ fontSize: 10, letterSpacing: '2px', color: '#c9a96e', fontWeight: 600, marginBottom: 6 }}>
+              <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>
                 MAGAZINE
               </p>
               <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', letterSpacing: '-0.3px' }}>
@@ -462,7 +462,7 @@ export default function MagazinePanel() {
                       }}
                       style={{
                         fontSize: 11,
-                        color: '#aaa',
+                        color: '#666',
                         background: 'none',
                         border: 'none',
                         cursor: 'pointer',
@@ -494,7 +494,7 @@ export default function MagazinePanel() {
                           <button
                             type="button"
                             onClick={() => setDetailImages((prev) => prev.filter((_, j) => j !== i))}
-                            style={{ fontSize: 10, color: '#aaa', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                            style={{ fontSize: 10, color: '#666', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                           >
                             제거
                           </button>
@@ -531,13 +531,13 @@ export default function MagazinePanel() {
       {view === 'done' && (
         <div style={{ padding: '80px 0', textAlign: 'center' }}>
           <p style={{ fontSize: 32, marginBottom: 16 }}>✦</p>
-          <p style={{ fontSize: 10, letterSpacing: '3px', color: '#c9a96e', fontWeight: 600, marginBottom: 12 }}>
+          <p style={{ fontSize: 10, letterSpacing: '3px', color: '#7a5520', fontWeight: 600, marginBottom: 12 }}>
             COMPLETE
           </p>
           <p style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a', marginBottom: 8 }}>
             등록이 완료되었습니다
           </p>
-          <p style={{ fontSize: 13, color: '#aaa', marginBottom: 36 }}>
+          <p style={{ fontSize: 13, color: '#666', marginBottom: 36 }}>
             매거진이 성공적으로 저장되었습니다.
           </p>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>

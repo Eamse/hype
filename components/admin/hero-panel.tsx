@@ -99,7 +99,7 @@ export default function HeroPanel() {
             style={{
               fontSize: 10,
               letterSpacing: '2px',
-              color: '#c9a96e',
+              color: '#7a5520',
               fontWeight: 600,
               marginBottom: 6,
             }}
@@ -116,14 +116,14 @@ export default function HeroPanel() {
           >
             Hero Images
           </h2>
-          <p style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>
+          <p style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
             Up to {MAX_HERO} images · shown as swipe carousel on main page
           </p>
         </div>
         <span
           style={{
             fontSize: 12,
-            color: '#c9a96e',
+            color: '#7a5520',
             fontWeight: 600,
             background: '#faf7f0',
             border: '1px solid #e8d9b8',
@@ -280,8 +280,8 @@ export default function HeroPanel() {
         >
           {uploading ? 'Uploading...' : '+ Add Images'}
         </button>
-        <span style={{ fontSize: 12, color: '#bbb' }}>
-          JPG, PNG, WEBP, GIF · max 50 MB
+        <span style={{ fontSize: 12, color: '#888' }}>
+          JPG, PNG, WEBP, GIF · max 10 MB
         </span>
       </div>
     </div>

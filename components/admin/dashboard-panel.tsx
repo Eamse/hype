@@ -50,7 +50,7 @@ export default function DashboardPanel({
           style={{
             fontSize: 10,
             letterSpacing: '2px',
-            color: '#c9a96e',
+            color: '#7a5520',
             fontWeight: 600,
             marginBottom: 6,
           }}
@@ -67,8 +67,8 @@ export default function DashboardPanel({
         >
           Dashboard
         </h2>
-        <p style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>
-          사이트 현황을 한눈에 확인하세요.
+        <p style={{ fontSize: 12, color: '#888', marginTop: 4 }}>
+          Get a quick overview of your site.
         </p>
       </div>
 
@@ -140,7 +140,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#c9a96e',
+                  color: '#7a5520',
                   fontWeight: 700,
                   letterSpacing: '1.5px',
                   marginBottom: 12,
@@ -176,7 +176,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#c9a96e',
+                  color: '#7a5520',
                   fontWeight: 700,
                   letterSpacing: '1.5px',
                   marginBottom: 12,
@@ -212,7 +212,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#c9a96e',
+                  color: '#7a5520',
                   fontWeight: 700,
                   letterSpacing: '1.5px',
                   marginBottom: 12,
@@ -254,7 +254,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#c9a96e',
+                  color: '#7a5520',
                   fontWeight: 700,
                   letterSpacing: '2px',
                   marginBottom: 4,
@@ -313,7 +313,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#c9a96e',
+                  color: '#7a5520',
                   fontWeight: 700,
                   letterSpacing: '2px',
                   marginBottom: 4,
@@ -378,7 +378,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#c9a96e',
+                  color: '#7a5520',
                   fontWeight: 700,
                   letterSpacing: '2px',
                 }}
@@ -450,7 +450,7 @@ export default function DashboardPanel({
                         textAlign: 'right',
                         fontSize: 16,
                         fontWeight: 700,
-                        color: '#c9a96e',
+                        color: '#7a5520',
                       }}
                     >
                       {p._count.id}

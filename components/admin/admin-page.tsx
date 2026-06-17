@@ -126,52 +126,101 @@ export default function AdminPage() {
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: '#f9f8f6',
+        background: 'linear-gradient(135deg, #f5e6e8 0%, #e8d5d8 30%, #d4b8c7 60%, #c9a0b4 100%)',
         fontFamily: "'Pretendard', -apple-system, sans-serif",
         display: 'flex',
         flexDirection: 'column',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
       <style>{`
         @keyframes spin { to { transform: rotate(360deg) } }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        input:focus { border-color: #c9a96e !important; box-shadow: 0 0 0 3px rgba(201,169,110,0.12) !important; }
+        input:focus { border-color: #c9956a !important; box-shadow: 0 0 0 3px rgba(201,149,106,0.18) !important; }
         button:disabled { opacity: 0.4; cursor: not-allowed; }
-        .admin-menu-btn:hover { background: #faf7f2 !important; }
+        .admin-menu-btn:hover { background: rgba(201,149,106,0.12) !important; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(180,120,140,0.35); border-radius: 4px; }
       `}</style>
+
+      {/* 정적 하트 데코 */}
+      {[
+        { top: '8%',  left: '4%',   size: 32, color: 'rgba(220,60,100,0.5)'  },
+        { top: '15%', right: '6%',  size: 20, color: 'rgba(200,80,130,0.45)' },
+        { top: '65%', left: '3%',   size: 26, color: 'rgba(230,90,140,0.5)'  },
+        { top: '72%', right: '5%',  size: 40, color: 'rgba(180,40,90,0.45)'  },
+        { top: '42%', right: '2%',  size: 16, color: 'rgba(215,70,115,0.5)'  },
+        { top: '3%',  left: '48%',  size: 13, color: 'rgba(240,100,150,0.45)'},
+        { top: '52%', left: '1%',   size: 18, color: 'rgba(190,50,95,0.5)'   },
+        { top: '88%', left: '38%',  size: 14, color: 'rgba(225,80,125,0.45)' },
+        { top: '30%', left: '7%',   size: 11, color: 'rgba(210,60,110,0.4)'  },
+        { top: '80%', right: '15%', size: 22, color: 'rgba(200,70,120,0.45)' },
+      ].map((h, i) => (
+        <div
+          key={i}
+          style={{
+            position: 'absolute',
+            top: h.top,
+            left: 'left' in h ? h.left : undefined,
+            right: 'right' in h ? h.right : undefined,
+            width: h.size,
+            height: h.size,
+            pointerEvents: 'none',
+            zIndex: 0,
+          }}
+        >
+          <svg viewBox="0 0 24 24" fill={h.color} xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </div>
+      ))}
+
+      {/* 대각선 라인 패턴 */}
+      <div style={{ position: 'absolute', inset: 0, backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(184,134,90,0.12) 40px, rgba(184,134,90,0.12) 41px)`, pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'absolute', inset: 0, backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 80px, rgba(201,149,106,0.07) 80px, rgba(201,149,106,0.07) 81px)`, pointerEvents: 'none', zIndex: 0 }} />
+
+      {/* 정적 블러 오브 */}
+      <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(210,120,150,0.55) 0%, transparent 65%)', pointerEvents: 'none', filter: 'blur(60px)', zIndex: 0 }} />
+      <div style={{ position: 'absolute', bottom: '-15%', right: '-8%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,130,80,0.45) 0%, transparent 65%)', pointerEvents: 'none', filter: 'blur(70px)', zIndex: 0 }} />
+      <div style={{ position: 'absolute', top: '35%', left: '60%', width: 350, height: 350, borderRadius: '50%', background: 'radial-gradient(circle, rgba(230,140,170,0.5) 0%, transparent 65%)', pointerEvents: 'none', filter: 'blur(50px)', zIndex: 0 }} />
 
       {/* 탑바 */}
       <header
         style={{
-          height: 100,
-          backgroundColor: '#fff',
-          borderBottom: '1px solid #e8e0d0',
+          height: 64,
+          backgroundColor: 'rgba(255,255,255,0.7)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(201,149,106,0.2)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           padding: '0 36px',
           flexShrink: 0,
-          boxShadow: '0 1px 0 rgba(201,169,110,0.15)',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span
             style={{
               fontWeight: 800,
-              fontSize: 18,
+              fontSize: 16,
               letterSpacing: '2.5px',
-              color: '#1a1a1a',
+              color: '#3a1a2a',
             }}
           >
             HYPE WEDDING
           </span>
-          <span style={{ width: 1, height: 18, background: '#ddd' }} />
+          <span style={{ width: 1, height: 16, background: 'rgba(180,120,140,0.3)' }} />
           <span
             style={{
-              fontSize: 14,
-              color: '#c9a96e',
-              letterSpacing: '1px',
-              fontWeight: 600,
+              fontSize: 10,
+              color: '#c9956a',
+              letterSpacing: '2px',
+              fontWeight: 700,
             }}
           >
             ADMIN
@@ -180,15 +229,15 @@ export default function AdminPage() {
         <button
           onClick={logout}
           style={{
-            fontSize: 14,
-            color: '#ef4444',
+            fontSize: 13,
+            color: '#e05555',
             display: 'flex',
             alignItems: 'center',
             gap: 6,
-            padding: '10px 20px',
-            border: '1px solid #fecaca',
+            padding: '8px 18px',
+            border: '1px solid rgba(220,80,80,0.25)',
             borderRadius: 8,
-            background: 'none',
+            background: 'rgba(220,80,80,0.07)',
             cursor: 'pointer',
             fontFamily: 'inherit',
             fontWeight: 600,
@@ -198,14 +247,16 @@ export default function AdminPage() {
         </button>
       </header>
 
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative', zIndex: 1 }}>
         {/* 사이드바 */}
         <aside
           style={{
-            width: 250,
-            backgroundColor: '#fff',
-            borderRight: '1px solid #e8e0d0',
-            padding: '28px 0',
+            width: 240,
+            backgroundColor: 'rgba(255,255,255,0.6)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            borderRight: '1px solid rgba(201,149,106,0.2)',
+            padding: '24px 0',
             flexShrink: 0,
             display: 'flex',
             flexDirection: 'column',
@@ -214,11 +265,11 @@ export default function AdminPage() {
           {admin && (
             <div
               style={{
-                margin: '0 20px 24px',
+                margin: '0 16px 24px',
                 padding: '14px 16px',
-                background: '#faf7f2',
+                background: 'rgba(255,255,255,0.6)',
                 borderRadius: 10,
-                border: '1px solid red',
+                border: '1px solid rgba(201,149,106,0.25)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 10,
@@ -229,7 +280,7 @@ export default function AdminPage() {
                   width: 32,
                   height: 32,
                   borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #c9a96e, #b8965a)',
+                  background: 'linear-gradient(135deg, #c9956a, #b8865a)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -249,13 +300,13 @@ export default function AdminPage() {
                 </svg>
               </div>
               <div>
-                <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a' }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a' }}>
                   {admin.loginId}님 환영해용 🩷
                 </p>
                 <p
                   style={{
                     fontSize: 11,
-                    color: '#c9a96e',
+                    color: '#c9956a',
                     marginTop: 2,
                     textTransform: 'uppercase',
                     letterSpacing: '1px',
@@ -268,12 +319,12 @@ export default function AdminPage() {
           )}
           <p
             style={{
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: 700,
-              color: '#c9a96e',
+              color: '#b08898',
               letterSpacing: '2px',
-              padding: '0 20px',
-              marginBottom: 12,
+              padding: '0 16px',
+              marginBottom: 8,
             }}
           >
             SECTIONS
@@ -286,9 +337,9 @@ export default function AdminPage() {
                 {i > 0 && (
                   <div
                     style={{
-                      margin: '0 20px',
+                      margin: '0 16px',
                       height: 1,
-                      background: '#f0ebe0',
+                      background: 'rgba(180,120,140,0.15)',
                     }}
                   />
                 )}
@@ -298,10 +349,10 @@ export default function AdminPage() {
                   style={{
                     width: '100%',
                     textAlign: 'left',
-                    padding: '18px 20px',
-                    background: isActive ? '#faf7f2' : 'transparent',
+                    padding: '14px 16px',
+                    background: isActive ? 'rgba(201,149,106,0.15)' : 'transparent',
                     border: 'none',
-                    borderLeft: `2px solid ${isActive ? '#c9a96e' : 'transparent'}`,
+                    borderLeft: `2px solid ${isActive ? '#c9956a' : 'transparent'}`,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -311,7 +362,7 @@ export default function AdminPage() {
                 >
                   <span
                     style={{
-                      color: isActive ? '#c9a96e' : '#bbb',
+                      color: isActive ? '#c9956a' : '#b08898',
                       display: 'flex',
                     }}
                   >
@@ -319,9 +370,9 @@ export default function AdminPage() {
                   </span>
                   <span
                     style={{
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: isActive ? 600 : 400,
-                      color: isActive ? '#1a1a1a' : '#777',
+                      color: isActive ? '#3a1a2a' : '#7a5060',
                       letterSpacing: '0.1px',
                     }}
                   >
@@ -333,16 +384,16 @@ export default function AdminPage() {
           })}
 
           <div
-            style={{ margin: '0 20px 16px', borderTop: '1px solid #f0ebe0' }}
+            style={{ margin: '16px 16px', borderTop: '1px solid rgba(180,120,140,0.2)' }}
           />
 
           <p
             style={{
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: 700,
-              color: '#c9a96e',
+              color: '#b08898',
               letterSpacing: '2px',
-              padding: '0 20px',
+              padding: '0 16px',
               marginBottom: 8,
             }}
           >
@@ -354,13 +405,13 @@ export default function AdminPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 10,
-              padding: '10px 20px',
-              fontSize: 15,
-              color: '#777',
+              padding: '10px 16px',
+              fontSize: 14,
+              color: '#7a5060',
               textDecoration: 'none',
             }}
           >
-            <span style={{ fontSize: 13, color: '#bbb' }}>↗</span>
+            <span style={{ fontSize: 13, color: '#b08898' }}>↗</span>
             View Site
           </Link>
         </aside>
@@ -370,18 +421,15 @@ export default function AdminPage() {
           style={{
             flex: 1,
             overflowY: 'auto',
-            padding: '40px 48px',
-            backgroundColor: '#f9f8f6',
+            padding: '36px 44px',
           }}
         >
-          {/* 콘텐츠 상단 골드 라인 */}
           <div
             style={{
-              height: 2,
-              background: 'linear-gradient(90deg, #c9a96e, #e8d5a3, #c9a96e)',
-              borderRadius: 2,
+              height: 1,
+              background: 'linear-gradient(90deg, transparent, #c9956a, #e8b88a, #c9956a, transparent)',
               marginBottom: 36,
-              opacity: 0.5,
+              opacity: 0.6,
             }}
           />
           {active === 'dashboard' && (

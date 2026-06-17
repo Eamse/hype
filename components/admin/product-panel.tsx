@@ -137,11 +137,11 @@ export default function ProductPanel({
         }}
       >
         <div>
-          <p style={{ fontSize: 10, letterSpacing: '2px', color: '#c9a96e', fontWeight: 600, marginBottom: 6 }}>
+          <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>
             PRODUCTS
           </p>
           <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', letterSpacing: '-0.3px' }}>{label}</h2>
-          <p style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>
+          <p style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
             {products.length} {isSlides ? 'slides' : 'products'}
           </p>
         </div>
@@ -171,7 +171,7 @@ export default function ProductPanel({
             boxShadow: '0 2px 12px rgba(201,169,110,0.08)',
           }}
         >
-          <p style={{ fontSize: 11, fontWeight: 700, color: '#c9a96e', letterSpacing: '2px', textTransform: 'uppercase' }}>
+          <p style={{ fontSize: 11, fontWeight: 700, color: '#7a5520', letterSpacing: '2px', textTransform: 'uppercase' }}>
             {isSlides ? 'New Slide' : 'New Product'}
           </p>
           {addError && (
