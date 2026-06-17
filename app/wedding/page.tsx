@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
 import SnsSidebar from '@/components/sns-sidebar';
