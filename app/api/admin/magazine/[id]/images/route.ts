@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { uploadToR2, deleteFileFromR2 } from '@/lib/r2';
+import { getAdminId } from '@/lib/admin-auth';
 import sharp from 'sharp';
 
 const { R2_PUBLIC_BASE_URL } = process.env;
@@ -16,6 +17,11 @@ export async function POST(
   request: NextRequest,
   props: { params: Promise<{ id: string }> },
 ) {
+  const adminId = await getAdminId(request);
+  if (!adminId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const { id } = await props.params;
   const idNum = parseId(id);
   if (idNum === null) {
@@ -56,6 +62,11 @@ export async function DELETE(
   request: NextRequest,
   props: { params: Promise<{ id: string }> },
 ) {
+  const adminId = await getAdminId(request);
+  if (!adminId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const { id } = await props.params;
   const idNum = parseId(id);
   if (idNum === null) {

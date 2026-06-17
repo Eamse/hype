@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getAdminId } from '@/lib/admin-auth';
 
 // GET /api/admin/magazine — 전체 목록 (임시저장 포함)
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const adminId = await getAdminId(request);
+  if (!adminId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   try {
     const magazines = await prisma.magazine.findMany({
       orderBy: { createdAt: 'desc' },
@@ -19,6 +25,11 @@ export async function GET() {
 
 // POST /api/admin/magazine — 글 생성
 export async function POST(request: NextRequest) {
+  const adminId = await getAdminId(request);
+  if (!adminId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();

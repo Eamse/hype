@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getAdminId } from '@/lib/admin-auth';
 
 function parseId(id: string): number | null {
   const n = Number(id);
@@ -38,6 +39,11 @@ export async function GET(_: NextRequest, props: { params: Promise<{ id: string 
 
 // PATCH /api/products/[id]
 export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const adminId = await getAdminId(request);
+  if (!adminId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const { id } = await props.params;
   const idNum = parseId(id);
   if (idNum === null) {
@@ -112,7 +118,12 @@ export async function PATCH(request: NextRequest, props: { params: Promise<{ id:
 }
 
 // DELETE /api/products/[id]
-export async function DELETE(_: NextRequest, props: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const adminId = await getAdminId(request);
+  if (!adminId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const { id } = await props.params;
   const idNum = parseId(id);
   if (idNum === null) {

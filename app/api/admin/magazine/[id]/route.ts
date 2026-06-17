@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getAdminId } from '@/lib/admin-auth';
 
 function parseId(id: string): number | null {
   const n = Number(id);
@@ -18,9 +19,14 @@ function isPrismaNotFound(e: unknown): boolean {
 
 // GET /api/admin/magazine/[id] — 단건 조회 (임시저장 포함)
 export async function GET(
-  _: NextRequest,
+  request: NextRequest,
   props: { params: Promise<{ id: string }> },
 ) {
+  const adminId = await getAdminId(request);
+  if (!adminId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const { id } = await props.params;
   const idNum = parseId(id);
   if (idNum === null) {
@@ -53,6 +59,11 @@ export async function PATCH(
   request: NextRequest,
   props: { params: Promise<{ id: string }> },
 ) {
+  const adminId = await getAdminId(request);
+  if (!adminId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const { id } = await props.params;
   const idNum = parseId(id);
   if (idNum === null) {
@@ -135,9 +146,14 @@ export async function PATCH(
 
 // DELETE /api/admin/magazine/[id] — 삭제
 export async function DELETE(
-  _: NextRequest,
+  request: NextRequest,
   props: { params: Promise<{ id: string }> },
 ) {
+  const adminId = await getAdminId(request);
+  if (!adminId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const { id } = await props.params;
   const idNum = parseId(id);
   if (idNum === null) {

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getAdminId } from '@/lib/admin-auth';
 
 const ALLOWED_SECTIONS = new Set([
   'Meet our Photographers in Jeju',
@@ -29,6 +30,11 @@ export async function GET(request: NextRequest) {
 
 // POST /api/products
 export async function POST(request: NextRequest) {
+  const adminId = await getAdminId(request);
+  if (!adminId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();
