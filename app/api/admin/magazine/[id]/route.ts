@@ -46,7 +46,10 @@ export async function GET(
         { status: 404 },
       );
     }
-    console.error('[GET /api/admin/magazine/:id]', e);
+    console.error(
+      '[GET /api/admin/magazine/:id]',
+      e instanceof Error ? e.message : e,
+    );
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },
@@ -136,7 +139,10 @@ export async function PATCH(
         { status: 404 },
       );
     }
-    console.error('[PATCH /api/admin/magazine/:id]', e);
+    console.error(
+      '[PATCH /api/admin/magazine/:id]',
+      e instanceof Error ? e.message : e,
+    );
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },
@@ -170,7 +176,10 @@ export async function DELETE(
         { status: 404 },
       );
     }
-    console.error('[DELETE /api/admin/magazine/:id]', e);
+    console.error(
+      '[DELETE /api/admin/magazine/:id]',
+      e instanceof Error ? e.message : e,
+    );
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },

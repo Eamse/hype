@@ -102,7 +102,10 @@ export async function DELETE(
     ) {
       return NextResponse.json({ error: 'Image not found' }, { status: 404 });
     }
-    console.error('[DELETE /api/admin/magazine/:id/images]', e);
+    console.error(
+      '[DELETE /api/admin/magazine/:id/images]',
+      e instanceof Error ? e.message : e,
+    );
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },

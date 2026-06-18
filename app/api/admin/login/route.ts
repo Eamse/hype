@@ -44,10 +44,10 @@ export async function POST(request: NextRequest) {
 
   const response = NextResponse.json({ ok: true });
   response.cookies.set('admin_token', token, {
-    httpOnly: true, // JS에서 접근 불가 (XSS 방어)
+    httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 2, // 2시간
+    sameSite: 'strict',
+    maxAge: 60 * 60 * 2,
     path: '/',
   });
   return response;

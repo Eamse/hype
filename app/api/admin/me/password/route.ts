@@ -44,5 +44,16 @@ export async function PATCH(request: NextRequest) {
     data: { password: hashed },
   });
 
-  return NextResponse.json({ ok: true });
+  // 비밀번호 변경 후 기존 토큰 무효화 — 재로그인 강제
+  const response = NextResponse.json({ ok: true });
+  response.cookies.set({
+    name: 'admin_token',
+    value: '',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 0,
+  });
+  return response;
 }

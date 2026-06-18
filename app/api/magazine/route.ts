@@ -9,7 +9,7 @@ export async function GET() {
     });
     return NextResponse.json(magazine);
   } catch (e) {
-    console.error(e);
+    console.error('[GET /api/products]', e instanceof Error ? e.message : e);
     return NextResponse.json({ error: 'No result found' }, { status: 500 });
   }
 }

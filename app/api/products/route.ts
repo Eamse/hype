@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
     });
     return NextResponse.json(product, { status: 201 });
   } catch (e) {
-    console.error('[POST /api/products]', e);
+    console.error('[POST /api/products]', e instanceof Error ? e.message : e);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },

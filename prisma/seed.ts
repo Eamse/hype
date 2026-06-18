@@ -1,13 +1,13 @@
 import { PrismaClient } from '../app/generated/prisma/client';
-import { PrismaNeonHttp } from '@prisma/adapter-neon';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcryptjs';
 import { config } from 'dotenv';
 
 config();
 
-const raw = process.env.DATABASE_URL ?? '';
-const connectionString = raw.replace(/[?&]channel_binding=[^&]*/g, '').replace(/\?$/, '');
-const adapter = new PrismaNeonHttp(connectionString, {});
+const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter } as never);
 
 // 마스터 계정 목록 (.env에서 비밀번호 주입)
@@ -22,7 +22,7 @@ async function main() {
     // .env에 비밀번호 없으면 스킵
     if (!master.password) {
       console.error(`❌ ${master.loginId}: .env에 비밀번호 없음`);
-      continue;
+      process.exit(1);
     }
 
     // bcrypt 해시 강도 12 (보안/성능 균형점)

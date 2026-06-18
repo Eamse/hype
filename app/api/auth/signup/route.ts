@@ -20,36 +20,40 @@ export async function POST(req: NextRequest) {
 
   if (!email || !password) {
     return NextResponse.json(
-      {
-        success: false,
-        message: 'email and password are required',
-      },
+      { success: false, message: 'email and password are required' },
       { status: 400 },
     );
   }
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return NextResponse.json({ success: false, message: 'Invalid email' }, { status: 400 });
+  }
 
-  if (existing)
+  if (typeof password !== 'string' || password.length < 8) {
     return NextResponse.json(
-      { success: false, message: 'This email is already registered' },
+      { success: false, message: 'Password must be at least 8 characters' },
       { status: 400 },
     );
+  }
 
   try {
     const hashedPassword = await bcrypt.hash(password, 12);
     await prisma.user.create({
-      data: { email, password: hashedPassword },
+      data: { email: email.toLowerCase().trim(), password: hashedPassword },
     });
     return NextResponse.json(
       { success: true, message: 'Account created successfully' },
       { status: 201 },
     );
   } catch (error) {
-    console.error(error, 'Server Error');
-    return NextResponse.json(
-      { success: false, message: 'Server error' },
-      { status: 500 },
-    );
+    // P2002 = unique constraint (이메일 중복) — 동일 응답으로 이메일 열거 방지
+    if (error instanceof Error && 'code' in error && (error as { code: string }).code === 'P2002') {
+      return NextResponse.json(
+        { success: true, message: 'Account created successfully' },
+        { status: 201 },
+      );
+    }
+    console.error('Signup error');
+    return NextResponse.json({ success: false, message: 'Server error' }, { status: 500 });
   }
 }

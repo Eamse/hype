@@ -15,7 +15,10 @@ export async function GET(request: NextRequest) {
     });
     return NextResponse.json(magazines);
   } catch (e) {
-    console.error('[GET /api/admin/magazine]', e);
+    console.error(
+      '[GET /api/admin/magazine]',
+      e instanceof Error ? e.message : e,
+    );
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },
@@ -64,7 +67,10 @@ export async function POST(request: NextRequest) {
     });
     return NextResponse.json(magazine, { status: 201 });
   } catch (e) {
-    console.error('[POST /api/admin/magazine]', e);
+    console.error(
+      '[POST /api/admin/magazine]',
+      e instanceof Error ? e.message : e,
+    );
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },

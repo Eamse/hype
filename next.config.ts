@@ -2,9 +2,11 @@ import type { NextConfig } from 'next';
 
 const R2_HOST = 'pub-c271b5fcdcc34eca9be592092db31905.r2.dev';
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const CSP = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
   "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
   `img-src 'self' data: blob: https://${R2_HOST} https://lh3.googleusercontent.com`,
   "font-src 'self' data: https://cdn.jsdelivr.net",

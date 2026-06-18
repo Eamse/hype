@@ -58,8 +58,10 @@ async function readAllImages(): Promise<Record<string, string[]>> {
   return result;
 }
 
-// GET /api/images — 전체 이미지 맵 반환
-export async function GET() {
+// GET /api/images — 전체 이미지 맵 반환 (어드민 전용)
+export async function GET(request: NextRequest) {
+  const adminId = await getAdminId(request);
+  if (!adminId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const images = await readAllImages();
   return NextResponse.json(images);
 }
@@ -123,7 +125,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const filename = `${key}_${Date.now()}.webp`;
+  const filename = `${key}_${crypto.randomUUID()}.webp`;
 
   let compress: Buffer;
   try {

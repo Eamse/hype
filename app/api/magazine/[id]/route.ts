@@ -39,7 +39,10 @@ export async function GET(
     if (isPrismaNotFound(e)) {
       return NextResponse.json({ error: 'Page not found' }, { status: 404 });
     }
-    console.error('[GET /api/magazine/:id]', e);
+    console.error(
+      '[GET /api/magazine/:id]',
+      e instanceof Error ? e.message : e,
+    );
     return NextResponse.json(
       { error: 'internal server error' },
       { status: 500 },
