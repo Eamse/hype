@@ -165,7 +165,7 @@ function StepCard({
   num: number;
 }) {
   return (
-    <div style={{ flex: 1, minWidth: 0 }}>
+    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
         {step.icon}
         {step.tag && (
@@ -191,7 +191,7 @@ function StepCard({
       >
         STEP {num} | {step.title}
       </p>
-      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+      <ul style={{ listStyle: 'none', padding: 0, margin: '0 auto', width: 'fit-content' }}>
         {step.bullets.map((b) => (
           <li
             key={b}
