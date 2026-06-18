@@ -1,12 +1,12 @@
 'use client';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useState, useEffect, useRef } from 'react';
 
 // ── Google Form URLs ──────────────────────────────────────────────
 const WEDDING_FORM_URL = 'https://forms.gle/3sWqu4NED5ruJEnN9'; // 웨딩
 const SNAP_FORM_URL = 'https://forms.gle/3sWqu4NED5ruJEnN9'; // 스냅
 
-// ── 프로세스 데이터 ───────────────────────────────────────────────
 const STEPS = [
   {
     icon: <InquiryIcon />,
@@ -155,23 +155,6 @@ function ChevronRight() {
     </svg>
   );
 }
-function ArrowIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="5" y1="12" x2="19" y2="12" />
-      <polyline points="12 5 19 12 12 19" />
-    </svg>
-  );
-}
 
 // ── 스텝 카드 ─────────────────────────────────────────────────────
 function StepCard({
@@ -186,18 +169,18 @@ function StepCard({
       <div style={{ marginBottom: 16 }}>{step.icon}</div>
       <p
         style={{
-          fontSize: 15,
+          fontSize: 18,
           fontWeight: 800,
           color: '#191919',
-          marginBottom: 10,
+          marginBottom: 12,
           lineHeight: 1.3,
         }}
       >
-        STEP {num} | <span style={{ fontWeight: 800 }}>{step.title}</span>
+        STEP {num} | {step.title}
         {step.tag && (
           <span
             style={{
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: 600,
               color: '#888',
               marginLeft: 6,
@@ -212,15 +195,15 @@ function StepCard({
           <li
             key={b}
             style={{
-              fontSize: 13,
+              fontSize: 16,
               color: '#555',
-              lineHeight: 1.8,
+              lineHeight: 1.9,
               display: 'flex',
               alignItems: 'flex-start',
-              gap: 6,
+              gap: 8,
             }}
           >
-            <span style={{ marginTop: 2, flexShrink: 0 }}>•</span>
+            <span style={{ marginTop: 3, flexShrink: 0 }}>•</span>
             {b}
           </li>
         ))}
@@ -233,13 +216,71 @@ function StepCard({
 export default function InquiryClient() {
   const isMobile = useIsMobile();
 
+  // B) 타이핑 효과
+  const FULL_TEXT = 'INQUIRY';
+  const [typed, setTyped] = useState('');
+  useEffect(() => {
+    let i = 0;
+    const timer = setInterval(() => {
+      i++;
+      setTyped(FULL_TEXT.slice(0, i));
+      if (i >= FULL_TEXT.length) clearInterval(timer);
+    }, 110);
+    return () => clearInterval(timer);
+  }, []);
+
+  // D) 버튼 hover
+  const [hovered, setHovered] = useState<'wedding' | 'snap' | null>(null);
+
+  // A) 히어로 섹션 fade-up
+  const heroRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const items = el.querySelectorAll('.inquiry-fade-up');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      },
+      { threshold: 0.1 },
+    );
+    items.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
+
+  // A+C) 스텝 섹션 순차 등장
+  const stepsRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = stepsRef.current;
+    if (!el) return;
+    const cards = el.querySelectorAll('.inquiry-step');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            cards.forEach((card, idx) => {
+              setTimeout(() => card.classList.add('visible'), idx * 150);
+            });
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.15 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const row1 = STEPS.slice(0, 3);
   const row2 = STEPS.slice(3, 5);
 
   return (
     <>
-      {/* ── 히어로: 타이틀 + 버튼 ── */}
+      {/* ── 히어로 ── */}
       <section
+        ref={heroRef}
         style={{
           minHeight: isMobile ? '20vh' : '30vh',
           display: 'flex',
@@ -247,11 +288,13 @@ export default function InquiryClient() {
           alignItems: 'center',
           justifyContent: 'center',
           textAlign: 'center',
-          padding: isMobile ? '10px 24px' : '10px 40px',
+          padding: isMobile ? '60px 24px' : '80px 40px',
           borderBottom: '1px solid #e8e8e8',
         }}
       >
+        {/* 서브 레이블 */}
         <p
+          className="inquiry-fade-up"
           style={{
             fontSize: 12,
             fontWeight: 700,
@@ -259,10 +302,13 @@ export default function InquiryClient() {
             textTransform: 'uppercase',
             color: '#999',
             marginBottom: 20,
+            animationDelay: '0.1s',
           }}
         >
           Book Your Session
         </p>
+
+        {/* B) 타이핑 타이틀 */}
         <h1
           style={{
             fontSize: isMobile ? 48 : 80,
@@ -271,17 +317,32 @@ export default function InquiryClient() {
             color: '#191919',
             lineHeight: 1,
             marginBottom: 20,
+            minWidth: isMobile ? 240 : 420,
           }}
         >
-          INQUIRY
+          {typed}
+          <span
+            className="cursor-blink"
+            style={{
+              display: 'inline-block',
+              width: 3,
+              height: isMobile ? 44 : 72,
+              backgroundColor: '#191919',
+              marginLeft: 4,
+              verticalAlign: 'middle',
+            }}
+          />
         </h1>
+
         <p
+          className="inquiry-fade-up"
           style={{
             fontSize: isMobile ? 14 : 16,
             color: '#777',
             lineHeight: 1.7,
             maxWidth: 480,
             marginBottom: 48,
+            animationDelay: '0.8s',
           }}
         >
           Choose your session type and fill out the form.
@@ -289,26 +350,32 @@ export default function InquiryClient() {
           We will be in touch within 1–2 business days.
         </p>
 
+        {/* D) hover 버튼 */}
         <div
+          className="inquiry-fade-up"
           style={{
             display: 'flex',
             flexDirection: isMobile ? 'column' : 'row',
             gap: 16,
             width: isMobile ? '100%' : 'auto',
+            animationDelay: '1s',
           }}
         >
           <a
             href={WEDDING_FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
+            onMouseEnter={() => setHovered('wedding')}
+            onMouseLeave={() => setHovered(null)}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: 10,
               padding: isMobile ? '18px 32px' : '20px 48px',
-              backgroundColor: '#191919',
-              color: '#fff',
+              backgroundColor: hovered === 'wedding' ? '#fff' : '#191919',
+              color: hovered === 'wedding' ? '#191919' : '#fff',
+              border: '1.5px solid #191919',
               fontSize: 14,
               fontWeight: 700,
               letterSpacing: '1.5px',
@@ -316,33 +383,63 @@ export default function InquiryClient() {
               borderRadius: 4,
               textDecoration: 'none',
               width: isMobile ? '100%' : 'auto',
+              transition: 'background-color 0.25s ease, color 0.25s ease',
             }}
           >
-            HYPE WEDDING <ArrowIcon />
+            HYPE WEDDING
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
           </a>
           <a
             href={SNAP_FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
+            onMouseEnter={() => setHovered('snap')}
+            onMouseLeave={() => setHovered(null)}
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
               gap: 10,
               padding: isMobile ? '18px 32px' : '20px 48px',
-              backgroundColor: '#fff',
-              color: '#191919',
+              backgroundColor: hovered === 'snap' ? '#191919' : '#fff',
+              color: hovered === 'snap' ? '#fff' : '#191919',
+              border: '1.5px solid #191919',
               fontSize: 14,
               fontWeight: 700,
               letterSpacing: '1.5px',
               textTransform: 'uppercase',
               borderRadius: 4,
-              border: '1.5px solid #191919',
               textDecoration: 'none',
               width: isMobile ? '100%' : 'auto',
+              transition: 'background-color 0.25s ease, color 0.25s ease',
             }}
           >
-            HYPE SNAP <ArrowIcon />
+            HYPE SNAP
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+              <polyline points="12 5 19 12 12 19" />
+            </svg>
           </a>
         </div>
       </section>
@@ -350,11 +447,12 @@ export default function InquiryClient() {
       {/* ── HOW IT WORKS ── */}
       <section
         style={{
-          // backgroundColor: '#f5f5f5',
-          padding: isMobile ? '60px 24px 80px' : '80px 60px 100px',
+          backgroundColor: '#f5f5f5',
+          padding: isMobile ? '20px 24px 80px' : '20px 60px 100px',
         }}
       >
         <p
+          className="inquiry-fade-up"
           style={{
             fontSize: 12,
             fontWeight: 700,
@@ -368,20 +466,22 @@ export default function InquiryClient() {
           Booking Process
         </p>
         <h2
+          className="inquiry-fade-up"
           style={{
             fontSize: isMobile ? 28 : 36,
             fontWeight: 800,
             color: '#191919',
             textAlign: 'center',
-            marginBottom: isMobile ? 48 : 64,
             letterSpacing: '-0.5px',
+            animationDelay: '0.15s',
           }}
         >
           How It Works
         </h2>
 
-        {/* 1행: step 1~3 */}
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+        {/* C) 스텝 순차 등장 */}
+        <div ref={stepsRef} style={{ maxWidth: 1100, margin: '0 auto' }}>
+          {/* 1행 */}
           <div
             style={{
               display: 'flex',
@@ -394,11 +494,13 @@ export default function InquiryClient() {
             {row1.map((step, idx) => (
               <div
                 key={step.title}
+                className="inquiry-step"
                 style={{
                   display: 'flex',
                   flex: 1,
                   alignItems: 'flex-start',
                   minWidth: 0,
+                  transitionDelay: `${idx * 0.15}s`,
                 }}
               >
                 <StepCard step={step} num={idx + 1} />
@@ -413,7 +515,7 @@ export default function InquiryClient() {
             ))}
           </div>
 
-          {/* 2행: step 4~5 (데스크탑에서 가운데 정렬) */}
+          {/* 2행 */}
           <div
             style={{
               display: 'flex',
@@ -427,11 +529,13 @@ export default function InquiryClient() {
             {row2.map((step, idx) => (
               <div
                 key={step.title}
+                className="inquiry-step"
                 style={{
                   display: 'flex',
                   flex: isMobile ? 1 : '0 0 calc(33.33% + 28px)',
                   alignItems: 'flex-start',
                   minWidth: 0,
+                  transitionDelay: `${(idx + 3) * 0.15}s`,
                 }}
               >
                 <StepCard step={step} num={idx + 4} />

@@ -372,9 +372,7 @@ function FaqItem({
           maxHeight: isOpen ? '2000px' : '0',
           opacity: isOpen ? 1 : 0,
           overflow: 'hidden',
-          transition: isOpen
-            ? 'max-height 0.4s ease, opacity 0.3s ease'
-            : 'max-height 0.4s ease, opacity 0.3s ease',
+          transition: 'max-height 0.35s ease, opacity 0.25s ease',
         }}
       >
         <div style={{ padding: '0 36px 32px' }}>
@@ -454,8 +452,22 @@ export default function FaqClient() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [tabFade, setTabFade] = useState({ left: false, right: true });
+  const [hoveredTab, setHoveredTab] = useState<string | null>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
+
+  // B) 타이핑
+  const [typed, setTyped] = useState('');
+  useEffect(() => {
+    let i = 0;
+    const timer = setInterval(() => {
+      i++;
+      setTyped('FAQ'.slice(0, i));
+      if (i >= 3) clearInterval(timer);
+    }, 180);
+    return () => clearInterval(timer);
+  }, []);
 
   function checkTabFade() {
     const el = tabsRef.current;
@@ -471,6 +483,29 @@ export default function FaqClient() {
     window.addEventListener('resize', checkTabFade);
     return () => window.removeEventListener('resize', checkTabFade);
   }, []);
+
+  // A) 타이틀 영역 fade-up
+  const headerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    el.querySelectorAll('.inquiry-fade-up').forEach((item, idx) => {
+      setTimeout(() => item.classList.add('visible'), idx * 120);
+    });
+  }, []);
+
+  // C) 아코디언 아이템 순차 등장 (카테고리 바뀔 때마다)
+  useEffect(() => {
+    const el = listRef.current;
+    if (!el) return;
+    const items = el.querySelectorAll('.faq-item-animate');
+    items.forEach((item) => item.classList.remove('visible'));
+    requestAnimationFrame(() => {
+      items.forEach((item, idx) => {
+        setTimeout(() => item.classList.add('visible'), idx * 80);
+      });
+    });
+  }, [activeCategory, searchQuery]);
 
   const isSearching = searchQuery.trim().length > 0;
   const displayItems = (
@@ -489,6 +524,7 @@ export default function FaqClient() {
     <>
       {/* ── FAQ 타이틀 + 검색 ── */}
       <div
+        ref={headerRef}
         style={{
           maxWidth: 1200,
           margin: '0 auto',
@@ -500,17 +536,21 @@ export default function FaqClient() {
         }}
       >
         <h1
+          className="inquiry-fade-up"
           style={{
             fontSize: isMobile ? 52 : 72,
             fontWeight: 900,
             letterSpacing: '-2px',
             color: '#191919',
             lineHeight: 1,
+            minWidth: isMobile ? 120 : 180,
           }}
         >
-          FAQ
+          {typed}
+          <span className="cursor-blink" style={{ display: 'inline-block', width: 3, height: isMobile ? 44 : 60, backgroundColor: '#191919', marginLeft: 3, verticalAlign: 'middle' }} />
         </h1>
         <div
+          className="inquiry-fade-up"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -519,6 +559,7 @@ export default function FaqClient() {
             paddingBottom: 4,
             flexShrink: 0,
             width: isMobile ? 160 : 240,
+            animationDelay: '0.3s',
           }}
         >
           <input
@@ -610,6 +651,8 @@ export default function FaqClient() {
                       setActiveCategory(cat);
                       setOpenIndex(null);
                     }}
+                    onMouseEnter={() => setHoveredTab(cat)}
+                    onMouseLeave={() => setHoveredTab(null)}
                     style={{
                       flexShrink: 0,
                       padding: isMobile ? '12px 16px' : '14px 24px',
@@ -617,15 +660,16 @@ export default function FaqClient() {
                       fontWeight: 700,
                       letterSpacing: '0.5px',
                       textTransform: 'uppercase',
-                      color: isActive ? '#e8000d' : '#888',
+                      color: isActive ? '#e8000d' : hoveredTab === cat ? '#191919' : '#888',
                       background: 'none',
                       borderTop: 'none',
                       borderLeft: 'none',
                       borderRight: 'none',
                       borderBottom: isActive
                         ? '2px solid #e8000d'
-                        : '2px solid transparent',
+                        : hoveredTab === cat ? '2px solid #191919' : '2px solid transparent',
                       cursor: 'pointer',
+                      transition: 'color 0.2s, border-color 0.2s',
                       whiteSpace: 'nowrap',
                     }}
                   >
@@ -676,6 +720,7 @@ export default function FaqClient() {
 
       {/* ── 아코디언 목록 ── */}
       <div
+        ref={listRef}
         style={{
           maxWidth: 1200,
           margin: '0 auto',
@@ -686,13 +731,14 @@ export default function FaqClient() {
           <p style={{ color: '#999', fontSize: 14 }}>No results found.</p>
         ) : (
           displayItems.map(({ q, a }, idx) => (
-            <FaqItem
-              key={idx}
-              q={q}
-              a={a}
-              isOpen={openIndex === idx}
-              onToggle={() => setOpenIndex(openIndex === idx ? null : idx)}
-            />
+            <div key={idx} className="faq-item-animate inquiry-step" style={{ transitionDelay: `${idx * 0.07}s` }}>
+              <FaqItem
+                q={q}
+                a={a}
+                isOpen={openIndex === idx}
+                onToggle={() => setOpenIndex(openIndex === idx ? null : idx)}
+              />
+            </div>
           ))
         )}
       </div>

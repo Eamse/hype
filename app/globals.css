@@ -236,3 +236,19 @@ a { text-decoration: none; color: inherit; }
   }
   .magazine-page-title { font-size: 28px; }
 }
+
+/* ── Inquiry 페이지 애니메이션 ──────────────────────────────── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.inquiry-fade-up { opacity: 0; }
+.inquiry-fade-up.visible { animation: fadeSlideUp 0.65s ease forwards; }
+.inquiry-step { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.inquiry-step.visible { opacity: 1; transform: translateY(0); }
+@keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.cursor-blink { animation: cursorBlink 0.8s step-end infinite; }
