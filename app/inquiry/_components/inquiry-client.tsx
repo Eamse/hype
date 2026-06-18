@@ -4,7 +4,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useState, useEffect, useRef } from 'react';
 
 // ── Google Form URLs ──────────────────────────────────────────────
-const WEDDING_FORM_URL = 'https://forms.gle/3sWqu4NED5ruJEnN9'; // 웨딩
+const WEDDING_FORM_URL = 'https://forms.gle/oJu6ZPBdhiLWaELDA'; // 웨딩
 const SNAP_FORM_URL = 'https://forms.gle/3sWqu4NED5ruJEnN9'; // 스냅
 
 const STEPS = [
@@ -166,7 +166,20 @@ function StepCard({
 }) {
   return (
     <div style={{ flex: 1, minWidth: 0 }}>
-      <div style={{ marginBottom: 16 }}>{step.icon}</div>
+      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+        {step.icon}
+        {step.tag && (
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 600,
+              color: '#888',
+            }}
+          >
+            ({step.tag})
+          </span>
+        )}
+      </div>
       <p
         style={{
           fontSize: 18,
@@ -177,18 +190,6 @@ function StepCard({
         }}
       >
         STEP {num} | {step.title}
-        {step.tag && (
-          <span
-            style={{
-              fontSize: 14,
-              fontWeight: 600,
-              color: '#888',
-              marginLeft: 6,
-            }}
-          >
-            ({step.tag})
-          </span>
-        )}
       </p>
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {step.bullets.map((b) => (
@@ -487,6 +488,7 @@ export default function InquiryClient() {
               display: 'flex',
               flexDirection: isMobile ? 'column' : 'row',
               alignItems: 'flex-start',
+              justifyContent: 'space-between',
               gap: isMobile ? 40 : 0,
               marginBottom: isMobile ? 0 : 60,
             }}
@@ -497,8 +499,9 @@ export default function InquiryClient() {
                 className="inquiry-step"
                 style={{
                   display: 'flex',
-                  flex: 1,
+                  // flex: 1,
                   alignItems: 'flex-start',
+
                   minWidth: 0,
                   transitionDelay: `${idx * 0.15}s`,
                 }}
@@ -520,8 +523,8 @@ export default function InquiryClient() {
             style={{
               display: 'flex',
               flexDirection: isMobile ? 'column' : 'row',
-              justifyContent: 'center',
               alignItems: 'flex-start',
+              justifyContent: 'space-evenly',
               gap: isMobile ? 40 : 0,
               marginTop: isMobile ? 40 : 0,
             }}
@@ -532,7 +535,7 @@ export default function InquiryClient() {
                 className="inquiry-step"
                 style={{
                   display: 'flex',
-                  flex: isMobile ? 1 : '0 0 calc(33.33% + 28px)',
+                  // flex: isMobile ? 1 : '0 0 calc(33.33% + 28px)',
                   alignItems: 'flex-start',
                   minWidth: 0,
                   transitionDelay: `${(idx + 3) * 0.15}s`,
