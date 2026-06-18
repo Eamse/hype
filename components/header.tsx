@@ -26,16 +26,20 @@ const NAV_LINKS: Record<Brand, { label: string; href: string }[]> = {
   'hype-wedding': [
     { label: 'Home', href: '/' },
     { label: 'Wedding', href: '/wedding' },
-    { label: 'Magazine', href: '/magazine' },
-    { label: 'Gallery', href: '#' },
-    { label: 'Inquiry', href: '#' },
+    // { label: 'Magazine', href: '/magazine' },
+    { label: 'Review', href: '#' },
+    { label: 'Inquiry', href: '/inquiry' },
+    { label: 'About Us', href: '#' },
+    { label: 'FAQ', href: '/faq' },
   ],
   'hype-snap': [
     { label: 'Home', href: '/hype-snap' },
     { label: 'Casual', href: '/casual' },
-    { label: 'Magazine', href: '/magazine?brand=hype-snap' },
-    { label: 'Gallery', href: '#' },
-    { label: 'Inquiry', href: '#' },
+    // { label: 'Magazine', href: '/magazine?brand=hype-snap' },
+    { label: 'Review', href: '#' },
+    { label: 'Inquiry', href: '/inquiry?brand=hype-snap' },
+    { label: 'About Us', href: '#' },
+    { label: 'FAQ', href: '/faq?brand=hype-snap' },
   ],
 };
 

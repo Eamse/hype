@@ -4,38 +4,11 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
-export default function HeroCarousel() {
-  const [heroImages, setHeroImages] = useState<string[]>([]);
+export default function HeroCarousel({ images }: { images: string[] }) {
+  const [heroImages] = useState<string[]>(images);
   const heroRef = useRef<HTMLDivElement>(null);
   const heroPaused = useRef(false);
   const isMobile = useIsMobile();
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const { signal } = controller;
-
-    async function load() {
-      try {
-        const res = await fetch('/api/images', { signal });
-        if (!res.ok) return;
-        const data: unknown = await res.json();
-        const hero = (data as Record<string, unknown>)['hero'];
-        if (Array.isArray(hero)) {
-          const valid = (hero as string[]).filter((url) => {
-            try { new URL(url); return true; } catch { return false; }
-          });
-          setHeroImages(valid);
-        }
-      } catch (e) {
-        if (e instanceof Error && e.name !== 'AbortError') {
-          console.error('[hero-carousel] 로딩 실패:', e);
-        }
-      }
-    }
-
-    load();
-    return () => controller.abort();
-  }, []);
 
   useEffect(() => {
     if (heroImages.length === 0) return;
@@ -58,15 +31,37 @@ export default function HeroCarousel() {
   if (heroImages.length === 0) return null;
 
   return (
-    <section style={{ maxWidth: 1200, margin: '0 auto', padding: '10px 20px', overflow: 'hidden' }}>
+    <section
+      style={{
+        maxWidth: 1200,
+        margin: '0 auto',
+        padding: '10px 20px',
+        overflow: 'hidden',
+      }}
+    >
       <div
         ref={heroRef}
         className="hide-scroll"
-        style={{ display: 'flex', gap: 8, overflowX: 'auto', scrollSnapType: 'x mandatory' }}
-        onMouseEnter={() => { heroPaused.current = true; }}
-        onMouseLeave={() => { heroPaused.current = false; }}
-        onTouchStart={() => { heroPaused.current = true; }}
-        onTouchEnd={() => { setTimeout(() => { heroPaused.current = false; }, 2000); }}
+        style={{
+          display: 'flex',
+          gap: 8,
+          overflowX: 'auto',
+          scrollSnapType: 'x mandatory',
+        }}
+        onMouseEnter={() => {
+          heroPaused.current = true;
+        }}
+        onMouseLeave={() => {
+          heroPaused.current = false;
+        }}
+        onTouchStart={() => {
+          heroPaused.current = true;
+        }}
+        onTouchEnd={() => {
+          setTimeout(() => {
+            heroPaused.current = false;
+          }, 2000);
+        }}
       >
         {[...heroImages, ...heroImages].map((url, idx) => (
           <div
@@ -75,14 +70,20 @@ export default function HeroCarousel() {
               flexShrink: 0,
               width: isMobile ? 'calc(50% - 4px)' : 'calc(25% - 6px)',
               aspectRatio: '3/4',
-              borderRadius: 8,
+              // borderRadius: 8,// 추후 수정
               overflow: 'hidden',
               position: 'relative',
               backgroundColor: '#e8e8e8',
               scrollSnapAlign: 'start',
             }}
           >
-            <Image src={url} alt={`hero-${idx}`} fill sizes={isMobile ? '50vw' : '25vw'} style={{ objectFit: 'cover' }} />
+            <Image
+              src={url}
+              alt={`hero-${idx}`}
+              fill
+              sizes={isMobile ? '50vw' : '25vw'}
+              style={{ objectFit: 'cover' }}
+            />
           </div>
         ))}
       </div>
