@@ -2,13 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { useIsMobile } from '@/hooks/useIsMobile';
 
 export default function HeroCarousel({ images }: { images: string[] }) {
   const [heroImages] = useState<string[]>(images);
   const heroRef = useRef<HTMLDivElement>(null);
   const heroPaused = useRef(false);
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (heroImages.length === 0) return;
@@ -65,11 +63,12 @@ export default function HeroCarousel({ images }: { images: string[] }) {
       >
         {[...heroImages, ...heroImages].map((url, idx) => (
           <div
+            className="lg:w-[calc(25%-6px)] w-[calc(50%-4px)]"
             key={idx}
             style={{
               flexShrink: 0,
-              width: isMobile ? 'calc(50% - 4px)' : 'calc(25% - 6px)',
               aspectRatio: '3/4',
+
               // borderRadius: 8,// 추후 수정
               overflow: 'hidden',
               position: 'relative',
@@ -81,7 +80,7 @@ export default function HeroCarousel({ images }: { images: string[] }) {
               src={url}
               alt={`hero-${idx}`}
               fill
-              sizes={isMobile ? '50vw' : '25vw'}
+              sizes="(max-width: 1024px) 50vw, 25vw"
               style={{ objectFit: 'cover' }}
             />
           </div>

@@ -8,29 +8,33 @@ import Header from '@/components/header';
 import SnsSidebar from '@/components/sns-sidebar';
 import Accordion from './_components/accordion';
 import { BackButton, StickyBottomBar } from './_components/product-actions';
+import ImageGallery from './_components/image-gallery';
 import type { Metadata } from 'next';
 
 type Props = { params: Promise<{ id: string }> };
 
 function CheckIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4dd9d9" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#4dd9d9"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <polyline points="20 6 9 17 4 12" />
     </svg>
   );
 }
 
-const INCLUSIONS = [
-  'Wedding dress (ceremony)',
-  'Studio photo shoot — 1 session',
-  'Makeup & hair (ceremony day)',
-  'Bridal bouquet & corsage',
-  'Fitting gown — 1 piece',
-];
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const product = await prisma.product.findUnique({ where: { id: Number(id) } });
+  const product = await prisma.product.findUnique({
+    where: { id: Number(id) },
+  });
   if (!product) return { title: 'Not Found' };
   return {
     title: `${product.title} — ${product.brand}`,
@@ -43,7 +47,10 @@ export default async function ProductDetailPage({ params }: Props) {
   const idNum = Number(id);
   if (!Number.isInteger(idNum) || idNum <= 0) notFound();
 
-  const product = await prisma.product.findUnique({ where: { id: idNum } });
+  const product = await prisma.product.findUnique({
+    where: { id: idNum },
+    include: { images: { orderBy: { order: 'asc' } } },
+  });
   if (!product) notFound();
 
   const relatedProducts = await prisma.product.findMany({
@@ -53,110 +60,158 @@ export default async function ProductDetailPage({ params }: Props) {
   });
 
   return (
-    <div style={{ backgroundColor: '#fff', color: '#191919', minHeight: '100vh', fontFamily: "'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif", paddingBottom: 80 }}>
+    <div className="bg-white text-[#191919] min-h-screen">
       <Header />
 
-      <main style={{ maxWidth: 720, margin: '0 auto', padding: '56px 20px 0' }}>
-        <BackButton />
+      <main className="pt-14">
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          {/* ── 왼쪽: 이미지 (데스크탑 sticky) ── */}
+          <div className="hide-scroll lg:sticky lg:top-14 lg:h-[calc(100vh-56px)] lg:overflow-y-auto p-5 lg:p-16 lg:pb-24">
+            <BackButton />
+            <ImageGallery
+              mainImageUrl={product.imageUrl}
+              images={product.images}
+            />
+          </div>
 
-        {/* Product Image */}
-        <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', borderRadius: 12, overflow: 'hidden', backgroundColor: '#f0f0f0', marginBottom: 8 }}>
-          {product.imageUrl ? (
-            <Image src={product.imageUrl} alt={product.title} fill sizes="(max-width: 720px) 100vw, 720px" priority style={{ objectFit: 'cover' }} />
-          ) : (
-            <div style={{ width: '100%', height: '100%', background: 'linear-gradient(110deg, #ececec 8%, #ddd 18%, #ececec 33%)', backgroundSize: '200% 100%' }} />
-          )}
-        </div>
+          {/* ── 오른쪽: 컨텐츠 ── */}
+          <div className="p-5 lg:px-14 lg:py-16 pb-24">
+            {/* Brand / Title / Price */}
+            <p className="text-xs text-[#aaa] mb-1">{product.brand}</p>
+            <h1 className="text-xl font-bold leading-snug mb-2">
+              {product.title}
+            </h1>
+            <p className="text-lg font-bold mb-6">
+              ₩{product.price.toLocaleString()}
+            </p>
 
-        {/* Brand / Title / Price */}
-        <div style={{ marginBottom: 20, marginTop: 20 }}>
-          <p style={{ fontSize: 12, color: '#aaa', marginBottom: 4 }}>{product.brand}</p>
-          <h1 style={{ fontSize: 20, fontWeight: 700, lineHeight: 1.4, marginBottom: 8 }}>{product.title}</h1>
-          <p style={{ fontSize: 18, fontWeight: 700 }}>₩{product.price.toLocaleString()}</p>
-        </div>
+            <div className="h-px bg-[#f0f0f0] mb-6" />
 
-        <div style={{ height: 1, backgroundColor: '#f0f0f0', marginBottom: 20 }} />
-
-        {/* Description */}
-        <div style={{ marginBottom: 24 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 10 }}>About This Product</h2>
-          <p style={{ fontSize: 13, color: '#555', lineHeight: 1.9 }}>
-            A detailed description of this product will appear here — covering the brand&apos;s atmosphere, highlights, studio locations, and available styles.
-          </p>
-        </div>
-
-        {/* What's Included */}
-        <div style={{ marginBottom: 24 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>What&apos;s Included</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {INCLUSIONS.map((item) => (
-              <div key={item} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <div style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: '#f0fffe', border: '1px solid #c8f5f5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <CheckIcon />
-                </div>
-                <span style={{ fontSize: 13, color: '#333' }}>{item}</span>
+            {/* Description */}
+            {product.description && (
+              <div className="mb-6">
+                <h2 className="text-sm font-semibold mb-2">
+                  About This Product
+                </h2>
+                <p className="text-sm text-[#555] leading-loose">
+                  {product.description}
+                </p>
               </div>
-            ))}
-          </div>
-        </div>
+            )}
 
-        <div style={{ height: 1, backgroundColor: '#f0f0f0', marginBottom: 24 }} />
+            {/* What's Included */}
+            {product.inclusions.length > 0 && (
+              <div className="mb-6">
+                <h2 className="text-sm font-semibold mb-3">
+                  What&apos;s Included
+                </h2>
+                <div className="flex flex-col gap-2">
+                  {product.inclusions.map((item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <div className="w-5 h-5 rounded-full bg-[#f0fffe] border border-[#c8f5f5] flex items-center justify-center shrink-0">
+                        <CheckIcon />
+                      </div>
+                      <span className="text-sm text-[#333]">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-        {/* Brand Card */}
-        <div style={{ marginBottom: 24 }}>
-          <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>Brand</h2>
-          <div style={{ border: '1px solid #e8e8e8', borderRadius: 12, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 16 }}>
-            <div style={{ width: 56, height: 56, borderRadius: '50%', backgroundColor: '#f0f0f0', flexShrink: 0, overflow: 'hidden' }} />
-            <div>
-              <p style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>{product.brand}</p>
-              <p style={{ fontSize: 12, color: '#aaa' }}>Gangnam, Seoul · Wedding Studio</p>
+            <div className="h-px bg-[#f0f0f0] mb-6" />
+
+            {/* Brand Card */}
+            <div className="mb-6">
+              <h2 className="text-sm font-semibold mb-3">Brand</h2>
+              <div className="border border-[#e8e8e8] rounded-xl px-5 py-4 flex items-center gap-4">
+                <div className="w-14 h-14 rounded-full bg-[#f0f0f0] shrink-0 overflow-hidden" />
+                <div>
+                  <p className="text-sm font-semibold mb-0.5">
+                    {product.brand}
+                  </p>
+                  <p className="text-xs text-[#aaa]">
+                    Gangnam, Seoul · Wedding Studio
+                  </p>
+                </div>
+                <button className="ml-auto text-xs font-semibold text-[#191919] border border-[#e0e0e0] rounded-md px-3 py-1.5 shrink-0 bg-transparent cursor-pointer">
+                  View Brand
+                </button>
+              </div>
             </div>
-            <button style={{ marginLeft: 'auto', fontSize: 12, fontWeight: 600, color: '#191919', border: '1px solid #e0e0e0', borderRadius: 6, padding: '6px 14px', flexShrink: 0, background: 'none', cursor: 'pointer', fontFamily: 'inherit' }}>
-              View Brand
-            </button>
-          </div>
-        </div>
 
-        {/* Related Products */}
-        {relatedProducts.length > 0 && (
-          <div style={{ marginBottom: 24 }}>
-            <h2 style={{ fontSize: 14, fontWeight: 600, marginBottom: 12 }}>More from This Brand</h2>
-            <div className="hide-scroll" style={{ display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4 }}>
-              {relatedProducts.map((p) => (
-                <Link key={p.id} href={`/product/${p.id}`} style={{ flexShrink: 0, width: 140, display: 'block' }}>
-                  <div style={{ width: 140, height: 140, borderRadius: 8, overflow: 'hidden', backgroundColor: '#f0f0f0', marginBottom: 6, position: 'relative' }}>
-                    {p.imageUrl ? (
-                      <Image src={p.imageUrl} alt={p.title} fill sizes="140px" style={{ objectFit: 'cover' }} />
-                    ) : (
-                      <div style={{ width: '100%', height: '100%', background: '#e8e8e8' }} />
-                    )}
-                  </div>
-                  <p style={{ fontSize: 11, color: '#aaa', marginBottom: 2 }}>{p.brand}</p>
-                  <p style={{ fontSize: 12, fontWeight: 500, color: '#191919', lineHeight: 1.3 }}>{p.title}</p>
-                  <p style={{ fontSize: 12, fontWeight: 700, marginTop: 2 }}>₩{p.price.toLocaleString()}</p>
-                </Link>
-              ))}
+            {/* Related Products */}
+            {relatedProducts.length > 0 && (
+              <div className="mb-6">
+                <h2 className="text-sm font-semibold mb-3">
+                  More from This Brand
+                </h2>
+                <div className="hide-scroll flex gap-2 overflow-x-auto pb-1">
+                  {relatedProducts.map((p) => (
+                    <Link
+                      key={p.id}
+                      href={`/product/${p.id}`}
+                      className="shrink-0 w-36 block"
+                    >
+                      <div className="w-36 h-36 rounded-lg overflow-hidden bg-[#f0f0f0] mb-1.5 relative">
+                        {p.imageUrl ? (
+                          <Image
+                            src={p.imageUrl}
+                            alt={p.title}
+                            fill
+                            sizes="144px"
+                            style={{ objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-[#e8e8e8]" />
+                        )}
+                      </div>
+                      <p className="text-[11px] text-[#aaa] mb-0.5">
+                        {p.brand}
+                      </p>
+                      <p className="text-xs font-medium text-[#191919] leading-snug">
+                        {p.title}
+                      </p>
+                      <p className="text-xs font-bold mt-0.5">
+                        ₩{p.price.toLocaleString()}
+                      </p>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="h-px bg-[#f0f0f0] mb-1" />
+
+            {/* Accordion */}
+            <div className="mb-6">
+              <Accordion title="Booking Guide">
+                <p>
+                  Please book at least 2 weeks in advance. A 30% deposit is
+                  required at the time of booking. Refunds may be restricted
+                  once a booking is confirmed.
+                </p>
+              </Accordion>
+              <Accordion title="How It Works">
+                <p>
+                  Parking is available at the studio on the day of your
+                  ceremony. Shoots typically take 3–4 hours.
+                </p>
+              </Accordion>
+              <Accordion title="Cancellation Policy">
+                <p>
+                  Within 7 days of booking: full refund · 7–14 days: 50% refund
+                  · After 14 days: no refund
+                </p>
+              </Accordion>
+              <Accordion title="Seller Info">
+                <p>
+                  Business name: {product.brand} · CEO: — · Business Reg:
+                  000-00-00000
+                </p>
+              </Accordion>
+              <div className="border-t border-[#e8e8e8]" />
             </div>
           </div>
-        )}
-
-        <div style={{ height: 1, backgroundColor: '#f0f0f0', marginBottom: 4 }} />
-
-        {/* Accordion */}
-        <div style={{ marginBottom: 24 }}>
-          <Accordion title="Booking Guide">
-            <p>Please book at least 2 weeks in advance. A 30% deposit is required at the time of booking. Refunds may be restricted once a booking is confirmed.</p>
-          </Accordion>
-          <Accordion title="How It Works">
-            <p>Parking is available at the studio on the day of your ceremony. Shoots typically take 3–4 hours.</p>
-          </Accordion>
-          <Accordion title="Cancellation Policy">
-            <p>Within 7 days of booking: full refund · 7–14 days: 50% refund · After 14 days: no refund</p>
-          </Accordion>
-          <Accordion title="Seller Info">
-            <p>Business name: {product.brand} · CEO: — · Business Reg: 000-00-00000</p>
-          </Accordion>
-          <div style={{ borderTop: '1px solid #e8e8e8' }} />
         </div>
       </main>
 

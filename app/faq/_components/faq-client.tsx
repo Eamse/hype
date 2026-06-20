@@ -211,46 +211,6 @@ Important: Overcast skies or wind are not cancellation reasons.`,
 };
 
 // ── 아이콘 ────────────────────────────────────────────────────────
-function FacebookIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-    </svg>
-  );
-}
-function XIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
-function LinkedInIcon() {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-      <rect x="2" y="9" width="4" height="12" />
-      <circle cx="4" cy="4" r="2" />
-    </svg>
-  );
-}
-function LinkIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-    </svg>
-  );
-}
 function ChevronUpIcon() {
   return (
     <svg
@@ -399,9 +359,7 @@ function FaqItem({
                 cursor: 'pointer',
                 padding: 0,
               }}
-            >
-              <FacebookIcon />
-            </button>
+            ></button>
             <button
               onClick={() => handleShare('twitter')}
               style={{
@@ -411,9 +369,7 @@ function FaqItem({
                 cursor: 'pointer',
                 padding: 0,
               }}
-            >
-              <XIcon />
-            </button>
+            ></button>
             <button
               onClick={() => handleShare('linkedin')}
               style={{
@@ -423,9 +379,7 @@ function FaqItem({
                 cursor: 'pointer',
                 padding: 0,
               }}
-            >
-              <LinkedInIcon />
-            </button>
+            ></button>
             <button
               onClick={handleCopyLink}
               style={{
@@ -435,9 +389,7 @@ function FaqItem({
                 cursor: 'pointer',
                 padding: 0,
               }}
-            >
-              <LinkIcon />
-            </button>
+            ></button>
           </div>
         </div>
       </div>
@@ -547,7 +499,17 @@ export default function FaqClient() {
           }}
         >
           {typed}
-          <span className="cursor-blink" style={{ display: 'inline-block', width: 3, height: isMobile ? 44 : 60, backgroundColor: '#191919', marginLeft: 3, verticalAlign: 'middle' }} />
+          <span
+            className="cursor-blink"
+            style={{
+              display: 'inline-block',
+              width: 3,
+              height: isMobile ? 44 : 60,
+              backgroundColor: '#191919',
+              marginLeft: 3,
+              verticalAlign: 'middle',
+            }}
+          />
         </h1>
         <div
           className="inquiry-fade-up"
@@ -660,14 +622,20 @@ export default function FaqClient() {
                       fontWeight: 700,
                       letterSpacing: '0.5px',
                       textTransform: 'uppercase',
-                      color: isActive ? '#e8000d' : hoveredTab === cat ? '#191919' : '#888',
+                      color: isActive
+                        ? '#e8000d'
+                        : hoveredTab === cat
+                          ? '#191919'
+                          : '#888',
                       background: 'none',
                       borderTop: 'none',
                       borderLeft: 'none',
                       borderRight: 'none',
                       borderBottom: isActive
                         ? '2px solid #e8000d'
-                        : hoveredTab === cat ? '2px solid #191919' : '2px solid transparent',
+                        : hoveredTab === cat
+                          ? '2px solid #191919'
+                          : '2px solid transparent',
                       cursor: 'pointer',
                       transition: 'color 0.2s, border-color 0.2s',
                       whiteSpace: 'nowrap',
@@ -731,7 +699,11 @@ export default function FaqClient() {
           <p style={{ color: '#999', fontSize: 14 }}>No results found.</p>
         ) : (
           displayItems.map(({ q, a }, idx) => (
-            <div key={idx} className="faq-item-animate inquiry-step" style={{ transitionDelay: `${idx * 0.07}s` }}>
+            <div
+              key={idx}
+              className="faq-item-animate inquiry-step"
+              style={{ transitionDelay: `${idx * 0.07}s` }}
+            >
               <FaqItem
                 q={q}
                 a={a}

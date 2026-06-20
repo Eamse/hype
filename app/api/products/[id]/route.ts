@@ -129,6 +129,12 @@ export async function PATCH(
     }
     data.order = orderNum;
   }
+  if (b.description !== undefined) {
+    data.description = typeof b.description === 'string' ? b.description : null;
+  }
+  if (b.inclusions !== undefined) {
+    data.inclusions = Array.isArray(b.inclusions) ? b.inclusions : [];
+  }
 
   if (Object.keys(data).length === 0) {
     return NextResponse.json(

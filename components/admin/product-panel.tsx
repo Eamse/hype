@@ -2,8 +2,15 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { type Product, btnStyle, labelStyle, inputStyle, isProductArray } from './types';
+import {
+  type Product,
+  btnStyle,
+  labelStyle,
+  inputStyle,
+  isProductArray,
+} from './types';
 import ProductRow from './product-row';
+import { INCLUSIONS } from './types';
 
 export default function ProductPanel({
   section,
@@ -19,7 +26,13 @@ export default function ProductPanel({
   const [loadError, setLoadError] = useState<string | null>(null);
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
-  const [newForm, setNewForm] = useState({ title: '', brand: '', price: '' });
+  const [newForm, setNewForm] = useState({
+    title: '',
+    description: '',
+    brand: '',
+    price: '',
+    inclusions: [] as string[],
+  });
   const [refreshKey, setRefreshKey] = useState(0);
   const [newImage, setNewImage] = useState<File | null>(null);
   const [newImagePreview, setNewImagePreview] = useState<string | null>(null);
@@ -77,6 +90,8 @@ export default function ProductPanel({
         title: newForm.title.trim(),
         brand: isSlides ? '-' : newForm.brand.trim(),
         price,
+        description: newForm.description,
+        inclusions: newForm.inclusions,
       }),
     });
 
@@ -107,7 +122,13 @@ export default function ProductPanel({
       }
     }
 
-    setNewForm({ title: '', brand: '', price: '' });
+    setNewForm({
+      title: '',
+      brand: '',
+      price: '',
+      description: '',
+      inclusions: [],
+    });
     setNewImage(null);
     setNewImagePreview(null);
     setAdding(false);
@@ -137,10 +158,27 @@ export default function ProductPanel({
         }}
       >
         <div>
-          <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>
+          <p
+            style={{
+              fontSize: 10,
+              letterSpacing: '2px',
+              color: '#7a5520',
+              fontWeight: 600,
+              marginBottom: 6,
+            }}
+          >
             PRODUCTS
           </p>
-          <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', letterSpacing: '-0.3px' }}>{label}</h2>
+          <h2
+            style={{
+              fontSize: 22,
+              fontWeight: 700,
+              color: '#1a1a1a',
+              letterSpacing: '-0.3px',
+            }}
+          >
+            {label}
+          </h2>
           <p style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
             {products.length} {isSlides ? 'slides' : 'products'}
           </p>
@@ -171,7 +209,15 @@ export default function ProductPanel({
             boxShadow: '0 2px 12px rgba(201,169,110,0.08)',
           }}
         >
-          <p style={{ fontSize: 11, fontWeight: 700, color: '#7a5520', letterSpacing: '2px', textTransform: 'uppercase' }}>
+          <p
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              color: '#7a5520',
+              letterSpacing: '2px',
+              textTransform: 'uppercase',
+            }}
+          >
             {isSlides ? 'New Slide' : 'New Product'}
           </p>
           {addError && (
@@ -237,6 +283,75 @@ export default function ProductPanel({
               </>
             )}
           </div>
+
+          <div>
+            <label style={labelStyle}>Description</label>
+            <textarea
+              value={newForm.description}
+              onChange={(e) =>
+                setNewForm((p) => ({ ...p, description: e.target.value }))
+              }
+              placeholder="Describe this product"
+              rows={3}
+              style={{ ...inputStyle, resize: 'vertical' }}
+            />
+          </div>
+
+          {!isSlides && (
+            <div>
+              <label style={labelStyle}>Inclusions</label>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  fontSize: 12,
+                  cursor: 'pointer',
+                  color: '#555',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={newForm.inclusions.length === INCLUSIONS.length}
+                  onChange={(e) =>
+                    setNewForm((p) => ({
+                      ...p,
+                      inclusions: e.target.checked ? [...INCLUSIONS] : [],
+                    }))
+                  }
+                ></input>
+                전체선택
+              </label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {INCLUSIONS.map((item) => (
+                  <label
+                    key={item}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      fontSize: 13,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={newForm.inclusions.includes(item)}
+                      onChange={(e) =>
+                        setNewForm((p) => ({
+                          ...p,
+                          inclusions: e.target.checked
+                            ? [...p.inclusions, item]
+                            : p.inclusions.filter((i) => i !== item),
+                        }))
+                      }
+                    />
+                    {item}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* 이미지 선택 */}
           <div>
@@ -310,7 +425,13 @@ export default function ProductPanel({
               onClick={() => {
                 setAdding(false);
                 setAddError(null);
-                setNewForm({ title: '', brand: '', price: '' });
+                setNewForm({
+                  title: '',
+                  brand: '',
+                  price: '',
+                  description: '',
+                  inclusions: [],
+                });
                 setNewImage(null);
                 setNewImagePreview(null);
               }}
@@ -368,7 +489,13 @@ export default function ProductPanel({
             : 'No products yet. Click "+ Add Product" to get started.'}
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+            gap: 16,
+          }}
+        >
           {products.map((p) => (
             <ProductRow
               key={p.id}

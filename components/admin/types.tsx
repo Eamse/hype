@@ -7,7 +7,10 @@ export type Product = {
   brand: string;
   price: number;
   imageUrl: string | null;
+  images: { id: number; url: string; order: number }[];
   order: number;
+  description: string | null;
+  inclusions: string[];
 };
 
 export type Section =
@@ -29,6 +32,11 @@ export type Magazine = {
   createdAt: string;
   updatedAt: string;
 };
+
+export const INCLUSIONS = [
+  '1 hour photoshoot session',
+  '20 edited digital photos',
+];
 
 export function btnStyle(
   bg: string,

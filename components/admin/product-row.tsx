@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import Image from 'next/image';
-import { type Product, btnStyle, inputStyle } from './types';
+import { type Product, btnStyle, inputStyle, INCLUSIONS } from './types';
 
 export default function ProductRow({
   product,
@@ -21,12 +21,16 @@ export default function ProductRow({
     title: product.title,
     brand: product.brand,
     price: String(product.price),
+    description: product.description ?? '',
+    inclusions: product.inclusions,
   });
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const [imgSaved, setImgSaved] = useState(false);
   const [imgError, setImgError] = useState<string | null>(null);
+  // const detailImgRef = useRef<HTMLInputElement>(null);
+  // const [detailUploading, setDetailUploading] = useState(false);
 
   async function handleSave() {
     if (!form.title.trim()) {
@@ -44,7 +48,11 @@ export default function ProductRow({
     setSaving(true);
     setSaveError(null);
     try {
-      const body: Record<string, unknown> = { title: form.title.trim() };
+      const body: Record<string, unknown> = {
+        title: form.title.trim(),
+        description: form.description,
+        inclusions: form.inclusions,
+      };
       if (!isSlide) {
         body.brand = form.brand.trim();
         body.price = Number(form.price);
@@ -130,6 +138,8 @@ export default function ProductRow({
       title: product.title,
       brand: product.brand,
       price: String(product.price),
+      description: product.description ?? '',
+      inclusions: product.inclusions,
     });
   }
 
@@ -166,8 +176,26 @@ export default function ProductRow({
             style={{ objectFit: 'cover' }}
           />
         ) : (
-          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#ccc' }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+              color: '#ccc',
+            }}
+          >
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.2"
+            >
               <rect x="3" y="3" width="18" height="18" rx="2" />
               <circle cx="8.5" cy="8.5" r="1.5" />
               <polyline points="21 15 16 10 5 21" />
@@ -176,50 +204,237 @@ export default function ProductRow({
           </div>
         )}
         {uploading && (
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #e8d9b8', borderTopColor: '#c9a96e', animation: 'spin 0.7s linear infinite' }} />
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(255,255,255,0.8)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <div
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: '50%',
+                border: '2px solid #e8d9b8',
+                borderTopColor: '#c9a96e',
+                animation: 'spin 0.7s linear infinite',
+              }}
+            />
           </div>
         )}
         {imgSaved && (
-          <div style={{ position: 'absolute', inset: 0, background: 'rgba(201,169,110,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 20 }}>✓</div>
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(201,169,110,0.85)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#fff',
+              fontSize: 20,
+            }}
+          >
+            ✓
+          </div>
         )}
-        <input ref={imgInputRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif" style={{ display: 'none' }} onChange={(e) => { const f = e.target.files?.[0]; if (f) handleImgUpload(f); e.target.value = ''; }} />
+        <input
+          ref={imgInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          style={{ display: 'none' }}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) handleImgUpload(f);
+            e.target.value = '';
+          }}
+        />
       </div>
 
       {/* 정보 영역 */}
-      <div style={{ padding: '14px 16px', flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <div
+        style={{
+          padding: '14px 16px',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 6,
+        }}
+      >
         {editing ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {saveError && <div style={{ fontSize: 11, color: '#dc2626', background: '#fef2f2', padding: '6px 10px', borderRadius: 5 }}>{saveError}</div>}
-            <input value={form.title} onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))} placeholder="Title" style={inputStyle} />
+            {saveError && (
+              <div
+                style={{
+                  fontSize: 11,
+                  color: '#dc2626',
+                  background: '#fef2f2',
+                  padding: '6px 10px',
+                  borderRadius: 5,
+                }}
+              >
+                {saveError}
+              </div>
+            )}
+            <input
+              value={form.title}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, title: e.target.value }))
+              }
+              placeholder="Title"
+              style={inputStyle}
+            />
             {!isSlide && (
               <>
-                <input value={form.brand} onChange={(e) => setForm((p) => ({ ...p, brand: e.target.value }))} placeholder="Brand" style={inputStyle} />
-                <input value={form.price} onChange={(e) => setForm((p) => ({ ...p, price: e.target.value }))} placeholder="Price" type="number" min="0" style={inputStyle} />
+                <input
+                  value={form.brand}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, brand: e.target.value }))
+                  }
+                  placeholder="Brand"
+                  style={inputStyle}
+                />
+                <input
+                  value={form.price}
+                  onChange={(e) =>
+                    setForm((p) => ({ ...p, price: e.target.value }))
+                  }
+                  placeholder="Price"
+                  type="number"
+                  min="0"
+                  style={inputStyle}
+                />
               </>
             )}
+
+            <textarea
+              value={form.description}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, description: e.target.value }))
+              }
+              placeholder="Description"
+              rows={3}
+              style={{ ...inputStyle, resize: 'vertical' }}
+            />
+            {!isSlide && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {INCLUSIONS.map((item) => (
+                  <label
+                    key={item}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      fontSize: 12,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={form.inclusions.includes(item)}
+                      onChange={(e) =>
+                        setForm((p) => ({
+                          ...p,
+                          inclusions: e.target.checked
+                            ? [...p.inclusions, item]
+                            : p.inclusions.filter((i) => i !== item),
+                        }))
+                      }
+                    />
+                    {item}
+                  </label>
+                ))}
+              </div>
+            )}
+
             <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
-              <button onClick={handleSave} disabled={saving} style={btnStyle('#191919', '#fff')}>{saving ? 'Saving...' : 'Save'}</button>
-              <button onClick={cancelEdit} disabled={saving} style={btnStyle('transparent', '#888', '#e0d8c8')}>Cancel</button>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                style={btnStyle('#191919', '#fff')}
+              >
+                {saving ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                onClick={cancelEdit}
+                disabled={saving}
+                style={btnStyle('transparent', '#888', '#e0d8c8')}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         ) : (
           <>
-            <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', lineHeight: 1.4 }}>{product.title}</p>
+            <p
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: '#1a1a1a',
+                lineHeight: 1.4,
+              }}
+            >
+              {product.title}
+            </p>
             {!isSlide && (
               <>
                 <p style={{ fontSize: 11, color: '#aaa' }}>{product.brand}</p>
-                <p style={{ fontSize: 13, fontWeight: 700, color: '#c9a96e' }}>₩{product.price.toLocaleString()}</p>
+                <p style={{ fontSize: 13, fontWeight: 700, color: '#c9a96e' }}>
+                  ₩{product.price.toLocaleString()}
+                </p>
               </>
             )}
-            <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}>
-              <button onClick={() => { setEditing(true); setSaveError(null); }} style={btnStyle('transparent', '#888', '#e0d8c8')}>Edit</button>
-              {product.imageUrl && <button onClick={handleImgDelete} style={btnStyle('transparent', '#888', '#e0d8c8')}>Remove Img</button>}
-              <button onClick={onDeleted} style={{ ...btnStyle('transparent', '#ef4444', '#ef4444') }}>Delete</button>
+            <div
+              style={{
+                display: 'flex',
+                gap: 6,
+                marginTop: 8,
+                flexWrap: 'wrap',
+              }}
+            >
+              <button
+                onClick={() => {
+                  setEditing(true);
+                  setSaveError(null);
+                }}
+                style={btnStyle('transparent', '#888', '#e0d8c8')}
+              >
+                Edit
+              </button>
+              {product.imageUrl && (
+                <button
+                  onClick={handleImgDelete}
+                  style={btnStyle('transparent', '#888', '#e0d8c8')}
+                >
+                  Remove Img
+                </button>
+              )}
+              <button
+                onClick={onDeleted}
+                style={{ ...btnStyle('transparent', '#ef4444', '#ef4444') }}
+              >
+                Delete
+              </button>
             </div>
           </>
         )}
-        {imgError && <div style={{ fontSize: 11, color: '#dc2626', background: '#fef2f2', padding: '6px 10px', borderRadius: 5 }}>{imgError}</div>}
+        {imgError && (
+          <div
+            style={{
+              fontSize: 11,
+              color: '#dc2626',
+              background: '#fef2f2',
+              padding: '6px 10px',
+              borderRadius: 5,
+            }}
+          >
+            {imgError}
+          </div>
+        )}
       </div>
     </div>
   );

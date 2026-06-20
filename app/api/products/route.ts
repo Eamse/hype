@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
     const products = await prisma.product.findMany({
       where: section ? { section } : undefined,
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+      include: { images: true },
     });
     return NextResponse.json(products);
   } catch (e) {
@@ -49,7 +50,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const { section, title, brand, price } = body as Record<string, unknown>;
+  const { section, title, brand, price, description, inclusions } =
+    body as Record<string, unknown>;
 
   if (typeof section !== 'string' || !ALLOWED_SECTIONS.has(section)) {
     return NextResponse.json(
@@ -81,6 +83,8 @@ export async function POST(request: NextRequest) {
         brand: brand.trim(),
         price: Math.round(priceNum),
         order: count,
+        description: typeof description === 'string' ? description : undefined,
+        inclusions: Array.isArray(inclusions) ? inclusions : [],
       },
     });
     return NextResponse.json(product, { status: 201 });
