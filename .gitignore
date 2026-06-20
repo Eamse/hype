@@ -51,3 +51,4 @@ next-env.d.ts
 
 /app/generated/prisma
 SECURITY_AUDIT.md
+memory/
