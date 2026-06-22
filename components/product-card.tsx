@@ -18,8 +18,8 @@ function HeartIcon({ active }: { active: boolean }) {
       width="14"
       height="14"
       viewBox="0 0 24 24"
-      fill={active ? '#222' : 'none'}
-      stroke={active ? '#222' : '#888'}
+      fill={active ? '#ef4444' : 'none'}
+      stroke={active ? '#ef4444' : '#888'}
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -54,73 +54,75 @@ export default function ProductCard({
   onToggleSave: (id: number) => void;
 }) {
   return (
-    <Link
-      href={`/product/${product.id}`}
-      className="product-card"
-      style={{ cursor: 'pointer', display: 'block' }}
-    >
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          aspectRatio: '1/1',
-          borderRadius: 6,
-          overflow: 'hidden',
-          backgroundColor: '#f0f0f0',
-          marginBottom: 8,
-        }}
+    <div style={{ position: 'relative' }}>
+      <Link
+        href={`/product/${product.id}`}
+        className="product-card"
+        style={{ cursor: 'pointer', display: 'block' }}
       >
-        {product.imageUrl ? (
-          <Image
-            src={product.imageUrl}
-            alt={product.title}
-            fill
-            sizes="(max-width: 768px) 50vw, 25vw"
-            className="card-img"
-            style={{ objectFit: 'cover' }}
-          />
-        ) : (
-          <ImgBox />
-        )}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleSave(product.id);
-          }}
+        <div
           style={{
-            position: 'absolute',
-            top: 6,
-            right: 6,
-            width: 26,
-            height: 26,
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.85)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            position: 'relative',
+            width: '100%',
+            aspectRatio: '1/1',
+            borderRadius: 6,
+            overflow: 'hidden',
+            backgroundColor: '#f0f0f0',
+            marginBottom: 8,
           }}
         >
-          <HeartIcon active={isSaved} />
-        </button>
-      </div>
-      <p style={{ fontSize: 11, color: '#999', marginBottom: 2 }}>
-        {product.brand}
-      </p>
-      <p
-        className="card-title"
+          {product.imageUrl ? (
+            <Image
+              src={product.imageUrl}
+              alt={product.title}
+              fill
+              sizes="(max-width: 768px) 50vw, 25vw"
+              className="card-img"
+              style={{ objectFit: 'cover' }}
+            />
+          ) : (
+            <ImgBox />
+          )}
+        </div>
+        <p style={{ fontSize: 11, color: '#999', marginBottom: 2 }}>
+          {product.brand}
+        </p>
+        <p
+          className="card-title"
+          style={{
+            fontSize: 13,
+            fontWeight: 500,
+            color: '#191919',
+            marginBottom: 3,
+            lineHeight: 1.4,
+          }}
+        >
+          {product.title}
+        </p>
+        <p style={{ fontSize: 13, fontWeight: 700, color: '#191919' }}>
+          USD {product.price.toLocaleString()}
+        </p>
+      </Link>
+      <button
+        onClick={() => onToggleSave(product.id)}
         style={{
-          fontSize: 13,
-          fontWeight: 500,
-          color: '#191919',
-          marginBottom: 3,
-          lineHeight: 1.4,
+          position: 'absolute',
+          top: 6,
+          right: 6,
+          width: 26,
+          height: 26,
+          borderRadius: '50%',
+          background: 'rgba(255,255,255,0.85)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: 'none',
+          cursor: 'pointer',
+          zIndex: 1,
         }}
       >
-        {product.title}
-      </p>
-      <p style={{ fontSize: 13, fontWeight: 700, color: '#191919' }}>
-        USD {product.price.toLocaleString()}
-      </p>
-    </Link>
+        <HeartIcon active={isSaved} />
+      </button>
+    </div>
   );
 }

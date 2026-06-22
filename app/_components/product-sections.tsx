@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import ProductSection from '@/components/product-section';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 type Product = {
   id: number;
@@ -16,12 +18,34 @@ type Section = { title: string; subtitle?: string; products: Product[] };
 
 export default function ProductSections({ sections }: { sections: Section[] }) {
   const [saved, setSaved] = useState<Set<number>>(new Set());
+  const { data: session } = useSession();
+  const router = useRouter();
 
-  function toggleSave(id: number) {
+  useEffect(() => {
+    if (!session) return;
+    fetch('/api/bookmarks')
+      .then((res) => res.json())
+      .then((data) => {
+        setSaved(new Set(data.map((b: { productId: number }) => b.productId)));
+      });
+  }, [session]);
+
+  async function toggleSave(id: number) {
+    if (!session) {
+      router.push('?auth=1');
+      return;
+    }
+    const res = await fetch('/api/bookmarks', {
+      method: 'POST',
+      body: JSON.stringify({ productId: id }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    const data = await res.json();
+
     setSaved((prev) => {
       const n = new Set(prev);
-      if (n.has(id)) n.delete(id);
-      else n.add(id);
+      if (data.bookmarked) n.add(id);
+      else n.delete(id);
       return n;
     });
   }

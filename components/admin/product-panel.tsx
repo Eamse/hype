@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, startTransition } from 'react';
 import Image from 'next/image';
 import {
   type Product,
@@ -88,14 +88,13 @@ export default function ProductPanel({
     return () => controller.abort();
   }, [section, refreshKey]);
 
+  const editingId = editingProduct?.id;
   useEffect(() => {
-    if (editingProduct) {
-      const updated = products.find((p) => p.id === editingProduct.id);
-      // eslint-disable-next-line
-      if (updated) setEditingProduct(updated);
+    if (editingId !== undefined) {
+      const updated = products.find((p) => p.id === editingId);
+      if (updated) startTransition(() => setEditingProduct(updated));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products]);
+  }, [products, editingId]);
 
   async function handleAdd() {
     if (!newForm.title.trim()) return;

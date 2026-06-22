@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useEffect, startTransition } from 'react';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
+import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import LoginModal from '@/components/login-modal';
 import { useSession, signOut } from 'next-auth/react';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -57,8 +58,8 @@ const SUB_NAV: Record<Brand, { label: string; section: string }[]> = {
 function SearchIcon() {
   return (
     <svg
-      width="18"
-      height="18"
+      width="22"
+      height="22"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -74,8 +75,8 @@ function SearchIcon() {
 function BookmarkIcon() {
   return (
     <svg
-      width="18"
-      height="18"
+      width="22"
+      height="22"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -90,8 +91,8 @@ function BookmarkIcon() {
 function BellIcon() {
   return (
     <svg
-      width="18"
-      height="18"
+      width="22"
+      height="22"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -107,8 +108,8 @@ function BellIcon() {
 function UserIcon() {
   return (
     <svg
-      width="18"
-      height="18"
+      width="22"
+      height="22"
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -213,9 +214,25 @@ export default function Header({
 }) {
   const pathname = usePathname();
   const [loginOpen, setLoginOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const { data: session } = useSession();
   const isMobile = useIsMobile();
+  const [bookmarkCount, setBookmarkCount] = useState(0);
+
+  useEffect(() => {
+    if (!session) return;
+    fetch('/api/bookmarks')
+      .then((res) => res.json())
+      .then((data) => setBookmarkCount(data.length));
+  }, [session]);
+
+  useEffect(() => {
+    if (searchParams.get('auth') === '1') {
+      startTransition(() => setLoginOpen(true));
+    }
+  }, [searchParams]);
 
   return (
     <>
@@ -324,16 +341,81 @@ export default function Header({
                 <button>
                   <SearchIcon />
                 </button>
-                <button>
+                <Link
+                  href="/bookmarks"
+                  style={{
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                >
                   <BookmarkIcon />
-                </button>
+                  {bookmarkCount > 0 && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        top: -6,
+                        right: -6,
+                        width: 16,
+                        height: 16,
+                        borderRadius: '50%',
+                        backgroundColor: '#ef4444',
+                        color: '#fff',
+                        fontSize: 10,
+                        fontWeight: 700,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      {bookmarkCount}
+                    </span>
+                  )}
+                </Link>
                 <button>
                   <BellIcon />
                 </button>
                 <button
                   onClick={() => (session ? signOut() : setLoginOpen(true))}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
                 >
-                  <UserIcon />
+                  {session?.user?.image ? (
+                    <Image
+                      src={session.user.image}
+                      alt="profile"
+                      width={28}
+                      height={28}
+                      style={{ borderRadius: '50%', objectFit: 'cover' }}
+                    />
+                  ) : session ? (
+                    <div
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: '50%',
+                        backgroundColor: '#191919',
+                        color: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: 12,
+                        fontWeight: 700,
+                      }}
+                    >
+                      {(session.user?.name ?? session.user?.email)
+                        ?.charAt(0)
+                        .toUpperCase() ?? '?'}
+                    </div>
+                  ) : (
+                    <UserIcon />
+                  )}
                 </button>
               </>
             ) : (
@@ -401,9 +483,12 @@ export default function Header({
             <button>
               <SearchIcon />
             </button>
-            <button>
+            <Link
+              href="/bookmarks"
+              style={{ display: 'flex', alignItems: 'center' }}
+            >
               <BookmarkIcon />
-            </button>
+            </Link>
             <button>
               <BellIcon />
             </button>
@@ -416,14 +501,58 @@ export default function Header({
                   setLoginOpen(true);
                 }
               }}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                display: 'flex',
+                alignItems: 'center',
+              }}
             >
-              <UserIcon />
+              {session?.user?.image ? (
+                <Image
+                  src={session.user.image}
+                  alt="profile"
+                  width={28}
+                  height={28}
+                  style={{ borderRadius: '50%', objectFit: 'cover' }}
+                />
+              ) : session ? (
+                <div
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: '50%',
+                    backgroundColor: '#191919',
+                    color: '#fff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: 12,
+                    fontWeight: 700,
+                  }}
+                >
+                  {(session.user?.name ?? session.user?.email)
+                    ?.charAt(0)
+                    .toUpperCase() ?? '?'}
+                </div>
+              ) : (
+                <UserIcon />
+              )}
             </button>
           </div>
         </div>
       )}
 
-      {loginOpen && <LoginModal onClose={() => setLoginOpen(false)} />}
+      {loginOpen && (
+        <LoginModal
+          onClose={() => {
+            setLoginOpen(false);
+            router.replace(pathname);
+          }}
+        />
+      )}
     </>
   );
 }

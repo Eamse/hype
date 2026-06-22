@@ -27,6 +27,7 @@ model Product {
   updatedAt DateTime       @updatedAt
   images    ProductImage[]
   inclusions String[]
+  bookmarks Bookmark[]
 }
 
 model ProductImage {
@@ -61,6 +62,7 @@ model User {
   updatedAt        DateTime  @updatedAt
   accounts         Account[]
   sessions         Session[]
+  bookmarks        Bookmark[]
 }
 
 model Account {
@@ -119,4 +121,15 @@ model MagazineImage {
   url        String
   order      Int      @default(0)
   magazine   Magazine @relation(fields: [magazineId], references: [id], onDelete: Cascade)
+}
+
+model Bookmark {
+    id        Int      @id @default(autoincrement())                                                                   
+    userId    String                                                                                                   
+    productId Int                                                                                                      
+    createdAt DateTime @default(now())                                                                                 
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)                                
+    product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)                             
+   
+    @@unique([userId, productId])  
 }

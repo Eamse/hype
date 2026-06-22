@@ -28,11 +28,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: { strategy: 'jwt' },
   callbacks: {
     ...authConfig.callbacks,
-    async jwt({ token, user, trigger }) {
+    async jwt({ token, user, account, profile, trigger }) {
       // 로그인 시 토큰에 id, isOnboarded 저장
       if (user) {
         token.id = user.id;
         token.isOnboarded = (user as { isOnboarded: boolean }).isOnboarded;
+        token.image = user.image;
+        token.name = user.name;
+      }
+      // 구글 로그인 시 프로필 이미지 저장
+      if (account?.provider === 'google' && profile) {
+        const picture = (profile as { picture?: string }).picture ?? null;
+        token.image = picture;
+        if (picture && token.id) {
+          await prisma.user.update({
+            where: { id: token.id as string },
+            data: { image: picture },
+          });
+        }
       }
       if (trigger === 'update') {
         const dbUser = await prisma.user.findUnique({
@@ -47,7 +60,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // 토큰 → 세션으로 전달
       session.user.id = token.id as string;
       session.user.isOnboarded = token.isOnboarded as boolean;
-      return session;
+      session.user.image = (token.image as string) ?? null;
+return session;
     },
   },
 });

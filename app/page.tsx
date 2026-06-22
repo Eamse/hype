@@ -8,12 +8,16 @@ import ProductSections from './_components/product-sections';
 import HomeFooter from './_components/home-footer';
 
 export default async function Home() {
-  const heroRow = await prisma.siteConfig.findUnique({ where: { key: 'images_hero' } });
+  const heroRow = await prisma.siteConfig.findUnique({
+    where: { key: 'images_hero' },
+  });
   const heroImages: string[] = (() => {
     try {
       const parsed: unknown = JSON.parse(heroRow?.value ?? '[]');
       return Array.isArray(parsed) ? (parsed as string[]) : [];
-    } catch { return []; }
+    } catch {
+      return [];
+    }
   })();
 
   const [jejuWedding, seoulWedding] = await Promise.all([

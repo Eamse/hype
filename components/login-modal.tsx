@@ -18,7 +18,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
       password,
       redirect: false,
     });
-    if (!result?.ok) {
+    if (result?.error) {
       setError('Please check your ID and password.');
     } else {
       onClose();

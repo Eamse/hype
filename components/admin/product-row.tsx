@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, startTransition } from 'react';
 import Image from 'next/image';
 import { type Product, btnStyle } from './types';
 
@@ -27,8 +27,7 @@ export default function ProductRow({
   const [imgError, setImgError] = useState<string | null>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line
-    setLocalExpanded(isExpanded);
+    startTransition(() => setLocalExpanded(isExpanded));
   }, [isExpanded]);
 
   async function handleImgUpload(file: File) {
@@ -187,7 +186,14 @@ export default function ProductRow({
                 letterSpacing: '0.5px',
               }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
                 <circle cx="12" cy="13" r="4" />
               </svg>

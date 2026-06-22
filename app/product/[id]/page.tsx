@@ -10,6 +10,7 @@ import Accordion from './_components/accordion';
 import { BackButton, StickyBottomBar } from './_components/product-actions';
 import ImageGallery from './_components/image-gallery';
 import type { Metadata } from 'next';
+import { auth } from '@/auth';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -58,6 +59,8 @@ export default async function ProductDetailPage({ params }: Props) {
     take: 10,
     orderBy: { order: 'asc' },
   });
+
+  const session = await auth();
 
   return (
     <div className="bg-white text-[#191919] min-h-screen">
@@ -216,7 +219,10 @@ export default async function ProductDetailPage({ params }: Props) {
       </main>
 
       <SnsSidebar />
-      <StickyBottomBar />
+      <StickyBottomBar
+        userId={session?.user?.id ?? null}
+        productId={product.id}
+      />
     </div>
   );
 }
