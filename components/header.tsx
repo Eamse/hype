@@ -219,6 +219,7 @@ export default function Header({
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [toast, setToast] = useState(false);
   const { data: session } = useSession();
   const isMobile = useIsMobile();
   const [bookmarkCount, setBookmarkCount] = useState(0);
@@ -343,13 +344,9 @@ export default function Header({
                 <button onClick={() => setSearchOpen(true)}>
                   <SearchIcon />
                 </button>
-                <Link
-                  href="/bookmarks"
-                  style={{
-                    position: 'relative',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
+                <button
+                  onClick={() => session ? router.push('/bookmarks') : setLoginOpen(true)}
+                  style={{ position: 'relative', display: 'flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                 >
                   <BookmarkIcon />
                   {bookmarkCount > 0 && (
@@ -373,12 +370,12 @@ export default function Header({
                       {bookmarkCount}
                     </span>
                   )}
-                </Link>
+                </button>
                 {/* <button>
                   <BellIcon />
                 </button> */}
                 <button
-                  onClick={() => (session ? signOut() : setLoginOpen(true))}
+                  onClick={() => session ? (signOut(), setToast(true), setTimeout(() => setToast(false), 3000)) : setLoginOpen(true)}
                   style={{
                     background: 'none',
                     border: 'none',
@@ -485,12 +482,12 @@ export default function Header({
             <button>
               <SearchIcon />
             </button>
-            <Link
-              href="/bookmarks"
-              style={{ display: 'flex', alignItems: 'center' }}
+            <button
+              onClick={() => { setMenuOpen(false); session ? router.push('/bookmarks') : setLoginOpen(true); }}
+              style={{ display: 'flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
             >
               <BookmarkIcon />
-            </Link>
+            </button>
             {/* <button>
               <BellIcon />
             </button> */}
@@ -499,6 +496,8 @@ export default function Header({
                 setMenuOpen(false);
                 if (session) {
                   signOut();
+                  setToast(true);
+                  setTimeout(() => setToast(false), 3000);
                 } else {
                   setLoginOpen(true);
                 }
@@ -558,6 +557,27 @@ export default function Header({
             router.replace(pathname);
           }}
         />
+      )}
+
+      {toast && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 72,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 300,
+            backgroundColor: '#191919',
+            color: '#fff',
+            padding: '12px 24px',
+            borderRadius: 8,
+            fontSize: 14,
+            fontWeight: 500,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          You have been logged out.
+        </div>
       )}
     </>
   );
