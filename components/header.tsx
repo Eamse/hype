@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import LoginModal from '@/components/login-modal';
+import SearchModal from '@/components/search-modal';
 import { useSession, signOut } from 'next-auth/react';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
@@ -88,23 +89,23 @@ function BookmarkIcon() {
     </svg>
   );
 }
-function BellIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-  );
-}
+// function BellIcon() {
+//   return (
+//     <svg
+//       width="22"
+//       height="22"
+//       viewBox="0 0 24 24"
+//       fill="none"
+//       stroke="currentColor"
+//       strokeWidth="1.8"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     >
+//       <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+//       <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+//     </svg>
+//   );
+// }
 function UserIcon() {
   return (
     <svg
@@ -217,6 +218,7 @@ export default function Header({
   const searchParams = useSearchParams();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const { data: session } = useSession();
   const isMobile = useIsMobile();
   const [bookmarkCount, setBookmarkCount] = useState(0);
@@ -338,7 +340,7 @@ export default function Header({
           >
             {!isMobile ? (
               <>
-                <button>
+                <button onClick={() => setSearchOpen(true)}>
                   <SearchIcon />
                 </button>
                 <Link
@@ -372,9 +374,9 @@ export default function Header({
                     </span>
                   )}
                 </Link>
-                <button>
+                {/* <button>
                   <BellIcon />
-                </button>
+                </button> */}
                 <button
                   onClick={() => (session ? signOut() : setLoginOpen(true))}
                   style={{
@@ -489,9 +491,9 @@ export default function Header({
             >
               <BookmarkIcon />
             </Link>
-            <button>
+            {/* <button>
               <BellIcon />
-            </button>
+            </button> */}
             <button
               onClick={() => {
                 setMenuOpen(false);
@@ -543,6 +545,10 @@ export default function Header({
             </button>
           </div>
         </div>
+      )}
+
+      {searchOpen && (
+        <SearchModal onClose={() => setSearchOpen(false)} />
       )}
 
       {loginOpen && (
