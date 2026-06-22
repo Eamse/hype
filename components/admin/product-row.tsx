@@ -1,83 +1,35 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { type Product, btnStyle, inputStyle, INCLUSIONS } from './types';
+import { type Product, btnStyle } from './types';
 
 export default function ProductRow({
   product,
   isSlide,
   onUpdated,
   onDeleted,
+  onEdit,
+  isExpanded,
 }: {
   product: Product;
   isSlide?: boolean;
   onUpdated: () => void;
   onDeleted: () => void;
+  onEdit: () => void;
+  isExpanded: boolean;
 }) {
   const imgInputRef = useRef<HTMLInputElement>(null);
-  const [editing, setEditing] = useState(false);
-  const [form, setForm] = useState({
-    title: product.title,
-    brand: product.brand,
-    price: String(product.price),
-    description: product.description ?? '',
-    inclusions: product.inclusions,
-  });
-  const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
+  const [localExpanded, setLocalExpanded] = useState(isExpanded);
+  const [imgHover, setImgHover] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [imgSaved, setImgSaved] = useState(false);
   const [imgError, setImgError] = useState<string | null>(null);
-  // const detailImgRef = useRef<HTMLInputElement>(null);
-  // const [detailUploading, setDetailUploading] = useState(false);
 
-  async function handleSave() {
-    if (!form.title.trim()) {
-      setSaveError('Title is required.');
-      return;
-    }
-    if (!isSlide) {
-      const priceNum = Number(form.price);
-      if (!Number.isFinite(priceNum) || priceNum < 0) {
-        setSaveError('Invalid price.');
-        return;
-      }
-    }
-
-    setSaving(true);
-    setSaveError(null);
-    try {
-      const body: Record<string, unknown> = {
-        title: form.title.trim(),
-        description: form.description,
-        inclusions: form.inclusions,
-      };
-      if (!isSlide) {
-        body.brand = form.brand.trim();
-        body.price = Number(form.price);
-      }
-      const res = await fetch(`/api/products/${product.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      if (!res.ok) {
-        const data: unknown = await res.json();
-        const msg =
-          typeof data === 'object' && data !== null && 'error' in data
-            ? String((data as { error: unknown }).error)
-            : 'Save failed';
-        throw new Error(msg);
-      }
-      setEditing(false);
-      onUpdated();
-    } catch (e) {
-      setSaveError(e instanceof Error ? e.message : 'Save failed');
-    } finally {
-      setSaving(false);
-    }
-  }
+  useEffect(() => {
+    // eslint-disable-next-line
+    setLocalExpanded(isExpanded);
+  }, [isExpanded]);
 
   async function handleImgUpload(file: File) {
     setUploading(true);
@@ -131,18 +83,6 @@ export default function ProductRow({
     }
   }
 
-  function cancelEdit() {
-    setEditing(false);
-    setSaveError(null);
-    setForm({
-      title: product.title,
-      brand: product.brand,
-      price: String(product.price),
-      description: product.description ?? '',
-      inclusions: product.inclusions,
-    });
-  }
-
   return (
     <div
       style={{
@@ -155,105 +95,134 @@ export default function ProductRow({
         flexDirection: 'column',
       }}
     >
-      {/* 이미지 영역 */}
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          aspectRatio: '3/4',
-          backgroundColor: '#f5f2ec',
-          cursor: 'pointer',
-        }}
-        onClick={() => !editing && imgInputRef.current?.click()}
-        title="Click to change image"
-      >
-        {product.imageUrl ? (
-          <Image
-            src={product.imageUrl}
-            alt={product.title}
-            fill
-            sizes="240px"
-            style={{ objectFit: 'cover' }}
-          />
-        ) : (
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 8,
-              color: '#ccc',
-            }}
-          >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.2"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <circle cx="8.5" cy="8.5" r="1.5" />
-              <polyline points="21 15 16 10 5 21" />
-            </svg>
-            <span style={{ fontSize: 10, letterSpacing: '1px' }}>No Image</span>
-          </div>
-        )}
-        {uploading && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'rgba(255,255,255,0.8)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
+      {/* 이미지 영역 - 클릭하면 썸네일 변경 */}
+      {localExpanded && (
+        <div
+          style={{
+            position: 'relative',
+            width: '100%',
+            aspectRatio: '3/4',
+            backgroundColor: '#f5f2ec',
+            cursor: 'pointer',
+          }}
+          onClick={() => imgInputRef.current?.click()}
+          onMouseEnter={() => setImgHover(true)}
+          onMouseLeave={() => setImgHover(false)}
+        >
+          {product.imageUrl ? (
+            <Image
+              src={product.imageUrl}
+              alt={product.title}
+              fill
+              sizes="240px"
+              style={{ objectFit: 'cover' }}
+            />
+          ) : (
             <div
               style={{
-                width: 20,
-                height: 20,
-                borderRadius: '50%',
-                border: '2px solid #e8d9b8',
-                borderTopColor: '#c9a96e',
-                animation: 'spin 0.7s linear infinite',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 8,
+                color: '#ccc',
               }}
-            />
-          </div>
-        )}
-        {imgSaved && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'rgba(201,169,110,0.85)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              fontSize: 20,
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.2"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <polyline points="21 15 16 10 5 21" />
+              </svg>
+              <span style={{ fontSize: 10, letterSpacing: '1px' }}>
+                No Image
+              </span>
+            </div>
+          )}
+          {uploading && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'rgba(255,255,255,0.8)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <div
+                style={{
+                  width: 20,
+                  height: 20,
+                  borderRadius: '50%',
+                  border: '2px solid #e8d9b8',
+                  borderTopColor: '#c9a96e',
+                  animation: 'spin 0.7s linear infinite',
+                }}
+              />
+            </div>
+          )}
+          {imgHover && !uploading && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'rgba(0,0,0,0.45)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: 6,
+                color: '#fff',
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: '0.5px',
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+                <circle cx="12" cy="13" r="4" />
+              </svg>
+              클릭하여 이미지 변경
+            </div>
+          )}
+          {imgSaved && (
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'rgba(201,169,110,0.85)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#fff',
+                fontSize: 20,
+              }}
+            >
+              ✓
+            </div>
+          )}
+          <input
+            ref={imgInputRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            style={{ display: 'none' }}
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleImgUpload(f);
+              e.target.value = '';
             }}
-          >
-            ✓
-          </div>
-        )}
-        <input
-          ref={imgInputRef}
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/gif"
-          style={{ display: 'none' }}
-          onChange={(e) => {
-            const f = e.target.files?.[0];
-            if (f) handleImgUpload(f);
-            e.target.value = '';
-          }}
-        />
-      </div>
+          />
+        </div>
+      )}
 
       {/* 정보 영역 */}
       <div
@@ -261,180 +230,119 @@ export default function ProductRow({
           padding: '14px 16px',
           flex: 1,
           display: 'flex',
-          flexDirection: 'column',
-          gap: 6,
+          flexDirection: 'row',
+          gap: 12,
         }}
       >
-        {editing ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {saveError && (
-              <div
-                style={{
-                  fontSize: 11,
-                  color: '#dc2626',
-                  background: '#fef2f2',
-                  padding: '6px 10px',
-                  borderRadius: 5,
-                }}
-              >
-                {saveError}
-              </div>
-            )}
-            <input
-              value={form.title}
-              onChange={(e) =>
-                setForm((p) => ({ ...p, title: e.target.value }))
-              }
-              placeholder="Title"
-              style={inputStyle}
-            />
-            {!isSlide && (
-              <>
-                <input
-                  value={form.brand}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, brand: e.target.value }))
-                  }
-                  placeholder="Brand"
-                  style={inputStyle}
-                />
-                <input
-                  value={form.price}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, price: e.target.value }))
-                  }
-                  placeholder="Price"
-                  type="number"
-                  min="0"
-                  style={inputStyle}
-                />
-              </>
-            )}
-
-            <textarea
-              value={form.description}
-              onChange={(e) =>
-                setForm((p) => ({ ...p, description: e.target.value }))
-              }
-              placeholder="Description"
-              rows={3}
-              style={{ ...inputStyle, resize: 'vertical' }}
-            />
-            {!isSlide && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {INCLUSIONS.map((item) => (
-                  <label
-                    key={item}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      fontSize: 12,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={form.inclusions.includes(item)}
-                      onChange={(e) =>
-                        setForm((p) => ({
-                          ...p,
-                          inclusions: e.target.checked
-                            ? [...p.inclusions, item]
-                            : p.inclusions.filter((i) => i !== item),
-                        }))
-                      }
-                    />
-                    {item}
-                  </label>
-                ))}
-              </div>
-            )}
-
-            <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                style={btnStyle('#191919', '#fff')}
-              >
-                {saving ? 'Saving...' : 'Save'}
-              </button>
-              <button
-                onClick={cancelEdit}
-                disabled={saving}
-                style={btnStyle('transparent', '#888', '#e0d8c8')}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        ) : (
-          <>
-            <p
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: '#1a1a1a',
-                lineHeight: 1.4,
-              }}
-            >
-              {product.title}
-            </p>
-            {!isSlide && (
-              <>
-                <p style={{ fontSize: 11, color: '#aaa' }}>{product.brand}</p>
-                <p style={{ fontSize: 13, fontWeight: 700, color: '#c9a96e' }}>
-                  ₩{product.price.toLocaleString()}
-                </p>
-              </>
-            )}
-            <div
-              style={{
-                display: 'flex',
-                gap: 6,
-                marginTop: 8,
-                flexWrap: 'wrap',
-              }}
-            >
-              <button
-                onClick={() => {
-                  setEditing(true);
-                  setSaveError(null);
-                }}
-                style={btnStyle('transparent', '#888', '#e0d8c8')}
-              >
-                Edit
-              </button>
-              {product.imageUrl && (
-                <button
-                  onClick={handleImgDelete}
-                  style={btnStyle('transparent', '#888', '#e0d8c8')}
-                >
-                  Remove Img
-                </button>
-              )}
-              <button
-                onClick={onDeleted}
-                style={{ ...btnStyle('transparent', '#ef4444', '#ef4444') }}
-              >
-                Delete
-              </button>
-            </div>
-          </>
-        )}
-        {imgError && (
-          <div
+        {/* 왼쪽: 텍스트 + 버튼 */}
+        <div
+          style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}
+        >
+          <p
             style={{
-              fontSize: 11,
-              color: '#dc2626',
-              background: '#fef2f2',
-              padding: '6px 10px',
-              borderRadius: 5,
+              fontSize: 13,
+              fontWeight: 600,
+              color: '#1a1a1a',
+              lineHeight: 1.4,
             }}
           >
-            {imgError}
+            {product.title}
+          </p>
+          {!isSlide && (
+            <>
+              <p style={{ fontSize: 11, color: '#aaa' }}>{product.brand}</p>
+              <p style={{ fontSize: 13, fontWeight: 700, color: '#c9a96e' }}>
+                ₩{product.price.toLocaleString()}
+              </p>
+            </>
+          )}
+          <div
+            style={{
+              display: 'flex',
+              gap: 6,
+              marginTop: 8,
+              alignItems: 'center',
+            }}
+          >
+            <button
+              onClick={onEdit}
+              style={btnStyle('transparent', '#888', '#e0d8c8')}
+            >
+              Edit
+            </button>
+            {product.imageUrl && (
+              <button
+                onClick={handleImgDelete}
+                style={btnStyle('transparent', '#888', '#e0d8c8')}
+              >
+                Remove Img
+              </button>
+            )}
+            <button
+              onClick={onDeleted}
+              style={{ ...btnStyle('transparent', '#ef4444', '#ef4444') }}
+            >
+              Delete
+            </button>
           </div>
-        )}
+          {imgError && (
+            <div
+              style={{
+                fontSize: 11,
+                color: '#dc2626',
+                background: '#fef2f2',
+                padding: '6px 10px',
+                borderRadius: 5,
+              }}
+            >
+              {imgError}
+            </div>
+          )}
+        </div>
+
+        {/* 오른쪽: 펼치기 버튼 + 썸네일 */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 6,
+            flexShrink: 0,
+          }}
+        >
+          <button
+            onClick={() => setLocalExpanded((v) => !v)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: 11,
+              color: '#aaa',
+              padding: '2px 4px',
+            }}
+          >
+            {localExpanded ? '▲접기' : '▼펼치기'}
+          </button>
+          {!localExpanded && product.imageUrl && (
+            <div
+              style={{
+                position: 'relative',
+                width: 80,
+                height: 80,
+                borderRadius: 8,
+                overflow: 'hidden',
+              }}
+            >
+              <Image
+                src={product.imageUrl}
+                alt={product.title}
+                fill
+                sizes="80px"
+                style={{ objectFit: 'cover' }}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

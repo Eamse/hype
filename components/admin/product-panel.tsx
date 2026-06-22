@@ -35,8 +35,26 @@ export default function ProductPanel({
   });
   const [refreshKey, setRefreshKey] = useState(0);
   const [newImage, setNewImage] = useState<File | null>(null);
+  const [newDetailImages, setNewDetailImages] = useState<File[]>([]);
   const [newImagePreview, setNewImagePreview] = useState<string | null>(null);
   const addImgRef = useRef<HTMLInputElement>(null);
+  const addDetailImgRef = useRef<HTMLInputElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [query, setQuery] = useState('');
+
+  // 편집 모달
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [editForm, setEditForm] = useState({
+    title: '',
+    brand: '',
+    price: '',
+    description: '',
+    inclusions: [] as string[],
+  });
+  const [editSaving, setEditSaving] = useState(false);
+  const [editSaveError, setEditSaveError] = useState<string | null>(null);
+  const [editDetailUploading, setEditDetailUploading] = useState(false);
+  const editDetailImgRef = useRef<HTMLInputElement>(null);
 
   const LABELS: Record<string, string> = {
     'Meet our Photographers in Jeju': 'Meet our Photographers in Jeju',
@@ -69,6 +87,15 @@ export default function ProductPanel({
       .finally(() => setLoading(false));
     return () => controller.abort();
   }, [section, refreshKey]);
+
+  useEffect(() => {
+    if (editingProduct) {
+      const updated = products.find((p) => p.id === editingProduct.id);
+      // eslint-disable-next-line
+      if (updated) setEditingProduct(updated);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [products]);
 
   async function handleAdd() {
     if (!newForm.title.trim()) return;
@@ -121,6 +148,14 @@ export default function ProductPanel({
         });
       }
     }
+    for (const file of newDetailImages) {
+      const fd = new FormData();
+      fd.append('image', file);
+      await fetch(`/api/products/${created.id}/images`, {
+        method: 'POST',
+        body: fd,
+      });
+    }
 
     setNewForm({
       title: '',
@@ -131,8 +166,73 @@ export default function ProductPanel({
     });
     setNewImage(null);
     setNewImagePreview(null);
+    setNewDetailImages([]);
     setAdding(false);
     load();
+  }
+
+  async function handleEditSave() {
+    if (!editingProduct) return;
+    if (!editForm.title.trim()) {
+      setEditSaveError('Title is required.');
+      return;
+    }
+    if (!isSlides) {
+      const priceNum = Number(editForm.price);
+      if (!Number.isFinite(priceNum) || priceNum < 0) {
+        setEditSaveError('Invalid price.');
+        return;
+      }
+    }
+    setEditSaving(true);
+    setEditSaveError(null);
+    try {
+      const body: Record<string, unknown> = {
+        title: editForm.title.trim(),
+        description: editForm.description,
+        inclusions: editForm.inclusions,
+      };
+      if (!isSlides) {
+        body.brand = editForm.brand.trim();
+        body.price = Number(editForm.price);
+      }
+      const res = await fetch(`/api/products/${editingProduct.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const data: unknown = await res.json();
+        const msg =
+          typeof data === 'object' && data !== null && 'error' in data
+            ? String((data as { error: unknown }).error)
+            : 'Save failed';
+        throw new Error(msg);
+      }
+      setEditingProduct(null);
+      load();
+    } catch (e) {
+      setEditSaveError(e instanceof Error ? e.message : 'Save failed');
+    } finally {
+      setEditSaving(false);
+    }
+  }
+
+  async function handleEditDetailImgUpload(file: File) {
+    if (!editingProduct) return;
+    setEditDetailUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      await fetch(`/api/products/${editingProduct.id}/images`, {
+        method: 'POST',
+        body: fd,
+      });
+      load();
+    } catch {
+    } finally {
+      setEditDetailUploading(false);
+    }
   }
 
   async function handleDelete(id: number) {
@@ -144,6 +244,14 @@ export default function ProductPanel({
       alert('Failed to delete item. Please try again.');
     }
   }
+
+  const filteredProducts = products.filter((p) => {
+    const q = query.toLowerCase();
+    return (
+      p.title.toLocaleLowerCase().includes(q) ||
+      p.brand.toLowerCase().includes(q)
+    );
+  });
 
   return (
     <div>
@@ -183,18 +291,43 @@ export default function ProductPanel({
             {products.length} {isSlides ? 'slides' : 'products'}
           </p>
         </div>
-        <button
-          onClick={() => {
-            setAdding(true);
-            setAddError(null);
-          }}
-          style={btnStyle('#191919', '#fff')}
-        >
-          {isSlides ? '+ Add Slide' : '+ Add Product'}
-        </button>
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            onClick={() => {
+              setAdding(true);
+              setAddError(null);
+            }}
+            style={btnStyle('#191919', '#fff')}
+          >
+            {isSlides ? '+ Add Slide' : '+ Add Product'}
+          </button>
+          <button
+            onClick={() => setIsExpanded((v) => !v)}
+            style={btnStyle('#191919', '#191919')}
+          >
+            {isExpanded ? '▲ 전체 접기' : '▼ 전체 펼치기'}
+          </button>
+        </div>
       </div>
 
       {/* 추가 폼 */}
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="제목 or 브랜드 검색"
+        style={{
+          width: '100%',
+          padding: '10px 14px',
+          fontSize: 14,
+          border: '1px solid black',
+          borderRadius: 8,
+          outline: 'none',
+          marginBottom: 20,
+          boxSizing: 'border-box',
+        }}
+      />
       {adding && (
         <div
           style={{
@@ -355,7 +488,7 @@ export default function ProductPanel({
 
           {/* 이미지 선택 */}
           <div>
-            <label style={labelStyle}>Image (optional)</label>
+            <label style={labelStyle}>Image</label>
             <input
               ref={addImgRef}
               type="file"
@@ -416,7 +549,34 @@ export default function ProductPanel({
               )}
             </div>
           </div>
-
+          {/* 상세 이미지 선택 */}
+          <div>
+            <label style={labelStyle}>Detail Images (optional)</label>
+            <input
+              ref={addDetailImgRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              multiple
+              style={{ display: 'none' }}
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files) setNewDetailImages(Array.from(files));
+                e.target.value = '';
+              }}
+            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <button
+                type="button"
+                onClick={() => addDetailImgRef.current?.click()}
+                style={btnStyle('transparent', '#555', '#ddd')}
+              >
+                {newDetailImages.length > 0
+                  ? `${newDetailImages.length} files selected`
+                  : '+ Select Detail Images'}
+              </button>
+            </div>
+          </div>
+          {/* 썸네일 이미지 선택 */}
           <div style={{ display: 'flex', gap: 8 }}>
             <button onClick={handleAdd} style={btnStyle('#191919', '#fff')}>
               Save
@@ -434,6 +594,7 @@ export default function ProductPanel({
                 });
                 setNewImage(null);
                 setNewImagePreview(null);
+                setNewDetailImages([]);
               }}
               style={btnStyle('transparent', '#555', '#ddd')}
             >
@@ -492,19 +653,283 @@ export default function ProductPanel({
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
             gap: 16,
           }}
         >
-          {products.map((p) => (
+          {filteredProducts.map((p) => (
             <ProductRow
               key={p.id}
               product={p}
               isSlide={isSlides}
+              isExpanded={isExpanded}
               onUpdated={() => load()}
               onDeleted={() => handleDelete(p.id)}
+              onEdit={() => {
+                setEditingProduct(p);
+                setEditForm({
+                  title: p.title,
+                  brand: p.brand,
+                  price: String(p.price),
+                  description: p.description ?? '',
+                  inclusions: p.inclusions,
+                });
+                setEditSaveError(null);
+              }}
             />
           ))}
+        </div>
+      )}
+
+      {/* 편집 모달 */}
+      {editingProduct && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 24,
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingProduct(null);
+          }}
+        >
+          <div
+            style={{
+              background: '#fff',
+              borderRadius: 16,
+              padding: 32,
+              width: '100%',
+              maxWidth: 560,
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 16,
+            }}
+          >
+            <p
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                color: '#7a5520',
+                letterSpacing: '2px',
+                textTransform: 'uppercase',
+              }}
+            >
+              Edit Product
+            </p>
+
+            {editSaveError && (
+              <div
+                style={{
+                  background: '#fef2f2',
+                  border: '1px solid #fecaca',
+                  borderRadius: 6,
+                  padding: '8px 12px',
+                  fontSize: 12,
+                  color: '#dc2626',
+                }}
+              >
+                {editSaveError}
+              </div>
+            )}
+
+            <div>
+              <label style={labelStyle}>Title</label>
+              <input
+                value={editForm.title}
+                onChange={(e) =>
+                  setEditForm((p) => ({ ...p, title: e.target.value }))
+                }
+                placeholder="Title"
+                style={inputStyle}
+              />
+            </div>
+
+            {!isSlides && (
+              <>
+                <div>
+                  <label style={labelStyle}>Brand</label>
+                  <input
+                    value={editForm.brand}
+                    onChange={(e) =>
+                      setEditForm((p) => ({ ...p, brand: e.target.value }))
+                    }
+                    placeholder="Brand"
+                    style={inputStyle}
+                  />
+                </div>
+                <div>
+                  <label style={labelStyle}>Price (₩)</label>
+                  <input
+                    value={editForm.price}
+                    onChange={(e) =>
+                      setEditForm((p) => ({ ...p, price: e.target.value }))
+                    }
+                    placeholder="Price"
+                    type="number"
+                    min="0"
+                    style={inputStyle}
+                  />
+                </div>
+              </>
+            )}
+
+            <div>
+              <label style={labelStyle}>Description</label>
+              <textarea
+                value={editForm.description}
+                onChange={(e) =>
+                  setEditForm((p) => ({ ...p, description: e.target.value }))
+                }
+                placeholder="Description"
+                rows={3}
+                style={{ ...inputStyle, resize: 'vertical' }}
+              />
+            </div>
+
+            {!isSlides && (
+              <div>
+                <label style={labelStyle}>Inclusions</label>
+                <div
+                  style={{ display: 'flex', flexDirection: 'column', gap: 6 }}
+                >
+                  {INCLUSIONS.map((item) => (
+                    <label
+                      key={item}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        fontSize: 12,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={editForm.inclusions.includes(item)}
+                        onChange={(e) =>
+                          setEditForm((p) => ({
+                            ...p,
+                            inclusions: e.target.checked
+                              ? [...p.inclusions, item]
+                              : p.inclusions.filter((i) => i !== item),
+                          }))
+                        }
+                      />
+                      {item}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label style={labelStyle}>Detail Images</label>
+              {editingProduct.images.length > 0 && (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 8,
+                    marginBottom: 10,
+                  }}
+                >
+                  {editingProduct.images.map((img) => (
+                    <div
+                      key={img.id}
+                      style={{ position: 'relative', width: 80, height: 80 }}
+                    >
+                      <Image
+                        src={img.url}
+                        alt="detail"
+                        fill
+                        style={{ objectFit: 'cover', borderRadius: 6 }}
+                      />
+                      <button
+                        onClick={async () => {
+                          const productId = editingProduct?.id;
+                          if (!productId) return;
+                          await fetch(
+                            `/api/products/${productId}/images?imageId=${img.id}`,
+                            { method: 'DELETE' },
+                          );
+                          load();
+                        }}
+                        style={{
+                          position: 'absolute',
+                          top: 2,
+                          right: 2,
+                          background: 'rgba(0,0,0,0.6)',
+                          color: '#fff',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: 18,
+                          height: 18,
+                          fontSize: 10,
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <input
+                ref={editDetailImgRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                multiple
+                style={{ display: 'none' }}
+                onChange={(e) => {
+                  const files = e.target.files;
+                  if (files) {
+                    Array.from(files).forEach((f) =>
+                      handleEditDetailImgUpload(f),
+                    );
+                  }
+                  e.target.value = '';
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => editDetailImgRef.current?.click()}
+                disabled={editDetailUploading}
+                style={btnStyle('transparent', '#555', '#ddd')}
+              >
+                {editDetailUploading ? 'Uploading...' : '+ Add Detail Images'}
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+              <button
+                onClick={handleEditSave}
+                disabled={editSaving}
+                style={btnStyle('#191919', '#fff')}
+              >
+                {editSaving ? 'Saving...' : 'Save'}
+              </button>
+              <button
+                onClick={() => {
+                  setEditingProduct(null);
+                  setEditSaveError(null);
+                }}
+                disabled={editSaving}
+                style={btnStyle('transparent', '#555', '#ddd')}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

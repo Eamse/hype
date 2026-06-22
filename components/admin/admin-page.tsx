@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import React from 'react';
 import Link from 'next/link';
 import { type Section } from './types';
@@ -8,7 +8,7 @@ import DashboardPanel from './dashboard-panel';
 import HeroPanel from './hero-panel';
 import ProductPanel from './product-panel';
 import MagazinePanel from './magazine-panel';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const IconDashboard = () => (
   <svg
@@ -106,11 +106,15 @@ const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
 ];
 
 export default function AdminPage() {
-  const [active, setActive] = useState<Section>('dashboard');
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const active = (searchParams.get('tab') as Section) ?? 'dashboard';
+  const setActive = (section: Section) => {
+    router.push(`/admin?tab=${encodeURIComponent(section)}`);
+  };
   const [admin, setAdmin] = useState<{ loginId: string; role: string } | null>(
     null,
   );
-  const router = useRouter();
   const logout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' }).catch(() => null);
     router.replace('/admin/login');
@@ -205,11 +209,13 @@ export default function AdminPage() {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <span
+            onClick={() => setActive('dashboard')}
             style={{
               fontWeight: 800,
               fontSize: 16,
               letterSpacing: '2.5px',
               color: '#3a1a2a',
+              cursor: 'pointer',
             }}
           >
             HYPE WEDDING
