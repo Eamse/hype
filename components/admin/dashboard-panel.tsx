@@ -10,8 +10,10 @@ type Stats = {
 
 export default function DashboardPanel({
   onNavigation,
+  isMobile,
 }: {
   onNavigation: (section: Section) => void;
+  isMobile: boolean;
 }) {
   const [state, setState] = useState<Stats | null>(null);
 
@@ -82,7 +84,7 @@ export default function DashboardPanel({
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
+              gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
               gap: 16,
             }}
           >
@@ -238,7 +240,7 @@ export default function DashboardPanel({
 
           {/* 중단 좌우 섹션 */}
           <div
-            style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: 16 }}
+            style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '3fr 2fr', gap: 16 }}
           >
             {/* 왼쪽 - 방문자 그래프 (추후 Google Console 연동) */}
             <div
@@ -413,18 +415,20 @@ export default function DashboardPanel({
                   >
                     COUNT
                   </th>
-                  <th
-                    style={{
-                      padding: '12px 24px',
-                      textAlign: 'right',
-                      fontSize: 11,
-                      color: '#aaa',
-                      fontWeight: 600,
-                      letterSpacing: '1px',
-                    }}
-                  >
-                    RATIO
-                  </th>
+                  {!isMobile && (
+                    <th
+                      style={{
+                        padding: '12px 24px',
+                        textAlign: 'right',
+                        fontSize: 11,
+                        color: '#aaa',
+                        fontWeight: 600,
+                        letterSpacing: '1px',
+                      }}
+                    >
+                      RATIO
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -455,44 +459,43 @@ export default function DashboardPanel({
                     >
                       {p._count.id}
                     </td>
-                    <td style={{ padding: '16px 24px', textAlign: 'right' }}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'flex-end',
-                          gap: 8,
-                        }}
-                      >
+                    {!isMobile && (
+                      <td style={{ padding: '16px 24px', textAlign: 'right' }}>
                         <div
                           style={{
-                            width: 80,
-                            height: 6,
-                            background: '#f0ebe0',
-                            borderRadius: 3,
-                            overflow: 'hidden',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'flex-end',
+                            gap: 8,
                           }}
                         >
                           <div
                             style={{
-                              height: '100%',
-                              width: `${totalProducts > 0 ? (p._count.id / totalProducts) * 100 : 0}%`,
-                              background:
-                                'linear-gradient(90deg, #c9a96e, #b8965a)',
+                              width: 80,
+                              height: 6,
+                              background: '#f0ebe0',
                               borderRadius: 3,
+                              overflow: 'hidden',
                             }}
-                          />
+                          >
+                            <div
+                              style={{
+                                height: '100%',
+                                width: `${totalProducts > 0 ? (p._count.id / totalProducts) * 100 : 0}%`,
+                                background: 'linear-gradient(90deg, #c9a96e, #b8965a)',
+                                borderRadius: 3,
+                              }}
+                            />
+                          </div>
+                          <span style={{ fontSize: 12, color: '#aaa', minWidth: 32 }}>
+                            {totalProducts > 0
+                              ? Math.round((p._count.id / totalProducts) * 100)
+                              : 0}
+                            %
+                          </span>
                         </div>
-                        <span
-                          style={{ fontSize: 12, color: '#aaa', minWidth: 32 }}
-                        >
-                          {totalProducts > 0
-                            ? Math.round((p._count.id / totalProducts) * 100)
-                            : 0}
-                          %
-                        </span>
-                      </div>
-                    </td>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

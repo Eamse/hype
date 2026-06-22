@@ -21,7 +21,9 @@ export default function ImageGallery({
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const allImages = [
-    ...(mainImageUrl ? [{ id: 0, url: mainImageUrl, description: '', order: -1 }] : []),
+    ...(mainImageUrl
+      ? [{ id: 0, url: mainImageUrl, description: '', order: -1 }]
+      : []),
     ...images,
   ];
 
@@ -46,7 +48,10 @@ export default function ImageGallery({
   }, [allImages.length]);
 
   return (
-    <div className="flex gap-3 h-full">
+    <div
+      className="flex gap-3 h-full"
+      style={{ display: 'flex', flexDirection: 'row-reverse' }}
+    >
       {/* 왼쪽: 세로 썸네일 */}
       {allImages.length > 0 && (
         <div
@@ -62,7 +67,10 @@ export default function ImageGallery({
               style={{
                 width: 64,
                 height: 64,
-                outline: selected === img.url ? '2px solid #191919' : '2px solid transparent',
+                outline:
+                  selected === img.url
+                    ? '2px solid #191919'
+                    : '2px solid transparent',
                 outlineOffset: 2,
               }}
             >
@@ -79,7 +87,10 @@ export default function ImageGallery({
       )}
 
       {/* 오른쪽: 메인 이미지 */}
-      <div className="relative flex-1 rounded-xl overflow-hidden bg-[#f0f0f0]" style={{ aspectRatio: '3/4' }}>
+      <div
+        className="relative flex-1 rounded-xl overflow-hidden bg-[#f0f0f0]"
+        style={{ aspectRatio: '3/4' }}
+      >
         {selected ? (
           <Image
             src={selected}

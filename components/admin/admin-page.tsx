@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
 import Link from 'next/link';
 import { type Section } from './types';
@@ -65,19 +65,19 @@ const IconMapPin = () => (
     <circle cx="12" cy="10" r="3" />
   </svg>
 );
-const IconBook = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-  >
-    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-  </svg>
-);
+// const IconBook = () => (
+//   <svg
+//     width="15"
+//     height="15"
+//     viewBox="0 0 24 24"
+//     fill="none"
+//     stroke="currentColor"
+//     strokeWidth="1.6"
+//   >
+//     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+//     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+//   </svg>
+// );
 
 const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: <IconDashboard /> },
@@ -102,7 +102,7 @@ const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
     label: 'Casual · Seoul',
     icon: <IconMapPin />,
   },
-  { id: 'Magazine', label: 'Magazine', icon: <IconBook /> },
+  // { id: 'Magazine', label: 'Magazine', icon: <IconBook /> },
 ];
 
 export default function AdminPage() {
@@ -115,6 +115,8 @@ export default function AdminPage() {
   const [admin, setAdmin] = useState<{ loginId: string; role: string } | null>(
     null,
   );
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
   const logout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' }).catch(() => null);
     router.replace('/admin/login');
@@ -126,11 +128,19 @@ export default function AdminPage() {
       .then((data) => setAdmin(data));
   }, []);
 
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
   return (
     <div
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #f5e6e8 0%, #e8d5d8 30%, #d4b8c7 60%, #c9a0b4 100%)',
+        background:
+          'linear-gradient(135deg, #f5e6e8 0%, #e8d5d8 30%, #d4b8c7 60%, #c9a0b4 100%)',
         fontFamily: "'Pretendard', -apple-system, sans-serif",
         display: 'flex',
         flexDirection: 'column',
@@ -151,15 +161,15 @@ export default function AdminPage() {
 
       {/* 정적 하트 데코 */}
       {[
-        { top: '8%',  left: '4%',   size: 32, color: 'rgba(220,60,100,0.5)'  },
-        { top: '15%', right: '6%',  size: 20, color: 'rgba(200,80,130,0.45)' },
-        { top: '65%', left: '3%',   size: 26, color: 'rgba(230,90,140,0.5)'  },
-        { top: '72%', right: '5%',  size: 40, color: 'rgba(180,40,90,0.45)'  },
-        { top: '42%', right: '2%',  size: 16, color: 'rgba(215,70,115,0.5)'  },
-        { top: '3%',  left: '48%',  size: 13, color: 'rgba(240,100,150,0.45)'},
-        { top: '52%', left: '1%',   size: 18, color: 'rgba(190,50,95,0.5)'   },
-        { top: '88%', left: '38%',  size: 14, color: 'rgba(225,80,125,0.45)' },
-        { top: '30%', left: '7%',   size: 11, color: 'rgba(210,60,110,0.4)'  },
+        { top: '8%', left: '4%', size: 32, color: 'rgba(220,60,100,0.5)' },
+        { top: '15%', right: '6%', size: 20, color: 'rgba(200,80,130,0.45)' },
+        { top: '65%', left: '3%', size: 26, color: 'rgba(230,90,140,0.5)' },
+        { top: '72%', right: '5%', size: 40, color: 'rgba(180,40,90,0.45)' },
+        { top: '42%', right: '2%', size: 16, color: 'rgba(215,70,115,0.5)' },
+        { top: '3%', left: '48%', size: 13, color: 'rgba(240,100,150,0.45)' },
+        { top: '52%', left: '1%', size: 18, color: 'rgba(190,50,95,0.5)' },
+        { top: '88%', left: '38%', size: 14, color: 'rgba(225,80,125,0.45)' },
+        { top: '30%', left: '7%', size: 11, color: 'rgba(210,60,110,0.4)' },
         { top: '80%', right: '15%', size: 22, color: 'rgba(200,70,120,0.45)' },
       ].map((h, i) => (
         <div
@@ -175,20 +185,82 @@ export default function AdminPage() {
             zIndex: 0,
           }}
         >
-          <svg viewBox="0 0 24 24" fill={h.color} xmlns="http://www.w3.org/2000/svg">
+          <svg
+            viewBox="0 0 24 24"
+            fill={h.color}
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
           </svg>
         </div>
       ))}
 
       {/* 대각선 라인 패턴 */}
-      <div style={{ position: 'absolute', inset: 0, backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(184,134,90,0.12) 40px, rgba(184,134,90,0.12) 41px)`, pointerEvents: 'none', zIndex: 0 }} />
-      <div style={{ position: 'absolute', inset: 0, backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 80px, rgba(201,149,106,0.07) 80px, rgba(201,149,106,0.07) 81px)`, pointerEvents: 'none', zIndex: 0 }} />
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(184,134,90,0.12) 40px, rgba(184,134,90,0.12) 41px)`,
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 80px, rgba(201,149,106,0.07) 80px, rgba(201,149,106,0.07) 81px)`,
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
 
       {/* 정적 블러 오브 */}
-      <div style={{ position: 'absolute', top: '-10%', left: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle, rgba(210,120,150,0.55) 0%, transparent 65%)', pointerEvents: 'none', filter: 'blur(60px)', zIndex: 0 }} />
-      <div style={{ position: 'absolute', bottom: '-15%', right: '-8%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,130,80,0.45) 0%, transparent 65%)', pointerEvents: 'none', filter: 'blur(70px)', zIndex: 0 }} />
-      <div style={{ position: 'absolute', top: '35%', left: '60%', width: 350, height: 350, borderRadius: '50%', background: 'radial-gradient(circle, rgba(230,140,170,0.5) 0%, transparent 65%)', pointerEvents: 'none', filter: 'blur(50px)', zIndex: 0 }} />
+      <div
+        style={{
+          position: 'absolute',
+          top: '-10%',
+          left: '-5%',
+          width: 500,
+          height: 500,
+          borderRadius: '50%',
+          background:
+            'radial-gradient(circle, rgba(210,120,150,0.55) 0%, transparent 65%)',
+          pointerEvents: 'none',
+          filter: 'blur(60px)',
+          zIndex: 0,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '-15%',
+          right: '-8%',
+          width: 600,
+          height: 600,
+          borderRadius: '50%',
+          background:
+            'radial-gradient(circle, rgba(200,130,80,0.45) 0%, transparent 65%)',
+          pointerEvents: 'none',
+          filter: 'blur(70px)',
+          zIndex: 0,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          top: '35%',
+          left: '60%',
+          width: 350,
+          height: 350,
+          borderRadius: '50%',
+          background:
+            'radial-gradient(circle, rgba(230,140,170,0.5) 0%, transparent 65%)',
+          pointerEvents: 'none',
+          filter: 'blur(50px)',
+          zIndex: 0,
+        }}
+      />
 
       {/* 탑바 */}
       <header
@@ -208,6 +280,21 @@ export default function AdminPage() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          {isMobile && (
+            <button
+              onClick={() => setIsMobileOpen(true)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: 20,
+                color: '#3a1a2a',
+                padding: 4,
+              }}
+            >
+              ☰
+            </button>
+          )}
           <span
             onClick={() => setActive('dashboard')}
             style={{
@@ -220,7 +307,14 @@ export default function AdminPage() {
           >
             HYPE WEDDING
           </span>
-          <span style={{ width: 1, height: 16, background: 'rgba(180,120,140,0.3)' }} />
+          <span
+            style={{
+              width: 1,
+              height: 16,
+              background: 'rgba(180,120,140,0.3)',
+            }}
+          />
+
           <span
             style={{
               fontSize: 10,
@@ -253,21 +347,78 @@ export default function AdminPage() {
         </button>
       </header>
 
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden', position: 'relative', zIndex: 1 }}>
+      <div
+        style={{
+          display: 'flex',
+          flex: 1,
+          overflow: 'hidden',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
         {/* 사이드바 */}
         <aside
           style={{
             width: 240,
-            backgroundColor: 'rgba(255,255,255,0.6)',
+            backgroundColor: 'rgba(255,255,255,0.95)',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
             borderRight: '1px solid rgba(201,149,106,0.2)',
             padding: '24px 0',
             flexShrink: 0,
-            display: 'flex',
+            display: isMobile && !isMobileOpen ? 'none' : 'flex',
             flexDirection: 'column',
+            ...(isMobile && {
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              height: '100dvh',
+              zIndex: 100,
+              boxShadow: '4px 0 20px rgba(0,0,0,0.15)',
+            }),
           }}
         >
+          {isMobile && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '16px 20px',
+                borderBottom: '1px solid rgba(201,149,106,0.2)',
+                marginBottom: 8,
+              }}
+            >
+              <span
+                style={{
+                  fontWeight: 800,
+                  fontSize: 14,
+                  letterSpacing: '2px',
+                  color: '#3a1a2a',
+                }}
+              >
+                MENU
+              </span>
+              <button
+                onClick={() => setIsMobileOpen(false)}
+                style={{
+                  background: 'rgba(220,80,80,0.08)',
+                  border: '1px solid rgba(220,80,80,0.2)',
+                  borderRadius: 8,
+                  cursor: 'pointer',
+                  fontSize: 14,
+                  color: '#e05555',
+                  width: 32,
+                  height: 32,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+          )}
           {admin && (
             <div
               style={{
@@ -356,7 +507,9 @@ export default function AdminPage() {
                     width: '100%',
                     textAlign: 'left',
                     padding: '14px 16px',
-                    background: isActive ? 'rgba(201,149,106,0.15)' : 'transparent',
+                    background: isActive
+                      ? 'rgba(201,149,106,0.15)'
+                      : 'transparent',
                     border: 'none',
                     borderLeft: `2px solid ${isActive ? '#c9956a' : 'transparent'}`,
                     cursor: 'pointer',
@@ -390,7 +543,10 @@ export default function AdminPage() {
           })}
 
           <div
-            style={{ margin: '16px 16px', borderTop: '1px solid rgba(180,120,140,0.2)' }}
+            style={{
+              margin: '16px 16px',
+              borderTop: '1px solid rgba(180,120,140,0.2)',
+            }}
           />
 
           <p
@@ -421,6 +577,17 @@ export default function AdminPage() {
             View Site
           </Link>
         </aside>
+        {isMobile && isMobileOpen && (
+          <div
+            onClick={() => setIsMobileOpen(false)}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0,0,0,0.4)',
+              zIndex: 99,
+            }}
+          />
+        )}
 
         {/* 콘텐츠 */}
         <main
@@ -433,13 +600,14 @@ export default function AdminPage() {
           <div
             style={{
               height: 1,
-              background: 'linear-gradient(90deg, transparent, #c9956a, #e8b88a, #c9956a, transparent)',
+              background:
+                'linear-gradient(90deg, transparent, #c9956a, #e8b88a, #c9956a, transparent)',
               marginBottom: 36,
               opacity: 0.6,
             }}
           />
           {active === 'dashboard' && (
-            <DashboardPanel onNavigation={setActive} />
+            <DashboardPanel onNavigation={setActive} isMobile={isMobile} />
           )}
           {active === 'hero' && <HeroPanel />}
           {active === 'Meet our Photographers in Jeju' && (
