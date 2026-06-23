@@ -43,8 +43,6 @@ async function verifyOnboarding(request: NextRequest) {
       secret: process.env.AUTH_SECRET!,
       salt: cookieName,
     });
-    console.log('decoded:', decoded);
-
     if (decoded?.isOnboarded) {
       return NextResponse.redirect(new URL('/', request.url));
     }
