@@ -28,10 +28,11 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   serverExternalPackages: [
     '@prisma/client',
-    '@neondatabase/serverless',
-    '@prisma/adapter-neon',
+    'pg',
+    '@prisma/adapter-pg',
     'sharp',
   ],
   images: {
