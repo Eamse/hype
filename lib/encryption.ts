@@ -1,12 +1,15 @@
 import crypto from 'crypto';
 
-const KEY = Buffer.from(process.env.ENCRYPTION_KEY!, 'hex');
 const ALGORITHM = 'aes-256-gcm';
+
+function getKey(): Buffer {
+  return Buffer.from(process.env.ENCRYPTION_KEY!, 'hex');
+}
 
 // 암호화 문자열 -> 바이트
 export function encrypt(text: string): string {
   const iv = crypto.randomBytes(12); // gcm은 12바이트 IV가 표준
-  const cipher = crypto.createCipheriv(ALGORITHM, KEY, iv);
+  const cipher = crypto.createCipheriv(ALGORITHM, getKey(), iv);
 
   const encrypted = Buffer.concat([
     cipher.update(text, 'utf8'),
@@ -25,7 +28,7 @@ export function decrypt(data: string): string {
   const authTag = buf.subarray(12, 28);
   const encrypted = buf.subarray(28);
 
-  const decipher = crypto.createDecipheriv(ALGORITHM, KEY, iv);
+  const decipher = crypto.createDecipheriv(ALGORITHM, getKey(), iv);
   decipher.setAuthTag(authTag);
 
   const decrypted = Buffer.concat([
