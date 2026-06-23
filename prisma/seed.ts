@@ -3,6 +3,7 @@ import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcryptjs';
 import { config } from 'dotenv';
+import { encrypt } from '../lib/encryption';
 
 config();
 
@@ -35,7 +36,7 @@ async function main() {
       create: {
         loginId: master.loginId,
         password: hashed,
-        name: master.name,
+        name: encrypt(master.name),
         phone: '',
         role: 'master',
         isActive: true,

@@ -21,7 +21,18 @@ export type Section =
   | 'Casual Photoshoot in Jeju'
   | 'Casual Photoshoot in Seoul'
   | 'Magazine'
-  | 'users';
+  | 'users'
+  | 'accounts';
+
+export type Account = {
+  id: string;
+  loginId: string;
+  name: string;
+  phone: string;
+  role: string;
+  isActive: boolean;
+  createdAt: string;
+};
 
 export type Magazine = {
   id: number;

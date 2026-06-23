@@ -10,6 +10,7 @@ import ProductPanel from './product-panel';
 import MagazinePanel from './magazine-panel';
 import UserPanel from './user-panel';
 import { useRouter, useSearchParams } from 'next/navigation';
+import AccountsPanel from './accounts-panel';
 
 const IconDashboard = () => (
   <svg
@@ -66,6 +67,28 @@ const IconMapPin = () => (
     <circle cx="12" cy="10" r="3" />
   </svg>
 );
+
+const IconSettings = () => (
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+  >
+    <circle cx="12" cy="12" r="3" />
+    <path
+      d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65
+   0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0                   
+  1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 
+  1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4  
+  0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65
+   1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
+    />
+  </svg>
+);
+
 // const IconBook = () => (
 //   <svg
 //     width="15"
@@ -81,7 +104,14 @@ const IconMapPin = () => (
 // );
 
 const IconUsers = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+  >
     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
     <circle cx="9" cy="7" r="4" />
     <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -114,6 +144,7 @@ const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
   },
   // { id: 'Magazine', label: 'Magazine', icon: <IconBook /> },
   { id: 'users', label: 'Members', icon: <IconUsers /> },
+  { id: 'accounts', label: 'Account Setting', icon: <IconSettings /> },
 ];
 
 export default function AdminPage() {
@@ -498,7 +529,9 @@ export default function AdminPage() {
             SECTIONS
           </p>
 
-          {MENU.map((m, i) => {
+          {MENU.filter(
+            (m) => m.id !== 'accounts' || admin?.role === 'master',
+          ).map((m, i) => {
             const isActive = m.id === active;
             return (
               <React.Fragment key={m.id}>
@@ -635,6 +668,7 @@ export default function AdminPage() {
           )}
           {active === 'Magazine' && <MagazinePanel />}
           {active === 'users' && <UserPanel />}
+          {active === 'accounts' && <AccountsPanel />}
         </main>
       </div>
     </div>
