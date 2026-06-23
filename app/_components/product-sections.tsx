@@ -26,7 +26,11 @@ export default function ProductSections({ sections }: { sections: Section[] }) {
     fetch('/api/bookmarks')
       .then((res) => res.json())
       .then((data) => {
-        setSaved(new Set(data.map((b: { productId: number }) => b.productId)));
+        if (Array.isArray(data)) {
+          setSaved(
+            new Set(data.map((b: { productId: number }) => b.productId)),
+          );
+        }
       });
   }, [session]);
 

@@ -25,13 +25,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   adapter: PrismaAdapter(prisma),
-  session: { strategy: 'jwt' },
+  session: { strategy: 'jwt', maxAge: 60 * 60 * 24 * 7 }, // 7일
   callbacks: {
     ...authConfig.callbacks,
     async jwt({ token, user, account, profile, trigger }) {
       // 로그인 시 토큰에 id, isOnboarded 저장
       if (user) {
-        token.id = user.id;
         token.isOnboarded = (user as { isOnboarded: boolean }).isOnboarded;
         token.image = user.image;
         token.name = user.name;
@@ -61,7 +60,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.id = token.id as string;
       session.user.isOnboarded = token.isOnboarded as boolean;
       session.user.image = (token.image as string) ?? null;
-return session;
+      return session;
     },
   },
 });

@@ -24,16 +24,16 @@ export default function DashboardPanel({
   }, []);
 
   const totalProducts =
-    state?.product.reduce((acc, p) => acc + p._count.id, 0) ?? 0;
+    state?.product?.reduce((acc, p) => acc + p._count.id, 0) ?? 0;
 
   const photographerCount =
     state?.product
-      .filter((p) => p.section.includes('Photographer'))
+      ?.filter((p) => p.section.includes('Photographer'))
       .reduce((acc, p) => acc + p._count.id, 0) ?? 0;
 
   const casualCount =
     state?.product
-      .filter((p) => p.section.includes('Casual'))
+      ?.filter((p) => p.section.includes('Casual'))
       .reduce((acc, p) => acc + p._count.id, 0) ?? 0;
 
   const SECTION_LABELS: Record<string, string> = {
@@ -432,7 +432,7 @@ export default function DashboardPanel({
                 </tr>
               </thead>
               <tbody>
-                {state.product.map((p, i) => (
+                {state?.product?.map((p, i) => (
                   <tr
                     key={p.section}
                     onClick={() => onNavigation(p.section as Section)}

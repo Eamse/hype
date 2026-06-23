@@ -20,7 +20,8 @@ export type Section =
   | 'Meet our Photographer in Seoul'
   | 'Casual Photoshoot in Jeju'
   | 'Casual Photoshoot in Seoul'
-  | 'Magazine';
+  | 'Magazine'
+  | 'users';
 
 export type Magazine = {
   id: number;

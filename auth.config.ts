@@ -6,6 +6,10 @@ import Google from 'next-auth/providers/google';
 export const authConfig: NextAuthConfig = {
   providers: [Google],
   callbacks: {
+    session({ session, token }) {
+      session.user.isOnboarded = token.isOnboarded as boolean;
+      return session;
+    },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
       const isOnboarded = auth?.user?.isOnboarded ?? false;
@@ -26,7 +30,9 @@ export const authConfig: NextAuthConfig = {
       if (!isOnboarded && path !== '/onboarding') {
         return Response.redirect(new URL('/onboarding', nextUrl));
       }
-
+      if (isOnboarded && path === '/onboarding') {
+        return Response.redirect(new URL('/', nextUrl));
+      }
       return true;
     },
   },

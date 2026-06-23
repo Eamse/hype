@@ -8,6 +8,7 @@ import DashboardPanel from './dashboard-panel';
 import HeroPanel from './hero-panel';
 import ProductPanel from './product-panel';
 import MagazinePanel from './magazine-panel';
+import UserPanel from './user-panel';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 const IconDashboard = () => (
@@ -79,6 +80,15 @@ const IconMapPin = () => (
 //   </svg>
 // );
 
+const IconUsers = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+  </svg>
+);
+
 const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: <IconDashboard /> },
   { id: 'hero', label: 'Hero Image', icon: <IconImage /> },
@@ -103,6 +113,7 @@ const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
     icon: <IconMapPin />,
   },
   // { id: 'Magazine', label: 'Magazine', icon: <IconBook /> },
+  { id: 'users', label: 'Members', icon: <IconUsers /> },
 ];
 
 export default function AdminPage() {
@@ -623,6 +634,7 @@ export default function AdminPage() {
             <ProductPanel section="Casual Photoshoot in Seoul" />
           )}
           {active === 'Magazine' && <MagazinePanel />}
+          {active === 'users' && <UserPanel />}
         </main>
       </div>
     </div>
