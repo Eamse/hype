@@ -31,6 +31,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user, account, profile, trigger }) {
       // 로그인 시 토큰에 id, isOnboarded 저장
       if (user) {
+        token.id = user.id;
         token.isOnboarded = (user as { isOnboarded: boolean }).isOnboarded;
         token.image = user.image;
         token.name = user.name;

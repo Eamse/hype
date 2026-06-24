@@ -21,8 +21,9 @@ export default function ProductSections({ sections }: { sections: Section[] }) {
   const { data: session } = useSession();
   const router = useRouter();
 
+  const userId = session?.user?.id;
   useEffect(() => {
-    if (!session) return;
+    if (!userId) return;
     fetch('/api/bookmarks')
       .then((res) => res.json())
       .then((data) => {
@@ -32,7 +33,7 @@ export default function ProductSections({ sections }: { sections: Section[] }) {
           );
         }
       });
-  }, [session]);
+  }, [userId]);
 
   async function toggleSave(id: number) {
     if (!session) {
