@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const SNS_ITEMS = [
   {
@@ -24,6 +25,9 @@ const SNS_ITEMS = [
 ];
 
 export default function SnsSidebar() {
+  const isMobile = useIsMobile();
+  if (isMobile) return null;
+
   return (
     <div
       style={{

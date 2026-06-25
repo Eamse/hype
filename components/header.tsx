@@ -445,9 +445,51 @@ export default function Header({
             backgroundColor: '#fff',
             display: 'flex',
             flexDirection: 'column',
-            padding: '32px 24px',
+            padding: '24px 24px 32px',
           }}
         >
+          {/* 상단: 아이콘 */}
+          <div style={{ display: 'flex', gap: 24, color: '#191919', marginBottom: 28 }}>
+            <button onClick={() => { setMenuOpen(false); setSearchOpen(true); }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+              <SearchIcon />
+            </button>
+            <button
+              onClick={() => { setMenuOpen(false); session ? router.push('/bookmarks') : setLoginOpen(true); }}
+              style={{ position: 'relative', display: 'flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+            >
+              <BookmarkIcon />
+              {bookmarkCount > 0 && (
+                <span style={{ position: 'absolute', top: -6, right: -6, width: 16, height: 16, borderRadius: '50%', backgroundColor: '#ef4444', color: '#fff', fontSize: 10, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {bookmarkCount}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+                if (session) {
+                  signOut();
+                  setToast(true);
+                  setTimeout(() => setToast(false), 3000);
+                } else {
+                  setLoginOpen(true);
+                }
+              }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
+            >
+              {session?.user?.image ? (
+                <Image src={session.user.image} alt="profile" width={28} height={28} style={{ borderRadius: '50%', objectFit: 'cover' }} />
+              ) : session ? (
+                <div style={{ width: 28, height: 28, borderRadius: '50%', backgroundColor: '#191919', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700 }}>
+                  {(session.user?.name ?? session.user?.email)?.charAt(0).toUpperCase() ?? '?'}
+                </div>
+              ) : (
+                <UserIcon />
+              )}
+            </button>
+          </div>
+
+          {/* 중단: 네비 링크 */}
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {NAV_LINKS[brand].map(({ label, href }) => {
               const active = href !== '#' && pathname === href;
@@ -471,77 +513,18 @@ export default function Header({
               );
             })}
           </nav>
-          <div
-            style={{
-              marginTop: 40,
-              display: 'flex',
-              gap: 24,
-              color: '#191919',
-            }}
-          >
-            <button>
-              <SearchIcon />
-            </button>
-            <button
-              onClick={() => { setMenuOpen(false); session ? router.push('/bookmarks') : setLoginOpen(true); }}
-              style={{ display: 'flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-            >
-              <BookmarkIcon />
-            </button>
-            {/* <button>
-              <BellIcon />
-            </button> */}
-            <button
-              onClick={() => {
-                setMenuOpen(false);
-                if (session) {
-                  signOut();
-                  setToast(true);
-                  setTimeout(() => setToast(false), 3000);
-                } else {
-                  setLoginOpen(true);
-                }
-              }}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 0,
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              {session?.user?.image ? (
-                <Image
-                  src={session.user.image}
-                  alt="profile"
-                  width={28}
-                  height={28}
-                  style={{ borderRadius: '50%', objectFit: 'cover' }}
-                />
-              ) : session ? (
-                <div
-                  style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: '50%',
-                    backgroundColor: '#191919',
-                    color: '#fff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 12,
-                    fontWeight: 700,
-                  }}
-                >
-                  {(session.user?.name ?? session.user?.email)
-                    ?.charAt(0)
-                    .toUpperCase() ?? '?'}
-                </div>
-              ) : (
-                <UserIcon />
-              )}
-            </button>
+
+          {/* 하단: SNS */}
+          <div style={{ marginTop: 24, display: 'flex', gap: 20 }}>
+            {[
+              { href: 'https://www.instagram.com/hypewedd_ing/', label: 'Instagram', src: '/instagram.png', size: 28 },
+              { href: 'https://www.tiktok.com/@hypewedd_ing', label: 'TikTok', src: '/tik-tok-.png', size: 36 },
+              { href: 'https://www.xiaohongshu.com/user/profile/68bd1504000000001900e6ce', label: 'Xiaohongshu', src: '/xiaohounshu.png', size: 36 },
+            ].map(({ href, label, src, size }) => (
+              <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
+                <Image src={src} alt={label} width={size} height={size} style={{ objectFit: 'contain' }} />
+              </a>
+            ))}
           </div>
         </div>
       )}

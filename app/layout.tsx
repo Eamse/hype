@@ -9,7 +9,7 @@ const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 export const metadata: Metadata = {
   title: 'HYPE WEDDING',
   description:
-    '유행을 따르는 결혼식 대신, 당신의 취향을 담은 웨딩을 완성하세요. 플래너 없이도 완벽한 준비, 호닌이 제안하는 스마트한 결혼준비의 시작.',
+    'Find your perfect wedding photographer in Korea. HYPE WEDDING connects couples around the world with top studios in Jeju and Seoul.',
 };
 
 export default function RootLayout({
@@ -18,7 +18,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={cn('h-full', 'font-sans', geist.variable)}>
+    <html lang="en" className={cn('h-full', 'font-sans', geist.variable)}>
       <body className="min-h-full flex flex-col">
         <NextSessionProvider>{children}</NextSessionProvider>
       </body>

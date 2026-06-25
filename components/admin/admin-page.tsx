@@ -167,8 +167,13 @@ export default function AdminPage() {
   useEffect(() => {
     fetch('/api/admin/me')
       .then((res) => res.json())
-      .then((data) => setAdmin(data));
-  }, []);
+      .then((data) => {
+        setAdmin(data);
+        if (data?.role !== 'master' && active === 'accounts') {
+          router.replace('/admin?tab=dashboard');
+        }
+      });
+  }, [active, router]);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);

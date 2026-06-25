@@ -156,6 +156,9 @@ a { text-decoration: none; color: inherit; }
 .hide-scroll::-webkit-scrollbar { display: none; }
 .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
+@keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+.arrow-nudge { display: inline-block; animation: nudge 1.2s ease-in-out infinite; }
+
 /* ── 반응형 레이아웃 ─────────────────────────────────────── */
 .magazine-detail-grid {
   display: grid;

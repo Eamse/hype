@@ -315,7 +315,7 @@ export default function ProductPanel({
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="제목 or 브랜드 검색"
+        placeholder="제목 or 내용 검색"
         style={{
           width: '100%',
           padding: '10px 14px',
