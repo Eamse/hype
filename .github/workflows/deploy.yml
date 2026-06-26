@@ -1,0 +1,24 @@
+name: Deploy to Server
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.HYPE }}
+          script: |
+            cd /root/hype
+            git pull origin main
+            npm run build
+            cp -r .next/static .next/standalone/.next/static
+            cp -r public .next/standalone/public
+            pm2 restart hypewedding
+            pm2 save
