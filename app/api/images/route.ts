@@ -15,7 +15,7 @@ const R2_PUBLIC_BASE_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
 // key: 영문/숫자/언더스코어/하이픈만 허용 (path traversal 방지)
 const KEY_RE = /^[a-zA-Z0-9_-]+$/;
 const DB_KEY_PREFIX = 'images_';
-const MAX_IMAGES_PER_KEY = 10;
+const MAX_IMAGES_PER_KEY = 6;
 
 /** SiteConfig에서 key의 이미지 URL 배열 읽기 */
 async function readImages(key: string): Promise<string[]> {

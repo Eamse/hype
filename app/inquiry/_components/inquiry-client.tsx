@@ -165,8 +165,23 @@ function StepCard({
   num: number;
 }) {
   return (
-    <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center', gap: 8 }}>
+    <div
+      style={{
+        flex: 1,
+        minWidth: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      <div
+        style={{
+          marginBottom: 16,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+        }}
+      >
         {step.icon}
         {step.tag && (
           <span
@@ -191,7 +206,14 @@ function StepCard({
       >
         STEP {num} | {step.title}
       </p>
-      <ul style={{ listStyle: 'none', padding: 0, margin: '0 auto', width: 'fit-content' }}>
+      <ul
+        style={{
+          listStyle: 'none',
+          padding: 0,
+          margin: '0 auto',
+          width: 'fit-content',
+        }}
+      >
         {step.bullets.map((b) => (
           <li
             key={b}
@@ -301,7 +323,7 @@ export default function InquiryClient() {
             fontWeight: 700,
             letterSpacing: '3px',
             textTransform: 'uppercase',
-            color: '#999',
+            color: '#767676',
             marginBottom: 20,
             animationDelay: '0.1s',
           }}
@@ -459,7 +481,7 @@ export default function InquiryClient() {
             fontWeight: 700,
             letterSpacing: '3px',
             textTransform: 'uppercase',
-            color: '#999',
+            color: '#767676',
             marginBottom: 12,
             textAlign: 'center',
           }}

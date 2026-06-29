@@ -41,12 +41,12 @@ export default function ProductSection({
             {title}
           </h2>
           {subtitle && (
-            <p style={{ fontSize: 12, color: '#999' }}>{subtitle}</p>
+            <p style={{ fontSize: 12, color: '#767676' }}>{subtitle}</p>
           )}
         </div>
         <Link
           href={`/products?section=${encodeURIComponent(title)}`}
-          className="text-[14px] text-[#999] flex items-center gap-1 transition-all hover:text-[#191919] hover:gap-2 hover:!underline"
+          className="text-[14px] text-[#767676] flex items-center gap-1 transition-all hover:text-[#191919] hover:gap-2 hover:!underline"
         >
           See All <span className="arrow-nudge">→</span>
         </Link>

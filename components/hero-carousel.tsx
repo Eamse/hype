@@ -1,92 +1,75 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 
 export default function HeroCarousel({ images }: { images: string[] }) {
-  const [heroImages] = useState<string[]>(images);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const heroPaused = useRef(false);
+  const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  const next = useCallback(() => {
+    setCurrent((p) => (p + 1) % images.length);
+  }, [images.length]);
 
   useEffect(() => {
-    if (heroImages.length === 0) return;
-    const id = setInterval(() => {
-      const el = heroRef.current;
-      if (heroPaused.current || !el) return;
-      const firstItem = el.children[0] as HTMLElement | undefined;
-      if (!firstItem) return;
-      const itemWidth = firstItem.offsetWidth + 8;
-      const moveBy = itemWidth * 2;
-      const half = el.scrollWidth / 2;
-      if (el.scrollLeft >= half - moveBy) {
-        el.scrollLeft = 0;
-      }
-      el.scrollBy({ left: moveBy, behavior: 'smooth' });
-    }, 2500);
+    if (images.length <= 1 || paused) return;
+    const id = setInterval(next, 4000);
     return () => clearInterval(id);
-  }, [heroImages]);
+  }, [images.length, paused, next]);
 
-  if (heroImages.length === 0) return null;
+  if (images.length === 0) return null;
 
   return (
     <section
-      style={{
-        maxWidth: 1200,
-        margin: '0 auto',
-        padding: '10px 20px',
-        overflow: 'hidden',
-      }}
+      style={{ position: 'relative', width: '100%', aspectRatio: '21/9', overflow: 'hidden', backgroundColor: '#111' }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
-      <div
-        ref={heroRef}
-        className="hide-scroll"
-        style={{
-          display: 'flex',
-          gap: 8,
-          overflowX: 'auto',
-          scrollSnapType: 'x mandatory',
-        }}
-        onMouseEnter={() => {
-          heroPaused.current = true;
-        }}
-        onMouseLeave={() => {
-          heroPaused.current = false;
-        }}
-        onTouchStart={() => {
-          heroPaused.current = true;
-        }}
-        onTouchEnd={() => {
-          setTimeout(() => {
-            heroPaused.current = false;
-          }, 2000);
-        }}
-      >
-        {[...heroImages, ...heroImages].map((url, idx) => (
-          <div
-            className="lg:w-[calc(25%-6px)] w-[calc(50%-4px)]"
-            key={idx}
-            style={{
-              flexShrink: 0,
-              aspectRatio: '3/4',
+      {images.map((url, idx) => (
+        <div
+          key={url}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            opacity: idx === current ? 1 : 0,
+            transition: 'opacity 0.8s ease',
+          }}
+        >
+          <Image
+            src={url}
+            alt={`hero-${idx}`}
+            fill
+            priority={idx === 0}
+            sizes="100vw"
+            style={{ objectFit: 'cover' }}
+          />
+        </div>
+      ))}
 
-              // borderRadius: 8,// 추후 수정
-              overflow: 'hidden',
-              position: 'relative',
-              backgroundColor: '#e8e8e8',
-              scrollSnapAlign: 'start',
-            }}
-          >
-            <Image
-              src={url}
-              alt={`hero-${idx}`}
-              priority={idx < 4}
-              fill
-              sizes="(max-width: 1024px) 50vw, 25vw"
-              style={{ objectFit: 'cover' }}
+      {/* 라인 인디케이터 */}
+      {images.length > 1 && (
+        <div style={{
+          position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)',
+          display: 'flex', gap: 6, zIndex: 2, width: '60%',
+        }}>
+          {images.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrent(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+              style={{
+                flex: 1,
+                height: 2,
+                background: idx === current ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'background 0.3s ease',
+                padding: 0,
+              }}
             />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

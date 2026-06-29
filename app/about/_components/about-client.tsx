@@ -81,7 +81,9 @@ export default function AboutClient({
                   borderTop: 'none',
                   borderLeft: 'none',
                   borderRight: 'none',
-                  borderBottom: isActive ? '2px solid #191919' : '2px solid transparent',
+                  borderBottom: isActive
+                    ? '2px solid #191919'
+                    : '2px solid transparent',
                   background: 'none',
                   cursor: 'pointer',
                   transition: 'color 0.2s ease',
@@ -103,7 +105,7 @@ export default function AboutClient({
         }}
       >
         {/* TODO: 어바웃 컨텐츠 추가 */}
-        <p style={{ color: '#999', fontSize: 14 }}>
+        <p style={{ color: '#767676', fontSize: 14 }}>
           {tabs.find((t) => t.value === activeTab)?.label} 소개 들어갈 자리
         </p>
       </div>

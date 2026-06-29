@@ -22,7 +22,8 @@ export type Section =
   | 'Casual Photoshoot in Seoul'
   | 'Magazine'
   | 'users'
-  | 'accounts';
+  | 'accounts'
+  | 'my-account';
 
 export type Account = {
   id: string;

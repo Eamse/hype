@@ -49,7 +49,7 @@ export default function UserPanel() {
             style={{
               fontSize: 13,
               fontWeight: 400,
-              color: '#999',
+              color: '#767676',
               marginLeft: 8,
             }}
           >
@@ -66,9 +66,9 @@ export default function UserPanel() {
 
       {/* 테이블 */}
       {loading ? (
-        <p style={{ color: '#999', fontSize: 14 }}>불러오는 중...</p>
+        <p style={{ color: '#767676', fontSize: 14 }}>불러오는 중...</p>
       ) : users.length === 0 ? (
-        <p style={{ color: '#999', fontSize: 14 }}>회원이 없어요.</p>
+        <p style={{ color: '#767676', fontSize: 14 }}>회원이 없어요.</p>
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <table
@@ -174,7 +174,7 @@ export default function UserPanel() {
                   <td
                     style={{
                       padding: '10px 12px',
-                      color: '#999',
+                      color: '#767676',
                       whiteSpace: 'nowrap',
                     }}
                   >

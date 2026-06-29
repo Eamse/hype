@@ -11,6 +11,7 @@ import MagazinePanel from './magazine-panel';
 import UserPanel from './user-panel';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AccountsPanel from './accounts-panel';
+import MyAccountPanel from './my-account-panel';
 
 const IconDashboard = () => (
   <svg
@@ -145,6 +146,7 @@ const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
   // { id: 'Magazine', label: 'Magazine', icon: <IconBook /> },
   { id: 'users', label: 'Members', icon: <IconUsers /> },
   { id: 'accounts', label: 'Account Setting', icon: <IconSettings /> },
+  { id: 'my-account', label: 'My Account', icon: <IconSettings /> },
 ];
 
 export default function AdminPage() {
@@ -674,6 +676,7 @@ export default function AdminPage() {
           {active === 'Magazine' && <MagazinePanel />}
           {active === 'users' && <UserPanel />}
           {active === 'accounts' && <AccountsPanel />}
+          {active === 'my-account' && <MyAccountPanel />}
         </main>
       </div>
     </div>

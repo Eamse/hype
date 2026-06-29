@@ -84,7 +84,7 @@ export default function ProductCard({
             <ImgBox />
           )}
         </div>
-        <p style={{ fontSize: 11, color: '#999', marginBottom: 2 }}>
+        <p style={{ fontSize: 11, color: '#767676', marginBottom: 2 }}>
           {product.brand}
         </p>
         <p

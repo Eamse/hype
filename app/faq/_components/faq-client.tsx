@@ -696,7 +696,7 @@ export default function FaqClient() {
         }}
       >
         {displayItems.length === 0 ? (
-          <p style={{ color: '#999', fontSize: 14 }}>No results found.</p>
+          <p style={{ color: '#767676', fontSize: 14 }}>No results found.</p>
         ) : (
           displayItems.map(({ q, a }, idx) => (
             <div

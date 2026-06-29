@@ -88,10 +88,10 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
       {/* 결과 목록 */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
         {loading && (
-          <p style={{ fontSize: 14, color: '#999' }}>검색 중...</p>
+          <p style={{ fontSize: 14, color: '#767676' }}>검색 중...</p>
         )}
         {!loading && query && results.length === 0 && (
-          <p style={{ fontSize: 14, color: '#999' }}>검색 결과가 없어요.</p>
+          <p style={{ fontSize: 14, color: '#767676' }}>검색 결과가 없어요.</p>
         )}
         {results.map((product) => (
           <div
@@ -130,7 +130,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
               )}
             </div>
             <div>
-              <p style={{ fontSize: 11, color: '#999', marginBottom: 2 }}>
+              <p style={{ fontSize: 11, color: '#767676', marginBottom: 2 }}>
                 {product.brand}
               </p>
               <p style={{ fontSize: 14, fontWeight: 500, color: '#191919' }}>

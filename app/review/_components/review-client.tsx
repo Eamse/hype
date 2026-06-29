@@ -97,7 +97,7 @@ export default function ReviewClient({
         }}
       >
         {/* TODO: 리뷰 카드 추가 */}
-        <p style={{ color: '#999', fontSize: 14 }}>
+        <p style={{ color: '#767676', fontSize: 14 }}>
           {tabs.find((t) => t.value === activeTab)?.label} 리뷰가 들어갈
           자리입니다.
         </p>

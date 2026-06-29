@@ -191,7 +191,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 style={{
                   flex: 1,
                   padding: '13px 0',
-                  backgroundColor: loading ? '#999' : '#111',
+                  backgroundColor: loading ? '#767676' : '#111',
                   color: '#fff',
                   borderRadius: 8,
                   fontSize: 13,

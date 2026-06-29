@@ -49,12 +49,16 @@ function ProductsContent() {
     <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
       <Header brand={brand} showSubNav />
       <main
-        style={{ maxWidth: 1200, margin: '0 auto', padding: isMobile ? '100px 16px 60px' : '130px 40px 60px' }}
+        style={{
+          maxWidth: 1200,
+          margin: '0 auto',
+          padding: isMobile ? '100px 16px 60px' : '130px 40px 60px',
+        }}
       >
         <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>
           {section ?? 'All Products'}
         </h1>
-        <p style={{ fontSize: 13, color: '#999', marginBottom: 32 }}>
+        <p style={{ fontSize: 13, color: '#767676', marginBottom: 32 }}>
           {products.length} products
         </p>
 
