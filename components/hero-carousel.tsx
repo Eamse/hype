@@ -79,6 +79,7 @@ export default function HeroCarousel({ images }: { images: string[] }) {
             <Image
               src={url}
               alt={`hero-${idx}`}
+              priority
               fill
               sizes="(max-width: 1024px) 50vw, 25vw"
               style={{ objectFit: 'cover' }}
