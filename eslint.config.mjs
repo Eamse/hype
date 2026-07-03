@@ -1,6 +1,7 @@
 import { globalIgnores } from "eslint/config";
 import nextPlugin from "@next/eslint-plugin-next";
 import tsParser from "@typescript-eslint/parser";
+import reactHooks from "eslint-plugin-react-hooks";
 
 const eslintConfig = [
   {
@@ -8,6 +9,12 @@ const eslintConfig = [
     files: ["**/*.{js,jsx,ts,tsx,mjs,cjs}"],
     languageOptions: {
       parser: tsParser,
+    },
+    plugins: {
+      "react-hooks": reactHooks,
+    },
+    rules: {
+      ...reactHooks.configs.recommended.rules,
     },
   },
   globalIgnores([
