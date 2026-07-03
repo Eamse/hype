@@ -15,6 +15,7 @@ const eslintConfig = [
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      "react-hooks/set-state-in-effect": "off",
     },
   },
   globalIgnores([
