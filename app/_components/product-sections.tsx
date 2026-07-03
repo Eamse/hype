@@ -8,8 +8,6 @@ import { useSession } from 'next-auth/react';
 type Product = {
   id: number;
   title: string;
-  brand: string;
-  price: number;
   imageUrl: string | null;
   section?: string;
 };

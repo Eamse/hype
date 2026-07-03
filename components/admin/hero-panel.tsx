@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 
-const MAX_HERO = 10;
+const MAX_HERO = 6;
 
 export default function HeroPanel() {
   const inputRef = useRef<HTMLInputElement>(null);

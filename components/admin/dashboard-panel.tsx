@@ -37,8 +37,8 @@ export default function DashboardPanel({
       .reduce((acc, p) => acc + p._count.id, 0) ?? 0;
 
   const SECTION_LABELS: Record<string, string> = {
-    'Meet our Photographers in Jeju': 'Photographers · Jeju',
-    'Meet our Photographer in Seoul': 'Photographers · Seoul',
+    'Photographers in Jeju': 'Photographers · Jeju',
+    'Photographers in Seoul': 'Photographers · Seoul',
     'Casual Photoshoot in Jeju': 'Casual · Jeju',
     'Casual Photoshoot in Seoul': 'Casual · Seoul',
     Magazine: 'Magazine',
@@ -84,7 +84,9 @@ export default function DashboardPanel({
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+              gridTemplateColumns: isMobile
+                ? 'repeat(2, 1fr)'
+                : 'repeat(4, 1fr)',
               gap: 16,
             }}
           >
@@ -240,7 +242,11 @@ export default function DashboardPanel({
 
           {/* 중단 좌우 섹션 */}
           <div
-            style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '3fr 2fr', gap: 16 }}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr' : '3fr 2fr',
+              gap: 16,
+            }}
           >
             {/* 왼쪽 - 방문자 그래프 (추후 Google Console 연동) */}
             <div
@@ -436,7 +442,10 @@ export default function DashboardPanel({
                   <tr
                     key={p.section}
                     onClick={() => onNavigation(p.section as Section)}
-                    style={{ borderTop: i > 0 ? '1px solid #f5f2ec' : 'none', cursor: 'pointer' }}
+                    style={{
+                      borderTop: i > 0 ? '1px solid #f5f2ec' : 'none',
+                      cursor: 'pointer',
+                    }}
                   >
                     <td
                       style={{
@@ -482,12 +491,19 @@ export default function DashboardPanel({
                               style={{
                                 height: '100%',
                                 width: `${totalProducts > 0 ? (p._count.id / totalProducts) * 100 : 0}%`,
-                                background: 'linear-gradient(90deg, #c9a96e, #b8965a)',
+                                background:
+                                  'linear-gradient(90deg, #c9a96e, #b8965a)',
                                 borderRadius: 3,
                               }}
                             />
                           </div>
-                          <span style={{ fontSize: 12, color: '#aaa', minWidth: 32 }}>
+                          <span
+                            style={{
+                              fontSize: 12,
+                              color: '#aaa',
+                              minWidth: 32,
+                            }}
+                          >
                             {totalProducts > 0
                               ? Math.round((p._count.id / totalProducts) * 100)
                               : 0}

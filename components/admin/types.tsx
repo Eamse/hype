@@ -4,26 +4,28 @@ export type Product = {
   id: number;
   section: string;
   title: string;
-  brand: string;
-  price: number;
   imageUrl: string | null;
   images: { id: number; url: string; order: number }[];
   order: number;
-  description: string | null;
-  inclusions: string[];
 };
 
 export type Section =
   | 'dashboard'
   | 'hero'
-  | 'Meet our Photographers in Jeju'
-  | 'Meet our Photographer in Seoul'
+  | 'wedding-photographers'
+  | 'Photographers in Jeju'
+  | 'Photographers in Seoul'
   | 'Casual Photoshoot in Jeju'
   | 'Casual Photoshoot in Seoul'
   | 'Magazine'
   | 'users'
   | 'accounts'
-  | 'my-account';
+  | 'my-account'
+  | 'addons'
+  | 'inclusions'
+  | 'partners-hmu'
+  | 'partners-dress'
+  | 'partners-suit';
 
 export type Account = {
   id: string;

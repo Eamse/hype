@@ -15,8 +15,6 @@ export default async function Bookmarks() {
         select: {
           id: true,
           title: true,
-          brand: true,
-          price: true,
           imageUrl: true,
           section: true,
         },

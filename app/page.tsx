@@ -22,27 +22,23 @@ export default async function Home() {
 
   const [jejuWedding, seoulWedding] = await Promise.all([
     prisma.product.findMany({
-      where: { section: 'Meet our Photographers in Jeju' },
+      where: { section: 'Photographers in Jeju' },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
       take: 8,
       select: {
         id: true,
         title: true,
-        brand: true,
-        price: true,
         imageUrl: true,
         section: true,
       },
     }),
     prisma.product.findMany({
-      where: { section: 'Meet our Photographer in Seoul' },
+      where: { section: 'Photographers in Seoul' },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
       take: 8,
       select: {
         id: true,
         title: true,
-        brand: true,
-        price: true,
         imageUrl: true,
         section: true,
       },
@@ -91,13 +87,11 @@ export default async function Home() {
         <ProductSections
           sections={[
             {
-              title: 'Meet our Photographers in Jeju',
-              subtitle: 'With Couple, Friend and Family',
+              title: 'Photographers in Jeju',
               products: jejuWedding,
             },
             {
-              title: 'Meet our Photographer in Seoul',
-              subtitle: 'With Couple, Friend and Family',
+              title: 'Photographers in Seoul',
               products: seoulWedding,
             },
           ]}

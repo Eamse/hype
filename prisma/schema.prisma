@@ -14,20 +14,27 @@ model SiteConfig {
   updatedAt DateTime @updatedAt
 }
 
+model HeroImage {
+  id          Int @id @default(autoincrement())
+  link        String?
+  url         String
+  description String?
+  tagline     String?
+  order       Int @default(0)
+  createdAt   DateTime @default(now())
+}
+
 model Product {
-  id        Int            @id @default(autoincrement())
+  id        Int              @id @default(autoincrement())
   section   String
   title     String
-  brand     String
-  price     Int
-  description String?
   imageUrl  String?
-  order     Int            @default(0)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
+  order     Int              @default(0)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
   images    ProductImage[]
-  inclusions String[]
   bookmarks Bookmark[]
+  directors ProductDirector[]
 }
 
 model ProductImage {
@@ -131,5 +138,99 @@ model Bookmark {
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)                                
     product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)                             
    
-    @@unique([userId, productId])  
+    @@unique([userId, productId])
+}
+
+model Director {
+  id        Int               @id @default(autoincrement())
+  number    String            // "#1-1", "#1-2", "#2"
+  name      String
+  instagram String?
+  imageUrl  String?
+  order     Int               @default(0)
+  products  ProductDirector[]
+  packages  Package[]
+}
+
+model ProductDirector {
+  productId  Int
+  directorId Int
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  director   Director @relation(fields: [directorId], references: [id], onDelete: Cascade)
+
+  @@id([productId, directorId])
+}
+
+model Package {
+  id              Int                @id @default(autoincrement())
+  directorId      Int
+  name            String             // "Package A", "Package B", "Package C"
+  subtitle        String?
+  priceSNS        Int
+  priceNoSNS      Int
+  shootingTime    String             // "4 hours"
+  locations       String             // "3 sites"
+  originalPhotos  String             // "800+"
+  retouched       Int
+  retouchedDetail String?
+  order           Int                @default(0)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  director        Director           @relation(fields: [directorId], references: [id], onDelete: Cascade)
+  addons          PackageAddon[]
+  inclusions      PackageInclusion[]
+  partners        PackagePartner[]
+}
+
+model Addon {
+  id       Int            @id @default(autoincrement())
+  name     String
+  price    Int
+  desc     String?
+  order    Int            @default(0)
+  packages PackageAddon[]
+}
+
+model PackageAddon {
+  packageId Int
+  addonId   Int
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  addon     Addon   @relation(fields: [addonId], references: [id], onDelete: Cascade)
+
+  @@id([packageId, addonId])
+}
+
+model Inclusion {
+  id       Int                @id @default(autoincrement())
+  name     String
+  order    Int                @default(0)
+  packages PackageInclusion[]
+}
+
+model PackageInclusion {
+  packageId   Int
+  inclusionId Int
+  package     Package   @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  inclusion   Inclusion @relation(fields: [inclusionId], references: [id], onDelete: Cascade)
+
+  @@id([packageId, inclusionId])
+}
+
+model Partner {
+  id        Int              @id @default(autoincrement())
+  role      String           // "hmu" | "dress" | "suit"
+  name      String
+  instagram String?
+  imageUrl  String?
+  order     Int              @default(0)
+  packages  PackagePartner[]
+}
+
+model PackagePartner {
+  packageId Int
+  partnerId Int
+  package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  partner   Partner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
+
+  @@id([packageId, partnerId])
 }

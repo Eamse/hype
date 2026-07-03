@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import React from 'react';
 import Link from 'next/link';
 import { type Section } from './types';
@@ -12,6 +12,10 @@ import UserPanel from './user-panel';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AccountsPanel from './accounts-panel';
 import MyAccountPanel from './my-account-panel';
+import WeddingPhotographerPanel from './wedding-photographer-panel';
+import AddonPanel from './addon-panel';
+import InclusionPanel from './inclusion-panel';
+import PartnerPanel from './partner-panel';
 
 const IconDashboard = () => (
   <svg
@@ -40,6 +44,19 @@ const IconImage = () => (
     <rect x="3" y="3" width="18" height="18" rx="2" />
     <circle cx="8.5" cy="8.5" r="1.5" />
     <polyline points="21 15 16 10 5 21" />
+  </svg>
+);
+const IconUser = () => (
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+  >
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
   </svg>
 );
 const IconCamera = () => (
@@ -120,16 +137,34 @@ const IconUsers = () => (
   </svg>
 );
 
+const MANAGE_SECTIONS: Section[] = [
+  'wedding-photographers',
+  'inclusions',
+  'addons',
+  'partners-hmu',
+  'partners-dress',
+  'partners-suit',
+];
+
+const MANAGE_ITEMS: { id: Section; label: string }[] = [
+  { id: 'wedding-photographers', label: 'Directors' },
+  { id: 'inclusions', label: 'Inclusions' },
+  { id: 'addons', label: 'Addons' },
+  { id: 'partners-hmu', label: 'Hair & Makeup' },
+  { id: 'partners-dress', label: 'Dress' },
+  { id: 'partners-suit', label: 'Suit' },
+];
+
 const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: <IconDashboard /> },
   { id: 'hero', label: 'Hero Image', icon: <IconImage /> },
   {
-    id: 'Meet our Photographers in Jeju',
+    id: 'Photographers in Jeju',
     label: 'Photographers · Jeju',
     icon: <IconCamera />,
   },
   {
-    id: 'Meet our Photographer in Seoul',
+    id: 'Photographers in Seoul',
     label: 'Photographers · Seoul',
     icon: <IconCamera />,
   },
@@ -161,6 +196,14 @@ export default function AdminPage() {
   );
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [manageOpen, setManageOpen] = useState(() => MANAGE_SECTIONS.includes(active as Section));
+  const prevActive = useRef(active);
+  useEffect(() => {
+    if (prevActive.current !== active) {
+      prevActive.current = active;
+      if (MANAGE_SECTIONS.includes(active as Section)) setManageOpen(true);
+    }
+  }, [active]);
   const logout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' }).catch(() => null);
     router.replace('/admin/login');
@@ -536,13 +579,74 @@ export default function AdminPage() {
             SECTIONS
           </p>
 
+          {/* 관리 아코디언 */}
+          <div style={{ margin: '0 16px', height: 1, background: 'rgba(180,120,140,0.15)' }} />
+          <button
+            className="admin-menu-btn"
+            onClick={() => setManageOpen((v) => !v)}
+            style={{
+              width: '100%',
+              textAlign: 'left',
+              padding: '14px 16px',
+              background: MANAGE_SECTIONS.includes(active as Section) ? 'rgba(201,149,106,0.08)' : 'transparent',
+              border: 'none',
+              borderLeft: `2px solid ${MANAGE_SECTIONS.includes(active as Section) ? '#c9956a' : 'transparent'}`,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              transition: 'all 0.15s',
+            }}
+          >
+            <span style={{ color: MANAGE_SECTIONS.includes(active as Section) ? '#c9956a' : '#b08898', display: 'flex' }}>
+              <IconSettings />
+            </span>
+            <span style={{ fontSize: 14, fontWeight: MANAGE_SECTIONS.includes(active as Section) ? 600 : 400, color: MANAGE_SECTIONS.includes(active as Section) ? '#3a1a2a' : '#7a5060', flex: 1 }}>
+              Manage
+            </span>
+            <span style={{ fontSize: 10, color: '#b08898', marginRight: 4 }}>{manageOpen ? '▲' : '▼'}</span>
+          </button>
+          {manageOpen && (
+            <div style={{ background: 'rgba(180,120,140,0.04)', borderLeft: '1px solid rgba(180,120,140,0.15)', marginLeft: 16, marginRight: 8 }}>
+              {MANAGE_ITEMS.map((m) => {
+                const isActive = m.id === active;
+                return (
+                  <button
+                    key={m.id}
+                    className="admin-menu-btn"
+                    onClick={() => setActive(m.id)}
+                    style={{
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '11px 16px',
+                      background: isActive ? 'rgba(201,149,106,0.15)' : 'transparent',
+                      border: 'none',
+                      borderLeft: `2px solid ${isActive ? '#c9956a' : 'transparent'}`,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      transition: 'all 0.15s',
+                    }}
+                  >
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: isActive ? '#c9956a' : '#d4b0c0', flexShrink: 0 }} />
+                    <span style={{ fontSize: 13, fontWeight: isActive ? 600 : 400, color: isActive ? '#3a1a2a' : '#7a5060' }}>
+                      {m.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {/* 일반 메뉴 */}
           {MENU.filter(
             (m) => m.id !== 'accounts' || admin?.role === 'master',
           ).map((m, i) => {
             const isActive = m.id === active;
             return (
               <React.Fragment key={m.id}>
-                {i > 0 && (
+                {i >= 0 && (
                   <div
                     style={{
                       margin: '0 16px',
@@ -661,11 +765,17 @@ export default function AdminPage() {
             <DashboardPanel onNavigation={setActive} isMobile={isMobile} />
           )}
           {active === 'hero' && <HeroPanel />}
-          {active === 'Meet our Photographers in Jeju' && (
-            <ProductPanel section="Meet our Photographers in Jeju" />
+          {active === 'wedding-photographers' && <WeddingPhotographerPanel />}
+          {active === 'inclusions' && <InclusionPanel />}
+          {active === 'addons' && <AddonPanel />}
+          {active === 'partners-hmu' && <PartnerPanel role="hmu" />}
+          {active === 'partners-dress' && <PartnerPanel role="dress" />}
+          {active === 'partners-suit' && <PartnerPanel role="suit" />}
+          {active === 'Photographers in Jeju' && (
+            <ProductPanel section="Photographers in Jeju" />
           )}
-          {active === 'Meet our Photographer in Seoul' && (
-            <ProductPanel section="Meet our Photographer in Seoul" />
+          {active === 'Photographers in Seoul' && (
+            <ProductPanel section="Photographers in Seoul" />
           )}
           {active === 'Casual Photoshoot in Jeju' && (
             <ProductPanel section="Casual Photoshoot in Jeju" />

@@ -11,8 +11,6 @@ type Bookmark = {
   product: {
     id: number;
     title: string;
-    brand: string;
-    price: number;
     imageUrl: string | null;
     section: string;
   };

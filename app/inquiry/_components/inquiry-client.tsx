@@ -10,7 +10,7 @@ const SNAP_FORM_URL = 'https://forms.gle/3sWqu4NED5ruJEnN9'; // 스냅
 const STEPS = [
   {
     icon: <InquiryIcon />,
-    title: 'Initial Inquiry',
+    title: 'Submit your Inquiry',
     bullets: [
       'Fill out inquiry form',
       'Tell us preferred dates',
@@ -311,7 +311,7 @@ export default function InquiryClient() {
           alignItems: 'center',
           justifyContent: 'center',
           textAlign: 'center',
-          padding: isMobile ? '60px 24px' : '80px 40px',
+          padding: isMobile ? '60px 24px' : '40px',
           borderBottom: '1px solid #e8e8e8',
         }}
       >
@@ -357,7 +357,7 @@ export default function InquiryClient() {
           />
         </h1>
 
-        <p
+        {/* <p
           className="inquiry-fade-up"
           style={{
             fontSize: isMobile ? 14 : 16,
@@ -371,7 +371,7 @@ export default function InquiryClient() {
           Choose your session type and fill out the form.
           <br />
           We will be in touch within 1–2 business days.
-        </p>
+        </p> */}
 
         {/* D) hover 버튼 */}
         <div

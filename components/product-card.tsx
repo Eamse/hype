@@ -6,8 +6,6 @@ import Link from 'next/link';
 export type Product = {
   id: number;
   title: string;
-  brand: string;
-  price: number;
   imageUrl: string | null;
   section?: string;
 };
@@ -84,23 +82,20 @@ export default function ProductCard({
             <ImgBox />
           )}
         </div>
-        <p style={{ fontSize: 11, color: '#767676', marginBottom: 2 }}>
-          {product.brand}
-        </p>
         <p
-          className="card-title"
+          className="card-title font-cormorant"
           style={{
-            fontSize: 13,
-            fontWeight: 500,
+            fontSize: 18,
+            fontWeight: 900,
             color: '#191919',
             marginBottom: 3,
             lineHeight: 1.4,
+            textAlign: 'center',
+            letterSpacing: '0.5px',
+            // WebkitTextStroke: '0.3px #191919',
           }}
         >
           {product.title}
-        </p>
-        <p style={{ fontSize: 13, fontWeight: 700, color: '#191919' }}>
-          USD {product.price.toLocaleString()}
         </p>
       </Link>
       <button

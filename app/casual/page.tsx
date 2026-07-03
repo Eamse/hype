@@ -10,12 +10,12 @@ export default async function CasualPage() {
     prisma.product.findMany({
       where: { section: 'Casual Photoshoot in Jeju' },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
-      select: { id: true, title: true, brand: true, price: true, imageUrl: true, section: true },
+      select: { id: true, title: true, imageUrl: true, section: true },
     }),
     prisma.product.findMany({
       where: { section: 'Casual Photoshoot in Seoul' },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
-      select: { id: true, title: true, brand: true, price: true, imageUrl: true, section: true },
+      select: { id: true, title: true, imageUrl: true, section: true },
     }),
   ]);
 

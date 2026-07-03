@@ -12,7 +12,7 @@ export const ALLOWED_IMAGE_MIME = new Set([
   'image/gif',
 ]);
 
-export const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10 MB
+export const MAX_IMAGE_SIZE = 50 * 1024 * 1024; // 50 MB
 
 /**
  * 파일 실제 내용의 매직 바이트를 검사해 MIME 타입 스푸핑을 방지

@@ -4,16 +4,13 @@ import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
-// 1. body에서 loginId, password 꺼내기
-// 2. DB에서 loginId로 어드민 조회
-// 3. 없으면 401
-// /4. bcrypt로 비밀번호 검증
-// 5. 틀리면 401
-// 6. 맞으면 쿠키 발급
 export async function POST(request: NextRequest) {
   const ip = getClientIp(request);
   if (!checkRateLimit(`admin_login:${ip}`, 10, 15 * 60 * 1000)) {
-    return NextResponse.json({ message: 'Too many login attempts. Please try again later.' }, { status: 429 });
+    return NextResponse.json(
+      { message: 'Too many login attempts. Please try again later.' },
+      { status: 429 },
+    );
   }
 
   const body = await request.json();
@@ -45,7 +42,7 @@ export async function POST(request: NextRequest) {
   const response = NextResponse.json({ ok: true });
   response.cookies.set('admin_token', token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: false,
     sameSite: 'strict',
     maxAge: 60 * 60 * 2,
     path: '/',

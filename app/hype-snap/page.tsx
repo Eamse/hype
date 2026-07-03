@@ -15,8 +15,6 @@ export default async function HypeSnapPage() {
       select: {
         id: true,
         title: true,
-        brand: true,
-        price: true,
         imageUrl: true,
         section: true,
       },
@@ -28,8 +26,6 @@ export default async function HypeSnapPage() {
       select: {
         id: true,
         title: true,
-        brand: true,
-        price: true,
         imageUrl: true,
         section: true,
       },

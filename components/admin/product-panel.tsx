@@ -1,932 +1,310 @@
 'use client';
 
-import { useState, useRef, useEffect, startTransition } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import {
-  type Product,
-  btnStyle,
-  labelStyle,
-  inputStyle,
-  isProductArray,
-} from './types';
+import { type Product, btnStyle, labelStyle, inputStyle } from './types';
+import { useSelection } from './use-selection';
+import BulkActions from './bulk-actions';
 import ProductRow from './product-row';
-import { INCLUSIONS } from './types';
 
-export default function ProductPanel({
-  section,
-}: {
-  section:
-    | 'Meet our Photographers in Jeju'
-    | 'Meet our Photographer in Seoul'
-    | 'Casual Photoshoot in Jeju'
-    | 'Casual Photoshoot in Seoul';
-}) {
+type Director = { id: number; number: string; name: string; instagram: string | null };
+
+const SECTIONS = [
+  'Photographers in Jeju',
+  'Photographers in Seoul',
+  'Casual Photoshoot in Jeju',
+  'Casual Photoshoot in Seoul',
+] as const;
+
+async function uploadImage(file: File, key: string): Promise<string> {
+  const fd = new FormData();
+  fd.append('image', file);
+  fd.append('key', key);
+  const res = await fetch('/api/images', { method: 'POST', body: fd });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? '업로드 실패');
+  return data.imageUrl as string;
+}
+
+async function uploadDetailImages(files: File[], productId: number): Promise<void> {
+  for (let i = 0; i < files.length; i++) {
+    const url = await uploadImage(files[i], `product_detail_${productId}_${Date.now()}_${i}`);
+    await fetch('/api/admin/product-images', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ productId, url }),
+    });
+  }
+}
+
+function DirectorPicker({ directors, selected, onChange }: { directors: Director[]; selected: number[]; onChange: (ids: number[]) => void }) {
+  if (directors.length === 0) return <p style={{ fontSize: 12, color: '#999' }}>등록된 작가가 없습니다.</p>;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      {directors.map((d) => (
+        <label key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
+          <input
+            type="checkbox"
+            checked={selected.includes(d.id)}
+            onChange={() => onChange(selected.includes(d.id) ? selected.filter((x) => x !== d.id) : [...selected, d.id])}
+          />
+          <span style={{ color: '#c9a96e', fontWeight: 600, fontSize: 11 }}>{d.number}</span>
+          {d.name}
+          {d.instagram && <span style={{ fontSize: 11, color: '#aaa' }}>{d.instagram}</span>}
+        </label>
+      ))}
+    </div>
+  );
+}
+
+export default function ProductPanel({ section }: { section: typeof SECTIONS[number] }) {
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [loadError, setLoadError] = useState<string | null>(null);
-  const [adding, setAdding] = useState(false);
-  const [addError, setAddError] = useState<string | null>(null);
-  const [newForm, setNewForm] = useState({
-    title: '',
-    description: '',
-    brand: '',
-    price: '',
-    inclusions: [] as string[],
-  });
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [newImage, setNewImage] = useState<File | null>(null);
-  const [newDetailImages, setNewDetailImages] = useState<File[]>([]);
-  const [newImagePreview, setNewImagePreview] = useState<string | null>(null);
-  const addImgRef = useRef<HTMLInputElement>(null);
-  const addDetailImgRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(true);
+  const [directors, setDirectors] = useState<Director[]>([]);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [query, setQuery] = useState('');
 
-  // 편집 모달
+  // 추가 폼
+  const [isAdding, setIsAdding] = useState(false);
+  const [newDirIds, setNewDirIds] = useState<number[]>([]);
+  const [thumbFile, setThumbFile] = useState<File | null>(null);
+  const [thumbPreview, setThumbPreview] = useState<string | null>(null);
+  const [detailFiles, setDetailFiles] = useState<File[]>([]);
+  const [adding, setAdding] = useState(false);
+  const addThumbRef = useRef<HTMLInputElement>(null);
+  const addDetailRef = useRef<HTMLInputElement>(null);
+
+  // 수정 모달
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [editForm, setEditForm] = useState({
-    title: '',
-    brand: '',
-    price: '',
-    description: '',
-    inclusions: [] as string[],
-  });
+  const [editDirIds, setEditDirIds] = useState<number[]>([]);
+  const [editDetailFiles, setEditDetailFiles] = useState<File[]>([]);
   const [editSaving, setEditSaving] = useState(false);
-  const [editSaveError, setEditSaveError] = useState<string | null>(null);
-  const [editDetailUploading, setEditDetailUploading] = useState(false);
-  const editDetailImgRef = useRef<HTMLInputElement>(null);
+  const editDetailRef = useRef<HTMLInputElement>(null);
 
-  const LABELS: Record<string, string> = {
-    'Meet our Photographers in Jeju': 'Meet our Photographers in Jeju',
-    'Meet our Photographer in Seoul': 'Meet our Photographer in Seoul',
-    'Casual Photoshoot in Jeju': 'Casual Photoshoot in Jeju',
-    'Casual Photoshoot in Seoul': 'Casual Photoshoot in Seoul',
-  };
-  const label = LABELS[section] ?? section;
-  const isSlides = false;
+  const { selectedIds, toggleSelect, toggleAll, clearSelection } = useSelection(products);
 
-  function load() {
-    setRefreshKey((k) => k + 1);
+  async function loadProducts() {
+    const data = await fetch(`/api/products?section=${encodeURIComponent(section)}`).then((r) => r.json());
+    setProducts(Array.isArray(data) ? data : []);
   }
 
   useEffect(() => {
-    const controller = new AbortController();
-    fetch(`/api/products?section=${section}`, { signal: controller.signal })
-      .then((res) => {
-        setLoadError(null);
-        if (!res.ok) throw new Error(`Server error: ${res.status}`);
-        return res.json() as Promise<unknown>;
-      })
-      .then((data) => {
-        if (!isProductArray(data)) throw new Error('Invalid response format');
-        setProducts(data);
-      })
-      .catch((e: Error) => {
-        if (e.name !== 'AbortError') setLoadError(e.message);
-      })
-      .finally(() => setLoading(false));
-    return () => controller.abort();
-  }, [section, refreshKey]);
+    Promise.all([
+      loadProducts(),
+      fetch('/api/admin/wedding-photographers').then((r) => r.json()).then((d) => setDirectors(Array.isArray(d) ? d : [])),
+    ]).finally(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [section]);
 
-  const editingId = editingProduct?.id;
-  useEffect(() => {
-    if (editingId !== undefined) {
-      const updated = products.find((p) => p.id === editingId);
-      if (updated) startTransition(() => setEditingProduct(updated));
-    }
-  }, [products, editingId]);
+  async function handleBulkDelete() {
+    await Promise.all([...selectedIds].map((id) => fetch(`/api/admin/products/${id}`, { method: 'DELETE' })));
+    await loadProducts();
+    clearSelection();
+  }
+
+  function buildTitle(ids: number[]) {
+    return directors.filter((d) => ids.includes(d.id)).map((d) => d.name).join(' & ') || '(미등록)';
+  }
 
   async function handleAdd() {
-    if (!newForm.title.trim()) return;
-    if (!isSlides && (!newForm.brand.trim() || !newForm.price)) return;
+    if (newDirIds.length === 0) { alert('작가를 선택해주세요.'); return; }
+    setAdding(true);
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ section, title: buildTitle(newDirIds) }),
+      });
+      if (!res.ok) { alert((await res.json()).error); return; }
+      const product = await res.json();
 
-    const price = isSlides ? 0 : Number(newForm.price);
-    if (!isSlides && (!Number.isFinite(price) || price < 0)) {
-      setAddError('Please enter a valid price.');
-      return;
-    }
-
-    setAddError(null);
-
-    const res = await fetch('/api/products', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        section,
-        title: newForm.title.trim(),
-        brand: isSlides ? '-' : newForm.brand.trim(),
-        price,
-        description: newForm.description,
-        inclusions: newForm.inclusions,
-      }),
-    });
-
-    if (!res.ok) {
-      const data: unknown = await res.json();
-      const msg =
-        typeof data === 'object' && data !== null && 'error' in data
-          ? String((data as { error: unknown }).error)
-          : 'Failed to add item';
-      setAddError(msg);
-      return;
-    }
-
-    const created = (await res.json()) as { id: number };
-
-    if (newImage) {
-      const fd = new FormData();
-      fd.append('key', `product_${created.id}`);
-      fd.append('image', newImage);
-      const imgRes = await fetch('/api/images', { method: 'POST', body: fd });
-      if (imgRes.ok) {
-        const imgData = (await imgRes.json()) as { imageUrl: string };
-        await fetch(`/api/products/${created.id}`, {
+      if (thumbFile) {
+        const url = await uploadImage(thumbFile, `product_thumb_${product.id}_${Date.now()}`);
+        await fetch(`/api/admin/products/${product.id}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imageUrl: imgData.imageUrl }),
+          body: JSON.stringify({ imageUrl: url }),
         });
       }
-    }
-    for (const file of newDetailImages) {
-      const fd = new FormData();
-      fd.append('image', file);
-      await fetch(`/api/products/${created.id}/images`, {
-        method: 'POST',
-        body: fd,
-      });
-    }
+      if (detailFiles.length > 0) await uploadDetailImages(detailFiles, product.id);
+      if (newDirIds.length > 0) {
+        await fetch(`/api/admin/products/${product.id}/directors`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ directorIds: newDirIds }),
+        });
+      }
 
-    setNewForm({
-      title: '',
-      brand: '',
-      price: '',
-      description: '',
-      inclusions: [],
-    });
-    setNewImage(null);
-    setNewImagePreview(null);
-    setNewDetailImages([]);
-    setAdding(false);
-    load();
+      await loadProducts();
+      setIsAdding(false);
+      setNewDirIds([]);
+      setThumbFile(null);
+      setThumbPreview(null);
+      setDetailFiles([]);
+    } finally {
+      setAdding(false);
+    }
+  }
+
+  async function handleDelete(id: number) {
+    if (!confirm('이 상품을 삭제할까요?')) return;
+    await fetch(`/api/admin/products/${id}`, { method: 'DELETE' });
+    setProducts((prev) => prev.filter((p) => p.id !== id));
+  }
+
+  async function openEdit(product: Product) {
+    setEditingProduct(product);
+    setEditDetailFiles([]);
+    const data = await fetch(`/api/admin/wedding-directors/${product.id}`).then((r) => r.json());
+    setEditDirIds(Array.isArray(data) ? data.map((d: Director) => d.id) : []);
   }
 
   async function handleEditSave() {
     if (!editingProduct) return;
-    if (!editForm.title.trim()) {
-      setEditSaveError('Title is required.');
-      return;
-    }
-    if (!isSlides) {
-      const priceNum = Number(editForm.price);
-      if (!Number.isFinite(priceNum) || priceNum < 0) {
-        setEditSaveError('Invalid price.');
-        return;
-      }
-    }
     setEditSaving(true);
-    setEditSaveError(null);
     try {
-      const body: Record<string, unknown> = {
-        title: editForm.title.trim(),
-        description: editForm.description,
-        inclusions: editForm.inclusions,
-      };
-      if (!isSlides) {
-        body.brand = editForm.brand.trim();
-        body.price = Number(editForm.price);
-      }
-      const res = await fetch(`/api/products/${editingProduct.id}`, {
+      await fetch(`/api/admin/products/${editingProduct.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ title: buildTitle(editDirIds) }),
       });
-      if (!res.ok) {
-        const data: unknown = await res.json();
-        const msg =
-          typeof data === 'object' && data !== null && 'error' in data
-            ? String((data as { error: unknown }).error)
-            : 'Save failed';
-        throw new Error(msg);
-      }
+      if (editDetailFiles.length > 0) await uploadDetailImages(editDetailFiles, editingProduct.id);
+      await fetch(`/api/admin/products/${editingProduct.id}/directors`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ directorIds: editDirIds }),
+      });
+      await loadProducts();
       setEditingProduct(null);
-      load();
-    } catch (e) {
-      setEditSaveError(e instanceof Error ? e.message : 'Save failed');
     } finally {
       setEditSaving(false);
     }
   }
 
-  async function handleEditDetailImgUpload(file: File) {
-    if (!editingProduct) return;
-    setEditDetailUploading(true);
-    try {
-      const fd = new FormData();
-      fd.append('image', file);
-      await fetch(`/api/products/${editingProduct.id}/images`, {
-        method: 'POST',
-        body: fd,
-      });
-      load();
-    } catch {
-    } finally {
-      setEditDetailUploading(false);
-    }
-  }
-
-  async function handleDelete(id: number) {
-    if (!confirm('Delete this item? This cannot be undone.')) return;
-    const res = await fetch(`/api/products/${id}`, { method: 'DELETE' });
-    if (res.ok) {
-      load();
-    } else {
-      alert('Failed to delete item. Please try again.');
-    }
-  }
-
-  const filteredProducts = products.filter((p) => {
-    const q = query.toLowerCase();
-    return (
-      p.title.toLocaleLowerCase().includes(q) ||
-      p.brand.toLowerCase().includes(q)
-    );
-  });
-
   return (
-    <div>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'space-between',
-          marginBottom: 28,
-          paddingBottom: 20,
-          borderBottom: '1px solid #ede8de',
-        }}
-      >
-        <div>
-          <p
-            style={{
-              fontSize: 10,
-              letterSpacing: '2px',
-              color: '#7a5520',
-              fontWeight: 600,
-              marginBottom: 6,
-            }}
-          >
-            PRODUCTS
-          </p>
-          <h2
-            style={{
-              fontSize: 22,
-              fontWeight: 700,
-              color: '#1a1a1a',
-              letterSpacing: '-0.3px',
-            }}
-          >
-            {label}
-          </h2>
-          <p style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
-            {products.length} {isSlides ? 'slides' : 'products'}
-          </p>
-        </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+      {/* 헤더 */}
+      <div style={{ paddingBottom: 20, borderBottom: '1px solid #ede8de' }}>
+        <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>PRODUCTS</p>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a' }}>{section}</h2>
+      </div>
 
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button
-            onClick={() => {
-              setAdding(true);
-              setAddError(null);
-            }}
-            style={btnStyle('#191919', '#fff')}
-          >
-            {isSlides ? '+ Add Slide' : '+ Add Product'}
-          </button>
-          <button
-            onClick={() => setIsExpanded((v) => !v)}
-            style={btnStyle('#191919', '#191919')}
-          >
-            {isExpanded ? '▲ 전체 접기' : '▼ 전체 펼치기'}
-          </button>
-        </div>
+      {/* 액션 버튼 */}
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <button style={btnStyle('#191919', '#fff')} onClick={() => setIsAdding(true)}>+ 상품 추가</button>
+        <button style={btnStyle('#fff', '#191919', '#ddd')} onClick={() => setIsExpanded((v) => !v)}>
+          {isExpanded ? '▲ 전체 접기' : '▼ 전체 펼치기'}
+        </button>
       </div>
 
       {/* 추가 폼 */}
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="제목 or 내용 검색"
-        style={{
-          width: '100%',
-          padding: '10px 14px',
-          fontSize: 14,
-          border: '1px solid black',
-          borderRadius: 8,
-          outline: 'none',
-          marginBottom: 20,
-          boxSizing: 'border-box',
-        }}
-      />
-      {adding && (
-        <div
-          style={{
-            background: '#fdfcfa',
-            border: '1px solid #e8d9b8',
-            borderRadius: 12,
-            padding: 24,
-            marginBottom: 24,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 14,
-            boxShadow: '0 2px 12px rgba(201,169,110,0.08)',
-          }}
-        >
-          <p
-            style={{
-              fontSize: 11,
-              fontWeight: 700,
-              color: '#7a5520',
-              letterSpacing: '2px',
-              textTransform: 'uppercase',
-            }}
-          >
-            {isSlides ? 'New Slide' : 'New Product'}
-          </p>
-          {addError && (
-            <div
-              style={{
-                background: '#fef2f2',
-                border: '1px solid #fecaca',
-                borderRadius: 6,
-                padding: '8px 12px',
-                fontSize: 12,
-                color: '#dc2626',
-              }}
-            >
-              {addError}
-            </div>
-          )}
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: isSlides ? '1fr' : '1fr 1fr 1fr',
-              gap: 10,
-            }}
-          >
-            <div>
-              <label style={labelStyle}>
-                {isSlides ? 'Slide Caption' : 'Title'}
-              </label>
-              <input
-                value={newForm.title}
-                onChange={(e) =>
-                  setNewForm((p) => ({ ...p, title: e.target.value }))
-                }
-                placeholder={isSlides ? 'e.g. Spring 2025' : 'Product title'}
-                style={inputStyle}
+      {isAdding && (
+        <div style={{ background: '#fdfcfa', border: '1px solid #ede8de', borderRadius: 12, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a' }}>새 상품 등록</p>
+
+          <div>
+            <label style={labelStyle}>썸네일 이미지</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <button type="button" style={btnStyle('transparent', '#555', '#ddd')} onClick={() => addThumbRef.current?.click()}>파일 선택</button>
+              {thumbPreview && (
+                <div style={{ position: 'relative', width: 48, height: 48, borderRadius: 6, overflow: 'hidden' }}>
+                  <Image src={thumbPreview} alt="thumb" fill style={{ objectFit: 'cover' }} />
+                </div>
+              )}
+              <input ref={addThumbRef} type="file" accept="image/*" style={{ display: 'none' }}
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) { setThumbFile(f); setThumbPreview(URL.createObjectURL(f)); } e.target.value = ''; }}
               />
             </div>
-            {!isSlides && (
-              <>
-                <div>
-                  <label style={labelStyle}>Brand</label>
-                  <input
-                    value={newForm.brand}
-                    onChange={(e) =>
-                      setNewForm((p) => ({ ...p, brand: e.target.value }))
-                    }
-                    placeholder="Brand name"
-                    style={inputStyle}
-                  />
-                </div>
-                <div>
-                  <label style={labelStyle}>Price (₩)</label>
-                  <input
-                    value={newForm.price}
-                    onChange={(e) =>
-                      setNewForm((p) => ({ ...p, price: e.target.value }))
-                    }
-                    placeholder="500000"
-                    type="number"
-                    min="0"
-                    style={inputStyle}
-                  />
-                </div>
-              </>
-            )}
           </div>
 
           <div>
-            <label style={labelStyle}>Description</label>
-            <textarea
-              value={newForm.description}
-              onChange={(e) =>
-                setNewForm((p) => ({ ...p, description: e.target.value }))
-              }
-              placeholder="Describe this product"
-              rows={3}
-              style={{ ...inputStyle, resize: 'vertical' }}
-            />
-          </div>
-
-          {!isSlides && (
-            <div>
-              <label style={labelStyle}>Inclusions</label>
-              <label
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 4,
-                  fontSize: 12,
-                  cursor: 'pointer',
-                  color: '#555',
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={newForm.inclusions.length === INCLUSIONS.length}
-                  onChange={(e) =>
-                    setNewForm((p) => ({
-                      ...p,
-                      inclusions: e.target.checked ? [...INCLUSIONS] : [],
-                    }))
-                  }
-                ></input>
-                전체선택
-              </label>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                {INCLUSIONS.map((item) => (
-                  <label
-                    key={item}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      fontSize: 13,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={newForm.inclusions.includes(item)}
-                      onChange={(e) =>
-                        setNewForm((p) => ({
-                          ...p,
-                          inclusions: e.target.checked
-                            ? [...p.inclusions, item]
-                            : p.inclusions.filter((i) => i !== item),
-                        }))
-                      }
-                    />
-                    {item}
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 이미지 선택 */}
-          <div>
-            <label style={labelStyle}>Image</label>
-            <input
-              ref={addImgRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              style={{ display: 'none' }}
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) {
-                  setNewImage(f);
-                  setNewImagePreview(URL.createObjectURL(f));
-                }
-                e.target.value = '';
-              }}
-            />
+            <label style={labelStyle}>상세 이미지</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <button
-                type="button"
-                onClick={() => addImgRef.current?.click()}
-                style={btnStyle('transparent', '#555', '#ddd')}
-              >
-                {newImagePreview ? 'Change Image' : '+ Select Image'}
-              </button>
-              {newImagePreview && (
-                <div
-                  style={{
-                    position: 'relative',
-                    width: 48,
-                    height: 48,
-                    borderRadius: 6,
-                    overflow: 'hidden',
-                  }}
-                >
-                  <Image
-                    src={newImagePreview}
-                    alt="preview"
-                    fill
-                    style={{ objectFit: 'cover' }}
-                  />
-                </div>
-              )}
-              {newImagePreview && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setNewImage(null);
-                    setNewImagePreview(null);
-                  }}
-                  style={{
-                    fontSize: 11,
-                    color: '#aaa',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Remove
-                </button>
-              )}
+              <button type="button" style={btnStyle('transparent', '#555', '#ddd')} onClick={() => addDetailRef.current?.click()}>파일 선택</button>
+              {detailFiles.length > 0 && <span style={{ fontSize: 12, color: '#666' }}>{detailFiles.length}개 선택됨</span>}
+              <input ref={addDetailRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
+                onChange={(e) => { setDetailFiles(Array.from(e.target.files ?? [])); e.target.value = ''; }}
+              />
             </div>
           </div>
-          {/* 상세 이미지 선택 */}
+
           <div>
-            <label style={labelStyle}>Detail Images (optional)</label>
-            <input
-              ref={addDetailImgRef}
-              type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
-              multiple
-              style={{ display: 'none' }}
-              onChange={(e) => {
-                const files = e.target.files;
-                if (files) setNewDetailImages(Array.from(files));
-                e.target.value = '';
-              }}
-            />
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <button
-                type="button"
-                onClick={() => addDetailImgRef.current?.click()}
-                style={btnStyle('transparent', '#555', '#ddd')}
-              >
-                {newDetailImages.length > 0
-                  ? `${newDetailImages.length} files selected`
-                  : '+ Select Detail Images'}
-              </button>
-            </div>
+            <label style={labelStyle}>연결 작가</label>
+            <DirectorPicker directors={directors} selected={newDirIds} onChange={setNewDirIds} />
           </div>
-          {/* 썸네일 이미지 선택 */}
+
           <div style={{ display: 'flex', gap: 8 }}>
-            <button onClick={handleAdd} style={btnStyle('#191919', '#fff')}>
-              Save
-            </button>
-            <button
-              onClick={() => {
-                setAdding(false);
-                setAddError(null);
-                setNewForm({
-                  title: '',
-                  brand: '',
-                  price: '',
-                  description: '',
-                  inclusions: [],
-                });
-                setNewImage(null);
-                setNewImagePreview(null);
-                setNewDetailImages([]);
-              }}
-              style={btnStyle('transparent', '#555', '#ddd')}
-            >
-              Cancel
-            </button>
+            <button style={btnStyle('#191919', '#fff')} onClick={handleAdd} disabled={adding}>{adding ? '등록 중...' : '등록'}</button>
+            <button style={btnStyle('#fff', '#666', '#ddd')} onClick={() => { setIsAdding(false); setThumbFile(null); setThumbPreview(null); setDetailFiles([]); setNewDirIds([]); }}>취소</button>
           </div>
         </div>
       )}
 
-      {/* 리스트 */}
-      {loading ? (
-        <div style={{ color: '#aaa', fontSize: 13, padding: '24px 0' }}>
-          Loading...
-        </div>
-      ) : loadError ? (
-        <div
-          style={{
-            background: '#fef2f2',
-            border: '1px solid #fecaca',
-            borderRadius: 8,
-            padding: '16px 20px',
-            fontSize: 13,
-            color: '#dc2626',
-          }}
-        >
-          {loadError}
-          <button
-            onClick={() => load()}
-            style={{
-              marginLeft: 12,
-              fontSize: 12,
-              textDecoration: 'underline',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              color: '#dc2626',
-            }}
-          >
-            Retry
-          </button>
-        </div>
-      ) : products.length === 0 ? (
-        <div
-          style={{
-            padding: '48px 0',
-            textAlign: 'center',
-            color: '#bbb',
-            fontSize: 13,
-          }}
-        >
-          {isSlides
-            ? 'No slides yet. Click "+ Add Slide" to get started.'
-            : 'No products yet. Click "+ Add Product" to get started.'}
-        </div>
-      ) : (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))',
-            gap: 16,
-          }}
-        >
-          {filteredProducts.map((p) => (
+      {/* 목록 */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {loading && <p style={{ fontSize: 13, color: '#999' }}>불러오는 중...</p>}
+        {!loading && products.length === 0 && <p style={{ fontSize: 13, color: '#999' }}>등록된 상품이 없습니다.</p>}
+
+        <BulkActions
+          total={products.length}
+          selectedCount={selectedIds.size}
+          allSelected={selectedIds.size === products.length && products.length > 0}
+          onToggleAll={toggleAll}
+          onDeleteSelected={handleBulkDelete}
+        />
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+          {products.map((p) => (
             <ProductRow
               key={p.id}
               product={p}
-              isSlide={isSlides}
               isExpanded={isExpanded}
-              onUpdated={() => load()}
+              isSelected={selectedIds.has(p.id)}
+              onToggleSelect={() => toggleSelect(p.id)}
+              onEdit={() => openEdit(p)}
               onDeleted={() => handleDelete(p.id)}
-              onEdit={() => {
-                setEditingProduct(p);
-                setEditForm({
-                  title: p.title,
-                  brand: p.brand,
-                  price: String(p.price),
-                  description: p.description ?? '',
-                  inclusions: p.inclusions,
-                });
-                setEditSaveError(null);
-              }}
+              onUpdated={loadProducts}
             />
           ))}
         </div>
-      )}
+      </div>
 
-      {/* 편집 모달 */}
+      {/* 수정 모달 */}
       {editingProduct && (
         <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            zIndex: 1000,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: 24,
-          }}
-          onClick={(e) => {
-            if (e.target === e.currentTarget) setEditingProduct(null);
-          }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+          onClick={(e) => { if (e.target === e.currentTarget) setEditingProduct(null); }}
         >
-          <div
-            style={{
-              background: '#fff',
-              borderRadius: 16,
-              padding: 32,
-              width: '100%',
-              maxWidth: 560,
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 16,
-            }}
-          >
-            <p
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                color: '#7a5520',
-                letterSpacing: '2px',
-                textTransform: 'uppercase',
-              }}
-            >
-              Edit Product
-            </p>
+          <div style={{ background: '#fff', borderRadius: 16, padding: 32, width: '100%', maxWidth: 520, maxHeight: '90vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#7a5520', letterSpacing: '2px' }}>상품 수정</p>
 
-            {editSaveError && (
-              <div
-                style={{
-                  background: '#fef2f2',
-                  border: '1px solid #fecaca',
-                  borderRadius: 6,
-                  padding: '8px 12px',
-                  fontSize: 12,
-                  color: '#dc2626',
-                }}
-              >
-                {editSaveError}
+            <div>
+              <label style={labelStyle}>상세 이미지 추가</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button type="button" style={btnStyle('transparent', '#555', '#ddd')} onClick={() => editDetailRef.current?.click()}>파일 선택</button>
+                {editDetailFiles.length > 0 && <span style={{ fontSize: 12, color: '#666' }}>{editDetailFiles.length}개 선택됨</span>}
+                <input ref={editDetailRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
+                  onChange={(e) => { setEditDetailFiles(Array.from(e.target.files ?? [])); e.target.value = ''; }}
+                />
               </div>
-            )}
-
-            <div>
-              <label style={labelStyle}>Title</label>
-              <input
-                value={editForm.title}
-                onChange={(e) =>
-                  setEditForm((p) => ({ ...p, title: e.target.value }))
-                }
-                placeholder="Title"
-                style={inputStyle}
-              />
-            </div>
-
-            {!isSlides && (
-              <>
-                <div>
-                  <label style={labelStyle}>Brand</label>
-                  <input
-                    value={editForm.brand}
-                    onChange={(e) =>
-                      setEditForm((p) => ({ ...p, brand: e.target.value }))
-                    }
-                    placeholder="Brand"
-                    style={inputStyle}
-                  />
-                </div>
-                <div>
-                  <label style={labelStyle}>Price (₩)</label>
-                  <input
-                    value={editForm.price}
-                    onChange={(e) =>
-                      setEditForm((p) => ({ ...p, price: e.target.value }))
-                    }
-                    placeholder="Price"
-                    type="number"
-                    min="0"
-                    style={inputStyle}
-                  />
-                </div>
-              </>
-            )}
-
-            <div>
-              <label style={labelStyle}>Description</label>
-              <textarea
-                value={editForm.description}
-                onChange={(e) =>
-                  setEditForm((p) => ({ ...p, description: e.target.value }))
-                }
-                placeholder="Description"
-                rows={3}
-                style={{ ...inputStyle, resize: 'vertical' }}
-              />
-            </div>
-
-            {!isSlides && (
-              <div>
-                <label style={labelStyle}>Inclusions</label>
-                <div
-                  style={{ display: 'flex', flexDirection: 'column', gap: 6 }}
-                >
-                  {INCLUSIONS.map((item) => (
-                    <label
-                      key={item}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8,
-                        fontSize: 12,
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={editForm.inclusions.includes(item)}
-                        onChange={(e) =>
-                          setEditForm((p) => ({
-                            ...p,
-                            inclusions: e.target.checked
-                              ? [...p.inclusions, item]
-                              : p.inclusions.filter((i) => i !== item),
-                          }))
-                        }
-                      />
-                      {item}
-                    </label>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div>
-              <label style={labelStyle}>Detail Images</label>
               {editingProduct.images.length > 0 && (
-                <div
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: 8,
-                    marginBottom: 10,
-                  }}
-                >
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 8 }}>
                   {editingProduct.images.map((img) => (
-                    <div
-                      key={img.id}
-                      style={{ position: 'relative', width: 80, height: 80 }}
-                    >
-                      <Image
-                        src={img.url}
-                        alt="detail"
-                        fill
-                        style={{ objectFit: 'cover', borderRadius: 6 }}
-                      />
-                      <button
-                        onClick={async () => {
-                          const productId = editingProduct?.id;
-                          if (!productId) return;
-                          await fetch(
-                            `/api/products/${productId}/images?imageId=${img.id}`,
-                            { method: 'DELETE' },
-                          );
-                          load();
-                        }}
-                        style={{
-                          position: 'absolute',
-                          top: 2,
-                          right: 2,
-                          background: 'rgba(0,0,0,0.6)',
-                          color: '#fff',
-                          border: 'none',
-                          borderRadius: '50%',
-                          width: 18,
-                          height: 18,
-                          fontSize: 10,
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                        }}
-                      >
-                        ✕
-                      </button>
+                    <div key={img.id} style={{ position: 'relative', width: 48, height: 48 }}>
+                      <Image src={img.url} alt="" fill style={{ objectFit: 'cover', borderRadius: 4 }} />
                     </div>
                   ))}
                 </div>
               )}
-              <input
-                ref={editDetailImgRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif"
-                multiple
-                style={{ display: 'none' }}
-                onChange={(e) => {
-                  const files = e.target.files;
-                  if (files) {
-                    Array.from(files).forEach((f) =>
-                      handleEditDetailImgUpload(f),
-                    );
-                  }
-                  e.target.value = '';
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => editDetailImgRef.current?.click()}
-                disabled={editDetailUploading}
-                style={btnStyle('transparent', '#555', '#ddd')}
-              >
-                {editDetailUploading ? 'Uploading...' : '+ Add Detail Images'}
-              </button>
             </div>
 
-            <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-              <button
-                onClick={handleEditSave}
-                disabled={editSaving}
-                style={btnStyle('#191919', '#fff')}
-              >
-                {editSaving ? 'Saving...' : 'Save'}
-              </button>
-              <button
-                onClick={() => {
-                  setEditingProduct(null);
-                  setEditSaveError(null);
-                }}
-                disabled={editSaving}
-                style={btnStyle('transparent', '#555', '#ddd')}
-              >
-                Cancel
-              </button>
+            <div>
+              <label style={labelStyle}>연결 작가</label>
+              <DirectorPicker directors={directors} selected={editDirIds} onChange={setEditDirIds} />
+            </div>
+
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button style={btnStyle('#191919', '#fff')} onClick={handleEditSave} disabled={editSaving}>{editSaving ? '저장 중...' : '저장'}</button>
+              <button style={btnStyle('#fff', '#666', '#ddd')} onClick={() => setEditingProduct(null)}>취소</button>
             </div>
           </div>
         </div>
