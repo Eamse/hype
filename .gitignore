@@ -38,9 +38,13 @@ yarn-error.log*
 *.db-shm
 *.db-wal
 
-# claude
+# claude / docs
 AGENTS.md
 CLAUDE.md
+BLUEPRINT.md
+asd.md
+docs/
+memory/
 
 # vercel
 .vercel
@@ -51,4 +55,3 @@ next-env.d.ts
 
 /app/generated/prisma
 SECURITY_AUDIT.md
-memory/
