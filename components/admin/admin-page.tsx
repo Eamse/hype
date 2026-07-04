@@ -107,19 +107,19 @@ const IconSettings = () => (
   </svg>
 );
 
-// const IconBook = () => (
-//   <svg
-//     width="15"
-//     height="15"
-//     viewBox="0 0 24 24"
-//     fill="none"
-//     stroke="currentColor"
-//     strokeWidth="1.6"
-//   >
-//     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-//     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-//   </svg>
-// );
+const IconBook = () => (
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+  >
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+  </svg>
+);
 
 const IconUsers = () => (
   <svg
@@ -157,7 +157,8 @@ const MANAGE_ITEMS: { id: Section; label: string }[] = [
 
 const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: <IconDashboard /> },
-  { id: 'hero', label: 'Hero Image', icon: <IconImage /> },
+  { id: 'hero-wedding', label: 'Hero · Wedding', icon: <IconImage /> },
+  { id: 'hero-snap', label: 'Hero · Snap', icon: <IconImage /> },
   {
     id: 'Photographers in Jeju',
     label: 'Photographers · Jeju',
@@ -178,7 +179,7 @@ const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
     label: 'Casual · Seoul',
     icon: <IconMapPin />,
   },
-  // { id: 'Magazine', label: 'Magazine', icon: <IconBook /> },
+  { id: 'Magazine', label: 'Magazine', icon: <IconBook /> },
   { id: 'users', label: 'Members', icon: <IconUsers /> },
   { id: 'accounts', label: 'Account Setting', icon: <IconSettings /> },
   { id: 'my-account', label: 'My Account', icon: <IconSettings /> },
@@ -196,7 +197,9 @@ export default function AdminPage() {
   );
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [manageOpen, setManageOpen] = useState(() => MANAGE_SECTIONS.includes(active as Section));
+  const [manageOpen, setManageOpen] = useState(() =>
+    MANAGE_SECTIONS.includes(active as Section),
+  );
   const prevActive = useRef(active);
   useEffect(() => {
     if (prevActive.current !== active) {
@@ -233,7 +236,6 @@ export default function AdminPage() {
         minHeight: '100vh',
         background:
           'linear-gradient(135deg, #f5e6e8 0%, #e8d5d8 30%, #d4b8c7 60%, #c9a0b4 100%)',
-        fontFamily: "'Pretendard', -apple-system, sans-serif",
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
@@ -431,7 +433,6 @@ export default function AdminPage() {
             borderRadius: 8,
             background: 'rgba(220,80,80,0.07)',
             cursor: 'pointer',
-            fontFamily: 'inherit',
             fontWeight: 600,
           }}
         >
@@ -580,7 +581,13 @@ export default function AdminPage() {
           </p>
 
           {/* 관리 아코디언 */}
-          <div style={{ margin: '0 16px', height: 1, background: 'rgba(180,120,140,0.15)' }} />
+          <div
+            style={{
+              margin: '0 16px',
+              height: 1,
+              background: 'rgba(180,120,140,0.15)',
+            }}
+          />
           <button
             className="admin-menu-btn"
             onClick={() => setManageOpen((v) => !v)}
@@ -588,7 +595,9 @@ export default function AdminPage() {
               width: '100%',
               textAlign: 'left',
               padding: '14px 16px',
-              background: MANAGE_SECTIONS.includes(active as Section) ? 'rgba(201,149,106,0.08)' : 'transparent',
+              background: MANAGE_SECTIONS.includes(active as Section)
+                ? 'rgba(201,149,106,0.08)'
+                : 'transparent',
               border: 'none',
               borderLeft: `2px solid ${MANAGE_SECTIONS.includes(active as Section) ? '#c9956a' : 'transparent'}`,
               cursor: 'pointer',
@@ -598,16 +607,43 @@ export default function AdminPage() {
               transition: 'all 0.15s',
             }}
           >
-            <span style={{ color: MANAGE_SECTIONS.includes(active as Section) ? '#c9956a' : '#b08898', display: 'flex' }}>
+            <span
+              style={{
+                color: MANAGE_SECTIONS.includes(active as Section)
+                  ? '#c9956a'
+                  : '#b08898',
+                display: 'flex',
+              }}
+            >
               <IconSettings />
             </span>
-            <span style={{ fontSize: 14, fontWeight: MANAGE_SECTIONS.includes(active as Section) ? 600 : 400, color: MANAGE_SECTIONS.includes(active as Section) ? '#3a1a2a' : '#7a5060', flex: 1 }}>
+            <span
+              style={{
+                fontSize: 14,
+                fontWeight: MANAGE_SECTIONS.includes(active as Section)
+                  ? 600
+                  : 400,
+                color: MANAGE_SECTIONS.includes(active as Section)
+                  ? '#3a1a2a'
+                  : '#7a5060',
+                flex: 1,
+              }}
+            >
               Manage
             </span>
-            <span style={{ fontSize: 10, color: '#b08898', marginRight: 4 }}>{manageOpen ? '▲' : '▼'}</span>
+            <span style={{ fontSize: 10, color: '#b08898', marginRight: 4 }}>
+              {manageOpen ? '▲' : '▼'}
+            </span>
           </button>
           {manageOpen && (
-            <div style={{ background: 'rgba(180,120,140,0.04)', borderLeft: '1px solid rgba(180,120,140,0.15)', marginLeft: 16, marginRight: 8 }}>
+            <div
+              style={{
+                background: 'rgba(180,120,140,0.04)',
+                borderLeft: '1px solid rgba(180,120,140,0.15)',
+                marginLeft: 16,
+                marginRight: 8,
+              }}
+            >
               {MANAGE_ITEMS.map((m) => {
                 const isActive = m.id === active;
                 return (
@@ -619,7 +655,9 @@ export default function AdminPage() {
                       width: '100%',
                       textAlign: 'left',
                       padding: '11px 16px',
-                      background: isActive ? 'rgba(201,149,106,0.15)' : 'transparent',
+                      background: isActive
+                        ? 'rgba(201,149,106,0.15)'
+                        : 'transparent',
                       border: 'none',
                       borderLeft: `2px solid ${isActive ? '#c9956a' : 'transparent'}`,
                       cursor: 'pointer',
@@ -629,8 +667,22 @@ export default function AdminPage() {
                       transition: 'all 0.15s',
                     }}
                   >
-                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: isActive ? '#c9956a' : '#d4b0c0', flexShrink: 0 }} />
-                    <span style={{ fontSize: 13, fontWeight: isActive ? 600 : 400, color: isActive ? '#3a1a2a' : '#7a5060' }}>
+                    <span
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: '50%',
+                        background: isActive ? '#c9956a' : '#d4b0c0',
+                        flexShrink: 0,
+                      }}
+                    />
+                    <span
+                      style={{
+                        fontSize: 13,
+                        fontWeight: isActive ? 600 : 400,
+                        color: isActive ? '#3a1a2a' : '#7a5060',
+                      }}
+                    >
                       {m.label}
                     </span>
                   </button>
@@ -764,7 +816,8 @@ export default function AdminPage() {
           {active === 'dashboard' && (
             <DashboardPanel onNavigation={setActive} isMobile={isMobile} />
           )}
-          {active === 'hero' && <HeroPanel />}
+          {active === 'hero-wedding' && <HeroPanel brand="wedding" />}
+          {active === 'hero-snap' && <HeroPanel brand="snap" />}
           {active === 'wedding-photographers' && <WeddingPhotographerPanel />}
           {active === 'inclusions' && <InclusionPanel />}
           {active === 'addons' && <AddonPanel />}

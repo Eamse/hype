@@ -27,20 +27,22 @@ type Brand = keyof typeof BRANDS;
 const NAV_LINKS: Record<Brand, { label: string; href: string }[]> = {
   'hype-wedding': [
     { label: 'Home', href: '/' },
-    { label: 'Service', href: '/wedding' },
-    // { label: 'Magazine', href: '/magazine' },
-    { label: 'Review', href: '/review' },
-    { label: 'Inquiry', href: '/inquiry' },
     { label: 'About Us', href: '/about' },
+    { label: 'Service', href: '/wedding' },
+    { label: 'Inquiry', href: '/inquiry' },
+    { label: 'Magazine', href: '/magazine' },
+    { label: 'Review', href: '/review' },
+
     { label: 'FAQ', href: '/faq' },
   ],
   'hype-snap': [
     { label: 'Home', href: '/hype-snap' },
-    { label: 'Service', href: '/casual' },
-    // { label: 'Magazine', href: '/magazine?brand=hype-snap' },
-    { label: 'Review', href: '/review?brand=hype-snap' },
-    { label: 'Inquiry', href: '/inquiry?brand=hype-snap' },
     { label: 'About Us', href: '/about?brand=hype-snap' },
+    { label: 'Service', href: '/casual' },
+    { label: 'Inquiry', href: '/inquiry?brand=hype-snap' },
+    { label: 'Magazine', href: '/magazine?brand=hype-snap' },
+    { label: 'Review', href: '/review?brand=hype-snap' },
+
     { label: 'FAQ', href: '/faq?brand=hype-snap' },
   ],
 };
@@ -89,23 +91,23 @@ function BookmarkIcon() {
     </svg>
   );
 }
-// function BellIcon() {
-//   return (
-//     <svg
-//       width="22"
-//       height="22"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="1.8"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-//       <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-//     </svg>
-//   );
-// }
+function BellIcon() {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
+  );
+}
 function UserIcon() {
   return (
     <svg

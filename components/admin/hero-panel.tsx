@@ -5,7 +5,8 @@ import Image from 'next/image';
 
 const MAX_HERO = 6;
 
-export default function HeroPanel() {
+export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
+  const heroKey = brand === 'wedding' ? 'hero_wedding' : 'hero_snap';
   const inputRef = useRef<HTMLInputElement>(null);
   const [images, setImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -20,14 +21,14 @@ export default function HeroPanel() {
         return r.json();
       })
       .then((d: Record<string, unknown>) => {
-        const hero = d['hero'];
+        const hero = d[heroKey];
         setImages(Array.isArray(hero) ? (hero as string[]) : []);
       })
       .catch((e: Error) => {
         if (e.name !== 'AbortError') setError('Failed to load images.');
       });
     return () => controller.abort();
-  }, []);
+  }, [heroKey]);
 
   // 파일 선택 시 업로드
   async function handleFiles(files: FileList) {
@@ -45,7 +46,7 @@ export default function HeroPanel() {
       const uploaded: string[] = [];
       for (const file of toUpload) {
         const fd = new FormData();
-        fd.append('key', 'hero');
+        fd.append('key', heroKey);
         fd.append('image', file);
         const res = await fetch('/api/images', { method: 'POST', body: fd });
         const data: unknown = await res.json();
@@ -71,7 +72,7 @@ export default function HeroPanel() {
     if (!confirm('Delete this image?')) return;
     setError(null);
     try {
-      const res = await fetch(`/api/images?key=hero&index=${index}`, {
+      const res = await fetch(`/api/images?key=${heroKey}&index=${index}`, {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error('Delete failed');
@@ -104,7 +105,7 @@ export default function HeroPanel() {
               marginBottom: 6,
             }}
           >
-            HERO IMAGE
+            {brand === 'wedding' ? 'HYPE WEDDING' : 'HYPE SNAP'}
           </p>
           <h2
             style={{
@@ -203,7 +204,6 @@ export default function HeroPanel() {
                       justifyContent: 'center',
                       cursor: 'pointer',
                       border: 'none',
-                      fontFamily: 'inherit',
                       backdropFilter: 'blur(4px)',
                     }}
                   >

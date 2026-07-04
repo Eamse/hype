@@ -35,7 +35,7 @@ export default async function WeddingPage() {
         backgroundColor: '#fff',
         color: '#191919',
         minHeight: '100vh',
-        fontFamily:
+        :
           "'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >

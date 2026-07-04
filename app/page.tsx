@@ -9,7 +9,7 @@ import HomeFooter from './_components/home-footer';
 
 export default async function Home() {
   const heroRow = await prisma.siteConfig.findUnique({
-    where: { key: 'images_hero' },
+    where: { key: 'images_hero_wedding' },
   });
   const heroImages: string[] = (() => {
     try {
@@ -51,8 +51,6 @@ export default async function Home() {
         backgroundColor: '#fff',
         color: '#191919',
         minHeight: '100vh',
-        fontFamily:
-          "'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       <Header />

@@ -44,7 +44,6 @@ export default function HomeFooter() {
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              fontFamily: 'inherit',
             }}
           >
             Terms of Service
@@ -57,7 +56,6 @@ export default function HomeFooter() {
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              fontFamily: 'inherit',
             }}
           >
             Privacy Policy
@@ -69,7 +67,6 @@ export default function HomeFooter() {
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              fontFamily: 'inherit',
             }}
           >
             Brand Partnership
@@ -87,7 +84,6 @@ export default function HomeFooter() {
             background: 'none',
             border: 'none',
             cursor: 'pointer',
-            fontFamily: 'inherit',
           }}
         >
           Name A Corp. Business Info

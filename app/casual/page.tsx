@@ -20,7 +20,6 @@ export default async function CasualPage() {
   ]);
 
   return (
-    <div style={{ backgroundColor: '#fff', color: '#191919', minHeight: '100vh', fontFamily: "'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif" }}>
       <Header brand="hype-snap" showSubNav />
 
       <main style={{ paddingTop: 130 }}>

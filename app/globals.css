@@ -1,7 +1,7 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -80,13 +80,14 @@
   box-sizing: border-box;
 }
 
-html {
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-}
-
 body {
   background-color: var(--background);
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    'Pretendard',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -147,20 +148,40 @@ body {
 }
 
 @keyframes shimmer {
-  from { background-position: 200% 0 }
-  to { background-position: -200% 0 }
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
 }
 
-a { text-decoration: none; color: inherit; }
+a {
+  text-decoration: none;
+  color: inherit;
+}
 
-.font-cormorant { font-family: 'Cormorant Garamond', serif; }
-:root { --font-cormorant: 'Cormorant Garamond', serif; }
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+.hide-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
-.hide-scroll::-webkit-scrollbar { display: none; }
-.hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-
-@keyframes nudge { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
-.arrow-nudge { display: inline-block; animation: nudge 1.2s ease-in-out infinite; }
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+.arrow-nudge {
+  display: inline-block;
+  animation: nudge 1.2s ease-in-out infinite;
+}
 
 /* ── 반응형 레이아웃 ─────────────────────────────────────── */
 .magazine-detail-grid {
@@ -181,14 +202,28 @@ a { text-decoration: none; color: inherit; }
 }
 
 @media (max-width: 768px) {
-  .magazine-detail-grid { grid-template-columns: 1fr; }
-  .magazine-detail-left { position: relative; height: auto; padding: 20px; }
-  .magazine-detail-right { padding: 32px 20px 80px; }
+  .magazine-detail-grid {
+    grid-template-columns: 1fr;
+  }
+  .magazine-detail-left {
+    position: relative;
+    height: auto;
+    padding: 20px;
+  }
+  .magazine-detail-right {
+    padding: 32px 20px 80px;
+  }
 }
 
-.product-card .card-img { transition: transform 0.35s ease; }
-.product-card:hover .card-img { transform: scale(1.05); }
-.product-card:hover .card-title { text-decoration: underline; }
+.product-card .card-img {
+  transition: transform 0.35s ease;
+}
+.product-card:hover .card-img {
+  transform: scale(1.05);
+}
+.product-card:hover .card-title {
+  text-decoration: underline;
+}
 
 /* ── D-Day 배너 반응형 ─────────────────────────────────────── */
 .dday-banner {
@@ -226,7 +261,9 @@ a { text-decoration: none; color: inherit; }
   margin: 0 auto;
   padding: 90px 40px 120px;
 }
-.magazine-page-title { font-size: 40px; }
+.magazine-page-title {
+  font-size: 40px;
+}
 
 @media (max-width: 768px) {
   .magazine-hero-grid {
@@ -240,21 +277,56 @@ a { text-decoration: none; color: inherit; }
   .magazine-page-padding {
     padding: 40px 20px 80px;
   }
-  .magazine-page-title { font-size: 28px; }
+  .magazine-page-title {
+    font-size: 28px;
+  }
 }
 
 /* ── Inquiry 페이지 애니메이션 ──────────────────────────────── */
 @keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(28px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-.inquiry-fade-up { opacity: 0; }
-.inquiry-fade-up.visible { animation: fadeSlideUp 0.65s ease forwards; }
-.inquiry-step { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
-.inquiry-step.visible { opacity: 1; transform: translateY(0); }
-@keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-.cursor-blink { animation: cursorBlink 0.8s step-end infinite; }
+.inquiry-fade-up {
+  opacity: 0;
+}
+.inquiry-fade-up.visible {
+  animation: fadeSlideUp 0.65s ease forwards;
+}
+.inquiry-step {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+.inquiry-step.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@keyframes cursorBlink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.cursor-blink {
+  animation: cursorBlink 0.8s step-end infinite;
+}

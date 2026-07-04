@@ -11,7 +11,8 @@ export type Product = {
 
 export type Section =
   | 'dashboard'
-  | 'hero'
+  | 'hero-wedding'
+  | 'hero-snap'
   | 'wedding-photographers'
   | 'Photographers in Jeju'
   | 'Photographers in Seoul'
@@ -67,7 +68,7 @@ export function btnStyle(
     background: isPrimary ? 'linear-gradient(135deg, #c9a96e, #b8965a)' : bg,
     color: isPrimary ? '#fff' : color,
     cursor: 'pointer',
-    fontFamily: 'inherit',
+
     border: border ? `1px solid ${border}` : 'none',
     whiteSpace: 'nowrap' as const,
     boxShadow: isPrimary ? '0 2px 8px rgba(201,169,110,0.3)' : 'none',
@@ -91,7 +92,7 @@ export const inputStyle: React.CSSProperties = {
   borderRadius: 8,
   border: '1px solid #e8e0d0',
   fontSize: 13,
-  fontFamily: 'inherit',
+
   outline: 'none',
   color: '#1a1a1a',
   backgroundColor: '#fdfcfa',

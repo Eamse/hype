@@ -159,10 +159,27 @@ export default function MagazinePanel() {
             }}
           >
             <div>
-              <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>
+              <p
+                style={{
+                  fontSize: 10,
+                  letterSpacing: '2px',
+                  color: '#7a5520',
+                  fontWeight: 600,
+                  marginBottom: 6,
+                }}
+              >
                 MAGAZINE
               </p>
-              <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', letterSpacing: '-0.3px' }}>Magazine</h2>
+              <h2
+                style={{
+                  fontSize: 22,
+                  fontWeight: 700,
+                  color: '#1a1a1a',
+                  letterSpacing: '-0.3px',
+                }}
+              >
+                Magazine
+              </h2>
               <p style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
                 {magazines.length} articles
               </p>
@@ -280,10 +297,25 @@ export default function MagazinePanel() {
             }}
           >
             <div>
-              <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>
+              <p
+                style={{
+                  fontSize: 10,
+                  letterSpacing: '2px',
+                  color: '#7a5520',
+                  fontWeight: 600,
+                  marginBottom: 6,
+                }}
+              >
                 MAGAZINE
               </p>
-              <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', letterSpacing: '-0.3px' }}>
+              <h2
+                style={{
+                  fontSize: 22,
+                  fontWeight: 700,
+                  color: '#1a1a1a',
+                  letterSpacing: '-0.3px',
+                }}
+              >
                 {selected ? '글 수정' : '글 작성'}
               </h2>
             </div>
@@ -336,7 +368,7 @@ export default function MagazinePanel() {
                   borderRadius: 7,
                   border: '1px solid #e0e0e0',
                   fontSize: 13,
-                  fontFamily: 'inherit',
+
                   outline: 'none',
                   color: '#191919',
                 }}
@@ -368,7 +400,7 @@ export default function MagazinePanel() {
                   borderRadius: 7,
                   border: '1px solid #e0e0e0',
                   fontSize: 13,
-                  fontFamily: 'inherit',
+
                   outline: 'none',
                   color: '#191919',
                   resize: 'vertical',
@@ -414,7 +446,10 @@ export default function MagazinePanel() {
                   const files = Array.from(e.target.files ?? []);
                   setDetailImages((prev) => [
                     ...prev,
-                    ...files.map((f) => ({ file: f, preview: URL.createObjectURL(f) })),
+                    ...files.map((f) => ({
+                      file: f,
+                      preview: URL.createObjectURL(f),
+                    })),
                   ]);
                   e.target.value = '';
                 }}
@@ -476,7 +511,9 @@ export default function MagazinePanel() {
                 </div>
 
                 {/* 상세 이미지 (다중) */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div
+                  style={{ display: 'flex', flexDirection: 'column', gap: 8 }}
+                >
                   <button
                     type="button"
                     onClick={() => detailImgRef.current?.click()}
@@ -485,16 +522,55 @@ export default function MagazinePanel() {
                     + 상세 이미지 추가
                   </button>
                   {detailImages.length > 0 && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: 8,
+                        marginTop: 4,
+                      }}
+                    >
                       {detailImages.map((img, i) => (
-                        <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-                          <div style={{ position: 'relative', width: 56, height: 56, borderRadius: 6, overflow: 'hidden' }}>
-                            <Image src={img.preview} alt="preview" fill style={{ objectFit: 'cover' }} />
+                        <div
+                          key={i}
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: 4,
+                          }}
+                        >
+                          <div
+                            style={{
+                              position: 'relative',
+                              width: 56,
+                              height: 56,
+                              borderRadius: 6,
+                              overflow: 'hidden',
+                            }}
+                          >
+                            <Image
+                              src={img.preview}
+                              alt="preview"
+                              fill
+                              style={{ objectFit: 'cover' }}
+                            />
                           </div>
                           <button
                             type="button"
-                            onClick={() => setDetailImages((prev) => prev.filter((_, j) => j !== i))}
-                            style={{ fontSize: 10, color: '#666', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                            onClick={() =>
+                              setDetailImages((prev) =>
+                                prev.filter((_, j) => j !== i),
+                              )
+                            }
+                            style={{
+                              fontSize: 10,
+                              color: '#666',
+                              background: 'none',
+                              border: 'none',
+                              cursor: 'pointer',
+                              padding: 0,
+                            }}
                           >
                             제거
                           </button>
@@ -531,10 +607,25 @@ export default function MagazinePanel() {
       {view === 'done' && (
         <div style={{ padding: '80px 0', textAlign: 'center' }}>
           <p style={{ fontSize: 32, marginBottom: 16 }}>✦</p>
-          <p style={{ fontSize: 10, letterSpacing: '3px', color: '#7a5520', fontWeight: 600, marginBottom: 12 }}>
+          <p
+            style={{
+              fontSize: 10,
+              letterSpacing: '3px',
+              color: '#7a5520',
+              fontWeight: 600,
+              marginBottom: 12,
+            }}
+          >
             COMPLETE
           </p>
-          <p style={{ fontSize: 20, fontWeight: 700, color: '#1a1a1a', marginBottom: 8 }}>
+          <p
+            style={{
+              fontSize: 20,
+              fontWeight: 700,
+              color: '#1a1a1a',
+              marginBottom: 8,
+            }}
+          >
             등록이 완료되었습니다
           </p>
           <p style={{ fontSize: 13, color: '#666', marginBottom: 36 }}>

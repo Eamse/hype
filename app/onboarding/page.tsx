@@ -54,7 +54,7 @@ export default function OnboardingPage() {
     if (!form.birthYear) e.birthYear = 'Required.';
     if (!form.birthMonth) e.birthMonth = 'Required.';
     if (!form.birthDay) e.birthDay = 'Required.';
-    if (!form.gender) e.gender = 'Please select a gender.';
+    // if (!form.gender) e.gender = 'Please select a gender.';
     if (!form.country) e.country = 'Please select a country.';
     if (!phoneValue) e.phone = 'Phone number is required.';
     if (!form.termsAgreement)

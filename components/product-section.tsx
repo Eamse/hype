@@ -23,7 +23,7 @@ export default function ProductSection({
   return (
     <section
       style={{
-        maxWidth: 1200,
+        // maxWidth: 1200,
         margin: '0 auto',
         padding: isMobile ? '0 16px 32px' : '0 40px 40px',
       }}
@@ -55,7 +55,7 @@ export default function ProductSection({
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
           gap: isMobile ? 8 : 12,
         }}
       >

@@ -132,14 +132,13 @@ export default function WeddingDetail({
     <div
       style={{
         color: '#2C2420',
-        fontFamily: "'Pretendard', -apple-system, sans-serif",
         maxWidth: 560,
       }}
     >
       {/* Brand header */}
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <h1
-          className="font-cormorant"
+          className="font"
           style={{
             fontSize: '20px',
             fontWeight: 300,
@@ -208,7 +207,7 @@ export default function WeddingDetail({
       {/* 제목 + 인스타 */}
       <div style={{ textAlign: 'center', marginBottom: '28px' }}>
         <h2
-          className="font-cormorant"
+          className="font"
           style={{
             fontSize: '28px',
             fontWeight: 400,
@@ -436,7 +435,7 @@ export default function WeddingDetail({
                   {d.label}
                 </div>
                 <div
-                  className="font-cormorant"
+                  className="font"
                   style={{
                     fontSize: '15px',
                     fontWeight: 400,
@@ -470,31 +469,100 @@ export default function WeddingDetail({
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: [activePackage.priceSNS > 0, activePackage.priceNoSNS > 0].filter(Boolean).length === 1 ? '1fr' : '1fr 1fr',
+                gridTemplateColumns:
+                  [
+                    activePackage.priceSNS > 0,
+                    activePackage.priceNoSNS > 0,
+                  ].filter(Boolean).length === 1
+                    ? '1fr'
+                    : '1fr 1fr',
                 gap: '12px',
                 marginBottom: '10px',
               }}
             >
               {activePackage.priceSNS > 0 && (
-                <div style={{ background: '#2C2420', borderRadius: '4px', padding: '24px 16px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.75)', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '10px' }}>
+                <div
+                  style={{
+                    background: '#2C2420',
+                    borderRadius: '4px',
+                    padding: '24px 16px',
+                    textAlign: 'center',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: '12px',
+                      color: 'rgba(255,255,255,0.75)',
+                      letterSpacing: '1px',
+                      textTransform: 'uppercase',
+                      marginBottom: '10px',
+                    }}
+                  >
                     Agree to SNS Upload
                   </div>
-                  <div className="font-cormorant" style={{ fontSize: '32px', fontWeight: 'bold', color: '#fff', lineHeight: 1 }}>
+                  <div
+                    className="font"
+                    style={{
+                      fontSize: '32px',
+                      fontWeight: 'bold',
+                      color: '#fff',
+                      lineHeight: 1,
+                    }}
+                  >
                     ${activePackage.priceSNS.toLocaleString()}
                   </div>
-                  <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.65)', marginTop: '4px' }}>USD</div>
+                  <div
+                    style={{
+                      fontSize: '12px',
+                      color: 'rgba(255,255,255,0.65)',
+                      marginTop: '4px',
+                    }}
+                  >
+                    USD
+                  </div>
                 </div>
               )}
               {activePackage.priceNoSNS > 0 && (
-                <div style={{ background: '#FAFAF8', border: '1px solid #E8E0D4', borderRadius: '4px', padding: '24px 16px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '12px', color: '#666', letterSpacing: '1px', textTransform: 'uppercase', marginBottom: '10px' }}>
+                <div
+                  style={{
+                    background: '#FAFAF8',
+                    border: '1px solid #E8E0D4',
+                    borderRadius: '4px',
+                    padding: '24px 16px',
+                    textAlign: 'center',
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: '12px',
+                      color: '#666',
+                      letterSpacing: '1px',
+                      textTransform: 'uppercase',
+                      marginBottom: '10px',
+                    }}
+                  >
                     Decline SNS Upload
                   </div>
-                  <div className="font-cormorant" style={{ fontSize: '32px', fontWeight: 'bold', color: '#2C2420', lineHeight: 1 }}>
+                  <div
+                    className="font"
+                    style={{
+                      fontSize: '32px',
+                      fontWeight: 'bold',
+                      color: '#2C2420',
+                      lineHeight: 1,
+                    }}
+                  >
                     ${activePackage.priceNoSNS.toLocaleString()}
                   </div>
-                  <div style={{ fontSize: '12px', color: '#aaa', marginTop: '4px' }}>USD</div>
+                  <div
+                    style={{
+                      fontSize: '12px',
+                      color: '#aaa',
+                      marginTop: '4px',
+                    }}
+                  >
+                    USD
+                  </div>
                 </div>
               )}
             </div>

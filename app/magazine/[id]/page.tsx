@@ -34,7 +34,6 @@ export default async function MagazineDetailPage({ params }: Props) {
   if (!magazine) notFound();
 
   return (
-    <div style={{ backgroundColor: '#fff', minHeight: '100vh', fontFamily: "'Pretendard', -apple-system, sans-serif" }}>
       <Header brand="hype-wedding" />
 
       <div className="magazine-detail-grid">

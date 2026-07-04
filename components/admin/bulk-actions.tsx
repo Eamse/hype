@@ -30,7 +30,14 @@ export default function BulkActions({
       }}
     >
       <label
-        style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, cursor: 'pointer', userSelect: 'none' }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 8,
+          fontSize: 12,
+          cursor: 'pointer',
+          userSelect: 'none',
+        }}
       >
         <input type="checkbox" checked={allSelected} onChange={onToggleAll} />
         전체 선택
@@ -38,7 +45,9 @@ export default function BulkActions({
 
       {selectedCount > 0 && (
         <>
-          <span style={{ fontSize: 12, color: '#888' }}>{selectedCount}개 선택됨</span>
+          <span style={{ fontSize: 12, color: '#888' }}>
+            {selectedCount}개 선택됨
+          </span>
           <button
             onClick={async () => {
               if (!confirm(`선택한 ${selectedCount}개를 삭제할까요?`)) return;
@@ -52,7 +61,7 @@ export default function BulkActions({
               border: 'none',
               borderRadius: 6,
               cursor: 'pointer',
-              fontFamily: 'inherit',
+
               fontWeight: 600,
             }}
           >

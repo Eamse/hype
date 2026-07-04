@@ -31,7 +31,7 @@ export default async function HypeSnapPage() {
       },
     }),
     prisma.siteConfig.findUnique({
-      where: { key: 'images_hero' },
+      where: { key: 'images_hero_snap' },
     }),
   ]);
   const heroImages: string[] = (() => {
@@ -49,8 +49,6 @@ export default async function HypeSnapPage() {
         backgroundColor: '#fff',
         color: '#191919',
         minHeight: '100vh',
-        fontFamily:
-          "'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       <Header brand="hype-snap" />

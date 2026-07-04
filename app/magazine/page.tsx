@@ -23,7 +23,6 @@ export default async function MagazinePage({ searchParams }: Props) {
   const [hero, ...rest] = magazines;
 
   return (
-    <div style={{ backgroundColor: '#fff', minHeight: '100vh', fontFamily: "'Pretendard', -apple-system, sans-serif" }}>
       <Header brand={brand} />
 
       <div className="magazine-page-padding">
@@ -40,7 +39,7 @@ export default async function MagazinePage({ searchParams }: Props) {
         ) : (
           <>
             {/* 히어로 */}
-            <Link href={`/magazine/${hero.id}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', marginBottom: 72 }}>
+            <Link href={`/magazine/${hero.id}`} style={{ textDecoration: 'none', color display: 'block', marginBottom: 72 }}>
               <div className="magazine-hero-grid">
                 <div>
                   {hero.imageUrl ? (

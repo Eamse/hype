@@ -66,7 +66,6 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
             fontSize: 16,
             border: 'none',
             outline: 'none',
-            fontFamily: 'inherit',
           }}
         />
         <button
@@ -78,7 +77,6 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
             background: 'none',
             border: 'none',
             cursor: 'pointer',
-            fontFamily: 'inherit',
           }}
         >
           완료

@@ -19,7 +19,6 @@ export default async function InquiryPage({
     <div
       style={{
         minHeight: '100vh',
-        fontFamily: "'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       <Header brand={activeBrand} />

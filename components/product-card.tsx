@@ -83,10 +83,9 @@ export default function ProductCard({
           )}
         </div>
         <p
-          className="card-title font-cormorant"
+          className="card-title"
           style={{
-            fontSize: 18,
-            fontWeight: 900,
+            fontSize: 14,
             color: '#191919',
             marginBottom: 3,
             lineHeight: 1.4,

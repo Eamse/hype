@@ -52,7 +52,6 @@ export function BackButton() {
         background: 'none',
         border: 'none',
         cursor: 'pointer',
-        fontFamily: 'inherit',
       }}
     >
       <ChevronLeftIcon />
@@ -129,7 +128,6 @@ export function StickyBottomBar({
           letterSpacing: '0.5px',
           border: 'none',
           cursor: 'pointer',
-          fontFamily: 'inherit',
         }}
       >
         Book Now
