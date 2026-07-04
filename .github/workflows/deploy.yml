@@ -20,10 +20,10 @@ jobs:
           key: ${{ env.HYPE }}
           script: |
             set -e
-            cd /root/hype
+            cd /root/hypepig
             git pull origin main
             npm run build
             cp -r .next/static .next/standalone/.next/static
             cp -r public .next/standalone/public
-            pm2 restart hypewedding
+            pm2 restart hypepig
             pm2 save
