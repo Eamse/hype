@@ -18,15 +18,20 @@ export async function PUT(
   const body = await request.json().catch(() => null);
   const directorIds: number[] = Array.isArray(body?.directorIds) ? body.directorIds : [];
 
-  await prisma.$transaction([
-    prisma.productDirector.deleteMany({ where: { productId } }),
-    ...(directorIds.length > 0
-      ? [prisma.productDirector.createMany({
-          data: directorIds.map((directorId) => ({ productId, directorId })),
-          skipDuplicates: true,
-        })]
-      : []),
-  ]);
+  try {
+    await prisma.$transaction([
+      prisma.productDirector.deleteMany({ where: { productId } }),
+      ...(directorIds.length > 0
+        ? [prisma.productDirector.createMany({
+            data: directorIds.map((directorId) => ({ productId, directorId })),
+            skipDuplicates: true,
+          })]
+        : []),
+    ]);
+  } catch (e) {
+    console.error('[PUT /api/admin/products/:id/directors]', e);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 
   return NextResponse.json({ success: true });
 }

@@ -90,25 +90,6 @@ export async function PATCH(
     }
     data.title = b.title.trim();
   }
-  if (b.brand != null) {
-    if (typeof b.brand !== 'string' || !b.brand.trim()) {
-      return NextResponse.json(
-        { error: 'brand must be a non-empty string' },
-        { status: 400 },
-      );
-    }
-    data.brand = b.brand.trim();
-  }
-  if (b.price != null) {
-    const priceNum = Number(b.price);
-    if (!Number.isFinite(priceNum) || priceNum < 0) {
-      return NextResponse.json(
-        { error: 'price must be a non-negative number' },
-        { status: 400 },
-      );
-    }
-    data.price = Math.round(priceNum);
-  }
   // imageUrl는 null 허용 (삭제 용도)
   if (b.imageUrl !== undefined) {
     if (b.imageUrl !== null && typeof b.imageUrl !== 'string') {
@@ -129,13 +110,6 @@ export async function PATCH(
     }
     data.order = orderNum;
   }
-  if (b.description !== undefined) {
-    data.description = typeof b.description === 'string' ? b.description : null;
-  }
-  if (b.inclusions !== undefined) {
-    data.inclusions = Array.isArray(b.inclusions) ? b.inclusions : [];
-  }
-
   if (Object.keys(data).length === 0) {
     return NextResponse.json(
       { error: 'No valid fields to update' },

@@ -19,14 +19,19 @@ export async function PATCH(
 
   const { title, imageUrl } = body as Record<string, unknown>;
 
-  const product = await prisma.product.update({
-    where: { id: productId },
-    data: {
-      ...(typeof title === 'string' && { title: title.trim() }),
-      ...(typeof imageUrl === 'string' && { imageUrl }),
-    },
-  });
-  return NextResponse.json(product);
+  try {
+    const product = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        ...(typeof title === 'string' && { title: title.trim() }),
+        ...(typeof imageUrl === 'string' && { imageUrl }),
+      },
+    });
+    return NextResponse.json(product);
+  } catch (e) {
+    console.error('[PATCH /api/admin/products/:id]', e);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }
 
 // DELETE /api/admin/products/[id]
@@ -41,6 +46,11 @@ export async function DELETE(
   const productId = Number(id);
   if (!Number.isFinite(productId)) return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
 
-  await prisma.product.delete({ where: { id: productId } });
-  return NextResponse.json({ success: true });
+  try {
+    await prisma.product.delete({ where: { id: productId } });
+    return NextResponse.json({ success: true });
+  } catch (e) {
+    console.error('[DELETE /api/admin/products/:id]', e);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }

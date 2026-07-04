@@ -16,11 +16,16 @@ export async function PATCH(
   const body = await request.json().catch(() => null);
   if (!body?.name?.trim()) return NextResponse.json({ error: 'name is required' }, { status: 400 });
 
-  const inclusion = await prisma.inclusion.update({
-    where: { id: inclusionId },
-    data: { name: body.name.trim() },
-  });
-  return NextResponse.json(inclusion);
+  try {
+    const inclusion = await prisma.inclusion.update({
+      where: { id: inclusionId },
+      data: { name: body.name.trim() },
+    });
+    return NextResponse.json(inclusion);
+  } catch (e) {
+    console.error('[PATCH /api/admin/inclusions/:id]', e);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }
 
 export async function DELETE(
@@ -34,6 +39,11 @@ export async function DELETE(
   const inclusionId = Number(id);
   if (!Number.isFinite(inclusionId)) return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
 
-  await prisma.inclusion.delete({ where: { id: inclusionId } });
-  return NextResponse.json({ success: true });
+  try {
+    await prisma.inclusion.delete({ where: { id: inclusionId } });
+    return NextResponse.json({ success: true });
+  } catch (e) {
+    console.error('[DELETE /api/admin/inclusions/:id]', e);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
 }
