@@ -168,7 +168,7 @@ export default function UserInfoFields({
       {/* 성별 */}
       <div className="flex flex-col gap-1">
         <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-          Gender <span className="text-red-500">*</span>
+          Gender <span className="text-gray-400 normal-case font-normal">(optional)</span>
         </label>
         <select
           name="gender"

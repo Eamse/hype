@@ -13,7 +13,7 @@ export default async function WeddingPage() {
       select: {
         id: true,
         title: true,
-                imageUrl: true,
+        imageUrl: true,
         section: true,
       },
     }),
@@ -23,7 +23,7 @@ export default async function WeddingPage() {
       select: {
         id: true,
         title: true,
-                imageUrl: true,
+        imageUrl: true,
         section: true,
       },
     }),
@@ -35,13 +35,11 @@ export default async function WeddingPage() {
         backgroundColor: '#fff',
         color: '#191919',
         minHeight: '100vh',
-        :
-          "'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
-      <Header showSubNav />
+      <Header />
 
-      <main style={{ paddingTop: 130 }}>
+      <main style={{ paddingTop: 80 }}>
         <ProductSections
           sections={[
             {

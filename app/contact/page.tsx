@@ -1,13 +1,13 @@
 import type { Metadata } from 'next';
 import Header from '@/components/header';
-import InquiryClient from './_components/inquiry-client';
+import ContactClient from './_components/contact-client';
 
 export const metadata: Metadata = {
-  title: 'Inquiry | HYPE WEDDING',
+  title: 'Contact | HYPE WEDDING',
   description: 'Book your photoshoot with HYPE WEDDING or HYPE SNAP.',
 };
 
-export default async function InquiryPage({
+export default async function ContactPage({
   searchParams,
 }: {
   searchParams: Promise<{ brand?: string }>;
@@ -19,12 +19,11 @@ export default async function InquiryPage({
     <div
       style={{
         minHeight: '100vh',
-        fontFamily: "'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif",
       }}
     >
       <Header brand={activeBrand} />
       <main style={{ paddingTop: 56 }}>
-        <InquiryClient />
+        <ContactClient />
       </main>
     </div>
   );

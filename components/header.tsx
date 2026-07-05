@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense, useEffect, startTransition } from 'react';
+import { useState, useEffect, startTransition, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
@@ -24,39 +24,113 @@ const BRANDS = {
 
 type Brand = keyof typeof BRANDS;
 
-const NAV_LINKS: Record<Brand, { label: string; href: string }[]> = {
+const NAV_LINKS: Record<
+  Brand,
+  {
+    label: string;
+    href: string;
+    dropdown?: { label: string; href: string; indent?: boolean }[];
+  }[]
+> = {
   'hype-wedding': [
     { label: 'Home', href: '/' },
     { label: 'About Us', href: '/about' },
-    { label: 'Service', href: '/wedding' },
-    { label: 'Inquiry', href: '/inquiry' },
-    { label: 'Magazine', href: '/magazine' },
-    { label: 'Review', href: '/review' },
+    {
+      label: 'Service',
+      href: '/wedding',
+      dropdown: [
+        { label: 'What We Offer', href: '/wedding' },
+        { label: 'Packages & Pricing', href: '/wedding' },
+        {
+          label: '• Wedding in Jeju',
+          href: '/products?section=Photographers%20in%20Jeju',
+          indent: true,
+        },
+        {
+          label: '- Wedding in Seoul',
+          href: '/products?section=Photographers%20in%20Seoul',
+          indent: true,
+        },
+      ],
+    },
 
-    { label: 'FAQ', href: '/faq' },
+    { label: 'Editional', href: '/magazine' },
+    { label: 'Reviews', href: '/review' },
+    {
+      label: 'Contact',
+      href: '/contact',
+      dropdown: [
+        { label: 'Customer Inquiry', href: '/cutomer' },
+        { label: 'FAQ', href: '/faq' },
+        { label: 'Vendor Partnership', href: '/partnership' },
+      ],
+    },
   ],
   'hype-snap': [
     { label: 'Home', href: '/hype-snap' },
     { label: 'About Us', href: '/about?brand=hype-snap' },
-    { label: 'Service', href: '/casual' },
-    { label: 'Inquiry', href: '/inquiry?brand=hype-snap' },
-    { label: 'Magazine', href: '/magazine?brand=hype-snap' },
-    { label: 'Review', href: '/review?brand=hype-snap' },
+    {
+      label: 'Service',
+      href: '/casual',
+      dropdown: [
+        { label: 'What We Offer', href: '/casual' },
+        { label: 'Packages & Pricing', href: '/casual' },
+        {
+          label: 'Casual in Jeju',
+          href: '/products?section=Casual%20Photoshoot%20in%20Jeju',
+          indent: true,
+        },
+        {
+          label: 'Casual in Seoul',
+          href: '/products?section=Casual%20Photoshoot%20in%20Seoul',
+          indent: true,
+        },
+      ],
+    },
 
-    { label: 'FAQ', href: '/faq?brand=hype-snap' },
+    { label: 'Editional', href: '/magazine?brand=hype-snap' },
+    { label: 'Reviews', href: '/review?brand=hype-snap' },
+    {
+      label: 'Contact',
+      href: '/contact?brand=hype-snap',
+      dropdown: [
+        { label: 'Customer Inquiry', href: '/cutomer' },
+        { label: 'FAQ', href: '/faq?brand=hype-snap' },
+        { label: 'Vendor Partnership', href: '/partnership?brand=hype-snap' },
+      ],
+    },
   ],
 };
 
-const SUB_NAV: Record<Brand, { label: string; section: string }[]> = {
-  'hype-wedding': [
-    { label: 'Wedding in Jeju', section: 'Photographers in Jeju' },
-    { label: 'Wedding in Seoul', section: 'Photographers in Seoul' },
-  ],
-  'hype-snap': [
-    { label: 'Casual in Jeju', section: 'Casual Photoshoot in Jeju' },
-    { label: 'Casual in Seoul', section: 'Casual Photoshoot in Seoul' },
-  ],
-};
+function DropdownLink({
+  href,
+  label,
+  indent,
+}: {
+  href: string;
+  label: string;
+  indent?: boolean;
+}) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <Link
+      href={href}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        fontSize: hovered ? 15 : 14,
+        fontWeight: 400,
+        color: '#191919',
+        textDecoration: hovered ? 'underline' : 'none',
+        whiteSpace: 'nowrap',
+        transition: 'font-size 0.15s',
+        paddingLeft: indent ? 16 : 0,
+      }}
+    >
+      {label}
+    </Link>
+  );
+}
 
 function SearchIcon() {
   return (
@@ -159,62 +233,7 @@ function CloseIcon() {
   );
 }
 
-function SubNav({ brand }: { brand: Brand }) {
-  const searchParams = useSearchParams();
-  const currentSection = searchParams.get('section');
-
-  return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 56,
-        left: 0,
-        right: 0,
-        zIndex: 99,
-        backgroundColor: '#fff',
-        borderBottom: '1px solid #e8e8e8',
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: '0 auto',
-          padding: '0 20px',
-          display: 'flex',
-        }}
-      >
-        {SUB_NAV[brand].map(({ label, section }) => {
-          const isActive = currentSection === section;
-          return (
-            <Link
-              key={section}
-              href={`/products?section=${encodeURIComponent(section)}`}
-              style={{
-                padding: '12px 20px',
-                fontSize: 13,
-                color: isActive ? '#191919' : '#555',
-                borderBottom: isActive
-                  ? '2px solid #191919'
-                  : '2px solid transparent',
-                fontWeight: isActive ? 600 : 400,
-              }}
-            >
-              {label}
-            </Link>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-export default function Header({
-  brand = 'hype-wedding',
-  showSubNav = false,
-}: {
-  brand?: Brand;
-  showSubNav?: boolean;
-}) {
+export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
   const pathname = usePathname();
   const [loginOpen, setLoginOpen] = useState(false);
   const searchParams = useSearchParams();
@@ -225,6 +244,20 @@ export default function Header({
   const { data: session } = useSession();
   const isMobile = useIsMobile();
   const [bookmarkCount, setBookmarkCount] = useState(0);
+  const [hoveredNav, setHoveredNav] = useState<string | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const navItemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  const openNav = (label: string) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setHoveredNav(label);
+  };
+  const closeNav = () => {
+    closeTimer.current = setTimeout(() => setHoveredNav(null), 150);
+  };
+  const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     if (!session) return;
@@ -296,41 +329,127 @@ export default function Header({
           </div>
 
           {/* ── 데스크탑 Nav ── */}
-          {!isMobile && (
-            <nav style={{ display: 'flex', gap: 32 }}>
-              {NAV_LINKS[brand].map(({ label, href }) => {
-                const active = href !== '#' && pathname === href;
-                return (
-                  <Link
-                    key={label}
-                    href={href}
-                    style={{
-                      fontSize: 14,
-                      fontWeight: active ? 600 : 400,
-                      color: '#191919',
-                      position: 'relative',
-                      padding: '4px 0',
-                      display: 'inline-block',
-                    }}
-                  >
-                    {label}
-                    {active && (
-                      <span
-                        style={{
-                          position: 'absolute',
-                          bottom: -2,
-                          left: 0,
-                          right: 0,
-                          height: 1.5,
-                          background: '#191919',
-                        }}
-                      />
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
-          )}
+          {!isMobile &&
+            (() => {
+              const allDropdownGroups = NAV_LINKS[brand].filter(
+                (i) => i.dropdown,
+              );
+              return (
+                <div onMouseLeave={closeNav}>
+                  <nav style={{ display: 'flex', gap: 32 }}>
+                    {NAV_LINKS[brand].map(({ label, href, dropdown }) => {
+                      const active = href !== '#' && pathname === href;
+
+                      if (dropdown) {
+                        return (
+                          <div
+                            key={label}
+                            ref={(el) => {
+                              if (el) navItemRefs.current.set(label, el);
+                            }}
+                            onMouseEnter={() => openNav(label)}
+                            style={{ display: 'flex', alignItems: 'center' }}
+                          >
+                            <span
+                              style={{
+                                fontSize: 14,
+                                fontWeight: active ? 600 : 400,
+                                color: '#191919',
+                                padding: '4px 0',
+                                cursor: 'default',
+                              }}
+                            >
+                              {label}
+                            </span>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <Link
+                          key={label}
+                          href={href}
+                          onMouseEnter={() => openNav(label)}
+                          style={{
+                            fontSize: 14,
+                            fontWeight: active ? 600 : 400,
+                            color: '#191919',
+                            position: 'relative',
+                            padding: '4px 0',
+                            display: 'inline-block',
+                          }}
+                        >
+                          {label}
+                          {active && (
+                            <span
+                              style={{
+                                position: 'absolute',
+                                bottom: -2,
+                                left: 0,
+                                right: 0,
+                                height: 1.5,
+                                background: '#191919',
+                              }}
+                            />
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                  {/* 드롭다운 */}
+                  {hoveredNav !== null && (
+                    <div
+                      onMouseEnter={() => {
+                        if (closeTimer.current)
+                          clearTimeout(closeTimer.current);
+                      }}
+                      onMouseLeave={closeNav}
+                      style={{
+                        position: 'fixed',
+                        top: 56,
+                        left: 0,
+                        right: 0,
+                        zIndex: 99,
+                        backgroundColor: '#fff',
+                        borderBottom: '1px solid #e8e8e8',
+                        padding: '12px 0 24px',
+                      }}
+                    >
+                      <div style={{ position: 'relative', height: 130 }}>
+                        {allDropdownGroups.map((group) => {
+                          const el = navItemRefs.current.get(group.label);
+                          const left = el ? el.getBoundingClientRect().left : 0;
+                          return (
+                            <div
+                              key={group.label}
+                              style={{
+                                position: 'absolute',
+                                left: left - 20,
+                                top: 0,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: 14,
+                              }}
+                            >
+                              {group.dropdown!.map(
+                                ({ label: dLabel, href: dHref, indent }) => (
+                                  <DropdownLink
+                                    key={dLabel}
+                                    href={dHref}
+                                    label={dLabel}
+                                    indent={indent}
+                                  />
+                                ),
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
           {/* ── 데스크탑 Icons / 모바일 햄버거 ── */}
           <div
@@ -343,7 +462,10 @@ export default function Header({
           >
             {!isMobile ? (
               <>
-                <button onClick={() => setSearchOpen(true)}>
+                <button
+                  onClick={() => setSearchOpen(true)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <SearchIcon />
                 </button>
                 <button
@@ -442,12 +564,6 @@ export default function Header({
             )}
           </div>
         </div>
-
-        {showSubNav && (
-          <Suspense fallback={null}>
-            <SubNav brand={brand} />
-          </Suspense>
-        )}
       </header>
 
       {/* ── 모바일 드로어 메뉴 ── */}
@@ -582,8 +698,74 @@ export default function Header({
 
           {/* 중단: 네비 링크 */}
           <nav style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            {NAV_LINKS[brand].map(({ label, href }) => {
+            {NAV_LINKS[brand].map(({ label, href, dropdown }) => {
               const active = href !== '#' && pathname === href;
+              const isOpen = openMobileDropdown === label;
+
+              if (dropdown) {
+                return (
+                  <div
+                    key={label}
+                    style={{ borderBottom: '1px solid #f0f0f0' }}
+                  >
+                    <button
+                      onClick={() =>
+                        setOpenMobileDropdown(isOpen ? null : label)
+                      }
+                      style={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        fontSize: 22,
+                        fontWeight: active ? 700 : 400,
+                        color: '#191919',
+                        padding: '16px 0',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        letterSpacing: '-0.3px',
+                        textAlign: 'left',
+                      }}
+                    >
+                      {label}
+                      <span style={{ fontSize: 16, color: '#999' }}>
+                        {isOpen ? '−' : '+'}
+                      </span>
+                    </button>
+                    {isOpen && (
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: 0,
+                          paddingBottom: 12,
+                        }}
+                      >
+                        {dropdown.map(({ label: dLabel, href: dHref }) => (
+                          <Link
+                            key={dLabel}
+                            href={dHref}
+                            onClick={() => {
+                              setMenuOpen(false);
+                              setOpenMobileDropdown(null);
+                            }}
+                            style={{
+                              fontSize: 15,
+                              color: '#555',
+                              padding: '10px 0 10px 16px',
+                              textDecoration: 'none',
+                            }}
+                          >
+                            {dLabel}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
               return (
                 <Link
                   key={label}

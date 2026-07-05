@@ -20,13 +20,22 @@ export default async function CasualPage() {
   ]);
 
   return (
-      <Header brand="hype-snap" showSubNav />
+    <div>
+      <Header brand="hype-snap" />
 
-      <main style={{ paddingTop: 130 }}>
+      <main style={{ paddingTop: 80 }}>
         <ProductSections
           sections={[
-            { title: 'Casual Photoshoot in Jeju', subtitle: 'With Couple, Friend and Family', products: jeju },
-            { title: 'Casual Photoshoot in Seoul', subtitle: 'With Couple, Friend and Family', products: seoul },
+            {
+              title: 'Casual Photoshoot in Jeju',
+              subtitle: 'With Couple, Friend and Family',
+              products: jeju,
+            },
+            {
+              title: 'Casual Photoshoot in Seoul',
+              subtitle: 'With Couple, Friend and Family',
+              products: seoul,
+            },
           ]}
         />
       </main>

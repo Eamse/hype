@@ -353,7 +353,6 @@ function FaqItem({
             <button
               onClick={() => handleShare('facebook')}
               style={{
-                color
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
@@ -363,7 +362,6 @@ function FaqItem({
             <button
               onClick={() => handleShare('twitter')}
               style={{
-                color
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
@@ -373,7 +371,6 @@ function FaqItem({
             <button
               onClick={() => handleShare('linkedin')}
               style={{
-                color
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
@@ -383,7 +380,6 @@ function FaqItem({
             <button
               onClick={handleCopyLink}
               style={{
-                color
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',

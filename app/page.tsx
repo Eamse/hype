@@ -6,6 +6,7 @@ import HeroCarousel from '@/components/hero-carousel';
 import SnsSidebar from '@/components/sns-sidebar';
 import ProductSections from './_components/product-sections';
 import HomeFooter from './_components/home-footer';
+import EditionalSection from './_components/editional-section';
 
 export default async function Home() {
   const heroRow = await prisma.siteConfig.findUnique({
@@ -20,11 +21,10 @@ export default async function Home() {
     }
   })();
 
-  const [jejuWedding, seoulWedding] = await Promise.all([
+  const [jejuWedding, seoulWedding, magazines] = await Promise.all([
     prisma.product.findMany({
       where: { section: 'Photographers in Jeju' },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
-      take: 8,
       select: {
         id: true,
         title: true,
@@ -35,12 +35,21 @@ export default async function Home() {
     prisma.product.findMany({
       where: { section: 'Photographers in Seoul' },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
-      take: 8,
       select: {
         id: true,
         title: true,
         imageUrl: true,
         section: true,
+      },
+    }),
+    prisma.magazine.findMany({
+      where: { published: true },
+      orderBy: [{ createdAt: 'desc' }],
+      take: 4,
+      select: {
+        id: true,
+        title: true,
+        imageUrl: true,
       },
     }),
   ]);
@@ -94,6 +103,8 @@ export default async function Home() {
             },
           ]}
         />
+
+        <EditionalSection magazines={magazines} />
       </main>
 
       <SnsSidebar />

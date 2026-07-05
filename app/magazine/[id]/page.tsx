@@ -34,6 +34,7 @@ export default async function MagazineDetailPage({ params }: Props) {
   if (!magazine) notFound();
 
   return (
+    <div style={{ minHeight: '100vh' }}>
       <Header brand="hype-wedding" />
 
       <div className="magazine-detail-grid">

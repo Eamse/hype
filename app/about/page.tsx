@@ -10,20 +10,16 @@ export const metadata: Metadata = {
 export default async function AboutPage({
   searchParams,
 }: {
-  searchParams: Promise<{ brand?: string; tab?: string }>;
+  searchParams: Promise<{ brand?: string }>;
 }) {
-  const { brand, tab } = await searchParams;
+  const { brand } = await searchParams;
   const activeBrand = brand === 'hype-snap' ? 'hype-snap' : 'hype-wedding';
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-      }}
-    >
+    <div style={{ minHeight: '100vh' }}>
       <Header brand={activeBrand} />
       <main style={{ paddingTop: 56 }}>
-        <AboutClient brand={activeBrand} initialTab={tab} />
+        <AboutClient brand={activeBrand} />
       </main>
     </div>
   );

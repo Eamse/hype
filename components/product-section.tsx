@@ -3,6 +3,7 @@
 import ProductCard, { type Product } from '@/components/product-card';
 import Link from 'next/link';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useState, useEffect } from 'react';
 
 export default function ProductSection({
   title,
@@ -18,6 +19,21 @@ export default function ProductSection({
   onToggleSave: (id: number) => void;
 }) {
   const isMobile = useIsMobile();
+  const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPage((prev) => {
+        const totalPage = Math.ceil(products.length / 5);
+        return prev + 1 >= totalPage ? 0 : prev + 1;
+      });
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [products.length]);
+
+  const visibleProducts = isMobile
+    ? products
+    : products.slice(page * 5, page * 5 + 5);
   if (products.length === 0) return null;
 
   return (
@@ -53,13 +69,15 @@ export default function ProductSection({
       </div>
 
       <div
+        key={page}
+        className="animate-fade"
         style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
           gap: isMobile ? 8 : 12,
         }}
       >
-        {products.map((p) => (
+        {visibleProducts.map((p) => (
           <ProductCard
             key={p.id}
             product={p}

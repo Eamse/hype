@@ -114,7 +114,6 @@ export default function SignupPage() {
     if (!userInfo.birthYear) e.birthYear = 'Required.';
     if (!userInfo.birthMonth) e.birthMonth = 'Required.';
     if (!userInfo.birthDay) e.birthDay = 'Required.';
-    if (!userInfo.gender) e.gender = 'Please select a gender.';
     if (!userInfo.country) e.country = 'Please select a country.';
     if (!phoneValue) e.phone = 'Phone number is required.';
     if (!userInfo.termsAgreement)

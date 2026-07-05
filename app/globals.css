@@ -330,3 +330,11 @@ a {
 .cursor-blink {
   animation: cursorBlink 0.8s step-end infinite;
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade {
+  animation: fadeIn 0.8s ease-in-out;
+}
