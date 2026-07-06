@@ -170,15 +170,12 @@ function PackageForm({
   };
 
   return (
-    <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
     <div
       style={{
         background: '#fdfcfa',
         border: '1px solid #e8e0d0',
         borderRadius: 10,
         padding: 20,
-        flex: 1,
-        minWidth: 0,
       }}
     >
       <div
@@ -186,14 +183,10 @@ function PackageForm({
       >
         <button
           type="button"
-          style={btnStyle(
-            showPreview ? '#191919' : '#fff',
-            showPreview ? '#fff' : '#3a1a2a',
-            '#ddd',
-          )}
-          onClick={() => setShowPreview((v) => !v)}
+          style={btnStyle('#fff', '#3a1a2a', '#ddd')}
+          onClick={() => setShowPreview(true)}
         >
-          {showPreview ? '미리보기 닫기' : '미리보기'}
+          미리보기
         </button>
       </div>
       {/* 기본 정보 */}
@@ -453,27 +446,54 @@ function PackageForm({
           </button>
         </div>
       )}
-    </div>
-    {showPreview && (
-      <PackagePreview
-        name={form.name}
-        subtitle={form.subtitle}
-        priceSNS={Number(form.priceSNS) || 0}
-        priceNoSNS={Number(form.priceNoSNS) || 0}
-        shootingTime={form.shootingTime}
-        locations={form.locations}
-        originalPhotos={form.originalPhotos}
-        retouched={Number(form.retouched) || 0}
-        retouchedDetail={form.retouchedDetail}
-        inclusionIds={form.inclusionIds}
-        allInclusions={allInclusions}
-        onReorderInclusions={(inclusionIds) => onChange({ ...form, inclusionIds })}
-        addonIds={form.addonIds}
-        allAddons={allAddons}
-        onReorderAddons={(addonIds) => onChange({ ...form, addonIds })}
-        partnerRows={partnerRows}
-      />
-    )}
+      {showPreview && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 24,
+          }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowPreview(false);
+          }}
+        >
+          <div
+            style={{
+              width: '100%',
+              maxWidth: 720,
+              maxHeight: '90vh',
+              overflowY: 'auto',
+            }}
+          >
+            <PackagePreview
+              onClose={() => setShowPreview(false)}
+              name={form.name}
+              subtitle={form.subtitle}
+              priceSNS={Number(form.priceSNS) || 0}
+              priceNoSNS={Number(form.priceNoSNS) || 0}
+              shootingTime={form.shootingTime}
+              locations={form.locations}
+              originalPhotos={form.originalPhotos}
+              retouched={Number(form.retouched) || 0}
+              retouchedDetail={form.retouchedDetail}
+              inclusionIds={form.inclusionIds}
+              allInclusions={allInclusions}
+              onReorderInclusions={(inclusionIds) =>
+                onChange({ ...form, inclusionIds })
+              }
+              addonIds={form.addonIds}
+              allAddons={allAddons}
+              onReorderAddons={(addonIds) => onChange({ ...form, addonIds })}
+              partnerRows={partnerRows}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
