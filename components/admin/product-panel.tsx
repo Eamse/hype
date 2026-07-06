@@ -9,12 +9,12 @@ import ProductRow from './product-row';
 
 type Director = { id: number; number: string; name: string; instagram: string | null };
 
-const SECTIONS = [
-  'Photographers in Jeju',
-  'Photographers in Seoul',
-  'Casual Photoshoot in Jeju',
-  'Casual Photoshoot in Seoul',
-] as const;
+type Category = 'Photographers' | 'Casual Photoshoot';
+
+const LOCATIONS: { label: string; value: 'Jeju' | 'Seoul' }[] = [
+  { label: '제주', value: 'Jeju' },
+  { label: '서울', value: 'Seoul' },
+];
 
 async function uploadImage(file: File, key: string): Promise<string> {
   const fd = new FormData();
@@ -57,7 +57,11 @@ function DirectorPicker({ directors, selected, onChange }: { directors: Director
   );
 }
 
-export default function ProductPanel({ section }: { section: typeof SECTIONS[number] }) {
+function sectionFor(category: Category, location: 'Jeju' | 'Seoul') {
+  return `${category} in ${location}`;
+}
+
+export default function ProductPanel({ category }: { category: Category }) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [directors, setDirectors] = useState<Director[]>([]);
@@ -65,6 +69,7 @@ export default function ProductPanel({ section }: { section: typeof SECTIONS[num
 
   // 추가 폼
   const [isAdding, setIsAdding] = useState(false);
+  const [newLocation, setNewLocation] = useState<'' | 'Jeju' | 'Seoul'>('');
   const [newDirIds, setNewDirIds] = useState<number[]>([]);
   const [thumbFile, setThumbFile] = useState<File | null>(null);
   const [thumbPreview, setThumbPreview] = useState<string | null>(null);
@@ -83,8 +88,12 @@ export default function ProductPanel({ section }: { section: typeof SECTIONS[num
   const { selectedIds, toggleSelect, toggleAll, clearSelection } = useSelection(products);
 
   async function loadProducts() {
-    const data = await fetch(`/api/products?section=${encodeURIComponent(section)}`).then((r) => r.json());
-    setProducts(Array.isArray(data) ? data : []);
+    const results = await Promise.all(
+      LOCATIONS.map(({ value }) =>
+        fetch(`/api/products?section=${encodeURIComponent(sectionFor(category, value))}`).then((r) => r.json()),
+      ),
+    );
+    setProducts(results.flatMap((d) => (Array.isArray(d) ? d : [])));
   }
 
   useEffect(() => {
@@ -93,7 +102,27 @@ export default function ProductPanel({ section }: { section: typeof SECTIONS[num
       fetch('/api/admin/wedding-photographers').then((r) => r.json()).then((d) => setDirectors(Array.isArray(d) ? d : [])),
     ]).finally(() => setLoading(false));
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [section]);
+  }, [category]);
+
+  async function handleMove(group: Product[], index: number, direction: 'up' | 'down') {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= group.length) return;
+    const a = group[index];
+    const b = group[targetIndex];
+    await Promise.all([
+      fetch(`/api/admin/products/${a.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order: b.order }),
+      }),
+      fetch(`/api/admin/products/${b.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order: a.order }),
+      }),
+    ]);
+    await loadProducts();
+  }
 
   async function handleBulkDelete() {
     await Promise.all([...selectedIds].map((id) => fetch(`/api/admin/products/${id}`, { method: 'DELETE' })));
@@ -106,13 +135,14 @@ export default function ProductPanel({ section }: { section: typeof SECTIONS[num
   }
 
   async function handleAdd() {
+    if (!newLocation) { alert('지역을 선택해주세요.'); return; }
     if (newDirIds.length === 0) { alert('작가를 선택해주세요.'); return; }
     setAdding(true);
     try {
       const res = await fetch('/api/products', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ section, title: buildTitle(newDirIds) }),
+        body: JSON.stringify({ section: sectionFor(category, newLocation), title: buildTitle(newDirIds) }),
       });
       if (!res.ok) { alert((await res.json()).error); return; }
       const product = await res.json();
@@ -136,6 +166,7 @@ export default function ProductPanel({ section }: { section: typeof SECTIONS[num
 
       await loadProducts();
       setIsAdding(false);
+      setNewLocation('');
       setNewDirIds([]);
       setThumbFile(null);
       setThumbPreview(null);
@@ -185,7 +216,7 @@ export default function ProductPanel({ section }: { section: typeof SECTIONS[num
       {/* 헤더 */}
       <div style={{ paddingBottom: 20, borderBottom: '1px solid #ede8de' }}>
         <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>PRODUCTS</p>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a' }}>{section}</h2>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a' }}>{category}</h2>
       </div>
 
       {/* 액션 버튼 */}
@@ -200,6 +231,15 @@ export default function ProductPanel({ section }: { section: typeof SECTIONS[num
       {isAdding && (
         <div style={{ background: '#fdfcfa', border: '1px solid #ede8de', borderRadius: 12, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a' }}>새 상품 등록</p>
+
+          <div>
+            <label style={labelStyle}>지역 *</label>
+            <select style={inputStyle} value={newLocation}
+              onChange={(e) => setNewLocation(e.target.value as typeof newLocation)}>
+              <option value="">선택</option>
+              {LOCATIONS.map((loc) => <option key={loc.value} value={loc.value}>{loc.label}</option>)}
+            </select>
+          </div>
 
           <div>
             <label style={labelStyle}>썸네일 이미지</label>
@@ -234,7 +274,7 @@ export default function ProductPanel({ section }: { section: typeof SECTIONS[num
 
           <div style={{ display: 'flex', gap: 8 }}>
             <button style={btnStyle('#191919', '#fff')} onClick={handleAdd} disabled={adding}>{adding ? '등록 중...' : '등록'}</button>
-            <button style={btnStyle('#fff', '#666', '#ddd')} onClick={() => { setIsAdding(false); setThumbFile(null); setThumbPreview(null); setDetailFiles([]); setNewDirIds([]); }}>취소</button>
+            <button style={btnStyle('#fff', '#666', '#ddd')} onClick={() => { setIsAdding(false); setNewLocation(''); setThumbFile(null); setThumbPreview(null); setDetailFiles([]); setNewDirIds([]); }}>취소</button>
           </div>
         </div>
       )}
@@ -252,19 +292,43 @@ export default function ProductPanel({ section }: { section: typeof SECTIONS[num
           onDeleteSelected={handleBulkDelete}
         />
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
-          {products.map((p) => (
-            <ProductRow
-              key={p.id}
-              product={p}
-              isExpanded={isExpanded}
-              isSelected={selectedIds.has(p.id)}
-              onToggleSelect={() => toggleSelect(p.id)}
-              onEdit={() => openEdit(p)}
-              onDeleted={() => handleDelete(p.id)}
-              onUpdated={loadProducts}
-            />
-          ))}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+          {LOCATIONS.map((loc) => {
+            const group = products.filter((p) => p.section === sectionFor(category, loc.value));
+            return (
+              <div key={loc.value} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <p style={{ fontSize: 12, fontWeight: 700, color: '#7a5520', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                  {loc.label} ({group.length})
+                </p>
+                {group.length === 0 && <p style={{ fontSize: 12, color: '#999' }}>등록된 상품이 없습니다.</p>}
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gridTemplateRows: `repeat(${Math.ceil(group.length / 2)}, auto)`,
+                  gridAutoFlow: 'column',
+                  gap: 16,
+                }}>
+                  {group.map((p, i) => (
+                    <ProductRow
+                      key={p.id}
+                      product={p}
+                      position={i + 1}
+                      isExpanded={isExpanded}
+                      isSelected={selectedIds.has(p.id)}
+                      onToggleSelect={() => toggleSelect(p.id)}
+                      onEdit={() => openEdit(p)}
+                      onDeleted={() => handleDelete(p.id)}
+                      onUpdated={loadProducts}
+                      onMoveUp={() => handleMove(group, i, 'up')}
+                      onMoveDown={() => handleMove(group, i, 'down')}
+                      canMoveUp={i > 0}
+                      canMoveDown={i < group.length - 1}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 

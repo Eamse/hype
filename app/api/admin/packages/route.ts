@@ -19,8 +19,8 @@ export async function GET(request: NextRequest) {
     const packages = await prisma.package.findMany({
       where: { directorId },
       include: {
-        addons: { include: { addon: true }, orderBy: { addon: { order: 'asc' } } },
-        inclusions: { include: { inclusion: true }, orderBy: { inclusion: { order: 'asc' } } },
+        addons: { include: { addon: true }, orderBy: { order: 'asc' } },
+        inclusions: { include: { inclusion: true }, orderBy: { order: 'asc' } },
         partners: { include: { partner: true } },
       },
       orderBy: { order: 'asc' },

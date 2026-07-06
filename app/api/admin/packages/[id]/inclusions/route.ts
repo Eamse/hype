@@ -18,6 +18,7 @@ export async function GET(
     const links = await prisma.packageInclusion.findMany({
       where: { packageId: pkgId },
       select: { inclusionId: true },
+      orderBy: { order: 'asc' },
     });
     return NextResponse.json(links.map((l) => l.inclusionId));
   } catch (e) {
@@ -46,7 +47,7 @@ export async function PUT(
       prisma.packageInclusion.deleteMany({ where: { packageId: pkgId } }),
       ...(inclusionIds.length > 0
         ? [prisma.packageInclusion.createMany({
-            data: inclusionIds.map((inclusionId) => ({ packageId: pkgId, inclusionId })),
+            data: inclusionIds.map((inclusionId, order) => ({ packageId: pkgId, inclusionId, order })),
             skipDuplicates: true,
           })]
         : []),

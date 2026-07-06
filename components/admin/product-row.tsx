@@ -6,20 +6,30 @@ import { type Product, btnStyle } from './types';
 
 export default function ProductRow({
   product,
+  position,
   isExpanded,
   isSelected,
   onToggleSelect,
   onEdit,
   onDeleted,
   onUpdated,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp,
+  canMoveDown,
 }: {
   product: Product;
+  position?: number;
   isExpanded: boolean;
   isSelected: boolean;
   onToggleSelect: () => void;
   onEdit: () => void;
   onDeleted: () => void;
   onUpdated: () => void;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  canMoveUp?: boolean;
+  canMoveDown?: boolean;
 }) {
   const imgInputRef = useRef<HTMLInputElement>(null);
   const [localExpanded, setLocalExpanded] = useState(isExpanded);
@@ -111,7 +121,10 @@ export default function ProductRow({
 
         {/* 텍스트 + 버튼 */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', lineHeight: 1.4 }}>{product.title}</p>
+          <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', lineHeight: 1.4 }}>
+            {position != null && <span style={{ color: '#c9a96e', marginRight: 6 }}>{position}번</span>}
+            {product.title}
+          </p>
           {imgError && <p style={{ fontSize: 11, color: '#dc2626' }}>{imgError}</p>}
           <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
             <button onClick={onEdit} style={btnStyle('transparent', '#888', '#e0d8c8')}>수정</button>
@@ -119,8 +132,26 @@ export default function ProductRow({
           </div>
         </div>
 
-        {/* 펼치기 버튼 + 접힌 상태 썸네일 */}
+        {/* 순서 이동 + 펼치기 버튼 + 접힌 상태 썸네일 */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+          {(onMoveUp || onMoveDown) && (
+            <div style={{ display: 'flex', gap: 2 }}>
+              <button
+                onClick={onMoveUp}
+                disabled={!canMoveUp}
+                style={{ background: 'none', border: '1px solid #e0d8c8', borderRadius: 4, cursor: canMoveUp ? 'pointer' : 'default', fontSize: 11, color: canMoveUp ? '#555' : '#ddd', padding: '2px 6px' }}
+              >
+                ▲
+              </button>
+              <button
+                onClick={onMoveDown}
+                disabled={!canMoveDown}
+                style={{ background: 'none', border: '1px solid #e0d8c8', borderRadius: 4, cursor: canMoveDown ? 'pointer' : 'default', fontSize: 11, color: canMoveDown ? '#555' : '#ddd', padding: '2px 6px' }}
+              >
+                ▼
+              </button>
+            </div>
+          )}
           <button
             onClick={() => setLocalExpanded((v) => !v)}
             style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, color: '#aaa', padding: '2px 4px' }}

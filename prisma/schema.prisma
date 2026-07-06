@@ -147,6 +147,7 @@ model Director {
   id        Int               @id @default(autoincrement())
   number    String            // "#1-1", "#1-2", "#2"
   name      String
+  location  String?           // "Jeju" | "Seoul" — 상품 연결 여부와 무관하게 항상 유지되는 소속 지역
   instagram String?
   imageUrl  String?
   order     Int               @default(0)
@@ -197,6 +198,7 @@ model Addon {
 model PackageAddon {
   packageId Int
   addonId   Int
+  order     Int     @default(0)
   package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
   addon     Addon   @relation(fields: [addonId], references: [id], onDelete: Cascade)
 
@@ -213,6 +215,7 @@ model Inclusion {
 model PackageInclusion {
   packageId   Int
   inclusionId Int
+  order       Int       @default(0)
   package     Package   @relation(fields: [packageId], references: [id], onDelete: Cascade)
   inclusion   Inclusion @relation(fields: [inclusionId], references: [id], onDelete: Cascade)
 

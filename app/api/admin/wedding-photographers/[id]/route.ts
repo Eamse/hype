@@ -29,7 +29,11 @@ export async function PATCH(
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
 
-  const { number, name, instagram, imageUrl } = body as Record<string, unknown>;
+  const { number, name, instagram, imageUrl, location } = body as Record<string, unknown>;
+
+  if (location !== undefined && location !== '' && location !== 'Jeju' && location !== 'Seoul') {
+    return NextResponse.json({ error: 'location must be Jeju or Seoul' }, { status: 400 });
+  }
 
   try {
     const photographer = await prisma.director.update({
@@ -39,6 +43,7 @@ export async function PATCH(
         ...(typeof name === 'string' && { name: name.trim() }),
         ...(typeof instagram === 'string' && { instagram: instagram.trim() }),
         ...(typeof imageUrl === 'string' && { imageUrl: imageUrl.trim() }),
+        ...(typeof location === 'string' && { location: location || null }),
       },
     });
     return NextResponse.json(photographer);

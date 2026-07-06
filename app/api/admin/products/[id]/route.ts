@@ -17,7 +17,7 @@ export async function PATCH(
   const body = await request.json().catch(() => null);
   if (!body) return NextResponse.json({ error: 'Invalid body' }, { status: 400 });
 
-  const { title, imageUrl } = body as Record<string, unknown>;
+  const { title, imageUrl, order } = body as Record<string, unknown>;
 
   try {
     const product = await prisma.product.update({
@@ -25,6 +25,7 @@ export async function PATCH(
       data: {
         ...(typeof title === 'string' && { title: title.trim() }),
         ...(typeof imageUrl === 'string' && { imageUrl }),
+        ...(typeof order === 'number' && Number.isFinite(order) && { order }),
       },
     });
     return NextResponse.json(product);

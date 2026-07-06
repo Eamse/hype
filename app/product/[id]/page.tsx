@@ -61,11 +61,11 @@ export default async function ProductDetailPage({ params }: Props) {
                     director: true,
                     addons: {
                       include: { addon: true },
-                      orderBy: { addon: { order: 'asc' } },
+                      orderBy: { order: 'asc' },
                     },
                     inclusions: {
                       include: { inclusion: true },
-                      orderBy: { inclusion: { order: 'asc' } },
+                      orderBy: { order: 'asc' },
                     },
                     partners: { include: { partner: true } },
                   },
@@ -83,9 +83,6 @@ export default async function ProductDetailPage({ params }: Props) {
         return { directors, packages };
       })()
     : null;
-
-  const brandLabel =
-    isWedding ? 'HYPE WEDDING' : isSnap ? 'HYPE SNAP' : product.title;
 
   const session = await auth();
 
@@ -108,7 +105,6 @@ export default async function ProductDetailPage({ params }: Props) {
           <div className="p-5 lg:px-14 lg:py-16 pb-24">
             {isPackageProduct && weddingData ? (
               <WeddingDetail
-                brandLabel={brandLabel}
                 title={product.title}
                 directors={weddingData.directors}
                 packages={weddingData.packages}

@@ -441,7 +441,13 @@ export default function DashboardPanel({
                 {state?.product?.map((p, i) => (
                   <tr
                     key={p.section}
-                    onClick={() => onNavigation(p.section as Section)}
+                    onClick={() =>
+                      onNavigation(
+                        p.section.includes('Casual')
+                          ? 'Casual Photoshoot'
+                          : 'Photographers',
+                      )
+                    }
                     style={{
                       borderTop: i > 0 ? '1px solid #f5f2ec' : 'none',
                       cursor: 'pointer',

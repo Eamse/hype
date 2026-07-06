@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const photographers = await prisma.director.findMany({
       orderBy: { number: 'asc' },
       include: {
-        products: { include: { product: { select: { id: true, title: true } } } },
+        products: { include: { product: { select: { id: true, title: true, section: true } } } },
       },
     });
     return NextResponse.json(photographers);
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
 
-  const { number, name, instagram, imageUrl } = body as Record<string, unknown>;
+  const { number, name, instagram, imageUrl, location } = body as Record<string, unknown>;
 
   if (typeof number !== 'string' || !number.trim()) {
     return NextResponse.json({ error: 'number is required' }, { status: 400 });
@@ -49,12 +49,16 @@ export async function POST(request: NextRequest) {
   if (typeof name !== 'string' || !name.trim()) {
     return NextResponse.json({ error: 'name is required' }, { status: 400 });
   }
+  if (location !== 'Jeju' && location !== 'Seoul') {
+    return NextResponse.json({ error: 'location must be Jeju or Seoul' }, { status: 400 });
+  }
 
   try {
     const photographer = await prisma.director.create({
       data: {
         number: number.trim(),
         name: name.trim(),
+        location,
         instagram: typeof instagram === 'string' ? instagram.trim() : null,
         imageUrl: typeof imageUrl === 'string' ? imageUrl.trim() : null,
       },

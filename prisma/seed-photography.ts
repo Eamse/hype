@@ -50,14 +50,18 @@ type RawDirector = {
 
 type PhotogData = { jeju: RawDirector[]; seoul: RawDirector[] };
 
+type LeafDirector = RawDirector & { location: 'Jeju' | 'Seoul' };
+
 // 모든 leaf 디렉터 수집 (subPhotographers 있으면 그 자식들, 없으면 본인)
-function collectDirectors(data: PhotogData): RawDirector[] {
-  const result: RawDirector[] = [];
-  for (const p of [...data.jeju, ...data.seoul]) {
-    if (p.subPhotographers && p.subPhotographers.length > 0) {
-      for (const sp of p.subPhotographers) result.push(sp);
-    } else {
-      result.push(p);
+function collectDirectors(data: PhotogData): LeafDirector[] {
+  const result: LeafDirector[] = [];
+  for (const [key, location] of [['jeju', 'Jeju'], ['seoul', 'Seoul']] as const) {
+    for (const p of data[key]) {
+      if (p.subPhotographers && p.subPhotographers.length > 0) {
+        for (const sp of p.subPhotographers) result.push({ ...sp, location });
+      } else {
+        result.push({ ...p, location });
+      }
     }
   }
   return result;
@@ -80,6 +84,10 @@ async function main() {
   await prisma.partner.deleteMany({});
   await prisma.addon.deleteMany({});
   await prisma.inclusion.deleteMany({});
+  // Casual/Snap 상품은 이 시드가 다루지 않으므로 Photographers 섹션만 정리
+  await prisma.product.deleteMany({
+    where: { section: { in: ['Photographers in Jeju', 'Photographers in Seoul'] } },
+  });
 
   // ── 1. Inclusions 수집 및 생성 ──
   const inclusionNames = new Set<string>();
@@ -134,16 +142,19 @@ async function main() {
 
   // ── 4. Directors + Packages + 연결 ──
   console.log('\n📸 Directors & Packages 등록 중...');
+  const directorIdByNumber = new Map<string, number>();
   let dirOrder = 0;
   for (const dir of directors) {
     const director = await prisma.director.create({
       data: {
         number: dir.number,
         name: dir.name,
+        location: dir.location,
         instagram: dir.instagram || null,
         order: dirOrder++,
       },
     });
+    directorIdByNumber.set(dir.number, director.id);
 
     let pkgOrder = 0;
     for (const pkg of dir.packages) {
@@ -186,6 +197,26 @@ async function main() {
     }
 
     console.log(`  ✓ ${dir.number} ${dir.name} — ${dir.packages.length}개 패키지`);
+  }
+
+  // ── 5. Products(스튜디오 단위) + ProductDirector 연결 ──
+  console.log('\n🏢 Products 등록 중...');
+  for (const [key, section] of [
+    ['jeju', 'Photographers in Jeju'],
+    ['seoul', 'Photographers in Seoul'],
+  ] as const) {
+    for (const [i, top] of data[key].entries()) {
+      const subs = top.subPhotographers && top.subPhotographers.length > 0 ? top.subPhotographers : [top];
+      const directorIds = subs.map((s) => directorIdByNumber.get(s.number)!);
+
+      const product = await prisma.product.create({
+        data: { title: top.name, section, order: i },
+      });
+      await prisma.productDirector.createMany({
+        data: directorIds.map((directorId) => ({ productId: product.id, directorId })),
+      });
+      console.log(`  ✓ ${top.number} ${top.name} — 작가 ${directorIds.length}명 연결`);
+    }
   }
 
   console.log('\n🎉 시드 완료!');

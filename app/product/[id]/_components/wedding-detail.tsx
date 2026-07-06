@@ -62,12 +62,10 @@ function InstagramLink({ handle }: { handle: string | null }) {
 }
 
 export default function WeddingDetail({
-  brandLabel,
   title,
   directors,
   packages,
 }: {
-  brandLabel: string;
   title: string;
   directors: Director[];
   packages: Package[];
@@ -90,6 +88,8 @@ export default function WeddingDetail({
     setActivePackageId(firstPkg?.id ?? null);
     setExpandedAddon(null);
   }
+
+  const productNumber = directors[0]?.number.split('-')[0];
 
   const activePkgs = packages.filter((p) => p.directorId === activeDirectorId);
   const activePackage =
@@ -135,20 +135,18 @@ export default function WeddingDetail({
         maxWidth: 560,
       }}
     >
-      {/* Brand header */}
+      {/* 제목 헤더 */}
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
         <h1
           className="font"
           style={{
-            fontSize: '20px',
-            fontWeight: 300,
-            letterSpacing: '4px',
-            textTransform: 'uppercase',
-            margin: 0,
+            fontSize: '28px',
+            fontWeight: 400,
             color: '#2C2420',
+            margin: '0 0 6px',
           }}
         >
-          {brandLabel}
+          {productNumber} {title}
         </h1>
         <div
           style={{
@@ -164,11 +162,14 @@ export default function WeddingDetail({
             color: '#888',
             letterSpacing: '2px',
             textTransform: 'uppercase',
-            margin: 0,
+            margin: '0 0 8px',
           }}
         >
-          Package &amp; Rate
+          {activePackage?.director.number} {activePackage?.director.name}
         </p>
+        {activePackage?.director.instagram && (
+          <InstagramLink handle={activePackage.director.instagram} />
+        )}
       </div>
 
       {/* 작가 탭 (복수일 때만) */}
@@ -198,29 +199,11 @@ export default function WeddingDetail({
                 letterSpacing: '0.5px',
               }}
             >
-              {d.name}
+              {d.number} {d.name}
             </button>
           ))}
         </div>
       )}
-
-      {/* 제목 + 인스타 */}
-      <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-        <h2
-          className="font"
-          style={{
-            fontSize: '28px',
-            fontWeight: 400,
-            color: '#2C2420',
-            margin: '0 0 6px',
-          }}
-        >
-          {title}
-        </h2>
-        {activePackage?.director.instagram && (
-          <InstagramLink handle={activePackage.director.instagram} />
-        )}
-      </div>
 
       {/* 패키지 탭 */}
       {activePkgs.length > 0 && (

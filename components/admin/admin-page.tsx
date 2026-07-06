@@ -160,23 +160,13 @@ const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
   { id: 'hero-wedding', label: 'Hero · Wedding', icon: <IconImage /> },
   { id: 'hero-snap', label: 'Hero · Snap', icon: <IconImage /> },
   {
-    id: 'Photographers in Jeju',
-    label: 'Photographers · Jeju',
+    id: 'Photographers',
+    label: 'Photographers',
     icon: <IconCamera />,
   },
   {
-    id: 'Photographers in Seoul',
-    label: 'Photographers · Seoul',
-    icon: <IconCamera />,
-  },
-  {
-    id: 'Casual Photoshoot in Jeju',
-    label: 'Casual · Jeju',
-    icon: <IconMapPin />,
-  },
-  {
-    id: 'Casual Photoshoot in Seoul',
-    label: 'Casual · Seoul',
+    id: 'Casual Photoshoot',
+    label: 'Casual Photoshoot',
     icon: <IconMapPin />,
   },
   { id: 'Magazine', label: 'Magazine', icon: <IconBook /> },
@@ -824,17 +814,11 @@ export default function AdminPage() {
           {active === 'partners-hmu' && <PartnerPanel role="hmu" />}
           {active === 'partners-dress' && <PartnerPanel role="dress" />}
           {active === 'partners-suit' && <PartnerPanel role="suit" />}
-          {active === 'Photographers in Jeju' && (
-            <ProductPanel section="Photographers in Jeju" />
+          {active === 'Photographers' && (
+            <ProductPanel category="Photographers" />
           )}
-          {active === 'Photographers in Seoul' && (
-            <ProductPanel section="Photographers in Seoul" />
-          )}
-          {active === 'Casual Photoshoot in Jeju' && (
-            <ProductPanel section="Casual Photoshoot in Jeju" />
-          )}
-          {active === 'Casual Photoshoot in Seoul' && (
-            <ProductPanel section="Casual Photoshoot in Seoul" />
+          {active === 'Casual Photoshoot' && (
+            <ProductPanel category="Casual Photoshoot" />
           )}
           {active === 'Magazine' && <MagazinePanel />}
           {active === 'users' && <UserPanel />}
