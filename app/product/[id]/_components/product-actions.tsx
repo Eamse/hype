@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useBookmarks } from '@/components/bookmark-provider';
 
 function ChevronLeftIcon() {
   return (
@@ -67,7 +67,8 @@ export function StickyBottomBar({
   userId: string | null;
   productId: number;
 }) {
-  const [saved, setSaved] = useState(false);
+  const { bookmarkedIds, toggleBookmark } = useBookmarks();
+  const saved = bookmarkedIds.has(productId);
   const router = useRouter();
 
   async function handleBookmark() {
@@ -75,13 +76,7 @@ export function StickyBottomBar({
       router.push('?auth=1');
       return;
     }
-    const res = await fetch('/api/bookmarks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productId }),
-    });
-    const data = await res.json();
-    setSaved(data.bookmarked);
+    await toggleBookmark(productId);
   }
   return (
     <div

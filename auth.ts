@@ -33,6 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.id = user.id as string;
         token.isOnboarded = (user as { isOnboarded: boolean }).isOnboarded;
+        token.role = (user as { role: string }).role;
         token.image = user.image;
         token.name = user.name;
       }
@@ -60,6 +61,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // 토큰 → 세션으로 전달
       session.user.id = token.id as string;
       session.user.isOnboarded = token.isOnboarded as boolean;
+      session.user.role = token.role as string;
       session.user.image = (token.image as string) ?? null;
       return session;
     },

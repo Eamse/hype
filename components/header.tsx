@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import LoginModal from '@/components/login-modal';
 import SearchModal from '@/components/search-modal';
+import NotificationBell from '@/components/notification-bell';
+import { useBookmarks } from '@/components/bookmark-provider';
 import { useSession, signOut } from 'next-auth/react';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
@@ -47,7 +49,7 @@ const NAV_LINKS: Record<
           indent: true,
         },
         {
-          label: '- Wedding in Seoul',
+          label: '• Wedding in Seoul',
           href: '/products?section=Photographers%20in%20Seoul',
           indent: true,
         },
@@ -76,12 +78,12 @@ const NAV_LINKS: Record<
         { label: 'What We Offer', href: '/casual' },
         { label: 'Packages & Pricing', href: '/casual' },
         {
-          label: 'Casual in Jeju',
+          label: '• Casual in Jeju',
           href: '/products?section=Casual%20Photoshoot%20in%20Jeju',
           indent: true,
         },
         {
-          label: 'Casual in Seoul',
+          label: '• Casual in Seoul',
           href: '/products?section=Casual%20Photoshoot%20in%20Seoul',
           indent: true,
         },
@@ -165,23 +167,6 @@ function BookmarkIcon() {
     </svg>
   );
 }
-function BellIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-    </svg>
-  );
-}
 function UserIcon() {
   return (
     <svg
@@ -243,7 +228,8 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
   const [toast, setToast] = useState(false);
   const { data: session } = useSession();
   const isMobile = useIsMobile();
-  const [bookmarkCount, setBookmarkCount] = useState(0);
+  const { bookmarkedIds } = useBookmarks();
+  const bookmarkCount = bookmarkedIds.size;
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navItemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -258,13 +244,6 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
   const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(
     null,
   );
-
-  useEffect(() => {
-    if (!session) return;
-    fetch('/api/bookmarks')
-      .then((res) => res.json())
-      .then((data) => setBookmarkCount(data.length));
-  }, [session]);
 
   useEffect(() => {
     if (searchParams.get('auth') === '1') {
@@ -464,6 +443,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
               <>
                 <button
                   onClick={() => setSearchOpen(true)}
+                  aria-label="Search"
                   style={{ cursor: 'pointer' }}
                 >
                   <SearchIcon />
@@ -472,6 +452,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                   onClick={() =>
                     session ? router.push('/bookmarks') : setLoginOpen(true)
                   }
+                  aria-label="Bookmarks"
                   style={{
                     position: 'relative',
                     display: 'flex',
@@ -505,9 +486,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                     </span>
                   )}
                 </button>
-                {/* <button>
-                  <BellIcon />
-                </button> */}
+                <NotificationBell />
                 <button
                   onClick={() =>
                     session
@@ -516,6 +495,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                         setTimeout(() => setToast(false), 3000))
                       : setLoginOpen(true)
                   }
+                  aria-label={session ? 'Sign out' : 'Sign in'}
                   style={{
                     background: 'none',
                     border: 'none',
@@ -558,7 +538,10 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                 </button>
               </>
             ) : (
-              <button onClick={() => setMenuOpen((v) => !v)}>
+              <button
+                onClick={() => setMenuOpen((v) => !v)}
+                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              >
                 {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
               </button>
             )}
@@ -596,6 +579,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                 setMenuOpen(false);
                 setSearchOpen(true);
               }}
+              aria-label="Search"
               style={{
                 background: 'none',
                 border: 'none',
@@ -610,6 +594,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                 setMenuOpen(false);
                 session ? router.push('/bookmarks') : setLoginOpen(true);
               }}
+              aria-label="Bookmarks"
               style={{
                 position: 'relative',
                 display: 'flex',
@@ -654,6 +639,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                   setLoginOpen(true);
                 }
               }}
+              aria-label={session ? 'Sign out' : 'Sign in'}
               style={{
                 background: 'none',
                 border: 'none',
@@ -729,7 +715,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                       }}
                     >
                       {label}
-                      <span style={{ fontSize: 16, color: '#999' }}>
+                      <span style={{ fontSize: 16, color: '#666' }}>
                         {isOpen ? '−' : '+'}
                       </span>
                     </button>

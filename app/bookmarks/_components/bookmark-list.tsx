@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import ProductCard from '@/components/product-card';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { useBookmarks } from '@/components/bookmark-provider';
 
 type Bookmark = {
   id: number;
@@ -17,9 +17,7 @@ type Bookmark = {
 };
 
 export default function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
-  const [saved, setSaved] = useState(
-    new Set(bookmarks.map((b) => b.product.id)),
-  );
+  const { bookmarkedIds, toggleBookmark } = useBookmarks();
   const { data: session } = useSession();
   const router = useRouter();
   const isMobile = useIsMobile();
@@ -29,19 +27,7 @@ export default function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
       router.push('?auth=1');
       return;
     }
-    const res = await fetch('/api/bookmarks', {
-      method: 'POST',
-      body: JSON.stringify({ productId: id }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-    const data = await res.json();
-
-    setSaved((prev) => {
-      const n = new Set(prev);
-      if (data.bookmarked) n.add(id);
-      else n.delete(id);
-      return n;
-    });
+    await toggleBookmark(id);
   }
   return (
     <div
@@ -67,7 +53,7 @@ export default function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
             <ProductCard
               key={bookmark.id}
               product={bookmark.product}
-              isSaved={saved.has(bookmark.product.id)}
+              isSaved={bookmarkedIds.has(bookmark.product.id)}
               onToggleSave={toggleSave}
             />
           ))}

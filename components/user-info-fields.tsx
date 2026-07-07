@@ -1,23 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
-import { getData } from 'country-list';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command';
-import { Button } from '@/components/ui/button';
+import CountryCombobox from '@/components/country-combobox';
 
 // ─── 타입 ─────────────────────────────────────────────────
 
@@ -63,9 +48,6 @@ export default function UserInfoFields({
   onChange,
   onPhoneChange,
 }: Props) {
-  const [open, setOpen] = useState(false);
-  const countries = getData();
-
   const errorBorder = 'border-red-400 focus:border-red-500';
   const normalBorder = 'border-gray-200 focus:border-gray-900';
 
@@ -190,37 +172,11 @@ export default function UserInfoFields({
         <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
           Nationality <span className="text-red-500">*</span>
         </label>
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-full justify-between font-normal">
-              {values.country
-                ? countries.find((c) => c.code === values.country)?.name
-                : 'Select Nationality'}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-full p-0">
-            <Command>
-              <CommandInput placeholder="Search nationality..." />
-              <CommandList>
-                <CommandEmpty>No country found.</CommandEmpty>
-                <CommandGroup>
-                  {countries.map((c) => (
-                    <CommandItem
-                      key={c.code}
-                      value={c.name}
-                      onSelect={() => {
-                        onChange('country', c.code);
-                        setOpen(false);
-                      }}
-                    >
-                      {c.name}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
+        <CountryCombobox
+          value={values.country}
+          onChange={(code) => onChange('country', code)}
+          placeholder="Select Nationality"
+        />
         {errors.country && (
           <p className="text-xs text-red-500">{errors.country}</p>
         )}

@@ -65,6 +65,7 @@ model User {
   phone            String?
   termsAgreedAt    DateTime?
   isOnboarded      Boolean   @default(false)
+  role             String    @default("user") // "user" | "admin" — admin이면 /review 인라인 관리 권한
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   accounts         Account[]
@@ -72,6 +73,7 @@ model User {
   bookmarks        Bookmark[]
   reviews          Review[]
   comments         Comment[]
+  notifications    Notification[]
 }
 
 model Account {
@@ -250,6 +252,8 @@ model Review {
   shootingDate String
   productType String        // "wedding" | "snap"
   location    String        // "jeju" | "seoul"
+  rating      Int?          // 1~5, 참고용 표시
+  isFeatured  Boolean       @default(false) // 우수 리뷰 상단 고정 (어드민 수동)
   password    String?       // 비회원 전용
   userId      String?
   directorId  Int?
@@ -259,6 +263,7 @@ model Review {
   director    Director?     @relation(fields: [directorId], references: [id], onDelete: SetNull)
   images      ReviewImage[]
   comments    Comment[]
+  notifications Notification[]
 }
 
 model ReviewImage {
@@ -270,13 +275,31 @@ model ReviewImage {
 }
 
 model Comment {
-  id         Int      @id @default(autoincrement())
+  id         Int        @id @default(autoincrement())
   reviewId   Int
   content    String
   authorName String
-  password   String?  // 비회원 전용
+  password   String?    // 비회원 전용
   userId     String?
-  createdAt  DateTime @default(now())
-  review     Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
-  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  parentId   Int?
+  deletedAt  DateTime?  // soft delete — 채워지면 "삭제된 댓글입니다"로 표시, 답글은 유지
+  createdAt  DateTime   @default(now())
+  review     Review     @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  user       User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  parent     Comment?   @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies    Comment[]  @relation("CommentReplies")
+  notifications Notification[]
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    String   // 알림 받는 사람 (회원만)
+  type      String   // "comment" | "reply"
+  reviewId  Int
+  commentId Int?
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: SetNull)
 }

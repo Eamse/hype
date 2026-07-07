@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import type { ReactNode } from 'react';
 
 const TABS: Record<
   'hype-wedding' | 'hype-snap',
@@ -19,20 +19,18 @@ const TABS: Record<
 
 export default function ReviewClient({
   brand,
-  initialTab,
+  activeTab,
+  children,
 }: {
   brand: 'hype-wedding' | 'hype-snap';
-  initialTab?: string;
+  activeTab: string;
+  children: ReactNode;
 }) {
   const router = useRouter();
   const pathname = usePathname();
   const tabs = TABS[brand];
-  const defaultTab =
-    tabs.find((t) => t.value === initialTab)?.value ?? tabs[0].value;
-  const [activeTab, setActiveTab] = useState(defaultTab);
 
   function handleTab(value: string) {
-    setActiveTab(value);
     const params = new URLSearchParams();
     if (brand === 'hype-snap') params.set('brand', 'hype-snap');
     params.set('tab', value);
@@ -69,7 +67,7 @@ export default function ReviewClient({
                   padding: '14px 24px',
                   fontSize: 13,
                   fontWeight: isActive ? 700 : 400,
-                  color: isActive ? '#191919' : '#888',
+                  color: isActive ? '#191919' : '#666',
                   borderTop: 'none',
                   borderLeft: 'none',
                   borderRight: 'none',
@@ -88,20 +86,8 @@ export default function ReviewClient({
         </div>
       </div>
 
-      {/* ── 컨텐츠 ── */}
-      <div
-        style={{
-          maxWidth: 1200,
-          margin: '0 auto',
-          padding: '60px 20px 120px',
-        }}
-      >
-        {/* TODO: 리뷰 카드 추가 */}
-        <p style={{ color: '#767676', fontSize: 14 }}>
-          {tabs.find((t) => t.value === activeTab)?.label} 리뷰가 들어갈
-          자리입니다.
-        </p>
-      </div>
+      {/* ── 컨텐츠 (서버가 내려준 그대로) ── */}
+      {children}
     </div>
   );
 }
