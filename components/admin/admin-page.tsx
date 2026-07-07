@@ -144,6 +144,7 @@ const MANAGE_SECTIONS: Section[] = [
   'partners-hmu',
   'partners-dress',
   'partners-suit',
+  'partners-bouquet',
 ];
 
 const MANAGE_ITEMS: { id: Section; label: string }[] = [
@@ -153,6 +154,7 @@ const MANAGE_ITEMS: { id: Section; label: string }[] = [
   { id: 'partners-hmu', label: 'Hair & Makeup' },
   { id: 'partners-dress', label: 'Dress' },
   { id: 'partners-suit', label: 'Suit' },
+  { id: 'partners-bouquet', label: 'Bouquet' },
 ];
 
 const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
@@ -814,6 +816,7 @@ export default function AdminPage() {
           {active === 'partners-hmu' && <PartnerPanel role="hmu" />}
           {active === 'partners-dress' && <PartnerPanel role="dress" />}
           {active === 'partners-suit' && <PartnerPanel role="suit" />}
+          {active === 'partners-bouquet' && <PartnerPanel role="bouquet" />}
           {active === 'Photographers' && (
             <ProductPanel category="Photographers" />
           )}

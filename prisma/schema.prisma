@@ -65,7 +65,7 @@ model User {
   phone            String?
   termsAgreedAt    DateTime?
   isOnboarded      Boolean   @default(false)
-  role             String    @default("user") // "user" | "admin" — admin이면 /review 인라인 관리 권한
+  role             String    @default("user") // "user" | "admin"(리뷰 인라인 관리) | "master"(매거진 작성)
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   accounts         Account[]
@@ -226,7 +226,7 @@ model PackageInclusion {
 
 model Partner {
   id        Int              @id @default(autoincrement())
-  role      String           // "hmu" | "dress" | "suit"
+  role      String           // "hmu" | "dress" | "suit" | "bouquet"
   name      String
   instagram String?
   imageUrl  String?

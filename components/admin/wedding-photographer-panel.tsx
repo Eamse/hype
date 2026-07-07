@@ -82,6 +82,7 @@ const emptyPkgForm = {
   hmuId: null as number | null,
   dressId: null as number | null,
   suitId: null as number | null,
+  bouquetId: null as number | null,
 };
 type PkgForm = typeof emptyPkgForm;
 
@@ -104,6 +105,8 @@ function pkgFormFromPackage(pkg: Package): PkgForm {
       pkg.partners.find((p) => p.partner.role === 'dress')?.partner.id ?? null,
     suitId:
       pkg.partners.find((p) => p.partner.role === 'suit')?.partner.id ?? null,
+    bouquetId:
+      pkg.partners.find((p) => p.partner.role === 'bouquet')?.partner.id ?? null,
   };
 }
 
@@ -136,6 +139,7 @@ function PackageForm({
   const hmuList = allPartners.filter((p) => p.role === 'hmu');
   const dressList = allPartners.filter((p) => p.role === 'dress');
   const suitList = allPartners.filter((p) => p.role === 'suit');
+  const bouquetList = allPartners.filter((p) => p.role === 'bouquet');
   const [showPreview, setShowPreview] = useState(false);
 
   const partnerRows = [
@@ -155,6 +159,12 @@ function PackageForm({
       ? {
           role: 'Suit',
           name: allPartners.find((p) => p.id === form.suitId)?.name ?? '',
+        }
+      : null,
+    form.bouquetId
+      ? {
+          role: 'Bouquet',
+          name: allPartners.find((p) => p.id === form.bouquetId)?.name ?? '',
         }
       : null,
   ].filter(Boolean) as { role: string; name: string }[];
@@ -286,7 +296,7 @@ function PackageForm({
       {/* Partners */}
       <p style={sectionTitle}>Partners</p>
       <div
-        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}
+        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 12 }}
       >
         <div>
           <label style={labelStyle}>Hair &amp; Makeup</label>
@@ -342,6 +352,26 @@ function PackageForm({
           >
             <option value="">없음</option>
             {suitList.map((p) => (
+              <option key={p.id} value={p.id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label style={labelStyle}>Bouquet</label>
+          <select
+            style={inputStyle}
+            value={form.bouquetId ?? ''}
+            onChange={(e) =>
+              onChange({
+                ...form,
+                bouquetId: e.target.value ? Number(e.target.value) : null,
+              })
+            }
+          >
+            <option value="">없음</option>
+            {bouquetList.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
               </option>
@@ -703,7 +733,7 @@ export default function WeddingPhotographerPanel() {
 
   // ── Package helpers ──
   async function savePkgRelations(pkgId: number, form: PkgForm) {
-    const partnerIds = [form.hmuId, form.dressId, form.suitId].filter(
+    const partnerIds = [form.hmuId, form.dressId, form.suitId, form.bouquetId].filter(
       (id): id is number => id !== null,
     );
     await Promise.all([
@@ -1181,7 +1211,9 @@ export default function WeddingPhotographerPanel() {
                                 ? 'HMU'
                                 : partner.role === 'dress'
                                   ? 'Dress'
-                                  : 'Suit'}
+                                  : partner.role === 'suit'
+                                    ? 'Suit'
+                                    : 'Bouquet'}
                               : {partner.name}
                             </span>
                           ))}

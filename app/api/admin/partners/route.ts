@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
   const { role, name, instagram, imageUrl } = body as Record<string, unknown>;
 
-  if (typeof role !== 'string' || !['hmu', 'dress', 'suit'].includes(role)) {
+  if (typeof role !== 'string' || !['hmu', 'dress', 'suit', 'bouquet'].includes(role)) {
     return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
   }
   if (typeof name !== 'string' || !name.trim()) {

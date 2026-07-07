@@ -37,6 +37,7 @@ type RawPackage = {
     hmu?: { name: string; instagram: string };
     dress?: { name: string; instagram: string };
     suit?: { name: string; instagram: string };
+    bouquet?: { name: string; instagram: string };
   };
 };
 
@@ -125,10 +126,11 @@ async function main() {
   const partnerByKey = new Map<string, { role: string; name: string; instagram: string | null }>();
   for (const dir of directors) {
     for (const pkg of dir.packages) {
-      const { hmu, dress, suit } = pkg.partners;
+      const { hmu, dress, suit, bouquet } = pkg.partners;
       if (hmu) partnerByKey.set(pKey('hmu', hmu.name), { role: 'hmu', name: hmu.name, instagram: hmu.instagram });
       if (dress) partnerByKey.set(pKey('dress', dress.name), { role: 'dress', name: dress.name, instagram: dress.instagram });
       if (suit) partnerByKey.set(pKey('suit', suit.name), { role: 'suit', name: suit.name, instagram: suit.instagram });
+      if (bouquet) partnerByKey.set(pKey('bouquet', bouquet.name), { role: 'bouquet', name: bouquet.name, instagram: bouquet.instagram });
     }
   }
 
@@ -187,8 +189,8 @@ async function main() {
       }
 
       // Partners 연결
-      const { hmu, dress, suit } = pkg.partners;
-      for (const [partner, role] of [[hmu, 'hmu'], [dress, 'dress'], [suit, 'suit']] as const) {
+      const { hmu, dress, suit, bouquet } = pkg.partners;
+      for (const [partner, role] of [[hmu, 'hmu'], [dress, 'dress'], [suit, 'suit'], [bouquet, 'bouquet']] as const) {
         if (partner) {
           const pId = partnerMap.get(pKey(role, partner.name));
           if (pId) await prisma.packagePartner.create({ data: { packageId: createdPkg.id, partnerId: pId } });

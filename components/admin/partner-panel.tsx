@@ -16,11 +16,12 @@ const ROLE_LABELS: Record<string, string> = {
   hmu: '헤어 & 메이크업',
   dress: '드레스',
   suit: '수트',
+  bouquet: '부케',
 };
 
 const emptyForm = { name: '', instagram: '' };
 
-export default function PartnerPanel({ role }: { role: 'hmu' | 'dress' | 'suit' }) {
+export default function PartnerPanel({ role }: { role: 'hmu' | 'dress' | 'suit' | 'bouquet' }) {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState(emptyForm);

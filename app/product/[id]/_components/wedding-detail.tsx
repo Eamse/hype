@@ -108,6 +108,9 @@ export default function WeddingDetail({
   const suit =
     packagePartners.find(({ partner }) => partner.role === 'suit')?.partner ??
     null;
+  const bouquet =
+    packagePartners.find(({ partner }) => partner.role === 'bouquet')?.partner ??
+    null;
 
   const partnerRows = [
     {
@@ -122,6 +125,9 @@ export default function WeddingDetail({
       ? { role: 'Dress', name: dress.name, instagram: dress.instagram }
       : null,
     suit ? { role: 'Suit', name: suit.name, instagram: suit.instagram } : null,
+    bouquet
+      ? { role: 'Bouquet', name: bouquet.name, instagram: bouquet.instagram }
+      : null,
   ].filter(Boolean) as {
     role: string;
     name: string;
