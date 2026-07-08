@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { sanitizeMagazineHtml } from '@/lib/magazine-sanitize';
 
 type MagazineDetailData = {
   title: string;
@@ -48,9 +49,10 @@ export default function MagazineDetailView({
 
         <div style={{ borderTop: '1px solid #e0e0e0', marginBottom: 40 }} />
 
-        <div style={{ fontSize: 15, lineHeight: 2, color: '#444', whiteSpace: 'pre-wrap', letterSpacing: '0.1px' }}>
-          {magazine.content}
-        </div>
+        <div
+          className="magazine-content"
+          dangerouslySetInnerHTML={{ __html: sanitizeMagazineHtml(magazine.content) }}
+        />
 
         {/* 상세 이미지들 */}
         {magazine.images.length > 0 && (

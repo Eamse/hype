@@ -338,3 +338,53 @@ a {
 .animate-fade {
   animation: fadeIn 0.8s ease-in-out;
 }
+
+/* ─── Magazine rich text content (TipTap) ─────────────── */
+.magazine-content,
+.ProseMirror {
+  font-size: 15px;
+  line-height: 2;
+  color: #444;
+  letter-spacing: 0.1px;
+}
+.magazine-content p,
+.ProseMirror p {
+  margin: 0 0 20px;
+}
+.magazine-content h2,
+.ProseMirror h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #191919;
+  margin: 32px 0 16px;
+}
+.magazine-content img,
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 24px 0;
+  border-radius: 4px;
+}
+.magazine-content blockquote,
+.ProseMirror blockquote {
+  border-left: 3px solid #e0e0e0;
+  margin: 20px 0;
+  padding-left: 16px;
+  color: #666;
+  font-style: italic;
+}
+.magazine-content ul,
+.magazine-content ol,
+.ProseMirror ul,
+.ProseMirror ol {
+  margin: 0 0 20px;
+  padding-left: 24px;
+}
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #aaa;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}

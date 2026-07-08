@@ -28,6 +28,7 @@ export async function GET(
     where: { id: reviewId },
     include: { images: true },
   });
+
   if (!review) {
     return NextResponse.json({ error: 'review not found' }, { status: 404 });
   }

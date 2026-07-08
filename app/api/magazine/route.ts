@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { isMagazineMaster } from '@/lib/magazine-auth';
+import { sanitizeMagazineHtml } from '@/lib/magazine-sanitize';
 
 //magazine 목록 조회
 export async function GET() {
@@ -47,7 +48,7 @@ export async function POST(request: NextRequest) {
     const magazine = await prisma.magazine.create({
       data: {
         title: b.title.trim(),
-        content: b.content.trim(),
+        content: sanitizeMagazineHtml(b.content.trim()),
         imageUrl: typeof b.imageUrl === 'string' ? b.imageUrl : null,
         published: b.published === true,
       },

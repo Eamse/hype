@@ -3,6 +3,8 @@ export const dynamic = 'force-dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
+import { auth } from '@/auth';
+import { isMagazineMaster } from '@/lib/magazine-auth';
 import Header from '@/components/header';
 import type { Metadata } from 'next';
 
@@ -21,12 +23,30 @@ export default async function MagazinePage({ searchParams }: Props) {
   });
 
   const [hero, ...rest] = magazines;
+  const session = await auth();
+  const isMaster = isMagazineMaster(session);
 
   return (
     <div>
       <Header brand={brand} />
 
       <div className="magazine-page-padding">
+        {isMaster && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginBottom: 16 }}>
+            <Link
+              href="/magazine/manage"
+              style={{ padding: '8px 14px', borderRadius: 6, border: '1px solid #e0e0e0', fontSize: 12, color: '#191919', textDecoration: 'none' }}
+            >
+              Manage
+            </Link>
+            <Link
+              href="/magazine/write"
+              style={{ padding: '8px 14px', borderRadius: 6, background: '#191919', color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}
+            >
+              + Write
+            </Link>
+          </div>
+        )}
         <p
           style={{
             fontSize: 11,
