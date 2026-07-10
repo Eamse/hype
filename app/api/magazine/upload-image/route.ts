@@ -9,6 +9,7 @@ import {
   validateMagicBytes,
   SHARP_OPTIONS,
 } from '@/lib/validate-image';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 const R2_PUBLIC_BASE_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
 
@@ -17,6 +18,10 @@ export async function POST(request: NextRequest) {
   const session = await auth();
   if (!isMagazineMaster(session)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (!checkRateLimit(`magazine-upload:${session!.user!.id}`, 60, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
   if (!R2_PUBLIC_BASE_URL) {

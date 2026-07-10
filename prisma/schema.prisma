@@ -124,6 +124,8 @@ model Magazine {
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
   images    MagazineImage[]
+
+  @@index([published, createdAt])
 }
 
 model MagazineImage {
@@ -132,6 +134,8 @@ model MagazineImage {
   url        String
   order      Int      @default(0)
   magazine   Magazine @relation(fields: [magazineId], references: [id], onDelete: Cascade)
+
+  @@index([magazineId])
 }
 
 model Bookmark {
@@ -264,6 +268,11 @@ model Review {
   images      ReviewImage[]
   comments    Comment[]
   notifications Notification[]
+
+  @@index([productType, location])
+  @@index([isFeatured, createdAt])
+  @@index([directorId])
+  @@index([userId])
 }
 
 model ReviewImage {
@@ -272,6 +281,8 @@ model ReviewImage {
   url      String
   order    Int    @default(0)
   review   Review @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+
+  @@index([reviewId])
 }
 
 model Comment {
@@ -289,6 +300,10 @@ model Comment {
   parent     Comment?   @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
   replies    Comment[]  @relation("CommentReplies")
   notifications Notification[]
+
+  @@index([reviewId])
+  @@index([parentId])
+  @@index([userId])
 }
 
 model Notification {
@@ -302,4 +317,8 @@ model Notification {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
   comment   Comment? @relation(fields: [commentId], references: [id], onDelete: SetNull)
+
+  @@index([userId, isRead])
+  @@index([reviewId])
+  @@index([commentId])
 }

@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { canModifyReview } from '@/lib/review-auth';
 import { deleteFileFromR2 } from '@/lib/r2';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 const ALLOWED_PRODUCT_TYPES = new Set(['wedding', 'snap']);
 const ALLOWED_LOCATIONS = new Set(['jeju', 'seoul']);
@@ -42,6 +43,10 @@ export async function PATCH(
   request: NextRequest,
   props: { params: Promise<{ id: string }> },
 ) {
+  if (!checkRateLimit(`review-modify:${getClientIp(request)}`, 15, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   const { id } = await props.params;
   const reviewId = parseId(id);
   if (reviewId === null) {
@@ -119,6 +124,10 @@ export async function DELETE(
   request: NextRequest,
   props: { params: Promise<{ id: string }> },
 ) {
+  if (!checkRateLimit(`review-modify:${getClientIp(request)}`, 15, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   const { id } = await props.params;
   const reviewId = parseId(id);
   if (reviewId === null) {

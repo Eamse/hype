@@ -1,6 +1,7 @@
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from 'next/server';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 export async function GET() {
   try {
@@ -34,6 +35,9 @@ export async function POST(request: NextRequest) {
     const session = await auth();
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    if (!checkRateLimit(`bookmark:${session.user.id}`, 60, 5 * 60 * 1000)) {
+      return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
     const { productId } = await request.json();
     if (!productId || typeof productId !== 'number') {

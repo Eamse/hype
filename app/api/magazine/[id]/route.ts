@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { isMagazineMaster } from '@/lib/magazine-auth';
 import { deleteFileFromR2 } from '@/lib/r2';
 import { sanitizeMagazineHtml } from '@/lib/magazine-sanitize';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 // 문자열로 온 id를 숫자로 반환하는 함수
 function parseId(id: string): number | null {
@@ -49,6 +50,10 @@ export async function PATCH(
   const session = await auth();
   if (!isMagazineMaster(session)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (!checkRateLimit(`magazine-write:${session!.user!.id}`, 30, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
   const { id } = await props.params;

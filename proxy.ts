@@ -67,8 +67,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // 나머지는 NextAuth로 처리 (일반 유저)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (auth as any)(request);
+  return (auth as unknown as (req: NextRequest) => Promise<NextResponse>)(request);
 }
 
 export const config = {

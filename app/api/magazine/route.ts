@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { isMagazineMaster } from '@/lib/magazine-auth';
 import { sanitizeMagazineHtml } from '@/lib/magazine-sanitize';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 //magazine 목록 조회
 export async function GET() {
@@ -22,6 +23,10 @@ export async function POST(request: NextRequest) {
   const session = await auth();
   if (!isMagazineMaster(session)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  if (!checkRateLimit(`magazine-write:${session!.user!.id}`, 30, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
   }
 
   let body: unknown;

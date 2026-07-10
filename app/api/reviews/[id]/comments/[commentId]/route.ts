@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { canModifyReview } from '@/lib/review-auth';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 function parseId(id: string): number | null {
   const n = Number(id);
@@ -14,6 +15,10 @@ export async function PATCH(
   request: NextRequest,
   props: { params: Promise<{ id: string; commentId: string }> },
 ) {
+  if (!checkRateLimit(`comment-modify:${getClientIp(request)}`, 20, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   const { commentId } = await props.params;
   const id = parseId(commentId);
   if (id === null) {
@@ -54,6 +59,10 @@ export async function DELETE(
   request: NextRequest,
   props: { params: Promise<{ id: string; commentId: string }> },
 ) {
+  if (!checkRateLimit(`comment-modify:${getClientIp(request)}`, 20, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   const { commentId } = await props.params;
   const id = parseId(commentId);
   if (id === null) {
