@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { uploadToR2, deleteFileFromR2 } from '@/lib/r2';
 import { getAdminId } from '@/lib/admin-auth';
-import sharp from 'sharp';
+import { validateAndCompressImage, ImageProcessingError } from '@/lib/validate-image';
 
 const { R2_PUBLIC_BASE_URL } = process.env;
 
@@ -38,12 +38,14 @@ export async function POST(
   const saved: { id: number; url: string; order: number }[] = [];
 
   for (const file of files) {
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const compress = await sharp(buffer)
-      .resize(1920)
-      .webp({ quality: 80 })
-      .toBuffer();
+    let compress: Buffer;
+    try {
+      compress = await validateAndCompressImage(file);
+    } catch (e) {
+      const status = e instanceof ImageProcessingError ? e.status : 500;
+      const message = e instanceof Error ? e.message : 'Image processing failed';
+      return NextResponse.json({ error: message }, { status });
+    }
     // Date.now()로 파일명 중복 방지
     const filename = `magazine_detail_${idNum}_${Date.now()}.webp`;
     await uploadToR2(filename, compress);

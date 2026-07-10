@@ -2,13 +2,7 @@ import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { uploadToR2, deleteFileFromR2 } from '@/lib/r2';
 import { getAdminId } from '@/lib/admin-auth';
-import {
-  ALLOWED_IMAGE_MIME,
-  MAX_IMAGE_SIZE,
-  validateMagicBytes,
-  SHARP_OPTIONS,
-} from '@/lib/validate-image';
-import sharp from 'sharp';
+import { validateAndCompressImage, ImageProcessingError } from '@/lib/validate-image';
 
 const R2_PUBLIC_BASE_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
 
@@ -43,19 +37,6 @@ export async function POST(
       { error: 'image file is required' },
       { status: 400 },
     );
-  if (!ALLOWED_IMAGE_MIME.has(file.type))
-    return NextResponse.json(
-      { error: 'Only JPG, PNG, WEBP, GIF files are allowed' },
-      { status: 400 },
-    );
-  if (file.size > MAX_IMAGE_SIZE)
-    return NextResponse.json(
-      { error: 'File size must not exceed 10MB' },
-      { status: 400 },
-    );
-  const buffer = Buffer.from(await file.arrayBuffer());
-  if (!validateMagicBytes(buffer, file.type))
-    return NextResponse.json({ error: 'Invald image file' }, { status: 400 });
   if (!R2_PUBLIC_BASE_URL)
     return NextResponse.json(
       { error: 'Storage not configured' },
@@ -65,15 +46,11 @@ export async function POST(
 
   let compressed: Buffer;
   try {
-    compressed = await sharp(buffer, SHARP_OPTIONS)
-      .resize(1920)
-      .webp({ quality: 80 })
-      .toBuffer();
-  } catch {
-    return NextResponse.json(
-      { error: 'Image processing failed' },
-      { status: 400 },
-    );
+    compressed = await validateAndCompressImage(file);
+  } catch (e) {
+    const status = e instanceof ImageProcessingError ? e.status : 500;
+    const message = e instanceof Error ? e.message : 'Image processing failed';
+    return NextResponse.json({ error: message }, { status });
   }
   try {
     await uploadToR2(filename, compressed);

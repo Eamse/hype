@@ -5,6 +5,8 @@
  * - 파일 크기 제한
  */
 
+import sharp from 'sharp';
+
 export const ALLOWED_IMAGE_MIME = new Set([
   'image/jpeg',
   'image/png',
@@ -54,3 +56,51 @@ export function validateMagicBytes(buffer: Buffer, mimeType: string): boolean {
  * limitInputPixels: 4000만 픽셀 초과 이미지는 에러 발생 (~6300x6300 이상)
  */
 export const SHARP_OPTIONS = { limitInputPixels: 40_000_000 } as const;
+
+/** 리사이즈/화질 기본값 — 여기 숫자만 바꾸면 프로젝트 전체 업로드 압축 정도가 바뀜 */
+export const DEFAULT_RESIZE_WIDTH = 1920;
+export const DEFAULT_WEBP_QUALITY = 80;
+
+export class ImageProcessingError extends Error {
+  status: number;
+  constructor(message: string, status = 400) {
+    super(message);
+    this.name = 'ImageProcessingError';
+    this.status = status;
+  }
+}
+
+/**
+ * 이미지 업로드 검증 + 압축 공통 처리
+ * MIME → 용량 → 매직바이트 검증 후 sharp로 리사이즈/webp 변환까지 한 번에
+ */
+export async function validateAndCompressImage(
+  file: File,
+  options: { resize?: number; quality?: number } = {},
+): Promise<Buffer> {
+  const resize = options.resize ?? DEFAULT_RESIZE_WIDTH;
+  const quality = options.quality ?? DEFAULT_WEBP_QUALITY;
+
+  if (!ALLOWED_IMAGE_MIME.has(file.type)) {
+    throw new ImageProcessingError('Only JPG, PNG, WEBP, GIF files are allowed');
+  }
+  if (file.size > MAX_IMAGE_SIZE) {
+    throw new ImageProcessingError(
+      `File size must not exceed ${MAX_IMAGE_SIZE / 1024 / 1024}MB`,
+    );
+  }
+
+  const buffer = Buffer.from(await file.arrayBuffer());
+  if (!validateMagicBytes(buffer, file.type)) {
+    throw new ImageProcessingError('Invalid image file');
+  }
+
+  try {
+    return await sharp(buffer, SHARP_OPTIONS)
+      .resize(resize)
+      .webp({ quality })
+      .toBuffer();
+  } catch {
+    throw new ImageProcessingError('Image processing failed');
+  }
+}

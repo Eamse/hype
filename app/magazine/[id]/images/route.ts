@@ -3,13 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { uploadToR2, deleteFileFromR2 } from '@/lib/r2';
 import { auth } from '@/auth';
 import { isMagazineMaster } from '@/lib/magazine-auth';
-import sharp from 'sharp';
-import {
-  ALLOWED_IMAGE_MIME,
-  MAX_IMAGE_SIZE,
-  validateMagicBytes,
-  SHARP_OPTIONS,
-} from '@/lib/validate-image';
+import { validateAndCompressImage, ImageProcessingError as ImageValidationError } from '@/lib/validate-image';
 import { checkRateLimit } from '@/lib/rate-limit';
 
 const R2_PUBLIC_BASE_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
@@ -20,39 +14,15 @@ function parseId(id: string): number | null {
   return n;
 }
 
-class ImageValidationError extends Error {}
-
 async function processFile(file: File, idNum: number, tag: string): Promise<string> {
-  if (!ALLOWED_IMAGE_MIME.has(file.type)) {
-    throw new ImageValidationError('Only JPG, PNG, WEBP, GIF files are allowed');
-  }
-  if (file.size > MAX_IMAGE_SIZE) {
-    throw new ImageValidationError('File size must not exceed 10 MB');
-  }
-
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  if (!validateMagicBytes(buffer, file.type)) {
-    throw new ImageValidationError('Invalid image file');
-  }
-
-  let compress: Buffer;
-  try {
-    compress = await sharp(buffer, SHARP_OPTIONS)
-      .resize(1920)
-      .webp({ quality: 80 })
-      .toBuffer();
-  } catch {
-    throw new ImageValidationError('Image processing failed');
-  }
+  const compress = await validateAndCompressImage(file);
 
   const filename = `magazine_${tag}_${idNum}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.webp`;
 
   try {
     await uploadToR2(filename, compress);
   } catch {
-    throw new ImageValidationError('Upload failed');
+    throw new ImageValidationError('Upload failed', 500);
   }
 
   return `${R2_PUBLIC_BASE_URL}/${filename}`;
@@ -118,7 +88,7 @@ export async function POST(
     return NextResponse.json({ coverUrl, images: saved }, { status: 201 });
   } catch (e) {
     if (e instanceof ImageValidationError) {
-      return NextResponse.json({ error: e.message }, { status: 400 });
+      return NextResponse.json({ error: e.message }, { status: e.status });
     }
     console.error('[POST /magazine/:id/images]', e);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
