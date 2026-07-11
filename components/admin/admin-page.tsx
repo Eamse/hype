@@ -7,7 +7,6 @@ import { type Section } from './types';
 import DashboardPanel from './dashboard-panel';
 import HeroPanel from './hero-panel';
 import ProductPanel from './product-panel';
-import MagazinePanel from './magazine-panel';
 import UserPanel from './user-panel';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AccountsPanel from './accounts-panel';
@@ -107,20 +106,6 @@ const IconSettings = () => (
   </svg>
 );
 
-const IconBook = () => (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-  >
-    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-  </svg>
-);
-
 const IconUsers = () => (
   <svg
     width="15"
@@ -171,7 +156,6 @@ const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
     label: 'Casual Photoshoot',
     icon: <IconMapPin />,
   },
-  { id: 'Magazine', label: 'Magazine', icon: <IconBook /> },
   { id: 'users', label: 'Members', icon: <IconUsers /> },
   { id: 'accounts', label: 'Account Setting', icon: <IconSettings /> },
   { id: 'my-account', label: 'My Account', icon: <IconSettings /> },
@@ -823,7 +807,6 @@ export default function AdminPage() {
           {active === 'Casual Photoshoot' && (
             <ProductPanel category="Casual Photoshoot" />
           )}
-          {active === 'Magazine' && <MagazinePanel />}
           {active === 'users' && <UserPanel />}
           {active === 'accounts' && <AccountsPanel />}
           {active === 'my-account' && <MyAccountPanel />}

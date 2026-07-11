@@ -16,7 +16,6 @@ export type Section =
   | 'wedding-photographers'
   | 'Photographers'
   | 'Casual Photoshoot'
-  | 'Magazine'
   | 'users'
   | 'accounts'
   | 'my-account'
@@ -35,17 +34,6 @@ export type Account = {
   role: string;
   isActive: boolean;
   createdAt: string;
-};
-
-export type Magazine = {
-  id: number;
-  title: string;
-  content: string;
-  imageUrl: string | null;
-  images: Magazine[];
-  published: boolean;
-  createdAt: string;
-  updatedAt: string;
 };
 
 export const INCLUSIONS = [
