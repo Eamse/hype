@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import LoginModal from '@/components/login-modal';
 import SearchModal from '@/components/search-modal';
-import NotificationBell from '@/components/notification-bell';
+import HeaderActionButtons from '@/components/header-action-buttons';
 import { useBookmarks } from '@/components/bookmark-provider';
 import { useSession, signOut } from 'next-auth/react';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -134,56 +134,6 @@ function DropdownLink({
   );
 }
 
-function SearchIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <line x1="21" y1="21" x2="16.65" y2="16.65" />
-    </svg>
-  );
-}
-function BookmarkIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}
-function UserIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-}
 function HamburgerIcon() {
   return (
     <svg
@@ -250,6 +200,16 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
       startTransition(() => setLoginOpen(true));
     }
   }, [searchParams]);
+
+  function handleSignClick() {
+    if (session) {
+      signOut();
+      setToast(true);
+      setTimeout(() => setToast(false), 3000);
+    } else {
+      setLoginOpen(true);
+    }
+  }
 
   return (
     <>
@@ -440,103 +400,16 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
             }}
           >
             {!isMobile ? (
-              <>
-                <button
-                  onClick={() => setSearchOpen(true)}
-                  aria-label="Search"
-                  style={{ cursor: 'pointer' }}
-                >
-                  <SearchIcon />
-                </button>
-                <button
-                  onClick={() =>
-                    session ? router.push('/bookmarks') : setLoginOpen(true)
-                  }
-                  aria-label="Bookmarks"
-                  style={{
-                    position: 'relative',
-                    display: 'flex',
-                    alignItems: 'center',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: 0,
-                  }}
-                >
-                  <BookmarkIcon />
-                  {bookmarkCount > 0 && (
-                    <span
-                      style={{
-                        position: 'absolute',
-                        top: -6,
-                        right: -6,
-                        width: 16,
-                        height: 16,
-                        borderRadius: '50%',
-                        backgroundColor: '#ef4444',
-                        color: '#fff',
-                        fontSize: 10,
-                        fontWeight: 700,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      {bookmarkCount}
-                    </span>
-                  )}
-                </button>
-                <NotificationBell />
-                <button
-                  onClick={() =>
-                    session
-                      ? (signOut(),
-                        setToast(true),
-                        setTimeout(() => setToast(false), 3000))
-                      : setLoginOpen(true)
-                  }
-                  aria-label={session ? 'Sign out' : 'Sign in'}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  {session?.user?.image ? (
-                    <Image
-                      src={session.user.image}
-                      alt="profile"
-                      width={28}
-                      height={28}
-                      style={{ borderRadius: '50%', objectFit: 'cover' }}
-                    />
-                  ) : session ? (
-                    <div
-                      style={{
-                        width: 28,
-                        height: 28,
-                        borderRadius: '50%',
-                        backgroundColor: '#191919',
-                        color: '#fff',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: 12,
-                        fontWeight: 700,
-                      }}
-                    >
-                      {(session.user?.name ?? session.user?.email)
-                        ?.charAt(0)
-                        .toUpperCase() ?? '?'}
-                    </div>
-                  ) : (
-                    <UserIcon />
-                  )}
-                </button>
-              </>
+              <HeaderActionButtons
+                session={session}
+                bookmarkCount={bookmarkCount}
+                showBell
+                onSearchClick={() => setSearchOpen(true)}
+                onBookmarkClick={() =>
+                  session ? router.push('/bookmarks') : setLoginOpen(true)
+                }
+                onSignClick={handleSignClick}
+              />
             ) : (
               <button
                 onClick={() => setMenuOpen((v) => !v)}
@@ -574,112 +447,23 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
               marginBottom: 28,
             }}
           >
-            <button
-              onClick={() => {
+            <HeaderActionButtons
+              session={session}
+              bookmarkCount={bookmarkCount}
+              showBell={false}
+              onSearchClick={() => {
                 setMenuOpen(false);
                 setSearchOpen(true);
               }}
-              aria-label="Search"
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 0,
-              }}
-            >
-              <SearchIcon />
-            </button>
-            <button
-              onClick={() => {
+              onBookmarkClick={() => {
                 setMenuOpen(false);
                 session ? router.push('/bookmarks') : setLoginOpen(true);
               }}
-              aria-label="Bookmarks"
-              style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 0,
-              }}
-            >
-              <BookmarkIcon />
-              {bookmarkCount > 0 && (
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: -6,
-                    right: -6,
-                    width: 16,
-                    height: 16,
-                    borderRadius: '50%',
-                    backgroundColor: '#ef4444',
-                    color: '#fff',
-                    fontSize: 10,
-                    fontWeight: 700,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {bookmarkCount}
-                </span>
-              )}
-            </button>
-            <button
-              onClick={() => {
+              onSignClick={() => {
                 setMenuOpen(false);
-                if (session) {
-                  signOut();
-                  setToast(true);
-                  setTimeout(() => setToast(false), 3000);
-                } else {
-                  setLoginOpen(true);
-                }
+                handleSignClick();
               }}
-              aria-label={session ? 'Sign out' : 'Sign in'}
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                padding: 0,
-                display: 'flex',
-                alignItems: 'center',
-              }}
-            >
-              {session?.user?.image ? (
-                <Image
-                  src={session.user.image}
-                  alt="profile"
-                  width={28}
-                  height={28}
-                  style={{ borderRadius: '50%', objectFit: 'cover' }}
-                />
-              ) : session ? (
-                <div
-                  style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: '50%',
-                    backgroundColor: '#191919',
-                    color: '#fff',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 12,
-                    fontWeight: 700,
-                  }}
-                >
-                  {(session.user?.name ?? session.user?.email)
-                    ?.charAt(0)
-                    .toUpperCase() ?? '?'}
-                </div>
-              ) : (
-                <UserIcon />
-              )}
-            </button>
+            />
           </div>
 
           {/* 중단: 네비 링크 */}
