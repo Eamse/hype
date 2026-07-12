@@ -53,7 +53,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
         {/* ── 상단 다크 헤더 ── */}
         <div
           style={{
-            backgroundColor: '#111',
+            backgroundColor: '#000',
             padding: '36px 40px 32px',
             textAlign: 'center',
             position: 'relative',
@@ -147,10 +147,10 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 width: '100%',
                 padding: '13px 16px',
                 border: 'none',
-                borderBottom: '1px solid #e0e0e0',
+                borderBottom: '1px solid #000',
                 backgroundColor: 'transparent',
                 fontSize: 14,
-                color: '#191919',
+                color: '#000',
                 outline: 'none',
               }}
             />
@@ -163,10 +163,10 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 width: '100%',
                 padding: '13px 16px',
                 border: 'none',
-                borderBottom: '1px solid #e0e0e0',
+                borderBottom: '1px solid #000',
                 backgroundColor: 'transparent',
                 fontSize: 14,
-                color: '#191919',
+                color: '#000',
                 outline: 'none',
               }}
             />
@@ -191,7 +191,7 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 style={{
                   flex: 1,
                   padding: '13px 0',
-                  backgroundColor: loading ? '#767676' : '#111',
+                  backgroundColor: loading ? '#bbb' : '#000',
                   color: '#fff',
                   borderRadius: 8,
                   fontSize: 13,
@@ -210,8 +210,8 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                   flex: 1,
                   padding: '13px 0',
                   backgroundColor: 'transparent',
-                  color: '#111',
-                  border: '1px solid #ccc',
+                  color: '#000',
+                  border: '1px solid #000',
                   borderRadius: 8,
                   fontSize: 13,
                   fontWeight: 600,
@@ -233,13 +233,13 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 margin: '8px 0',
               }}
             >
-              <div style={{ flex: 1, height: 1, backgroundColor: '#e8e8e8' }} />
+              <div style={{ flex: 1, height: 1, backgroundColor: '#000' }} />
               <span
-                style={{ fontSize: 11, color: '#ccc', letterSpacing: '2px' }}
+                style={{ fontSize: 11, color: '#000', letterSpacing: '2px' }}
               >
                 OR
               </span>
-              <div style={{ flex: 1, height: 1, backgroundColor: '#e8e8e8' }} />
+              <div style={{ flex: 1, height: 1, backgroundColor: '#000' }} />
             </div>
 
             <button
@@ -249,8 +249,8 @@ export default function LoginModal({ onClose }: { onClose: () => void }) {
                 width: '100%',
                 padding: '13px 0',
                 backgroundColor: '#fff',
-                color: '#444',
-                border: '1px solid #e0e0e0',
+                color: '#000',
+                border: '1px solid #000',
                 borderRadius: 8,
                 fontSize: 13,
                 fontWeight: 500,

@@ -133,7 +133,7 @@ export default function HeaderActionButtons({
               width: 28,
               height: 28,
               borderRadius: '50%',
-              backgroundColor: '#191919',
+              backgroundColor: '#000',
               color: '#fff',
               display: 'flex',
               alignItems: 'center',

@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, startTransition } from 'react';
 import Image from 'next/image';
 import { type Product, btnStyle } from './types';
+import { resizeImageFile } from '@/lib/client-image-resize';
 
 export default function ProductRow({
   product,
@@ -46,9 +47,10 @@ export default function ProductRow({
     setUploading(true);
     setImgError(null);
     try {
+      const resized = await resizeImageFile(file);
       const fd = new FormData();
       fd.append('key', `product_thumb_${product.id}_${Date.now()}`);
-      fd.append('image', file);
+      fd.append('image', resized);
       const res = await fetch('/api/images', { method: 'POST', body: fd });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? 'Upload failed');
@@ -68,11 +70,11 @@ export default function ProductRow({
   }
 
   return (
-    <div style={{ background: '#fff', border: '1px solid #ede8de', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ background: '#fff', border: '1px solid #000', borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.05)', display: 'flex', flexDirection: 'column' }}>
       {/* 이미지 영역 (펼쳐진 상태) */}
       {localExpanded && (
         <div
-          style={{ position: 'relative', width: '100%', aspectRatio: '3/4', backgroundColor: '#f5f2ec', cursor: 'pointer' }}
+          style={{ position: 'relative', width: '100%', aspectRatio: '3/4', backgroundColor: '#fff', cursor: 'pointer' }}
           onClick={() => imgInputRef.current?.click()}
           onMouseEnter={() => setImgHover(true)}
           onMouseLeave={() => setImgHover(false)}
@@ -80,7 +82,7 @@ export default function ProductRow({
           {product.imageUrl ? (
             <Image src={product.imageUrl} alt={product.title} fill sizes="300px" style={{ objectFit: 'cover' }} />
           ) : (
-            <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#ccc' }}>
+            <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#000' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
                 <rect x="3" y="3" width="18" height="18" rx="2" />
                 <circle cx="8.5" cy="8.5" r="1.5" />
@@ -91,7 +93,7 @@ export default function ProductRow({
           )}
           {uploading && (
             <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #e8d9b8', borderTopColor: '#c9a96e', animation: 'spin 0.7s linear infinite' }} />
+              <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #000', borderTopColor: '#c9a96e', animation: 'spin 0.7s linear infinite' }} />
             </div>
           )}
           {imgHover && !uploading && (
@@ -121,13 +123,13 @@ export default function ProductRow({
 
         {/* 텍스트 + 버튼 */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <p style={{ fontSize: 13, fontWeight: 600, color: '#1a1a1a', lineHeight: 1.4 }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: '#000', lineHeight: 1.4 }}>
             {position != null && <span style={{ color: '#c9a96e', marginRight: 6 }}>{position}번</span>}
             {product.title}
           </p>
           {imgError && <p style={{ fontSize: 11, color: '#dc2626' }}>{imgError}</p>}
           <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
-            <button onClick={onEdit} style={btnStyle('transparent', '#888', '#e0d8c8')}>수정</button>
+            <button onClick={onEdit} style={btnStyle('transparent', '#000', '#e0d8c8')}>수정</button>
             <button onClick={onDeleted} style={btnStyle('transparent', '#ef4444', '#fdd')}>삭제</button>
           </div>
         </div>
@@ -139,14 +141,14 @@ export default function ProductRow({
               <button
                 onClick={onMoveUp}
                 disabled={!canMoveUp}
-                style={{ background: 'none', border: '1px solid #e0d8c8', borderRadius: 4, cursor: canMoveUp ? 'pointer' : 'default', fontSize: 11, color: canMoveUp ? '#555' : '#ddd', padding: '2px 6px' }}
+                style={{ background: 'none', border: '1px solid #e0d8c8', borderRadius: 4, cursor: canMoveUp ? 'pointer' : 'default', fontSize: 11, color: canMoveUp ? '#000' : '#bbb', padding: '2px 6px' }}
               >
                 ▲
               </button>
               <button
                 onClick={onMoveDown}
                 disabled={!canMoveDown}
-                style={{ background: 'none', border: '1px solid #e0d8c8', borderRadius: 4, cursor: canMoveDown ? 'pointer' : 'default', fontSize: 11, color: canMoveDown ? '#555' : '#ddd', padding: '2px 6px' }}
+                style={{ background: 'none', border: '1px solid #e0d8c8', borderRadius: 4, cursor: canMoveDown ? 'pointer' : 'default', fontSize: 11, color: canMoveDown ? '#000' : '#bbb', padding: '2px 6px' }}
               >
                 ▼
               </button>
@@ -154,7 +156,7 @@ export default function ProductRow({
           )}
           <button
             onClick={() => setLocalExpanded((v) => !v)}
-            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, color: '#aaa', padding: '2px 4px' }}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, color: '#000', padding: '2px 4px' }}
           >
             {localExpanded ? '▲접기' : '▼펼치기'}
           </button>

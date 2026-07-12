@@ -36,6 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = (user as { role: string }).role;
         token.image = user.image;
         token.name = user.name;
+        token.roleCheckedAt = Date.now();
       }
       // 구글 로그인 시 프로필 이미지 저장
       if (account?.provider === 'google' && profile) {
@@ -54,6 +55,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           select: { isOnboarded: true },
         });
         token.isOnboarded = dbUser?.isOnboarded ?? false;
+      }
+      // 매 요청마다 role이 로그인 시점 이후로 바뀌었는지 확인 (권한 변경/회수를 즉시 반영)
+      if (!user && token.id) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { role: true, updatedAt: true },
+        });
+        if (!dbUser) {
+          // 계정이 삭제됨 — 세션 무효화
+          return null;
+        }
+        const checkedAt = (token.roleCheckedAt as number | undefined) ?? 0;
+        if (dbUser.updatedAt.getTime() > checkedAt) {
+          token.role = dbUser.role;
+          token.roleCheckedAt = Date.now();
+        }
       }
       return token;
     },

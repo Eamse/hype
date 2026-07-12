@@ -339,7 +339,7 @@ export default function WeddingPhotographerPanel() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       {/* 헤더 */}
-      <div style={{ paddingBottom: 20, borderBottom: '1px solid #ede8de' }}>
+      <div style={{ paddingBottom: 20, borderBottom: '1px solid #000' }}>
         <p
           style={{
             fontSize: 10,
@@ -351,10 +351,10 @@ export default function WeddingPhotographerPanel() {
         >
           MANAGE
         </p>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a' }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#000' }}>
           Directors 관리
         </h2>
-        <p style={{ fontSize: 12, color: '#999', marginTop: 4 }}>
+        <p style={{ fontSize: 12, color: '#000', marginTop: 4 }}>
           작가 정보와 패키지(가격·구성·파트너)를 여기서 모두 관리합니다.
         </p>
       </div>
@@ -362,8 +362,8 @@ export default function WeddingPhotographerPanel() {
       {/* 작가 등록 폼 */}
       <div
         style={{
-          background: '#fdfcfa',
-          border: '1px solid #ede8de',
+          background: '#fff',
+          border: '1px solid #000',
           borderRadius: 12,
           padding: 24,
         }}
@@ -467,7 +467,7 @@ export default function WeddingPhotographerPanel() {
         {/* 패키지 */}
         <div
           style={{
-            borderTop: '1px solid #ede8de',
+            borderTop: '1px solid #000',
             paddingTop: 16,
             marginBottom: 16,
           }}
@@ -497,7 +497,7 @@ export default function WeddingPhotographerPanel() {
               )}
             </p>
             <button
-              style={btnStyle('transparent', '#3a1a2a', '#ddd')}
+              style={btnStyle('transparent', '#3a1a2a', '#000')}
               onClick={() =>
                 setNewDirPkgForms((prev) => [...prev, { ...emptyPkgForm }])
               }
@@ -516,7 +516,7 @@ export default function WeddingPhotographerPanel() {
                   marginBottom: 6,
                 }}
               >
-                <p style={{ fontSize: 12, fontWeight: 600, color: '#666' }}>
+                <p style={{ fontSize: 12, fontWeight: 600, color: '#000' }}>
                   Package {idx + 1}
                 </p>
                 <button
@@ -556,7 +556,7 @@ export default function WeddingPhotographerPanel() {
         </div>
 
         <button
-          style={btnStyle('#191919', '#fff')}
+          style={btnStyle('#000', '#fff')}
           onClick={handleCreateDir}
           disabled={saving}
         >
@@ -567,10 +567,10 @@ export default function WeddingPhotographerPanel() {
       {/* 작가 목록 */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {loading && (
-          <p style={{ fontSize: 13, color: '#999' }}>불러오는 중...</p>
+          <p style={{ fontSize: 13, color: '#000' }}>불러오는 중...</p>
         )}
         {!loading && directors.length === 0 && (
-          <p style={{ fontSize: 13, color: '#999' }}>등록된 작가가 없습니다.</p>
+          <p style={{ fontSize: 13, color: '#000' }}>등록된 작가가 없습니다.</p>
         )}
         <BulkActions
           total={directors.length}
@@ -602,7 +602,7 @@ export default function WeddingPhotographerPanel() {
                 {label} ({group.length})
               </p>
               {group.length === 0 && (
-                <p style={{ fontSize: 12, color: '#999' }}>
+                <p style={{ fontSize: 12, color: '#000' }}>
                   등록된 작가가 없습니다.
                 </p>
               )}

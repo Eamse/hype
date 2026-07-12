@@ -14,7 +14,7 @@ function moveInArray<T>(
 
 const sectionLabel: React.CSSProperties = {
   fontSize: 12,
-  color: 'rgb(102, 102, 102)',
+  color: '#000',
   letterSpacing: '2px',
   textTransform: 'uppercase',
   margin: '0 0 12px',
@@ -45,14 +45,14 @@ function ReorderRow({
         alignItems: 'center',
         gap: 8,
         padding: '8px 10px',
-        border: '1px solid #E8E0D4',
+        border: '1px solid #000',
         borderRadius: 4,
         background: '#fff',
       }}
     >
       <span
         style={{
-          color: '#8B7355',
+          color: '#000',
           fontWeight: 700,
           flexShrink: 0,
           minWidth: 16,
@@ -60,9 +60,9 @@ function ReorderRow({
       >
         {position}
       </span>
-      <span style={{ flex: 1, fontSize: 13, color: '#1a1a1a' }}>{label}</span>
+      <span style={{ flex: 1, fontSize: 13, color: '#000' }}>{label}</span>
       {extra && (
-        <span style={{ fontSize: 12, color: '#8B7355', fontWeight: 500 }}>
+        <span style={{ fontSize: 12, color: '#000', fontWeight: 500 }}>
           {extra}
         </span>
       )}
@@ -75,7 +75,7 @@ function ReorderRow({
           border: '1px solid #e0d8c8',
           borderRadius: 4,
           cursor: canMoveUp ? 'pointer' : 'default',
-          color: canMoveUp ? '#555' : '#ddd',
+          color: canMoveUp ? '#000' : '#bbb',
           padding: '1px 6px',
           fontSize: 11,
         }}
@@ -91,7 +91,7 @@ function ReorderRow({
           border: '1px solid #e0d8c8',
           borderRadius: 4,
           cursor: canMoveDown ? 'pointer' : 'default',
-          color: canMoveDown ? '#555' : '#ddd',
+          color: canMoveDown ? '#000' : '#bbb',
           padding: '1px 6px',
           fontSize: 11,
         }}
@@ -145,7 +145,7 @@ export default function PackagePreview({
         position: 'relative',
         color: '#2C2420',
         background: '#fff',
-        border: '1px solid #E8E0D4',
+        border: '1px solid #000',
         borderRadius: 8,
         padding: 24,
         maxWidth: 680,
@@ -176,7 +176,7 @@ export default function PackagePreview({
         <p
           style={{
             fontSize: 11,
-            color: '#888',
+            color: '#000',
             letterSpacing: '1px',
             textTransform: 'uppercase',
             margin: 0,
@@ -191,7 +191,7 @@ export default function PackagePreview({
           <p
             style={{
               fontSize: 13,
-              color: '#8B7355',
+              color: '#000',
               fontWeight: 500,
               margin: '6px 0 0',
             }}
@@ -204,9 +204,9 @@ export default function PackagePreview({
       {partnerRows.length > 0 && (
         <div
           style={{
-            border: '1px solid #E8E0D4',
+            border: '1px solid #000',
             borderRadius: 4,
-            background: 'rgb(250, 250, 248)',
+            background: '#fff',
             padding: '16px 20px',
             marginBottom: 20,
           }}
@@ -215,7 +215,7 @@ export default function PackagePreview({
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {partnerRows.map((item) => (
               <div key={item.role} style={{ fontSize: 13 }}>
-                <span style={{ color: '#555' }}>{item.role}: </span>
+                <span style={{ color: '#000' }}>{item.role}: </span>
                 <span style={{ fontWeight: 600 }}>{item.name}</span>
               </div>
             ))}
@@ -261,8 +261,8 @@ export default function PackagePreview({
       {(shootingTime || locations || originalPhotos || retouched > 0) && (
         <div
           style={{
-            border: '1px solid #E8E0D4',
-            background: 'rgb(250, 250, 248)',
+            border: '1px solid #000',
+            background: '#fff',
             borderRadius: 4,
             padding: '16px 20px',
             marginBottom: 20,
@@ -284,10 +284,10 @@ export default function PackagePreview({
               },
             ].map((d) => (
               <div key={d.label}>
-                <div style={{ fontSize: 11, color: '#555', marginBottom: 2 }}>
+                <div style={{ fontSize: 11, color: '#000', marginBottom: 2 }}>
                   {d.label}
                 </div>
-                <div style={{ fontSize: 14, color: '#1a1a1a' }}>
+                <div style={{ fontSize: 14, color: '#000' }}>
                   {d.value || '-'}
                 </div>
               </div>
@@ -297,7 +297,7 @@ export default function PackagePreview({
             <p
               style={{
                 fontSize: 12,
-                color: '#444',
+                color: '#000',
                 margin: '12px 0 0',
                 lineHeight: 1.5,
               }}
@@ -345,8 +345,8 @@ export default function PackagePreview({
           {priceNoSNS > 0 && (
             <div
               style={{
-                background: '#FAFAF8',
-                border: '1px solid #E8E0D4',
+                background: '#fff',
+                border: '1px solid #000',
                 borderRadius: 4,
                 padding: '16px 12px',
                 textAlign: 'center',
@@ -355,7 +355,7 @@ export default function PackagePreview({
               <div
                 style={{
                   fontSize: 11,
-                  color: '#666',
+                  color: '#000',
                   textTransform: 'uppercase',
                   marginBottom: 6,
                 }}

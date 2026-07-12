@@ -87,7 +87,7 @@ export default async function ProductDetailPage({ params }: Props) {
   const session = await auth();
 
   return (
-    <div className="bg-white text-[#191919] min-h-screen">
+    <div className="bg-white text-[#000] min-h-screen">
       <Header brand={headerBrand} />
 
       <main className="pt-14">
@@ -115,7 +115,7 @@ export default async function ProductDetailPage({ params }: Props) {
                   {product.title}
                 </h1>
 
-                <div className="h-px bg-[#f0f0f0] mb-6" />
+                <div className="h-px bg-[#000] mb-6" />
 
                 <div className="mb-6">
                   <Accordion title="Booking Guide">
@@ -130,7 +130,7 @@ export default async function ProductDetailPage({ params }: Props) {
                       refund · After 14 days: no refund
                     </p>
                   </Accordion>
-                  <div className="border-t border-[#e8e8e8]" />
+                  <div className="border-t border-[#000]" />
                 </div>
               </>
             )}

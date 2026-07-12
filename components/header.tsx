@@ -41,30 +41,30 @@ const NAV_LINKS: Record<
       label: 'Service',
       href: '/wedding',
       dropdown: [
-        { label: 'What We Offer', href: '/wedding' },
-        { label: 'Packages & Pricing', href: '/wedding' },
+        { label: 'What We Offer', href: '/offer' },
+        { label: 'Packages', href: '/packages' },
         {
-          label: '• Wedding in Jeju',
+          label: '• Jeju',
           href: '/products?section=Photographers%20in%20Jeju',
           indent: true,
         },
         {
-          label: '• Wedding in Seoul',
+          label: '• Seoul',
           href: '/products?section=Photographers%20in%20Seoul',
           indent: true,
         },
       ],
     },
 
-    { label: 'Editional', href: '/magazine' },
+    { label: 'Editorial', href: '/magazine' },
     { label: 'Reviews', href: '/review' },
     {
-      label: 'Contact',
-      href: '/contact',
+      label: 'Inquiry',
+      href: '/inquiry',
       dropdown: [
-        { label: 'Customer Inquiry', href: '/cutomer' },
+        { label: 'Inquiry', href: '/inquiry' },
         { label: 'FAQ', href: '/faq' },
-        { label: 'Vendor Partnership', href: '/partnership' },
+        { label: 'Partnership', href: '/partnership' },
       ],
     },
   ],
@@ -75,30 +75,30 @@ const NAV_LINKS: Record<
       label: 'Service',
       href: '/casual',
       dropdown: [
-        { label: 'What We Offer', href: '/casual' },
-        { label: 'Packages & Pricing', href: '/casual' },
+        { label: 'What We Offer', href: '/offer?brand=hype-snap' },
+        { label: 'Packages', href: '/packages?brand=hype-snap' },
         {
-          label: '• Casual in Jeju',
+          label: '• Jeju',
           href: '/products?section=Casual%20Photoshoot%20in%20Jeju',
           indent: true,
         },
         {
-          label: '• Casual in Seoul',
+          label: '• Seoul',
           href: '/products?section=Casual%20Photoshoot%20in%20Seoul',
           indent: true,
         },
       ],
     },
 
-    { label: 'Editional', href: '/magazine?brand=hype-snap' },
+    { label: 'Editorial', href: '/magazine?brand=hype-snap' },
     { label: 'Reviews', href: '/review?brand=hype-snap' },
     {
-      label: 'Contact',
-      href: '/contact?brand=hype-snap',
+      label: 'Inquiry',
+      href: '/inquiry?brand=hype-snap',
       dropdown: [
-        { label: 'Customer Inquiry', href: '/cutomer' },
+        { label: 'Inquiry', href: '/inquiry?brand=hype-snap' },
         { label: 'FAQ', href: '/faq?brand=hype-snap' },
-        { label: 'Vendor Partnership', href: '/partnership?brand=hype-snap' },
+        { label: 'Partnership', href: '/partnership?brand=hype-snap' },
       ],
     },
   ],
@@ -122,7 +122,7 @@ function DropdownLink({
       style={{
         fontSize: hovered ? 15 : 14,
         fontWeight: 400,
-        color: '#191919',
+        color: '#000',
         textDecoration: hovered ? 'underline' : 'none',
         whiteSpace: 'nowrap',
         transition: 'font-size 0.15s',
@@ -222,7 +222,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
           zIndex: 100,
           height: 56,
           backgroundColor: '#fff',
-          borderBottom: '1px solid #e8e8e8',
+          borderBottom: '1px solid white',
         }}
       >
         <div
@@ -245,7 +245,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
               >
                 {i > 0 && (
                   <span
-                    style={{ color: '#ccc', fontSize: 14, fontWeight: 300 }}
+                    style={{ color: '#000', fontSize: 14, fontWeight: 300 }}
                   >
                     |
                   </span>
@@ -257,7 +257,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                     fontWeight: 800,
                     letterSpacing: '1px',
                     textTransform: 'uppercase',
-                    color: brand === b ? '#191919' : '#bbb',
+                    color: brand === b ? '#000' : '#bbb',
                     textDecoration: 'none',
                   }}
                 >
@@ -293,7 +293,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                               style={{
                                 fontSize: 14,
                                 fontWeight: active ? 600 : 400,
-                                color: '#191919',
+                                color: '#000',
                                 padding: '4px 0',
                                 cursor: 'default',
                               }}
@@ -312,7 +312,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                           style={{
                             fontSize: 14,
                             fontWeight: active ? 600 : 400,
-                            color: '#191919',
+                            color: '#000',
                             position: 'relative',
                             padding: '4px 0',
                             display: 'inline-block',
@@ -327,7 +327,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                                 left: 0,
                                 right: 0,
                                 height: 1.5,
-                                background: '#191919',
+                                background: '#000',
                               }}
                             />
                           )}
@@ -338,6 +338,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                   {/* 드롭다운 */}
                   {hoveredNav !== null && (
                     <div
+                      className="header-dropdown"
                       onMouseEnter={() => {
                         if (closeTimer.current)
                           clearTimeout(closeTimer.current);
@@ -349,8 +350,10 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                         left: 0,
                         right: 0,
                         zIndex: 99,
-                        backgroundColor: '#fff',
-                        borderBottom: '1px solid #e8e8e8',
+                        backgroundColor:
+                          pathname === '/' || pathname === '/hype-snap'
+                            ? 'rgba(255, 255, 255, 0.5)'
+                            : '#fff',
                         padding: '12px 0 24px',
                       }}
                     >
@@ -363,7 +366,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                               key={group.label}
                               style={{
                                 position: 'absolute',
-                                left: left - 20,
+                                left: left - 0,
                                 top: 0,
                                 display: 'flex',
                                 flexDirection: 'column',
@@ -371,14 +374,30 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                               }}
                             >
                               {group.dropdown!.map(
-                                ({ label: dLabel, href: dHref, indent }) => (
-                                  <DropdownLink
-                                    key={dLabel}
-                                    href={dHref}
-                                    label={dLabel}
-                                    indent={indent}
-                                  />
-                                ),
+                                ({ label: dLabel, href: dHref, indent }, i) => {
+                                  const prevIndent =
+                                    group.dropdown![i - 1]?.indent;
+                                  const isFirstIndent = indent && !prevIndent;
+                                  const isSecondIndent = indent && prevIndent;
+                                  return (
+                                    <div
+                                      key={dLabel}
+                                      style={
+                                        isFirstIndent
+                                          ? { marginTop: -8 }
+                                          : isSecondIndent
+                                            ? { marginTop: -8 }
+                                            : undefined
+                                      }
+                                    >
+                                      <DropdownLink
+                                        href={dHref}
+                                        label={dLabel}
+                                        indent={indent}
+                                      />
+                                    </div>
+                                  );
+                                },
                               )}
                             </div>
                           );
@@ -396,7 +415,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
               display: 'flex',
               gap: 16,
               alignItems: 'center',
-              color: '#191919',
+              color: '#000',
             }}
           >
             {!isMobile ? (
@@ -443,7 +462,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
             style={{
               display: 'flex',
               gap: 24,
-              color: '#191919',
+              color: '#000',
               marginBottom: 28,
             }}
           >
@@ -474,10 +493,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
 
               if (dropdown) {
                 return (
-                  <div
-                    key={label}
-                    style={{ borderBottom: '1px solid #f0f0f0' }}
-                  >
+                  <div key={label} style={{ borderBottom: '1px solid #000' }}>
                     <button
                       onClick={() =>
                         setOpenMobileDropdown(isOpen ? null : label)
@@ -489,7 +505,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                         alignItems: 'center',
                         fontSize: 22,
                         fontWeight: active ? 700 : 400,
-                        color: '#191919',
+                        color: '#000',
                         padding: '16px 0',
                         background: 'none',
                         border: 'none',
@@ -499,7 +515,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                       }}
                     >
                       {label}
-                      <span style={{ fontSize: 16, color: '#666' }}>
+                      <span style={{ fontSize: 16, color: '#000' }}>
                         {isOpen ? '−' : '+'}
                       </span>
                     </button>
@@ -522,7 +538,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                             }}
                             style={{
                               fontSize: 15,
-                              color: '#555',
+                              color: '#000',
                               padding: '10px 0 10px 16px',
                               textDecoration: 'none',
                             }}
@@ -544,9 +560,9 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                   style={{
                     fontSize: 22,
                     fontWeight: active ? 700 : 400,
-                    color: '#191919',
+                    color: '#000',
                     padding: '16px 0',
-                    borderBottom: '1px solid #f0f0f0',
+                    borderBottom: '1px solid #000',
                     textDecoration: 'none',
                     letterSpacing: '-0.3px',
                   }}
@@ -618,7 +634,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 300,
-            backgroundColor: '#191919',
+            backgroundColor: '#000',
             color: '#fff',
             padding: '12px 24px',
             borderRadius: 8,

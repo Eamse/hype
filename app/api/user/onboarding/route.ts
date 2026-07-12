@@ -70,8 +70,10 @@ export async function POST(request: NextRequest) {
   }
 
   if (
-    typeof gender !== 'string' ||
-    !['male', 'female', 'other'].includes(gender)
+    gender !== undefined &&
+    gender !== null &&
+    gender !== '' &&
+    (typeof gender !== 'string' || !['male', 'female', 'other'].includes(gender))
   ) {
     return NextResponse.json(
       { message: 'Invalid gender value' },
@@ -112,7 +114,7 @@ export async function POST(request: NextRequest) {
       birthYear: encrypt(String(year)),
       birthMonth: encrypt(String(month)),
       birthDay: encrypt(String(day)),
-      gender,
+      gender: gender || null,
       country: country.trim(),
       phoneCountryCode: phoneCountryCode.trim(),
       phone: encrypt(phone.trim()),

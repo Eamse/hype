@@ -13,7 +13,7 @@ const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '10px 12px',
   borderRadius: 6,
-  border: '1px solid #e0e0e0',
+  border: '1px solid #000',
   fontSize: 14,
 };
 
@@ -33,7 +33,7 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: 13,
   fontWeight: 600,
-  color: '#333',
+  color: '#000',
   marginBottom: 6,
 };
 
@@ -48,7 +48,6 @@ export default function ReviewForm() {
   const [productType, setProductType] = useState('');
   const [location, setLocation] = useState('');
   const [directorId, setDirectorId] = useState('');
-  const [rating, setRating] = useState(0);
   const [guestName, setGuestName] = useState('');
   const [guestPassword, setGuestPassword] = useState('');
 
@@ -75,8 +74,7 @@ export default function ReviewForm() {
       !shootingDate ||
       !productType ||
       !location ||
-      !directorId ||
-      rating === 0
+      !directorId
     ) {
       alert('Please fill in all fields.');
       return;
@@ -99,7 +97,7 @@ export default function ReviewForm() {
           productType,
           location,
           directorId,
-          rating,
+          rating: null, // 추후 사용 예정 — 지금은 항상 null로 전송
           name: guestName,
           password: guestPassword,
         }),
@@ -117,6 +115,7 @@ export default function ReviewForm() {
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      {/* 추후 사용 예정 — 별점(Rating) UI 임시 비활성화
       <div>
         <label style={labelStyle}>Rating *</label>
         <div style={{ display: 'flex', gap: 4 }}>
@@ -132,7 +131,7 @@ export default function ReviewForm() {
                 background: 'none',
                 border: 'none',
                 cursor: 'pointer',
-                color: n <= rating ? '#f5b301' : '#ddd',
+                color: n <= rating ? '#f5b301' : '#000',
                 padding: 0,
               }}
             >
@@ -141,6 +140,7 @@ export default function ReviewForm() {
           ))}
         </div>
       </div>
+      */}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
         <div>
@@ -236,7 +236,7 @@ export default function ReviewForm() {
         disabled={submitting}
         style={{
           padding: '14px',
-          background: '#191919',
+          background: '#000',
           color: '#fff',
           border: 'none',
           borderRadius: 8,

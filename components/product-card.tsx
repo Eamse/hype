@@ -10,19 +10,19 @@ export type Product = {
   section?: string;
 };
 
-function HeartIcon({ active }: { active: boolean }) {
+function BookmarkIcon({ active }: { active: boolean }) {
   return (
     <svg
       width="14"
       height="14"
       viewBox="0 0 24 24"
-      fill={active ? '#ef4444' : 'none'}
-      stroke={active ? '#ef4444' : '#888'}
+      fill={active ? '#000' : 'none'}
+      stroke={active ? '#000' : '#bbb'}
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
     </svg>
   );
 }
@@ -65,7 +65,7 @@ export default function ProductCard({
             aspectRatio: '1/1',
             borderRadius: 6,
             overflow: 'hidden',
-            backgroundColor: '#f0f0f0',
+            backgroundColor: '#000',
             marginBottom: 8,
           }}
         >
@@ -86,12 +86,12 @@ export default function ProductCard({
           className="card-title"
           style={{
             fontSize: 14,
-            color: '#191919',
+            color: '#000',
             marginBottom: 3,
             lineHeight: 1.4,
             textAlign: 'center',
             letterSpacing: '0.5px',
-            // WebkitTextStroke: '0.3px #191919',
+            // WebkitTextStroke: '0.3px #000',
           }}
         >
           {product.title}
@@ -115,7 +115,7 @@ export default function ProductCard({
           zIndex: 1,
         }}
       >
-        <HeartIcon active={isSaved} />
+        <BookmarkIcon active={isSaved} />
       </button>
     </div>
   );

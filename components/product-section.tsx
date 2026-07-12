@@ -6,12 +6,14 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 import { useState, useEffect } from 'react';
 
 export default function ProductSection({
+  id,
   title,
   subtitle,
   products,
   saved,
   onToggleSave,
 }: {
+  id?: string;
   title: string;
   subtitle?: string;
   products: Product[];
@@ -38,10 +40,12 @@ export default function ProductSection({
 
   return (
     <section
+      id={id}
       style={{
         // maxWidth: 1200,
         margin: '0 auto',
-        padding: isMobile ? '0 16px 32px' : '0 40px 40px',
+        padding: isMobile ? '16px' : '40px',
+        scrollMarginTop: 106,
       }}
     >
       <div
@@ -57,12 +61,12 @@ export default function ProductSection({
             {title}
           </h2>
           {subtitle && (
-            <p style={{ fontSize: 12, color: '#767676' }}>{subtitle}</p>
+            <p style={{ fontSize: 12, color: '#000' }}>{subtitle}</p>
           )}
         </div>
         <Link
           href={`/products?section=${encodeURIComponent(title)}`}
-          className="text-[14px] text-[#767676] flex items-center gap-1 transition-all hover:text-[#191919] hover:gap-2 hover:!underline"
+          className="text-[14px] text-[#000] flex items-center gap-1 transition-all hover:text-[#000] hover:gap-2 hover:!underline"
         >
           See All <span className="arrow-nudge">→</span>
         </Link>

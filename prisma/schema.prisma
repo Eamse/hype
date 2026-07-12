@@ -121,11 +121,13 @@ model Magazine {
   content   String
   imageUrl  String?
   published Boolean         @default(false)
+  isPinned  Boolean         @default(false) // 상단 고정 (마스터 수동, "우수" 개념 아님)
   createdAt DateTime        @default(now())
   updatedAt DateTime        @updatedAt
   images    MagazineImage[]
 
   @@index([published, createdAt])
+  @@index([isPinned, createdAt])
 }
 
 model MagazineImage {

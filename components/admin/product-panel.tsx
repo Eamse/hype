@@ -6,6 +6,7 @@ import { type Product, btnStyle, labelStyle, inputStyle } from './types';
 import { useSelection } from './use-selection';
 import BulkActions from './bulk-actions';
 import ProductRow from './product-row';
+import { resizeImageFile, resizeImageFiles } from '@/lib/client-image-resize';
 
 type Director = { id: number; number: string; name: string; instagram: string | null };
 
@@ -38,7 +39,7 @@ async function uploadDetailImages(files: File[], productId: number): Promise<voi
 }
 
 function DirectorPicker({ directors, selected, onChange }: { directors: Director[]; selected: number[]; onChange: (ids: number[]) => void }) {
-  if (directors.length === 0) return <p style={{ fontSize: 12, color: '#999' }}>등록된 작가가 없습니다.</p>;
+  if (directors.length === 0) return <p style={{ fontSize: 12, color: '#000' }}>등록된 작가가 없습니다.</p>;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
       {directors.map((d) => (
@@ -50,7 +51,7 @@ function DirectorPicker({ directors, selected, onChange }: { directors: Director
           />
           <span style={{ color: '#c9a96e', fontWeight: 600, fontSize: 11 }}>{d.number}</span>
           {d.name}
-          {d.instagram && <span style={{ fontSize: 11, color: '#aaa' }}>{d.instagram}</span>}
+          {d.instagram && <span style={{ fontSize: 11, color: '#000' }}>{d.instagram}</span>}
         </label>
       ))}
     </div>
@@ -214,22 +215,22 @@ export default function ProductPanel({ category }: { category: Category }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       {/* 헤더 */}
-      <div style={{ paddingBottom: 20, borderBottom: '1px solid #ede8de' }}>
+      <div style={{ paddingBottom: 20, borderBottom: '1px solid #000' }}>
         <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>PRODUCTS</p>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a' }}>{category}</h2>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#000' }}>{category}</h2>
       </div>
 
       {/* 액션 버튼 */}
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        <button style={btnStyle('#191919', '#fff')} onClick={() => setIsAdding(true)}>+ 상품 추가</button>
-        <button style={btnStyle('#fff', '#191919', '#ddd')} onClick={() => setIsExpanded((v) => !v)}>
+        <button style={btnStyle('#000', '#fff')} onClick={() => setIsAdding(true)}>+ 상품 추가</button>
+        <button style={btnStyle('#fff', '#000', '#000')} onClick={() => setIsExpanded((v) => !v)}>
           {isExpanded ? '▲ 전체 접기' : '▼ 전체 펼치기'}
         </button>
       </div>
 
       {/* 추가 폼 */}
       {isAdding && (
-        <div style={{ background: '#fdfcfa', border: '1px solid #ede8de', borderRadius: 12, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div style={{ background: '#fff', border: '1px solid #000', borderRadius: 12, padding: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
           <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a' }}>새 상품 등록</p>
 
           <div>
@@ -244,14 +245,22 @@ export default function ProductPanel({ category }: { category: Category }) {
           <div>
             <label style={labelStyle}>썸네일 이미지</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <button type="button" style={btnStyle('transparent', '#555', '#ddd')} onClick={() => addThumbRef.current?.click()}>파일 선택</button>
+              <button type="button" style={btnStyle('transparent', '#000', '#000')} onClick={() => addThumbRef.current?.click()}>파일 선택</button>
               {thumbPreview && (
                 <div style={{ position: 'relative', width: 48, height: 48, borderRadius: 6, overflow: 'hidden' }}>
                   <Image src={thumbPreview} alt="thumb" fill style={{ objectFit: 'cover' }} />
                 </div>
               )}
               <input ref={addThumbRef} type="file" accept="image/*" style={{ display: 'none' }}
-                onChange={(e) => { const f = e.target.files?.[0]; if (f) { setThumbFile(f); setThumbPreview(URL.createObjectURL(f)); } e.target.value = ''; }}
+                onChange={async (e) => {
+                  const f = e.target.files?.[0];
+                  if (f) {
+                    const resized = await resizeImageFile(f);
+                    setThumbFile(resized);
+                    setThumbPreview(URL.createObjectURL(resized));
+                  }
+                  e.target.value = '';
+                }}
               />
             </div>
           </div>
@@ -259,10 +268,13 @@ export default function ProductPanel({ category }: { category: Category }) {
           <div>
             <label style={labelStyle}>상세 이미지</label>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <button type="button" style={btnStyle('transparent', '#555', '#ddd')} onClick={() => addDetailRef.current?.click()}>파일 선택</button>
-              {detailFiles.length > 0 && <span style={{ fontSize: 12, color: '#666' }}>{detailFiles.length}개 선택됨</span>}
+              <button type="button" style={btnStyle('transparent', '#000', '#000')} onClick={() => addDetailRef.current?.click()}>파일 선택</button>
+              {detailFiles.length > 0 && <span style={{ fontSize: 12, color: '#000' }}>{detailFiles.length}개 선택됨</span>}
               <input ref={addDetailRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
-                onChange={(e) => { setDetailFiles(Array.from(e.target.files ?? [])); e.target.value = ''; }}
+                onChange={async (e) => {
+                  setDetailFiles(await resizeImageFiles(Array.from(e.target.files ?? [])));
+                  e.target.value = '';
+                }}
               />
             </div>
           </div>
@@ -273,16 +285,16 @@ export default function ProductPanel({ category }: { category: Category }) {
           </div>
 
           <div style={{ display: 'flex', gap: 8 }}>
-            <button style={btnStyle('#191919', '#fff')} onClick={handleAdd} disabled={adding}>{adding ? '등록 중...' : '등록'}</button>
-            <button style={btnStyle('#fff', '#666', '#ddd')} onClick={() => { setIsAdding(false); setNewLocation(''); setThumbFile(null); setThumbPreview(null); setDetailFiles([]); setNewDirIds([]); }}>취소</button>
+            <button style={btnStyle('#000', '#fff')} onClick={handleAdd} disabled={adding}>{adding ? '등록 중...' : '등록'}</button>
+            <button style={btnStyle('#fff', '#000', '#000')} onClick={() => { setIsAdding(false); setNewLocation(''); setThumbFile(null); setThumbPreview(null); setDetailFiles([]); setNewDirIds([]); }}>취소</button>
           </div>
         </div>
       )}
 
       {/* 목록 */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {loading && <p style={{ fontSize: 13, color: '#999' }}>불러오는 중...</p>}
-        {!loading && products.length === 0 && <p style={{ fontSize: 13, color: '#999' }}>등록된 상품이 없습니다.</p>}
+        {loading && <p style={{ fontSize: 13, color: '#000' }}>불러오는 중...</p>}
+        {!loading && products.length === 0 && <p style={{ fontSize: 13, color: '#000' }}>등록된 상품이 없습니다.</p>}
 
         <BulkActions
           total={products.length}
@@ -300,7 +312,7 @@ export default function ProductPanel({ category }: { category: Category }) {
                 <p style={{ fontSize: 12, fontWeight: 700, color: '#7a5520', letterSpacing: '1px', textTransform: 'uppercase' }}>
                   {loc.label} ({group.length})
                 </p>
-                {group.length === 0 && <p style={{ fontSize: 12, color: '#999' }}>등록된 상품이 없습니다.</p>}
+                {group.length === 0 && <p style={{ fontSize: 12, color: '#000' }}>등록된 상품이 없습니다.</p>}
                 <div style={{
                   display: 'grid',
                   gridTemplateColumns: 'repeat(2, 1fr)',
@@ -344,10 +356,13 @@ export default function ProductPanel({ category }: { category: Category }) {
             <div>
               <label style={labelStyle}>상세 이미지 추가</label>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <button type="button" style={btnStyle('transparent', '#555', '#ddd')} onClick={() => editDetailRef.current?.click()}>파일 선택</button>
-                {editDetailFiles.length > 0 && <span style={{ fontSize: 12, color: '#666' }}>{editDetailFiles.length}개 선택됨</span>}
+                <button type="button" style={btnStyle('transparent', '#000', '#000')} onClick={() => editDetailRef.current?.click()}>파일 선택</button>
+                {editDetailFiles.length > 0 && <span style={{ fontSize: 12, color: '#000' }}>{editDetailFiles.length}개 선택됨</span>}
                 <input ref={editDetailRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
-                  onChange={(e) => { setEditDetailFiles(Array.from(e.target.files ?? [])); e.target.value = ''; }}
+                  onChange={async (e) => {
+                    setEditDetailFiles(await resizeImageFiles(Array.from(e.target.files ?? [])));
+                    e.target.value = '';
+                  }}
                 />
               </div>
               {editingProduct.images.length > 0 && (
@@ -367,8 +382,8 @@ export default function ProductPanel({ category }: { category: Category }) {
             </div>
 
             <div style={{ display: 'flex', gap: 8 }}>
-              <button style={btnStyle('#191919', '#fff')} onClick={handleEditSave} disabled={editSaving}>{editSaving ? '저장 중...' : '저장'}</button>
-              <button style={btnStyle('#fff', '#666', '#ddd')} onClick={() => setEditingProduct(null)}>취소</button>
+              <button style={btnStyle('#000', '#fff')} onClick={handleEditSave} disabled={editSaving}>{editSaving ? '저장 중...' : '저장'}</button>
+              <button style={btnStyle('#fff', '#000', '#000')} onClick={() => setEditingProduct(null)}>취소</button>
             </div>
           </div>
         </div>

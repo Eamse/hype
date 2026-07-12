@@ -3,6 +3,8 @@ export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
 import SnsSidebar from '@/components/sns-sidebar';
+import SubTabBar from '@/components/sub-tab-bar';
+import { serviceSubTabs } from '@/lib/service-sub-tabs';
 import ProductSections from '../_components/product-sections';
 
 export default async function CasualPage() {
@@ -22,8 +24,8 @@ export default async function CasualPage() {
   return (
     <div>
       <Header brand="hype-snap" />
-
-      <main style={{ paddingTop: 80 }}>
+      <main style={{ paddingTop: 56 }}>
+        <SubTabBar tabs={serviceSubTabs('hype-snap')} />
         <ProductSections
           sections={[
             {

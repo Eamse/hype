@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { resizeImageFile } from '@/lib/client-image-resize';
 
 const MAX_HERO = 6;
 
@@ -45,9 +46,10 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
     try {
       const uploaded: string[] = [];
       for (const file of toUpload) {
+        const resized = await resizeImageFile(file);
         const fd = new FormData();
         fd.append('key', heroKey);
-        fd.append('image', file);
+        fd.append('image', resized);
         const res = await fetch('/api/images', { method: 'POST', body: fd });
         const data: unknown = await res.json();
         if (!res.ok) {
@@ -92,7 +94,7 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
           justifyContent: 'space-between',
           marginBottom: 28,
           paddingBottom: 20,
-          borderBottom: '1px solid #ede8de',
+          borderBottom: '1px solid #000',
         }}
       >
         <div>
@@ -111,13 +113,13 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
             style={{
               fontSize: 22,
               fontWeight: 700,
-              color: '#1a1a1a',
+              color: '#000',
               letterSpacing: '-0.3px',
             }}
           >
             Hero Images
           </h2>
-          <p style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
+          <p style={{ fontSize: 12, color: '#000', marginTop: 4 }}>
             Up to {MAX_HERO} images · shown as swipe carousel on main page
           </p>
         </div>
@@ -127,7 +129,7 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
             color: '#7a5520',
             fontWeight: 600,
             background: '#faf7f0',
-            border: '1px solid #e8d9b8',
+            border: '1px solid #000',
             borderRadius: 20,
             padding: '4px 14px',
           }}
@@ -171,8 +173,8 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
                 aspectRatio: '3/4',
                 borderRadius: 10,
                 overflow: 'hidden',
-                backgroundColor: '#f5f2ec',
-                border: url ? '1.5px solid #e8d9b8' : '1.5px dashed #ddd5c5',
+                backgroundColor: '#fff',
+                border: url ? '1.5px solid #000' : '1.5px dashed #ddd5c5',
                 boxShadow: url ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
               }}
             >
@@ -220,7 +222,7 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 6,
-                    color: '#ccc',
+                    color: '#000',
                   }}
                 >
                   {i < images.length || uploading ? (
@@ -229,7 +231,7 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
                         width: 18,
                         height: 18,
                         borderRadius: '50%',
-                        border: '2px solid #e0e0e0',
+                        border: '2px solid #000',
                         borderTopColor: '#c9a96e',
                         animation: 'spin 0.7s linear infinite',
                       }}
@@ -280,7 +282,7 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
         >
           {uploading ? 'Uploading...' : '+ Add Images'}
         </button>
-        <span style={{ fontSize: 12, color: '#888' }}>
+        <span style={{ fontSize: 12, color: '#000' }}>
           JPG, PNG, WEBP, GIF · max 10 MB
         </span>
       </div>

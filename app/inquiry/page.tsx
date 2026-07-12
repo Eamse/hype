@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Header from '@/components/header';
+import SubTabBar from '@/components/sub-tab-bar';
+import { inquirySubTabs } from '@/lib/inquiry-sub-tabs';
 import InquiryClient from './_components/inquiry-client';
 
 export const metadata: Metadata = {
@@ -24,6 +26,7 @@ export default async function InquiryPage({
     >
       <Header brand={activeBrand} />
       <main style={{ paddingTop: 56 }}>
+        <SubTabBar tabs={inquirySubTabs(activeBrand)} />
         <InquiryClient />
       </main>
     </div>

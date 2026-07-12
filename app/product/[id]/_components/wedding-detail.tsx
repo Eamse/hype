@@ -46,9 +46,9 @@ function InstagramLink({ handle }: { handle: string | null }) {
             target="_blank"
             rel="noopener noreferrer"
             style={{
-              color: '#8B7355',
+              color: '#000',
               textDecoration: 'none',
-              borderBottom: '1px solid #D4C5B0',
+              borderBottom: '1px solid #000',
               fontWeight: 'bold',
             }}
           >
@@ -109,8 +109,8 @@ export default function WeddingDetail({
     packagePartners.find(({ partner }) => partner.role === 'suit')?.partner ??
     null;
   const bouquet =
-    packagePartners.find(({ partner }) => partner.role === 'bouquet')?.partner ??
-    null;
+    packagePartners.find(({ partner }) => partner.role === 'bouquet')
+      ?.partner ?? null;
 
   const partnerRows = [
     {
@@ -158,14 +158,14 @@ export default function WeddingDetail({
           style={{
             width: '40px',
             height: '1px',
-            background: '#D4C5B0',
+            background: '#000',
             margin: '12px auto',
           }}
         />
         <p
           style={{
             fontSize: '11px',
-            color: '#888',
+            color: '#000',
             letterSpacing: '2px',
             textTransform: 'uppercase',
             margin: '0 0 8px',
@@ -250,7 +250,7 @@ export default function WeddingDetail({
           style={{
             textAlign: 'center',
             fontSize: '14px',
-            color: '#8B7355',
+            color: '#000',
             fontWeight: 500,
             margin: '0 0 28px',
             letterSpacing: '0.3px',
@@ -264,9 +264,9 @@ export default function WeddingDetail({
       {partnerRows.length > 0 && (
         <div
           style={{
-            border: '1px solid #E8E0D4',
+            border: '1px solid #000',
             borderRadius: '4px',
-            background: 'rgb(250, 250, 248)',
+            background: '#fff',
             padding: '20px 24px',
             marginBottom: '28px',
           }}
@@ -274,7 +274,7 @@ export default function WeddingDetail({
           <p
             style={{
               fontSize: '13px',
-              color: 'rgb(102, 102, 102)',
+              color: '#000',
               fontWeight: 'bold',
               letterSpacing: '2px',
               textTransform: 'uppercase',
@@ -295,7 +295,7 @@ export default function WeddingDetail({
                 <div
                   style={{
                     fontSize: '12px',
-                    color: '#555',
+                    color: '#000',
                     marginBottom: '2px',
                   }}
                 >
@@ -305,7 +305,7 @@ export default function WeddingDetail({
                   style={{
                     fontSize: '14px',
                     fontWeight: 600,
-                    color: '#1a1a1a',
+                    color: '#000',
                     marginBottom: '2px',
                   }}
                 >
@@ -318,7 +318,7 @@ export default function WeddingDetail({
           <p
             style={{
               fontSize: '12px',
-              color: '#555',
+              color: '#000',
               margin: '16px 0 0',
               fontStyle: 'italic',
             }}
@@ -335,7 +335,7 @@ export default function WeddingDetail({
             style={{
               fontSize: '12px',
               fontWeight: 'bold',
-              color: '#888',
+              color: '#000',
               letterSpacing: '2px',
               textTransform: 'uppercase',
               margin: '0 0 12px',
@@ -355,7 +355,7 @@ export default function WeddingDetail({
                 key={inclusion.id}
                 style={{
                   fontSize: '14px',
-                  color: '#1a1a1a',
+                  color: '#000',
                   display: 'flex',
                   alignItems: 'flex-start',
                   gap: '8px',
@@ -363,7 +363,7 @@ export default function WeddingDetail({
                 }}
               >
                 <span
-                  style={{ color: '#8B7355', flexShrink: 0, marginTop: '1px' }}
+                  style={{ color: '#000', flexShrink: 0, marginTop: '1px' }}
                 >
                   ✓
                 </span>
@@ -378,8 +378,8 @@ export default function WeddingDetail({
       {activePackage && (
         <div
           style={{
-            border: '1px solid #E8E0D4',
-            background: 'rgb(250, 250, 248)',
+            border: '1px solid #000',
+            background: '#fff',
             borderRadius: '4px',
             padding: '20px 24px',
             marginBottom: '20px',
@@ -388,7 +388,7 @@ export default function WeddingDetail({
           <p
             style={{
               fontSize: '12px',
-              color: 'rgb(102, 102, 102)',
+              color: '#000',
               letterSpacing: '2px',
               textTransform: 'uppercase',
               fontWeight: 'bold',
@@ -417,7 +417,7 @@ export default function WeddingDetail({
                 <div
                   style={{
                     fontSize: '12px',
-                    color: '#555',
+                    color: '#000',
                     marginBottom: '4px',
                   }}
                 >
@@ -428,7 +428,7 @@ export default function WeddingDetail({
                   style={{
                     fontSize: '15px',
                     fontWeight: 400,
-                    color: '#1a1a1a',
+                    color: '#000',
                   }}
                 >
                   {d.value}
@@ -440,7 +440,7 @@ export default function WeddingDetail({
             <p
               style={{
                 fontSize: '13px',
-                color: '#444',
+                color: '#000',
                 margin: '16px 0 0',
                 lineHeight: 1.5,
               }}
@@ -514,8 +514,8 @@ export default function WeddingDetail({
               {activePackage.priceNoSNS > 0 && (
                 <div
                   style={{
-                    background: '#FAFAF8',
-                    border: '1px solid #E8E0D4',
+                    background: '#fff',
+                    border: '1px solid #000',
                     borderRadius: '4px',
                     padding: '24px 16px',
                     textAlign: 'center',
@@ -524,7 +524,7 @@ export default function WeddingDetail({
                   <div
                     style={{
                       fontSize: '12px',
-                      color: '#666',
+                      color: '#000',
                       letterSpacing: '1px',
                       textTransform: 'uppercase',
                       marginBottom: '10px',
@@ -546,7 +546,7 @@ export default function WeddingDetail({
                   <div
                     style={{
                       fontSize: '12px',
-                      color: '#aaa',
+                      color: '#000',
                       marginTop: '4px',
                     }}
                   >
@@ -555,11 +555,11 @@ export default function WeddingDetail({
                 </div>
               )}
             </div>
-            <p style={{ fontSize: '12px', color: '#888', margin: '0 0 2px' }}>
+            <p style={{ fontSize: '12px', color: '#000', margin: '0 0 2px' }}>
               * Final price is subject to change based on current USD exchange
               rate and does NOT include add-ons.
             </p>
-            <p style={{ fontSize: '12px', color: '#888', margin: 0 }}>
+            <p style={{ fontSize: '12px', color: '#000', margin: 0 }}>
               * SNS Upload: Hype Pig (Hype Wedding, Hype Snap) SNS, Photographer
               SNS
             </p>
@@ -572,7 +572,7 @@ export default function WeddingDetail({
           <p
             style={{
               fontSize: '12px',
-              color: 'rgb(102, 102, 102)',
+              color: '#000',
               letterSpacing: '2px',
               textTransform: 'uppercase',
               margin: '0 0 12px',
@@ -586,7 +586,7 @@ export default function WeddingDetail({
               <div
                 key={addon.id}
                 style={{
-                  border: '1px solid #E8E0D4',
+                  border: '1px solid #000',
                   borderRadius: '4px',
                   overflow: 'hidden',
                 }}
@@ -601,19 +601,20 @@ export default function WeddingDetail({
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     padding: '13px 16px',
-                    background: expandedAddon === i ? '#FAFAF8' : '#fff',
+                    background:
+                      expandedAddon === i ? 'rgba(0,0,0,0.04)' : '#fff',
                     border: 'none',
                     cursor: 'pointer',
                     textAlign: 'left',
                   }}
                 >
-                  <span style={{ fontSize: '14px', color: '#1a1a1a' }}>
+                  <span style={{ fontSize: '14px', color: '#000' }}>
                     {addon.name}
                   </span>
                   <span
                     style={{
                       fontSize: '13px',
-                      color: '#8B7355',
+                      color: '#000',
                       fontWeight: 500,
                       flexShrink: 0,
                       marginLeft: '12px',
@@ -629,14 +630,14 @@ export default function WeddingDetail({
                   <div
                     style={{
                       padding: '0 16px 14px',
-                      background: '#FAFAF8',
-                      borderTop: '1px solid #E8E0D4',
+                      background: '#fff',
+                      borderTop: '1px solid #000',
                     }}
                   >
                     <p
                       style={{
                         fontSize: '13px',
-                        color: '#444',
+                        color: '#000',
                         lineHeight: 1.6,
                         margin: '12px 0 0',
                       }}
@@ -651,7 +652,7 @@ export default function WeddingDetail({
           <p
             style={{
               fontSize: '12px',
-              color: '#888',
+              color: '#000',
               margin: '10px 0 0',
               fontStyle: 'italic',
             }}
@@ -667,10 +668,10 @@ export default function WeddingDetail({
         style={{
           textAlign: 'center',
           padding: '32px 0',
-          borderTop: '1px solid #E8E0D4',
+          borderTop: '1px solid #000',
         }}
       >
-        <p style={{ fontSize: '14px', color: '#555', margin: '0 0 16px' }}>
+        <p style={{ fontSize: '14px', color: '#000', margin: '0 0 16px' }}>
           Ready to book or have questions?
         </p>
         <a
@@ -691,13 +692,13 @@ export default function WeddingDetail({
         >
           CONTACT US ON WHATSAPP
         </a>
-        <p style={{ fontSize: '12px', color: '#888', marginTop: '14px' }}>
+        <p style={{ fontSize: '12px', color: '#000', marginTop: '14px' }}>
           Instagram:{' '}
           <a
             href="https://instagram.com/hypewedd_ing"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: '#8B7355', textDecoration: 'none' }}
+            style={{ color: '#000', textDecoration: 'none' }}
           >
             @hypewedd_ing
           </a>

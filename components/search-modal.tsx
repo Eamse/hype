@@ -4,17 +4,29 @@ import { useState, useEffect, startTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-type Product = {
+type SearchResult = {
+  type: 'product' | 'magazine' | 'review';
   id: number;
   title: string;
-  brand: string;
+  subtitle: string;
   imageUrl: string | null;
-  section: string;
 };
+
+const SECTION_LABEL: Record<SearchResult['type'], string> = {
+  product: 'Products',
+  magazine: 'Editorial',
+  review: 'Reviews',
+};
+
+function detailHref(item: SearchResult): string {
+  if (item.type === 'product') return `/product/${item.id}`;
+  if (item.type === 'magazine') return `/magazine/${item.id}`;
+  return `/review/${item.id}`;
+}
 
 export default function SearchModal({ onClose }: { onClose: () => void }) {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Product[]>([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -35,6 +47,12 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
     return () => clearTimeout(timer);
   }, [query]);
 
+  const groups: { type: SearchResult['type']; items: SearchResult[] }[] = (
+    ['product', 'magazine', 'review'] as const
+  )
+    .map((type) => ({ type, items: results.filter((r) => r.type === type) }))
+    .filter((g) => g.items.length > 0);
+
   return (
     <div
       style={{
@@ -50,7 +68,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
       <div
         style={{
           padding: '16px 20px',
-          borderBottom: '1px solid #e8e8e8',
+          borderBottom: '1px solid #000',
           display: 'flex',
           alignItems: 'center',
           gap: 12,
@@ -73,7 +91,7 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
           style={{
             fontSize: 14,
             fontWeight: 600,
-            color: '#191919',
+            color: '#000',
             background: 'none',
             border: 'none',
             cursor: 'pointer',
@@ -85,58 +103,73 @@ export default function SearchModal({ onClose }: { onClose: () => void }) {
 
       {/* 결과 목록 */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
-        {loading && (
-          <p style={{ fontSize: 14, color: '#767676' }}>검색 중...</p>
-        )}
+        {loading && <p style={{ fontSize: 14, color: '#000' }}>검색 중...</p>}
         {!loading && query && results.length === 0 && (
-          <p style={{ fontSize: 14, color: '#767676' }}>검색 결과가 없어요.</p>
+          <p style={{ fontSize: 14, color: '#000' }}>검색 결과가 없어요.</p>
         )}
-        {results.map((product) => (
-          <div
-            key={product.id}
-            onClick={() => {
-              router.push(`/product/${product.id}`);
-              onClose();
-            }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 12,
-              padding: '12px 0',
-              borderBottom: '1px solid #f0f0f0',
-              cursor: 'pointer',
-            }}
-          >
-            <div
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: 6,
-                overflow: 'hidden',
-                backgroundColor: '#f0f0f0',
-                flexShrink: 0,
-              }}
-            >
-              {product.imageUrl && (
-                <Image
-                  src={product.imageUrl}
-                  alt={product.title}
-                  width={56}
-                  height={56}
-                  style={{ objectFit: 'cover', width: '100%', height: '100%' }}
-                />
-              )}
-            </div>
-            <div>
-              <p style={{ fontSize: 11, color: '#767676', marginBottom: 2 }}>
-                {product.brand}
+        {!loading &&
+          groups.map((group) => (
+            <div key={group.type} style={{ marginBottom: 24 }}>
+              <p
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: '1.5px',
+                  textTransform: 'uppercase',
+                  color: '#bbb',
+                  margin: '0 0 8px',
+                }}
+              >
+                {SECTION_LABEL[group.type]}
               </p>
-              <p style={{ fontSize: 14, fontWeight: 500, color: '#191919' }}>
-                {product.title}
-              </p>
+              {group.items.map((item) => (
+                <div
+                  key={`${item.type}-${item.id}`}
+                  onClick={() => {
+                    router.push(detailHref(item));
+                    onClose();
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                    padding: '12px 0',
+                    borderBottom: '1px solid #000',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: 6,
+                      overflow: 'hidden',
+                      backgroundColor: '#000',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {item.imageUrl && (
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.title}
+                        width={56}
+                        height={56}
+                        style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                      />
+                    )}
+                  </div>
+                  <div>
+                    <p style={{ fontSize: 11, color: '#000', marginBottom: 2 }}>
+                      {item.subtitle}
+                    </p>
+                    <p style={{ fontSize: 14, fontWeight: 500, color: '#000' }}>
+                      {item.title}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

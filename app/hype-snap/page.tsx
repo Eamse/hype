@@ -47,38 +47,37 @@ export default async function HypeSnapPage() {
     <div
       style={{
         backgroundColor: '#fff',
-        color: '#191919',
+        color: '#000',
         minHeight: '100vh',
       }}
     >
       <Header brand="hype-snap" />
 
       <main style={{ paddingTop: 56 }}>
-        <HeroCarousel images={heroImages} />
-
-        <section
-          style={{ maxWidth: 1200, margin: '0 auto', padding: '0 20px 24px' }}
-        >
+        <HeroCarousel images={heroImages}>
           <div className="dday-banner">
-            <span>
-              Leave your desired <strong>photoshoot date</strong>
-            </span>
+            <div className="dday-banner-text">
+              <span className="dday-banner-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </span>
+              <span>
+                Leave your desired <strong>photoshoot date</strong>
+              </span>
+            </div>
             <a
               href="https://forms.gle/3sWqu4NED5ruJEnN9"
               target="_blank"
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: '#191919',
-                border: '1px solid #191919',
-                borderRadius: 6,
-                padding: '6px 16px',
-              }}
+              className="dday-banner-cta"
             >
               Enter photoshoot info
             </a>
           </div>
-        </section>
+        </HeroCarousel>
 
         <ProductSections
           sections={[

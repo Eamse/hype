@@ -210,8 +210,7 @@ export default function AdminPage() {
     <div
       style={{
         minHeight: '100vh',
-        background:
-          'linear-gradient(135deg, #f5e6e8 0%, #e8d5d8 30%, #d4b8c7 60%, #c9a0b4 100%)',
+        background: '#fff',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',

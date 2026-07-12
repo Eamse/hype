@@ -69,7 +69,7 @@ export default function ImageGallery({
                 height: 64,
                 outline:
                   selected === img.url
-                    ? '2px solid #191919'
+                    ? '2px solid #000'
                     : '2px solid transparent',
                 outlineOffset: 2,
               }}
@@ -88,7 +88,7 @@ export default function ImageGallery({
 
       {/* 오른쪽: 메인 이미지 */}
       <div
-        className="relative flex-1 rounded-xl overflow-hidden bg-[#f0f0f0]"
+        className="relative flex-1 rounded-xl overflow-hidden bg-[#000]"
         style={{ aspectRatio: '3/4' }}
       >
         {selected ? (
@@ -101,7 +101,13 @@ export default function ImageGallery({
             style={{ objectFit: 'cover' }}
           />
         ) : (
-          <div className="w-full h-full bg-[#e8e8e8]" />
+          <div
+            className="w-full h-full"
+            style={{
+              background:
+                'linear-gradient(110deg, rgb(236, 236, 236) 8%, rgb(221, 221, 221) 18%, rgb(236, 236, 236) 33%) 0% 0% / 200% 100%',
+            }}
+          />
         )}
       </div>
     </div>

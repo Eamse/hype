@@ -73,8 +73,8 @@ export default function PackageForm({
   return (
     <div
       style={{
-        background: '#fdfcfa',
-        border: '1px solid #e8e0d0',
+        background: '#fff',
+        border: '1px solid #000',
         borderRadius: 10,
         padding: 20,
       }}
@@ -84,7 +84,7 @@ export default function PackageForm({
       >
         <button
           type="button"
-          style={btnStyle('#fff', '#3a1a2a', '#ddd')}
+          style={btnStyle('#fff', '#3a1a2a', '#000')}
           onClick={() => setShowPreview(true)}
         >
           미리보기
@@ -356,13 +356,13 @@ export default function PackageForm({
       {!hideButtons && (
         <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
           <button
-            style={btnStyle('#191919', '#fff')}
+            style={btnStyle('#000', '#fff')}
             onClick={onSave}
             disabled={saving}
           >
             {saving ? '저장 중...' : '저장'}
           </button>
-          <button style={btnStyle('#fff', '#666', '#ddd')} onClick={onCancel}>
+          <button style={btnStyle('#fff', '#000', '#000')} onClick={onCancel}>
             취소
           </button>
         </div>

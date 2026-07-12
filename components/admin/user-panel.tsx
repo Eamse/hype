@@ -49,7 +49,7 @@ export default function UserPanel() {
             style={{
               fontSize: 13,
               fontWeight: 400,
-              color: '#767676',
+              color: '#000',
               marginLeft: 8,
             }}
           >
@@ -66,16 +66,16 @@ export default function UserPanel() {
 
       {/* 테이블 */}
       {loading ? (
-        <p style={{ color: '#767676', fontSize: 14 }}>불러오는 중...</p>
+        <p style={{ color: '#000', fontSize: 14 }}>불러오는 중...</p>
       ) : users.length === 0 ? (
-        <p style={{ color: '#767676', fontSize: 14 }}>회원이 없어요.</p>
+        <p style={{ color: '#000', fontSize: 14 }}>회원이 없어요.</p>
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <table
             style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}
           >
             <thead>
-              <tr style={{ borderBottom: '2px solid #e8d5d8' }}>
+              <tr style={{ borderBottom: '2px solid #000' }}>
                 {[
                   'Provider',
                   'Email',
@@ -121,8 +121,8 @@ export default function UserPanel() {
                     ) : (
                       <span
                         style={{
-                          background: '#f0f0f0',
-                          color: '#555',
+                          background: '#000',
+                          color: '#000',
                           padding: '2px 8px',
                           borderRadius: 4,
                           fontSize: 11,
@@ -174,7 +174,7 @@ export default function UserPanel() {
                   <td
                     style={{
                       padding: '10px 12px',
-                      color: '#767676',
+                      color: '#000',
                       whiteSpace: 'nowrap',
                     }}
                   >

@@ -58,7 +58,7 @@ function InquiryIcon() {
       height="52"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#191919"
+      stroke="#000"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -76,7 +76,7 @@ function ConsultIcon() {
       height="52"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#191919"
+      stroke="#000"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -92,7 +92,7 @@ function ContractIcon() {
       height="52"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#191919"
+      stroke="#000"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -112,7 +112,7 @@ function PrepIcon() {
       height="52"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#191919"
+      stroke="#000"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -129,7 +129,7 @@ function CameraIcon() {
       height="52"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#191919"
+      stroke="#000"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -146,7 +146,7 @@ function ChevronRight() {
       height="28"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="#bbb"
+      stroke="#000"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -188,7 +188,7 @@ function StepCard({
             style={{
               fontSize: 12,
               fontWeight: 600,
-              color: '#888',
+              color: '#000',
             }}
           >
             ({step.tag})
@@ -199,7 +199,7 @@ function StepCard({
         style={{
           fontSize: 18,
           fontWeight: 800,
-          color: '#191919',
+          color: '#000',
           marginBottom: 12,
           lineHeight: 1.3,
         }}
@@ -219,7 +219,7 @@ function StepCard({
             key={b}
             style={{
               fontSize: 16,
-              color: '#555',
+              color: '#000',
               lineHeight: 1.9,
               display: 'flex',
               alignItems: 'flex-start',
@@ -312,7 +312,7 @@ export default function InquiryClient() {
           justifyContent: 'center',
           textAlign: 'center',
           padding: isMobile ? '60px 24px' : '40px',
-          borderBottom: '1px solid #e8e8e8',
+          borderBottom: '1px solid #000',
         }}
       >
         {/* 서브 레이블 */}
@@ -323,7 +323,7 @@ export default function InquiryClient() {
             fontWeight: 700,
             letterSpacing: '3px',
             textTransform: 'uppercase',
-            color: '#767676',
+            color: '#000',
             marginBottom: 20,
             animationDelay: '0.1s',
           }}
@@ -337,7 +337,7 @@ export default function InquiryClient() {
             fontSize: isMobile ? 48 : 80,
             fontWeight: 900,
             letterSpacing: '-2px',
-            color: '#191919',
+            color: '#000',
             lineHeight: 1,
             marginBottom: 20,
             minWidth: isMobile ? 240 : 420,
@@ -350,7 +350,7 @@ export default function InquiryClient() {
               display: 'inline-block',
               width: 3,
               height: isMobile ? 44 : 72,
-              backgroundColor: '#191919',
+              backgroundColor: '#000',
               marginLeft: 4,
               verticalAlign: 'middle',
             }}
@@ -361,7 +361,7 @@ export default function InquiryClient() {
           className="inquiry-fade-up"
           style={{
             fontSize: isMobile ? 14 : 16,
-            color: '#777',
+            color: '#000',
             lineHeight: 1.7,
             maxWidth: 480,
             marginBottom: 48,
@@ -396,9 +396,9 @@ export default function InquiryClient() {
               justifyContent: 'center',
               gap: 10,
               padding: isMobile ? '18px 32px' : '20px 48px',
-              backgroundColor: hovered === 'wedding' ? '#fff' : '#191919',
-              color: hovered === 'wedding' ? '#191919' : '#fff',
-              border: '1.5px solid #191919',
+              backgroundColor: hovered === 'wedding' ? '#fff' : '#000',
+              color: hovered === 'wedding' ? '#000' : '#fff',
+              border: '1.5px solid #000',
               fontSize: 14,
               fontWeight: 700,
               letterSpacing: '1.5px',
@@ -436,9 +436,9 @@ export default function InquiryClient() {
               justifyContent: 'center',
               gap: 10,
               padding: isMobile ? '18px 32px' : '20px 48px',
-              backgroundColor: hovered === 'snap' ? '#191919' : '#fff',
-              color: hovered === 'snap' ? '#fff' : '#191919',
-              border: '1.5px solid #191919',
+              backgroundColor: hovered === 'snap' ? '#000' : '#fff',
+              color: hovered === 'snap' ? '#fff' : '#000',
+              border: '1.5px solid #000',
               fontSize: 14,
               fontWeight: 700,
               letterSpacing: '1.5px',
@@ -470,7 +470,7 @@ export default function InquiryClient() {
       {/* ── HOW IT WORKS ── */}
       <section
         style={{
-          backgroundColor: '#f5f5f5',
+          backgroundColor: '#fff',
           padding: isMobile ? '20px 24px 80px' : '20px 60px 100px',
         }}
       >
@@ -481,7 +481,7 @@ export default function InquiryClient() {
             fontWeight: 700,
             letterSpacing: '3px',
             textTransform: 'uppercase',
-            color: '#767676',
+            color: '#000',
             marginBottom: 12,
             textAlign: 'center',
           }}
@@ -493,7 +493,7 @@ export default function InquiryClient() {
           style={{
             fontSize: isMobile ? 28 : 36,
             fontWeight: 800,
-            color: '#191919',
+            color: '#000',
             textAlign: 'center',
             letterSpacing: '-0.5px',
             animationDelay: '0.15s',

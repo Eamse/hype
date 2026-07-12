@@ -5,6 +5,7 @@ import StarterKit from '@tiptap/starter-kit';
 import ImageExtension from '@tiptap/extension-image';
 import Placeholder from '@tiptap/extension-placeholder';
 import { useCallback, useRef } from 'react';
+import { resizeImageFile } from '@/lib/client-image-resize';
 
 function ToolbarButton({
   active,
@@ -22,9 +23,9 @@ function ToolbarButton({
       style={{
         padding: '4px 10px',
         borderRadius: 4,
-        border: '1px solid #e0e0e0',
-        background: active ? '#191919' : '#fff',
-        color: active ? '#fff' : '#333',
+        border: '1px solid #000',
+        background: active ? '#000' : '#fff',
+        color: active ? '#fff' : '#000',
         fontSize: 12,
         cursor: 'pointer',
       }}
@@ -59,8 +60,9 @@ export default function TiptapEditor({
   const handleImageUpload = useCallback(
     async (file: File) => {
       if (!editor) return;
+      const resized = await resizeImageFile(file, 1600);
       const fd = new FormData();
-      fd.append('image', file);
+      fd.append('image', resized);
       const res = await fetch('/api/magazine/upload-image', {
         method: 'POST',
         body: fd,
@@ -78,13 +80,13 @@ export default function TiptapEditor({
   if (!editor) return null;
 
   return (
-    <div style={{ border: '1px solid #e0e0e0', borderRadius: 6 }}>
+    <div style={{ border: '1px solid #000', borderRadius: 6 }}>
       <div
         style={{
           display: 'flex',
           gap: 4,
           padding: 8,
-          borderBottom: '1px solid #eee',
+          borderBottom: '1px solid #000',
           flexWrap: 'wrap',
         }}
       >

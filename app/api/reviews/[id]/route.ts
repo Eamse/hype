@@ -74,6 +74,7 @@ export async function PATCH(
     location,
     rating,
     directorId,
+    isFeatured,
   } = body;
 
   if (productType !== undefined && !ALLOWED_PRODUCT_TYPES.has(productType)) {
@@ -88,6 +89,13 @@ export async function PATCH(
         { error: 'rating must be between 1 and 5' },
         { status: 400 },
       );
+    }
+  }
+  // 우수 리뷰 지정은 admin/master만 가능 (작성자 본인도 불가)
+  if (isFeatured !== undefined) {
+    const isModerator = session?.user?.role === 'admin' || session?.user?.role === 'master';
+    if (!isModerator || typeof isFeatured !== 'boolean') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
   }
 
@@ -105,6 +113,7 @@ export async function PATCH(
         ...(directorId !== undefined && {
           directorId: directorId ? Number(directorId) : null,
         }),
+        ...(isFeatured !== undefined && { isFeatured }),
       },
     });
 

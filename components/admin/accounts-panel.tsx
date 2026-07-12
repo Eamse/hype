@@ -61,7 +61,7 @@ export default function AccountsPanel() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       {/* 헤더 */}
-      <div style={{ paddingBottom: 20, borderBottom: '1px solid #ede8de' }}>
+      <div style={{ paddingBottom: 20, borderBottom: '1px solid #000' }}>
         <p
           style={{
             fontSize: 10,
@@ -77,13 +77,13 @@ export default function AccountsPanel() {
           style={{
             fontSize: 22,
             fontWeight: 700,
-            color: '#1a1a1a',
+            color: '#000',
             letterSpacing: '-0.3px',
           }}
         >
           Account Setting
         </h2>
-        <p style={{ fontSize: 12, color: '#888', marginTop: 4 }}>
+        <p style={{ fontSize: 12, color: '#000', marginTop: 4 }}>
           Manage admin accounts.
         </p>
       </div>
@@ -92,7 +92,7 @@ export default function AccountsPanel() {
       <div
         style={{
           background: '#fff',
-          border: '1px solid #ede8de',
+          border: '1px solid #000',
           borderRadius: 16,
           padding: 24,
         }}
@@ -101,7 +101,7 @@ export default function AccountsPanel() {
           style={{
             fontSize: 13,
             fontWeight: 600,
-            color: '#1a1a1a',
+            color: '#000',
             marginBottom: 16,
           }}
         >
@@ -171,7 +171,7 @@ export default function AccountsPanel() {
                 alignItems: 'center',
                 gap: 6,
                 fontSize: 13,
-                color: '#1a1a1a',
+                color: '#000',
                 cursor: 'pointer',
               }}
             >
@@ -189,7 +189,7 @@ export default function AccountsPanel() {
         <div
           style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}
         >
-          <button onClick={handleCreate} style={btnStyle('#191919', '#fff')}>
+          <button onClick={handleCreate} style={btnStyle('#000', '#fff')}>
             Create
           </button>
         </div>
@@ -199,13 +199,13 @@ export default function AccountsPanel() {
       <div
         style={{
           background: '#fff',
-          border: '1px solid #ede8de',
+          border: '1px solid #000',
           borderRadius: 16,
           overflow: 'hidden',
         }}
       >
         <div
-          style={{ padding: '20px 24px', borderBottom: '1px solid #f5f2ec' }}
+          style={{ padding: '20px 24px', borderBottom: '1px solid #fff' }}
         >
           <p
             style={{
@@ -220,7 +220,7 @@ export default function AccountsPanel() {
               style={{
                 fontSize: 13,
                 fontWeight: 400,
-                color: '#767676',
+                color: '#000',
                 marginLeft: 8,
               }}
             >
@@ -229,7 +229,7 @@ export default function AccountsPanel() {
           </p>
         </div>
         {loading ? (
-          <p style={{ color: '#767676', fontSize: 14, padding: 24 }}>
+          <p style={{ color: '#000', fontSize: 14, padding: 24 }}>
             불러오는 중...
           </p>
         ) : (
@@ -242,7 +242,7 @@ export default function AccountsPanel() {
               }}
             >
               <thead>
-                <tr style={{ background: '#faf7f2' }}>
+                <tr style={{ background: '#fff' }}>
                   {[
                     'Login ID',
                     'Name',
@@ -258,7 +258,7 @@ export default function AccountsPanel() {
                         padding: '12px 16px',
                         textAlign: 'left',
                         fontSize: 11,
-                        color: '#aaa',
+                        color: '#000',
                         fontWeight: 600,
                         letterSpacing: '1px',
                         whiteSpace: 'nowrap',
@@ -271,20 +271,20 @@ export default function AccountsPanel() {
               </thead>
               <tbody>
                 {accounts.map((a) => (
-                  <tr key={a.id} style={{ borderTop: '1px solid #f5f2ec' }}>
+                  <tr key={a.id} style={{ borderTop: '1px solid #fff' }}>
                     <td
                       style={{
                         padding: '14px 16px',
                         fontWeight: 600,
-                        color: '#1a1a1a',
+                        color: '#000',
                       }}
                     >
                       {a.loginId}
                     </td>
-                    <td style={{ padding: '14px 16px', color: '#1a1a1a' }}>
+                    <td style={{ padding: '14px 16px', color: '#000' }}>
                       {a.name}
                     </td>
-                    <td style={{ padding: '14px 16px', color: '#1a1a1a' }}>
+                    <td style={{ padding: '14px 16px', color: '#000' }}>
                       {a.phone}
                     </td>
                     <td style={{ padding: '14px 16px' }}>
@@ -319,7 +319,7 @@ export default function AccountsPanel() {
                     <td
                       style={{
                         padding: '14px 16px',
-                        color: '#767676',
+                        color: '#000',
                         whiteSpace: 'nowrap',
                       }}
                     >

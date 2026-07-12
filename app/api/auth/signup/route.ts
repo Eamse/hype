@@ -88,8 +88,10 @@ export async function POST(req: NextRequest) {
     }
   }
   if (
-    typeof gender !== 'string' ||
-    !['male', 'female', 'other'].includes(gender)
+    gender !== undefined &&
+    gender !== null &&
+    gender !== '' &&
+    (typeof gender !== 'string' || !['male', 'female', 'other'].includes(gender))
   ) {
     return NextResponse.json(
       {
@@ -111,7 +113,7 @@ export async function POST(req: NextRequest) {
         birthYear: encrypt(String(year)),
         birthMonth: encrypt(String(month)),
         birthDay: encrypt(String(day)),
-        gender,
+        gender: gender || null,
         country: country.trim(),
         phoneCountryCode: phoneCountryCode.trim(),
         phone: encrypt(phone.trim()),

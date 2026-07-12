@@ -9,7 +9,7 @@ export async function canModifyReview(
   session: { user?: { id?: string | null; role?: string | null } } | null,
   password: unknown,
 ): Promise<boolean> {
-  if (session?.user?.role === 'admin') return true;
+  if (session?.user?.role === 'admin' || session?.user?.role === 'master') return true;
   if (owned.userId) {
     return owned.userId === session?.user?.id;
   }

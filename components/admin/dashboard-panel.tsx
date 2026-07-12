@@ -47,7 +47,7 @@ export default function DashboardPanel({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* 헤더 */}
-      <div style={{ paddingBottom: 20, borderBottom: '1px solid #ede8de' }}>
+      <div style={{ paddingBottom: 20, borderBottom: '1px solid #000' }}>
         <p
           style={{
             fontSize: 10,
@@ -63,19 +63,19 @@ export default function DashboardPanel({
           style={{
             fontSize: 22,
             fontWeight: 700,
-            color: '#1a1a1a',
+            color: '#000',
             letterSpacing: '-0.3px',
           }}
         >
           Dashboard
         </h2>
-        <p style={{ fontSize: 12, color: '#888', marginTop: 4 }}>
+        <p style={{ fontSize: 12, color: '#000', marginTop: 4 }}>
           Get a quick overview of your site.
         </p>
       </div>
 
       {!state ? (
-        <div style={{ color: '#aaa', fontSize: 13, padding: '24px 0' }}>
+        <div style={{ color: '#000', fontSize: 13, padding: '24px 0' }}>
           Loading...
         </div>
       ) : (
@@ -135,7 +135,7 @@ export default function DashboardPanel({
             <div
               style={{
                 background: '#fff',
-                border: '1px solid #ede8de',
+                border: '1px solid #000',
                 borderRadius: 16,
                 padding: '24px',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
@@ -156,13 +156,13 @@ export default function DashboardPanel({
                 style={{
                   fontSize: 40,
                   fontWeight: 800,
-                  color: '#1a1a1a',
+                  color: '#000',
                   lineHeight: 1,
                 }}
               >
                 {totalProducts}
               </p>
-              <p style={{ fontSize: 11, color: '#aaa', marginTop: 8 }}>
+              <p style={{ fontSize: 11, color: '#000', marginTop: 8 }}>
                 전체 등록 상품
               </p>
             </div>
@@ -171,7 +171,7 @@ export default function DashboardPanel({
             <div
               style={{
                 background: '#fff',
-                border: '1px solid #ede8de',
+                border: '1px solid #000',
                 borderRadius: 16,
                 padding: '24px',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
@@ -192,13 +192,13 @@ export default function DashboardPanel({
                 style={{
                   fontSize: 40,
                   fontWeight: 800,
-                  color: '#1a1a1a',
+                  color: '#000',
                   lineHeight: 1,
                 }}
               >
                 {photographerCount}
               </p>
-              <p style={{ fontSize: 11, color: '#aaa', marginTop: 8 }}>
+              <p style={{ fontSize: 11, color: '#000', marginTop: 8 }}>
                 제주 + 서울
               </p>
             </div>
@@ -207,7 +207,7 @@ export default function DashboardPanel({
             <div
               style={{
                 background: '#fff',
-                border: '1px solid #ede8de',
+                border: '1px solid #000',
                 borderRadius: 16,
                 padding: '24px',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
@@ -228,13 +228,13 @@ export default function DashboardPanel({
                 style={{
                   fontSize: 40,
                   fontWeight: 800,
-                  color: '#1a1a1a',
+                  color: '#000',
                   lineHeight: 1,
                 }}
               >
                 {casualCount}
               </p>
-              <p style={{ fontSize: 11, color: '#aaa', marginTop: 8 }}>
+              <p style={{ fontSize: 11, color: '#000', marginTop: 8 }}>
                 제주 + 서울
               </p>
             </div>
@@ -252,7 +252,7 @@ export default function DashboardPanel({
             <div
               style={{
                 background: '#fff',
-                border: '1px solid #ede8de',
+                border: '1px solid #000',
                 borderRadius: 16,
                 padding: '24px',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
@@ -274,7 +274,7 @@ export default function DashboardPanel({
                 style={{
                   fontSize: 13,
                   fontWeight: 600,
-                  color: '#1a1a1a',
+                  color: '#000',
                   marginBottom: 24,
                 }}
               >
@@ -286,7 +286,7 @@ export default function DashboardPanel({
                   alignItems: 'center',
                   justifyContent: 'center',
                   height: 180,
-                  color: '#ddd',
+                  color: '#000',
                   flexDirection: 'column',
                   gap: 8,
                 }}
@@ -301,7 +301,7 @@ export default function DashboardPanel({
                 >
                   <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
                 </svg>
-                <p style={{ fontSize: 12, color: '#ccc' }}>
+                <p style={{ fontSize: 12, color: '#000' }}>
                   Google Search Console 연동 예정
                 </p>
               </div>
@@ -311,7 +311,7 @@ export default function DashboardPanel({
             <div
               style={{
                 background: '#fff',
-                border: '1px solid #ede8de',
+                border: '1px solid #000',
                 borderRadius: 16,
                 padding: '24px',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
@@ -333,7 +333,7 @@ export default function DashboardPanel({
                 style={{
                   fontSize: 13,
                   fontWeight: 600,
-                  color: '#1a1a1a',
+                  color: '#000',
                   marginBottom: 24,
                 }}
               >
@@ -345,7 +345,7 @@ export default function DashboardPanel({
                   alignItems: 'center',
                   justifyContent: 'center',
                   height: 180,
-                  color: '#ddd',
+                  color: '#000',
                   flexDirection: 'column',
                   gap: 8,
                 }}
@@ -362,7 +362,7 @@ export default function DashboardPanel({
                   <circle cx="8.5" cy="8.5" r="1.5" />
                   <polyline points="21 15 16 10 5 21" />
                 </svg>
-                <p style={{ fontSize: 12, color: '#ccc' }}>데이터 연동 예정</p>
+                <p style={{ fontSize: 12, color: '#000' }}>데이터 연동 예정</p>
               </div>
             </div>
           </div>
@@ -371,7 +371,7 @@ export default function DashboardPanel({
           <div
             style={{
               background: '#fff',
-              border: '1px solid #ede8de',
+              border: '1px solid #000',
               borderRadius: 16,
               overflow: 'hidden',
               boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
@@ -380,7 +380,7 @@ export default function DashboardPanel({
             <div
               style={{
                 padding: '20px 24px',
-                borderBottom: '1px solid #f5f2ec',
+                borderBottom: '1px solid #fff',
               }}
             >
               <p
@@ -396,13 +396,13 @@ export default function DashboardPanel({
             </div>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
               <thead>
-                <tr style={{ background: '#faf7f2' }}>
+                <tr style={{ background: '#fff' }}>
                   <th
                     style={{
                       padding: '12px 24px',
                       textAlign: 'left',
                       fontSize: 11,
-                      color: '#aaa',
+                      color: '#000',
                       fontWeight: 600,
                       letterSpacing: '1px',
                     }}
@@ -414,7 +414,7 @@ export default function DashboardPanel({
                       padding: '12px 24px',
                       textAlign: 'right',
                       fontSize: 11,
-                      color: '#aaa',
+                      color: '#000',
                       fontWeight: 600,
                       letterSpacing: '1px',
                     }}
@@ -427,7 +427,7 @@ export default function DashboardPanel({
                         padding: '12px 24px',
                         textAlign: 'right',
                         fontSize: 11,
-                        color: '#aaa',
+                        color: '#000',
                         fontWeight: 600,
                         letterSpacing: '1px',
                       }}
@@ -449,7 +449,7 @@ export default function DashboardPanel({
                       )
                     }
                     style={{
-                      borderTop: i > 0 ? '1px solid #f5f2ec' : 'none',
+                      borderTop: i > 0 ? '1px solid #fff' : 'none',
                       cursor: 'pointer',
                     }}
                   >
@@ -457,7 +457,7 @@ export default function DashboardPanel({
                       style={{
                         padding: '16px 24px',
                         fontSize: 13,
-                        color: '#1a1a1a',
+                        color: '#000',
                         fontWeight: 500,
                       }}
                     >
@@ -506,7 +506,7 @@ export default function DashboardPanel({
                           <span
                             style={{
                               fontSize: 12,
-                              color: '#aaa',
+                              color: '#000',
                               minWidth: 32,
                             }}
                           >

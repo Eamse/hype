@@ -5,6 +5,8 @@ import Header from '@/components/header';
 import { prisma } from '@/lib/prisma';
 import { buildCommentTree } from '@/lib/comment-tree';
 import CommentSection from './_components/comment-section';
+import ReviewDeleteButton from './_components/review-delete-button';
+import { maskName } from '@/lib/mask-name';
 import { getName } from 'country-list';
 
 type Props = { params: Promise<{ id: string }> };
@@ -55,11 +57,16 @@ export default async function ReviewDetailPage({ params }: Props) {
       <Header brand="hype-wedding" />
       <main style={{ paddingTop: 56 }}>
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '40px 20px 80px' }}>
-          <p style={{ fontSize: 12, color: '#666', margin: '0 0 8px' }}>
-            {review.name} · {getName(review.country) ?? review.country} · {review.shootingDate} ·{' '}
-            {review.productType} · {review.location}
-            {review.director && ` · ${review.director.number} ${review.director.name}`}
-            {review.rating && ` · ★ ${review.rating}`}
+          <p style={{ fontSize: 12, color: '#000', margin: '0 0 8px', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span>
+              {maskName(review.name)} · {getName(review.country) ?? review.country} · {review.shootingDate} ·{' '}
+              {review.productType} · {review.location}
+              {review.director && ` · ${review.director.number} ${review.director.name}`}
+              {/* 추후 사용 예정 — 별점 표시 임시 비활성화
+              {review.rating && ` · ★ ${review.rating}`}
+              */}
+            </span>
+            <ReviewDeleteButton reviewId={reviewId} authorUserId={review.userId} />
           </p>
           <h1 style={{ fontSize: 24, fontWeight: 700, margin: '0 0 20px' }}>
             {review.title}
@@ -82,7 +89,7 @@ export default async function ReviewDetailPage({ params }: Props) {
             </div>
           )}
 
-          <p style={{ fontSize: 15, lineHeight: 1.7, color: '#333', whiteSpace: 'pre-wrap' }}>
+          <p style={{ fontSize: 15, lineHeight: 1.7, color: '#000', whiteSpace: 'pre-wrap' }}>
             {review.content}
           </p>
 

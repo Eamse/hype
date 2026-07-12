@@ -291,7 +291,7 @@ function FaqItem({
     <div
       style={{
         backgroundColor: '#fff',
-        border: '1px solid #e0e0e0',
+        border: '1px solid #000',
         borderRadius: 8,
         overflow: 'hidden',
         marginBottom: 12,
@@ -316,13 +316,13 @@ function FaqItem({
           style={{
             fontSize: 22,
             fontWeight: 500,
-            color: '#191919',
+            color: '#000',
             lineHeight: 1.4,
           }}
         >
           Q: {q}
         </span>
-        <span style={{ flexShrink: 0, color: '#191919' }}>
+        <span style={{ flexShrink: 0, color: '#000' }}>
           {isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
         </span>
       </button>
@@ -340,7 +340,7 @@ function FaqItem({
             <p
               style={{
                 fontSize: 18,
-                color: '#555',
+                color: '#000',
                 lineHeight: 1.8,
                 marginBottom: 24,
                 whiteSpace: 'pre-line',
@@ -349,7 +349,7 @@ function FaqItem({
               A: {a}
             </p>
           )}
-          <div style={{ display: 'flex', gap: 12, color: '#191919' }}>
+          <div style={{ display: 'flex', gap: 12, color: '#000' }}>
             <button
               onClick={() => handleShare('facebook')}
               style={{
@@ -489,7 +489,7 @@ export default function FaqClient() {
             fontSize: isMobile ? 52 : 72,
             fontWeight: 900,
             letterSpacing: '-2px',
-            color: '#191919',
+            color: '#000',
             lineHeight: 1,
             minWidth: isMobile ? 120 : 180,
           }}
@@ -501,7 +501,7 @@ export default function FaqClient() {
               display: 'inline-block',
               width: 3,
               height: isMobile ? 44 : 60,
-              backgroundColor: '#191919',
+              backgroundColor: '#000',
               marginLeft: 3,
               verticalAlign: 'middle',
             }}
@@ -513,7 +513,7 @@ export default function FaqClient() {
             display: 'flex',
             alignItems: 'center',
             gap: 8,
-            borderBottom: '1.5px solid #191919',
+            borderBottom: '1.5px solid #000',
             paddingBottom: 4,
             flexShrink: 0,
             width: isMobile ? 160 : 240,
@@ -531,10 +531,10 @@ export default function FaqClient() {
               background: 'none',
               outline: 'none',
               fontSize: 14,
-              color: '#191919',
+              color: '#000',
             }}
           />
-          <span style={{ color: '#191919' }}>
+          <span style={{ color: '#000' }}>
             <SearchIcon />
           </span>
         </div>
@@ -542,7 +542,7 @@ export default function FaqClient() {
 
       {/* ── 카테고리 탭 ── */}
       {!isSearching && (
-        <div style={{ borderBottom: '1px solid #e0e0e0' }}>
+        <div style={{ borderBottom: '1px solid #000' }}>
           <div
             style={{
               maxWidth: 1200,
@@ -563,7 +563,7 @@ export default function FaqClient() {
                 width: 28,
                 height: 28,
                 borderRadius: '50%',
-                border: '1px solid #ddd',
+                border: '1px solid #000',
                 background: '#fff',
                 cursor: 'pointer',
                 display: 'flex',
@@ -580,7 +580,7 @@ export default function FaqClient() {
                 height="14"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#191919"
+                stroke="#000"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -621,8 +621,8 @@ export default function FaqClient() {
                       color: isActive
                         ? '#e8000d'
                         : hoveredTab === cat
-                          ? '#191919'
-                          : '#888',
+                          ? '#000'
+                          : '#000',
                       background: 'none',
                       borderTop: 'none',
                       borderLeft: 'none',
@@ -630,7 +630,7 @@ export default function FaqClient() {
                       borderBottom: isActive
                         ? '2px solid #e8000d'
                         : hoveredTab === cat
-                          ? '2px solid #191919'
+                          ? '2px solid #000'
                           : '2px solid transparent',
                       cursor: 'pointer',
                       transition: 'color 0.2s, border-color 0.2s',
@@ -653,7 +653,7 @@ export default function FaqClient() {
                 width: 28,
                 height: 28,
                 borderRadius: '50%',
-                border: '1px solid #ddd',
+                border: '1px solid #000',
                 background: '#fff',
                 cursor: 'pointer',
                 display: 'flex',
@@ -670,7 +670,7 @@ export default function FaqClient() {
                 height="14"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#191919"
+                stroke="#000"
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -692,7 +692,7 @@ export default function FaqClient() {
         }}
       >
         {displayItems.length === 0 ? (
-          <p style={{ color: '#767676', fontSize: 14 }}>No results found.</p>
+          <p style={{ color: '#000', fontSize: 14 }}>No results found.</p>
         ) : (
           displayItems.map(({ q, a }, idx) => (
             <div

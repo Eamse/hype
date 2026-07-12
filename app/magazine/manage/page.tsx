@@ -21,7 +21,7 @@ export default async function MagazineManagePage() {
       <div style={{ minHeight: '100vh' }}>
         <Header brand="hype-wedding" />
         <div style={{ padding: '160px 20px', textAlign: 'center' }}>
-          <p style={{ fontSize: 15, color: '#666' }}>
+          <p style={{ fontSize: 15, color: '#000' }}>
             You don&apos;t have permission to access this page.
           </p>
         </div>
@@ -30,7 +30,7 @@ export default async function MagazineManagePage() {
   }
 
   const magazines = await prisma.magazine.findMany({
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
   });
 
   return (
@@ -55,7 +55,7 @@ export default async function MagazineManagePage() {
             style={{
               padding: '10px 16px',
               borderRadius: 8,
-              background: '#191919',
+              background: '#000',
               color: '#fff',
               fontSize: 13,
               fontWeight: 700,
@@ -70,6 +70,7 @@ export default async function MagazineManagePage() {
             id: m.id,
             title: m.title,
             published: m.published,
+            isPinned: m.isPinned,
             createdAt: m.createdAt.toISOString(),
           }))}
         />

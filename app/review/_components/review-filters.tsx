@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
 type Director = { id: number; number: string; name: string };
@@ -8,9 +9,9 @@ type Director = { id: number; number: string; name: string };
 const selectStyle: React.CSSProperties = {
   padding: '8px 12px',
   borderRadius: 6,
-  border: '1px solid #e0e0e0',
+  border: '1px solid #000',
   fontSize: 13,
-  color: '#191919',
+  color: '#000',
   background: '#fff',
 };
 
@@ -55,43 +56,62 @@ export default function ReviewFilters({
         zIndex: 40,
         background: '#fff',
         display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         gap: 12,
         padding: '16px 0',
-        borderBottom: '1px solid #f0f0f0',
+        borderBottom: '1px solid #000',
         marginBottom: 24,
       }}
     >
-      <select
-        style={selectStyle}
-        value={productType ?? ''}
-        onChange={(e) => updateParam('productType', e.target.value)}
+      <div style={{ display: 'flex', gap: 12 }}>
+        <select
+          style={selectStyle}
+          value={productType ?? ''}
+          onChange={(e) => updateParam('productType', e.target.value)}
+        >
+          <option value="">All Products</option>
+          <option value="wedding">Wedding</option>
+          <option value="snap">Snap</option>
+        </select>
+        <select
+          style={selectStyle}
+          value={location ?? ''}
+          onChange={(e) => updateParam('location', e.target.value)}
+        >
+          <option value="">All Locations</option>
+          <option value="jeju">Jeju</option>
+          <option value="seoul">Seoul</option>
+        </select>
+        <select
+          style={selectStyle}
+          value={directorId ?? ''}
+          disabled={!location}
+          onChange={(e) => updateParam('directorId', e.target.value)}
+        >
+          <option value="">All Photographers</option>
+          {directors.map((d) => (
+            <option key={d.id} value={d.id}>
+              {d.number} {d.name}
+            </option>
+          ))}
+        </select>
+      </div>
+      <Link
+        href="/review/write"
+        style={{
+          padding: '10px 18px',
+          background: '#000',
+          color: '#fff',
+          borderRadius: 6,
+          fontSize: 13,
+          fontWeight: 700,
+          textDecoration: 'none',
+          whiteSpace: 'nowrap',
+        }}
       >
-        <option value="">All Products</option>
-        <option value="wedding">Wedding</option>
-        <option value="snap">Snap</option>
-      </select>
-      <select
-        style={selectStyle}
-        value={location ?? ''}
-        onChange={(e) => updateParam('location', e.target.value)}
-      >
-        <option value="">All Locations</option>
-        <option value="jeju">Jeju</option>
-        <option value="seoul">Seoul</option>
-      </select>
-      <select
-        style={selectStyle}
-        value={directorId ?? ''}
-        disabled={!location}
-        onChange={(e) => updateParam('directorId', e.target.value)}
-      >
-        <option value="">All Photographers</option>
-        {directors.map((d) => (
-          <option key={d.id} value={d.id}>
-            {d.number} {d.name}
-          </option>
-        ))}
-      </select>
+        Write a Review
+      </Link>
     </div>
   );
 }

@@ -18,7 +18,7 @@ export default async function MagazinePage({ searchParams }: Props) {
 
   const magazines = await prisma.magazine.findMany({
     where: { published: true },
-    orderBy: { createdAt: 'desc' },
+    orderBy: [{ isPinned: 'desc' }, { createdAt: 'desc' }],
     select: { id: true, title: true, imageUrl: true, createdAt: true },
   });
 
@@ -31,48 +31,58 @@ export default async function MagazinePage({ searchParams }: Props) {
       <Header brand={brand} />
 
       <div className="magazine-page-padding">
-        {isMaster && (
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginBottom: 16 }}>
-            <Link
-              href="/magazine/manage"
-              style={{ padding: '8px 14px', borderRadius: 6, border: '1px solid #e0e0e0', fontSize: 12, color: '#191919', textDecoration: 'none' }}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            gap: 8,
+          }}
+        >
+          <div>
+            <p
+              style={{
+                fontSize: 11,
+                letterSpacing: '3px',
+                textTransform: 'uppercase',
+                color: '#000',
+                marginBottom: 12,
+              }}
             >
-              Manage
-            </Link>
-            <Link
-              href="/magazine/write"
-              style={{ padding: '8px 14px', borderRadius: 6, background: '#191919', color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}
+              Hype Wedding
+            </p>
+            <h1
+              className="magazine-page-title"
+              style={{
+                fontWeight: 800,
+                color: '#000',
+                letterSpacing: '-0.5px',
+              }}
             >
-              + Write
-            </Link>
+              Magazine
+            </h1>
           </div>
-        )}
-        <p
-          style={{
-            fontSize: 11,
-            letterSpacing: '3px',
-            textTransform: 'uppercase',
-            color: '#aaa',
-            marginBottom: 12,
-          }}
-        >
-          Hype Wedding
-        </p>
-        <h1
-          className="magazine-page-title"
-          style={{
-            fontWeight: 800,
-            color: '#191919',
-            marginBottom: 24,
-            letterSpacing: '-0.5px',
-          }}
-        >
-          Magazine
-        </h1>
-        <div style={{ borderTop: '1px solid #e0e0e0', marginBottom: 48 }} />
+          {isMaster && (
+            <div style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
+              <Link
+                href="/magazine/manage"
+                style={{ padding: '8px 14px', borderRadius: 6, border: '1px solid #000', fontSize: 12, color: '#000', textDecoration: 'none' }}
+              >
+                Manage
+              </Link>
+              <Link
+                href="/magazine/write"
+                style={{ padding: '8px 14px', borderRadius: 6, background: '#000', color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}
+              >
+                + Write
+              </Link>
+            </div>
+          )}
+        </div>
+        <div style={{ borderTop: '1px solid #000', margin: '24px 0 48px' }} />
 
         {magazines.length === 0 ? (
-          <p style={{ color: '#aaa', fontSize: 14 }}>
+          <p style={{ color: '#000', fontSize: 14 }}>
             아직 게시된 글이 없습니다.
           </p>
         ) : (
@@ -107,11 +117,11 @@ export default async function MagazinePage({ searchParams }: Props) {
                       style={{
                         width: '100%',
                         aspectRatio: '3/4',
-                        backgroundColor: '#f5f5f5',
+                        backgroundColor: '#fff',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: '#ccc',
+                        color: '#000',
                         fontSize: 13,
                       }}
                     >
@@ -124,7 +134,7 @@ export default async function MagazinePage({ searchParams }: Props) {
                     style={{
                       fontSize: 10,
                       letterSpacing: '3px',
-                      color: '#aaa',
+                      color: '#000',
                       textTransform: 'uppercase',
                       marginBottom: 16,
                     }}
@@ -140,7 +150,7 @@ export default async function MagazinePage({ searchParams }: Props) {
                     style={{
                       fontSize: 32,
                       fontWeight: 800,
-                      color: '#191919',
+                      color: '#000',
                       lineHeight: 1.2,
                       letterSpacing: '-0.5px',
                       marginBottom: 24,
@@ -153,8 +163,8 @@ export default async function MagazinePage({ searchParams }: Props) {
                       fontSize: 10,
                       letterSpacing: '3px',
                       textTransform: 'uppercase',
-                      color: '#191919',
-                      borderBottom: '1px solid #191919',
+                      color: '#000',
+                      borderBottom: '1px solid #000',
                       paddingBottom: 2,
                     }}
                   >
@@ -172,7 +182,7 @@ export default async function MagazinePage({ searchParams }: Props) {
                     fontSize: 10,
                     letterSpacing: '3px',
                     textTransform: 'uppercase',
-                    color: '#aaa',
+                    color: '#000',
                     textAlign: 'center',
                     marginBottom: 32,
                   }}
@@ -209,11 +219,11 @@ export default async function MagazinePage({ searchParams }: Props) {
                               style={{
                                 width: '100%',
                                 height: '100%',
-                                backgroundColor: '#f5f5f5',
+                                backgroundColor: '#fff',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                color: '#ccc',
+                                color: '#000',
                                 fontSize: 13,
                               }}
                             >
@@ -225,7 +235,7 @@ export default async function MagazinePage({ searchParams }: Props) {
                           style={{
                             fontSize: 10,
                             letterSpacing: '2px',
-                            color: '#aaa',
+                            color: '#000',
                             textTransform: 'uppercase',
                             marginBottom: 6,
                           }}
@@ -240,7 +250,7 @@ export default async function MagazinePage({ searchParams }: Props) {
                           style={{
                             fontSize: 16,
                             fontWeight: 700,
-                            color: '#191919',
+                            color: '#000',
                             lineHeight: 1.3,
                           }}
                         >

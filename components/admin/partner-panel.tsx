@@ -89,15 +89,15 @@ export default function PartnerPanel({ role }: { role: 'hmu' | 'dress' | 'suit' 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       {/* 헤더 */}
-      <div style={{ paddingBottom: 20, borderBottom: '1px solid #ede8de' }}>
+      <div style={{ paddingBottom: 20, borderBottom: '1px solid #000' }}>
         <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>
           WEDDING
         </p>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a' }}>{ROLE_LABELS[role]} 관리</h2>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#000' }}>{ROLE_LABELS[role]} 관리</h2>
       </div>
 
       {/* 등록 폼 */}
-      <div style={{ background: '#fdfcfa', border: '1px solid #ede8de', borderRadius: 12, padding: 24 }}>
+      <div style={{ background: '#fff', border: '1px solid #000', borderRadius: 12, padding: 24 }}>
         <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a', marginBottom: 16 }}>새 등록</p>
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 2fr', gap: 12, marginBottom: 16 }}>
           <div>
@@ -119,14 +119,14 @@ export default function PartnerPanel({ role }: { role: 'hmu' | 'dress' | 'suit' 
             />
           </div>
         </div>
-        <button style={btnStyle('#191919', '#fff')} onClick={handleCreate}>등록</button>
+        <button style={btnStyle('#000', '#fff')} onClick={handleCreate}>등록</button>
       </div>
 
       {/* 목록 */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {loading && <p style={{ fontSize: 13, color: '#999' }}>불러오는 중...</p>}
+        {loading && <p style={{ fontSize: 13, color: '#000' }}>불러오는 중...</p>}
         {!loading && partners.length === 0 && (
-          <p style={{ fontSize: 13, color: '#999' }}>등록된 항목이 없습니다.</p>
+          <p style={{ fontSize: 13, color: '#000' }}>등록된 항목이 없습니다.</p>
         )}
         <BulkActions
           total={partners.length}
@@ -136,7 +136,7 @@ export default function PartnerPanel({ role }: { role: 'hmu' | 'dress' | 'suit' 
           onDeleteSelected={handleBulkDelete}
         />
         {partners.map((p) => (
-          <div key={p.id} style={{ background: '#fff', border: '1px solid #ede8de', borderRadius: 10, padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+          <div key={p.id} style={{ background: '#fff', border: '1px solid #000', borderRadius: 10, padding: '16px 20px', display: 'flex', alignItems: 'flex-start', gap: 12 }}>
             <input type="checkbox" checked={selectedIds.has(p.id)} onChange={() => toggleSelect(p.id)}
               style={{ flexShrink: 0, marginTop: 2 }} />
             <div style={{ flex: 1 }}>
@@ -145,18 +145,18 @@ export default function PartnerPanel({ role }: { role: 'hmu' | 'dress' | 'suit' 
                 <input style={inputStyle} value={editForm.name} onChange={(e) => setEditForm((f) => ({ ...f, name: e.target.value }))} placeholder="이름" />
                 <input style={inputStyle} value={editForm.instagram} onChange={(e) => setEditForm((f) => ({ ...f, instagram: e.target.value }))} placeholder="인스타그램" />
                 <div style={{ gridColumn: '1 / -1', display: 'flex', gap: 8 }}>
-                  <button style={btnStyle('#191919', '#fff')} onClick={() => handleUpdate(p.id)}>저장</button>
-                  <button style={btnStyle('#fff', '#666', '#ddd')} onClick={() => setEditingId(null)}>취소</button>
+                  <button style={btnStyle('#000', '#fff')} onClick={() => handleUpdate(p.id)}>저장</button>
+                  <button style={btnStyle('#fff', '#000', '#000')} onClick={() => setEditingId(null)}>취소</button>
                 </div>
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div>
-                  <span style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a' }}>{p.name}</span>
-                  {p.instagram && <span style={{ fontSize: 12, color: '#888', marginLeft: 10 }}>{p.instagram}</span>}
+                  <span style={{ fontSize: 15, fontWeight: 600, color: '#000' }}>{p.name}</span>
+                  {p.instagram && <span style={{ fontSize: 12, color: '#000', marginLeft: 10 }}>{p.instagram}</span>}
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <button style={btnStyle('#fff', '#3a1a2a', '#ddd')} onClick={() => { setEditingId(p.id); setEditForm({ name: p.name, instagram: p.instagram ?? '' }); }}>수정</button>
+                  <button style={btnStyle('#fff', '#3a1a2a', '#000')} onClick={() => { setEditingId(p.id); setEditForm({ name: p.name, instagram: p.instagram ?? '' }); }}>수정</button>
                   <button style={btnStyle('#fff', '#e05555', '#fdd')} onClick={() => handleDelete(p.id)}>삭제</button>
                 </div>
               </div>

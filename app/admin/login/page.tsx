@@ -33,7 +33,7 @@ export default function AdminSignIn() {
     borderRadius: 10,
     fontSize: 14,
     outline: 'none',
-    color: '#f5ede8',
+    color: '#fff',
     backgroundColor: '#3a2018',
     transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
     boxShadow: focused ? '0 0 0 3px rgba(184,134,90,0.18)' : 'none',
@@ -46,8 +46,7 @@ export default function AdminSignIn() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background:
-          'linear-gradient(135deg, #f5e6e8 0%, #e8d5d8 30%, #d4b8c7 60%, #c9a0b4 100%)',
+        background: '#fff',
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -334,7 +333,7 @@ export default function AdminSignIn() {
           style={{
             fontSize: 26,
             fontWeight: 300,
-            color: '#f5ede8',
+            color: '#fff',
             marginBottom: 8,
             letterSpacing: '0.5px',
           }}

@@ -20,5 +20,6 @@ declare module 'next-auth/jwt' {
     id: string;
     isOnboarded: boolean;
     role: string;
+    roleCheckedAt: number;
   }
 }

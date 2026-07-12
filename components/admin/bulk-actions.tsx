@@ -24,9 +24,9 @@ export default function BulkActions({
         alignItems: 'center',
         gap: 14,
         padding: '10px 14px',
-        background: '#fafaf8',
+        background: '#fff',
         borderRadius: 8,
-        border: '1px solid #ede8de',
+        border: '1px solid #000',
       }}
     >
       <label
@@ -45,7 +45,7 @@ export default function BulkActions({
 
       {selectedCount > 0 && (
         <>
-          <span style={{ fontSize: 12, color: '#888' }}>
+          <span style={{ fontSize: 12, color: '#000' }}>
             {selectedCount}개 선택됨
           </span>
           <button

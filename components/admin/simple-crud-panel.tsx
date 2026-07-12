@@ -131,15 +131,15 @@ export default function SimpleCrudPanel({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       {/* 헤더 */}
-      <div style={{ paddingBottom: 20, borderBottom: '1px solid #ede8de' }}>
+      <div style={{ paddingBottom: 20, borderBottom: '1px solid #000' }}>
         <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>
           {category}
         </p>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a' }}>{title}</h2>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#000' }}>{title}</h2>
       </div>
 
       {/* 등록 폼 */}
-      <div style={{ background: '#fdfcfa', border: '1px solid #ede8de', borderRadius: 12, padding: 24 }}>
+      <div style={{ background: '#fff', border: '1px solid #000', borderRadius: 12, padding: 24 }}>
         <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a', marginBottom: 16 }}>{createLabel}</p>
         <div
           style={{
@@ -164,15 +164,15 @@ export default function SimpleCrudPanel({
             </div>
           ))}
         </div>
-        <button style={btnStyle('#191919', '#fff')} onClick={handleCreate}>
+        <button style={btnStyle('#000', '#fff')} onClick={handleCreate}>
           등록
         </button>
       </div>
 
       {/* 목록 */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {loading && <p style={{ fontSize: 13, color: '#999' }}>불러오는 중...</p>}
-        {!loading && items.length === 0 && <p style={{ fontSize: 13, color: '#999' }}>{emptyListText}</p>}
+        {loading && <p style={{ fontSize: 13, color: '#000' }}>불러오는 중...</p>}
+        {!loading && items.length === 0 && <p style={{ fontSize: 13, color: '#000' }}>{emptyListText}</p>}
         <BulkActions
           total={items.length}
           selectedCount={selectedIds.size}
@@ -183,7 +183,7 @@ export default function SimpleCrudPanel({
         {items.map((item) => (
           <div
             key={item.id}
-            style={{ background: '#fff', border: '1px solid #ede8de', borderRadius: 10, overflow: 'hidden' }}
+            style={{ background: '#fff', border: '1px solid #000', borderRadius: 10, overflow: 'hidden' }}
           >
             <div
               style={{ padding: '14px 20px', display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}
@@ -197,7 +197,7 @@ export default function SimpleCrudPanel({
                 style={{ flexShrink: 0 }}
               />
               <div style={{ display: 'flex', alignItems: 'center', gap: 16, flex: 1 }}>
-                <span style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a' }}>
+                <span style={{ fontSize: 15, fontWeight: 600, color: '#000' }}>
                   {item[primary.key]}
                 </span>
                 {summaryFields.map((f) => (
@@ -207,11 +207,11 @@ export default function SimpleCrudPanel({
                   </span>
                 ))}
               </div>
-              <span style={{ fontSize: 11, color: '#aaa' }}>{expandedId === item.id ? '▲' : '▼'}</span>
+              <span style={{ fontSize: 11, color: '#000' }}>{expandedId === item.id ? '▲' : '▼'}</span>
             </div>
 
             {expandedId === item.id && (
-              <div style={{ borderTop: '1px solid #ede8de', padding: '16px 20px', background: '#fafaf8' }}>
+              <div style={{ borderTop: '1px solid #000', padding: '16px 20px', background: '#fff' }}>
                 {editingId === item.id ? (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                     <div
@@ -236,10 +236,10 @@ export default function SimpleCrudPanel({
                       ))}
                     </div>
                     <div style={{ display: 'flex', gap: 8 }}>
-                      <button style={btnStyle('#191919', '#fff')} onClick={() => handleUpdate(item.id)}>
+                      <button style={btnStyle('#000', '#fff')} onClick={() => handleUpdate(item.id)}>
                         저장
                       </button>
-                      <button style={btnStyle('#fff', '#666', '#ddd')} onClick={() => setEditingId(null)}>
+                      <button style={btnStyle('#fff', '#000', '#000')} onClick={() => setEditingId(null)}>
                         취소
                       </button>
                     </div>
@@ -249,14 +249,14 @@ export default function SimpleCrudPanel({
                     {detailFields.map(
                       (f) =>
                         item[f.key] && (
-                          <p key={f.key} style={{ fontSize: 13, color: '#555' }}>
+                          <p key={f.key} style={{ fontSize: 13, color: '#000' }}>
                             {item[f.key]}
                           </p>
                         ),
                     )}
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button
-                        style={btnStyle('#fff', '#3a1a2a', '#ddd')}
+                        style={btnStyle('#fff', '#3a1a2a', '#000')}
                         onClick={() => {
                           setEditingId(item.id);
                           setEditForm(

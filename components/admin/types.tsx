@@ -46,7 +46,7 @@ export function btnStyle(
   color: string,
   border?: string,
 ): React.CSSProperties {
-  const isPrimary = bg === '#191919';
+  const isPrimary = bg === '#000';
   return {
     padding: '8px 18px',
     borderRadius: 8,
@@ -77,12 +77,12 @@ export const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '10px 12px',
   borderRadius: 8,
-  border: '1px solid #e8e0d0',
+  border: '1px solid #000',
   fontSize: 13,
 
   outline: 'none',
-  color: '#1a1a1a',
-  backgroundColor: '#fdfcfa',
+  color: '#000',
+  backgroundColor: '#fff',
 };
 
 export function isProductArray(data: unknown): data is Product[] {

@@ -100,7 +100,7 @@ export default function DirectorRow({
     <div
       style={{
         background: '#fff',
-        border: '1px solid #ede8de',
+        border: '1px solid #000',
         borderRadius: 12,
         overflow: 'hidden',
       }}
@@ -198,10 +198,10 @@ export default function DirectorRow({
                 }
                 placeholder="인스타"
               />
-              <button style={btnStyle('#191919', '#fff')} onClick={onSaveEditDir}>
+              <button style={btnStyle('#000', '#fff')} onClick={onSaveEditDir}>
                 저장
               </button>
-              <button style={btnStyle('#fff', '#666', '#ddd')} onClick={onCancelEditDir}>
+              <button style={btnStyle('#fff', '#000', '#000')} onClick={onCancelEditDir}>
                 취소
               </button>
             </div>
@@ -223,19 +223,19 @@ export default function DirectorRow({
                 <span style={{ fontSize: 12, color: '#c9a96e', fontWeight: 700 }}>
                   {dir.number}
                 </span>
-                <span style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a' }}>
+                <span style={{ fontSize: 15, fontWeight: 600, color: '#000' }}>
                   {dir.name}
                 </span>
                 {dir.instagram && (
-                  <span style={{ fontSize: 12, color: '#888' }}>{dir.instagram}</span>
+                  <span style={{ fontSize: 12, color: '#000' }}>{dir.instagram}</span>
                 )}
-                <span style={{ fontSize: 11, color: '#aaa', marginLeft: 'auto' }}>
+                <span style={{ fontSize: 11, color: '#000', marginLeft: 'auto' }}>
                   {packages.length > 0 ? `패키지 ${packages.length}개` : ''}{' '}
                   {isExpanded ? '▲' : '▼'}
                 </span>
               </button>
               <div style={{ display: 'flex', gap: 6, marginLeft: 12 }}>
-                <button style={btnStyle('#fff', '#3a1a2a', '#ddd')} onClick={onStartEditDir}>
+                <button style={btnStyle('#fff', '#3a1a2a', '#000')} onClick={onStartEditDir}>
                   수정
                 </button>
                 <button style={btnStyle('#fff', '#e05555', '#fdd')} onClick={onDeleteDir}>
@@ -251,8 +251,8 @@ export default function DirectorRow({
       {isExpanded && (
         <div
           style={{
-            borderTop: '1px solid #ede8de',
-            background: '#fafaf8',
+            borderTop: '1px solid #000',
+            background: '#fff',
             padding: '20px 20px 24px',
           }}
         >
@@ -276,13 +276,13 @@ export default function DirectorRow({
               Packages
             </p>
             {!isAddingPkg && (
-              <button style={btnStyle('#191919', '#fff')} onClick={onStartAddPkg}>
+              <button style={btnStyle('#000', '#fff')} onClick={onStartAddPkg}>
                 + 패키지 추가
               </button>
             )}
           </div>
 
-          {pkgsLoading && <p style={{ fontSize: 12, color: '#999' }}>불러오는 중...</p>}
+          {pkgsLoading && <p style={{ fontSize: 12, color: '#000' }}>불러오는 중...</p>}
 
           {/* 패키지 추가 폼 */}
           {isAddingPkg && (
@@ -310,7 +310,7 @@ export default function DirectorRow({
                 key={pkg.id}
                 style={{
                   background: '#fff',
-                  border: '1px solid #e8e0d0',
+                  border: '1px solid #000',
                   borderRadius: 8,
                   overflow: 'hidden',
                 }}
@@ -342,14 +342,14 @@ export default function DirectorRow({
                   >
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span style={{ fontSize: 14, fontWeight: 600, color: '#1a1a1a' }}>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: '#000' }}>
                           {pkg.name}
                         </span>
                         {pkg.subtitle && (
-                          <span style={{ fontSize: 12, color: '#888' }}>{pkg.subtitle}</span>
+                          <span style={{ fontSize: 12, color: '#000' }}>{pkg.subtitle}</span>
                         )}
                       </div>
-                      <div style={{ display: 'flex', gap: 12, fontSize: 12, color: '#666' }}>
+                      <div style={{ display: 'flex', gap: 12, fontSize: 12, color: '#000' }}>
                         <span>SNS ${pkg.priceSNS.toLocaleString()}</span>
                         <span>No SNS ${pkg.priceNoSNS.toLocaleString()}</span>
                         <span>{pkg.shootingTime}</span>
@@ -408,7 +408,7 @@ export default function DirectorRow({
                     </div>
                     <div style={{ display: 'flex', gap: 6, marginLeft: 12, flexShrink: 0 }}>
                       <button
-                        style={btnStyle('#fff', '#3a1a2a', '#ddd')}
+                        style={btnStyle('#fff', '#3a1a2a', '#000')}
                         onClick={() => onStartEditPkg(pkg)}
                       >
                         수정
@@ -425,7 +425,7 @@ export default function DirectorRow({
               </div>
             ))}
             {!pkgsLoading && packages.length === 0 && !isAddingPkg && (
-              <p style={{ fontSize: 12, color: '#999' }}>등록된 패키지가 없습니다.</p>
+              <p style={{ fontSize: 12, color: '#000' }}>등록된 패키지가 없습니다.</p>
             )}
           </div>
         </div>

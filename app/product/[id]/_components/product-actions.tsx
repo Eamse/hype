@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import { useBookmarks } from '@/components/bookmark-provider';
 
+const BOOKING_FORM_URL = 'https://forms.gle/3sWqu4NED5ruJEnN9';
+
 function ChevronLeftIcon() {
   return (
     <svg
@@ -26,8 +28,8 @@ function BookmarkIcon({ active }: { active: boolean }) {
       width="22"
       height="22"
       viewBox="0 0 24 24"
-      fill={active ? '#191919' : 'none'}
-      stroke="#191919"
+      fill={active ? '#000' : 'none'}
+      stroke="#000"
       strokeWidth="1.8"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -48,7 +50,7 @@ export function BackButton() {
         gap: 4,
         padding: '16px 0',
         fontSize: 13,
-        color: '#555',
+        color: '#000',
         background: 'none',
         border: 'none',
         cursor: 'pointer',
@@ -87,7 +89,7 @@ export function StickyBottomBar({
         right: 0,
         zIndex: 100,
         backgroundColor: '#fff',
-        borderTop: '1px solid #e8e8e8',
+        borderTop: '1px solid #000',
         padding: '12px 20px',
         display: 'flex',
         alignItems: 'center',
@@ -100,7 +102,7 @@ export function StickyBottomBar({
           width: 48,
           height: 48,
           borderRadius: 10,
-          border: '1px solid #e0e0e0',
+          border: '1px solid #000',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -111,22 +113,29 @@ export function StickyBottomBar({
       >
         <BookmarkIcon active={saved} />
       </button>
-      <button
+      <a
+        href={BOOKING_FORM_URL}
+        target="_blank"
+        rel="noopener noreferrer"
         style={{
           flex: 1,
           height: 48,
           borderRadius: 10,
-          backgroundColor: '#191919',
+          backgroundColor: '#000',
           color: '#fff',
           fontSize: 15,
           fontWeight: 600,
           letterSpacing: '0.5px',
           border: 'none',
           cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textDecoration: 'none',
         }}
       >
         Book Now
-      </button>
+      </a>
     </div>
   );
 }

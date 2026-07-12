@@ -29,7 +29,7 @@ export default function HomeFooter() {
   return (
     <footer
       style={{
-        borderTop: '1px solid #e8e8e8',
+        borderTop: '1px solid silver',
         padding: '24px 20px',
         backgroundColor: '#fff',
       }}
@@ -40,7 +40,7 @@ export default function HomeFooter() {
             style={{
               fontSize: 12,
               fontWeight: 700,
-              color: '#191919',
+              color: '#000',
               background: 'none',
               border: 'none',
               cursor: 'pointer',
@@ -52,7 +52,7 @@ export default function HomeFooter() {
             style={{
               fontSize: 12,
               fontWeight: 700,
-              color: '#191919',
+              color: '#000',
               background: 'none',
               border: 'none',
               cursor: 'pointer',
@@ -63,7 +63,7 @@ export default function HomeFooter() {
           <button
             style={{
               fontSize: 12,
-              color: '#888',
+              color: '#000',
               background: 'none',
               border: 'none',
               cursor: 'pointer',
@@ -80,7 +80,7 @@ export default function HomeFooter() {
             alignItems: 'center',
             gap: 4,
             fontSize: 11,
-            color: '#888',
+            color: '#000',
             background: 'none',
             border: 'none',
             cursor: 'pointer',
@@ -94,11 +94,11 @@ export default function HomeFooter() {
           <div
             style={{
               fontSize: 11,
-              color: '#aaa',
+              color: '#000',
               lineHeight: 1.9,
               marginTop: 10,
               paddingTop: 10,
-              borderTop: '1px solid #f0f0f0',
+              borderTop: '1px solid #000',
             }}
           >
             <p>CEO: Kim Do-hee &nbsp;|&nbsp; Business Reg: 807-81-03218</p>
@@ -111,7 +111,7 @@ export default function HomeFooter() {
           </div>
         )}
 
-        <p style={{ fontSize: 11, color: '#ccc', marginTop: 16 }}>
+        <p style={{ fontSize: 11, color: '#000', marginTop: 16 }}>
           © 2024 Name A Corp. All rights reserved.
         </p>
       </div>

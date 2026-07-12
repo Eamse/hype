@@ -12,7 +12,7 @@ type Product = {
   section?: string;
 };
 
-type Section = { title: string; subtitle?: string; products: Product[] };
+type Section = { id?: string; title: string; subtitle?: string; products: Product[] };
 
 export default function ProductSections({ sections }: { sections: Section[] }) {
   const { bookmarkedIds, toggleBookmark } = useBookmarks();
@@ -32,6 +32,7 @@ export default function ProductSections({ sections }: { sections: Section[] }) {
       {sections.map((s) => (
         <ProductSection
           key={s.title}
+          id={s.id}
           title={s.title}
           subtitle={s.subtitle}
           products={s.products}

@@ -100,11 +100,11 @@ export default function WeddingDirectorView({
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* 헤더 */}
-      <div style={{ paddingBottom: 20, borderBottom: '1px solid #ede8de' }}>
+      <div style={{ paddingBottom: 20, borderBottom: '1px solid #000' }}>
         <button
           onClick={onBack}
           style={{
-            ...btnStyle('transparent', '#888', '#e0d8c8'),
+            ...btnStyle('transparent', '#000', '#e0d8c8'),
             marginBottom: 16,
           }}
         >
@@ -121,7 +121,7 @@ export default function WeddingDirectorView({
         >
           DIRECTOR 관리
         </p>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a' }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#000' }}>
           {product.title}
         </h2>
       </div>
@@ -129,8 +129,8 @@ export default function WeddingDirectorView({
       {/* 작가 연결 */}
       <div
         style={{
-          background: '#fdfcfa',
-          border: '1px solid #ede8de',
+          background: '#fff',
+          border: '1px solid #000',
           borderRadius: 12,
           padding: 20,
         }}
@@ -163,7 +163,7 @@ export default function WeddingDirectorView({
             ))}
           </select>
           <button
-            style={btnStyle('#191919', '#fff')}
+            style={btnStyle('#000', '#fff')}
             onClick={handleLink}
             disabled={!selectedPhotographerId}
           >
@@ -174,16 +174,16 @@ export default function WeddingDirectorView({
 
       {/* 연결된 작가 목록 */}
       {loading ? (
-        <p style={{ fontSize: 13, color: '#999' }}>불러오는 중...</p>
+        <p style={{ fontSize: 13, color: '#000' }}>불러오는 중...</p>
       ) : linked.length === 0 ? (
-        <p style={{ fontSize: 13, color: '#999' }}>연결된 작가가 없습니다.</p>
+        <p style={{ fontSize: 13, color: '#000' }}>연결된 작가가 없습니다.</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {linked.map((p) => (
             <div
               key={p.id}
               style={{
-                border: '1px solid #ede8de',
+                border: '1px solid #000',
                 borderRadius: 10,
                 overflow: 'hidden',
               }}
@@ -205,19 +205,19 @@ export default function WeddingDirectorView({
                     {p.number}
                   </span>
                   <span
-                    style={{ fontSize: 15, fontWeight: 600, color: '#1a1a1a' }}
+                    style={{ fontSize: 15, fontWeight: 600, color: '#000' }}
                   >
                     {p.name}
                   </span>
                   {p.instagram && (
-                    <span style={{ fontSize: 12, color: '#888' }}>
+                    <span style={{ fontSize: 12, color: '#000' }}>
                       {p.instagram}
                     </span>
                   )}
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button
-                    style={btnStyle('transparent', '#c9956a', '#e8d9b8')}
+                    style={btnStyle('transparent', '#c9956a', '#000')}
                     onClick={() =>
                       setActivePackagePhotographerId(
                         activePackagePhotographerId === p.id ? null : p.id,
@@ -241,11 +241,11 @@ export default function WeddingDirectorView({
                 <div
                   style={{
                     padding: '16px 18px',
-                    background: '#fafaf8',
-                    borderTop: '1px solid #ede8de',
+                    background: '#fff',
+                    borderTop: '1px solid #000',
                   }}
                 >
-                  <p style={{ fontSize: 12, color: '#999' }}>
+                  <p style={{ fontSize: 12, color: '#000' }}>
                     패키지 관리 — 준비 중
                   </p>
                 </div>

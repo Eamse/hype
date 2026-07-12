@@ -99,6 +99,12 @@ export async function PATCH(
     }
     data.published = b.published;
   }
+  if (b.isPinned !== undefined) {
+    if (typeof b.isPinned !== 'boolean') {
+      return NextResponse.json({ error: 'isPinned must be a boolean' }, { status: 400 });
+    }
+    data.isPinned = b.isPinned;
+  }
 
   if (Object.keys(data).length === 0) {
     return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });

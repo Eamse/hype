@@ -4,6 +4,8 @@ import { useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import Header from '@/components/header';
 import ProductCard from '@/components/product-card';
+import SubTabBar from '@/components/sub-tab-bar';
+import { serviceSubTabs } from '@/lib/service-sub-tabs';
 import { isProductArray, type Product } from '@/lib/is-product-array';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
@@ -48,17 +50,20 @@ function ProductsContent() {
   return (
     <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
       <Header brand={brand} />
+      <div style={{ paddingTop: 56 }}>
+        <SubTabBar tabs={serviceSubTabs(brand)} />
+      </div>
       <main
         style={{
           maxWidth: 1200,
           margin: '0 auto',
-          padding: isMobile ? '72px 16px 60px' : '80px 40px 60px',
+          padding: isMobile ? '32px 16px 60px' : '40px 40px 60px',
         }}
       >
         <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>
           {section ?? 'All Products'}
         </h1>
-        <p style={{ fontSize: 13, color: '#767676', marginBottom: 32 }}>
+        <p style={{ fontSize: 13, color: '#000', marginBottom: 32 }}>
           {products.length} products
         </p>
 

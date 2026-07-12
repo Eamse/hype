@@ -156,6 +156,20 @@ body {
   }
 }
 
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.header-dropdown {
+  animation: dropdownFadeIn 0.18s ease-out;
+}
+
 a {
   text-decoration: none;
   color: inherit;
@@ -186,30 +200,16 @@ a {
 /* ── 반응형 레이아웃 ─────────────────────────────────────── */
 .magazine-detail-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   min-height: 80vh;
 }
-.magazine-detail-left {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
-  background: #fff;
-  padding: 80px;
-}
 .magazine-detail-right {
+  max-width: 800px;
+  margin: 0 auto;
   padding: 80px 60px 120px;
 }
 
 @media (max-width: 768px) {
-  .magazine-detail-grid {
-    grid-template-columns: 1fr;
-  }
-  .magazine-detail-left {
-    position: relative;
-    height: auto;
-    padding: 20px;
-  }
   .magazine-detail-right {
     padding: 32px 20px 80px;
   }
@@ -225,22 +225,64 @@ a {
   text-decoration: underline;
 }
 
-/* ── D-Day 배너 반응형 ─────────────────────────────────────── */
+/* ── 히어로 캐러셀 반응형 비율 ─────────────────────────────── */
+.hero-carousel {
+  aspect-ratio: 21 / 9;
+}
+@media (max-width: 768px) {
+  .hero-carousel {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* ── D-Day 배너 (히어로 이미지 좌하단 플로팅 카드) ────────────────── */
 .dday-banner {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 0;
+  font-size: 13px;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+}
+.dday-banner-text {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  border: 1px solid #e8e8e8;
+  gap: 10px;
+  letter-spacing: 0.2px;
+}
+.dday-banner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #fff;
+}
+.dday-banner-cta {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #000;
+  background: #fff;
+  border: 1px solid #fff;
   border-radius: 8px;
-  padding: 14px 20px;
-  font-size: 14px;
+  padding: 9px 18px;
+  white-space: nowrap;
+  text-decoration: none;
+  text-shadow: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.dday-banner-cta:hover {
+  background: transparent;
+  color: #fff;
 }
 @media (max-width: 768px) {
   .dday-banner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    font-size: 13px;
+    padding: 14px 18px;
+    font-size: 12px;
   }
 }
 
@@ -332,8 +374,12 @@ a {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 .animate-fade {
   animation: fadeIn 0.8s ease-in-out;

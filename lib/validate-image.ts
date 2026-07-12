@@ -57,9 +57,10 @@ export function validateMagicBytes(buffer: Buffer, mimeType: string): boolean {
  */
 export const SHARP_OPTIONS = { limitInputPixels: 40_000_000 } as const;
 
-/** 리사이즈/화질 기본값 — 여기 숫자만 바꾸면 프로젝트 전체 업로드 압축 정도가 바뀜 */
-export const DEFAULT_RESIZE_WIDTH = 1920;
-export const DEFAULT_WEBP_QUALITY = 80;
+/** 리사이즈/화질 기본값 — 여기 숫자만 바꾸면 프로젝트 전체 업로드 압축 정도가 바뀜
+ * 웨딩 사진 특성상 고화질 유지가 중요해서 해상도/화질을 높게 잡음 (결과물이 10MB 안팎까지 나올 수 있음) */
+export const DEFAULT_RESIZE_WIDTH = 3840;
+export const DEFAULT_WEBP_QUALITY = 92;
 
 export class ImageProcessingError extends Error {
   status: number;

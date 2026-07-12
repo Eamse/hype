@@ -3,6 +3,8 @@ export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
 import SnsSidebar from '@/components/sns-sidebar';
+import SubTabBar from '@/components/sub-tab-bar';
+import { serviceSubTabs } from '@/lib/service-sub-tabs';
 import ProductSections from '../_components/product-sections';
 
 export default async function WeddingPage() {
@@ -33,13 +35,13 @@ export default async function WeddingPage() {
     <div
       style={{
         backgroundColor: '#fff',
-        color: '#191919',
+        color: '#000',
         minHeight: '100vh',
       }}
     >
       <Header />
-
-      <main style={{ paddingTop: 80 }}>
+      <main style={{ paddingTop: 56 }}>
+        <SubTabBar tabs={serviceSubTabs('hype-wedding')} />
         <ProductSections
           sections={[
             {

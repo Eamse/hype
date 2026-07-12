@@ -4,6 +4,9 @@ import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import CountryCombobox from '@/components/country-combobox';
 
+// "선택 안 함" 체크 시 저장되는 값 — 서버가 이미 허용하는 'other'를 재사용
+const PREFER_NOT_TO_SAY = 'other';
+
 // ─── 타입 ─────────────────────────────────────────────────
 
 export type UserInfoValues = {
@@ -156,12 +159,25 @@ export default function UserInfoFields({
           name="gender"
           value={values.gender}
           onChange={(e) => onChange(e.target.name, e.target.value)}
-          className={`border rounded-lg px-3 py-2 text-sm outline-none bg-white ${errors.gender ? errorBorder : normalBorder}`}
+          disabled={values.gender === PREFER_NOT_TO_SAY}
+          className={`border rounded-lg px-3 py-2 text-sm outline-none bg-white disabled:bg-gray-100 disabled:text-gray-400 ${errors.gender ? errorBorder : normalBorder}`}
         >
           <option value="">Select Gender</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
         </select>
+        <div className="flex items-center gap-2 mt-1">
+          <input
+            type="checkbox"
+            id="genderSkip"
+            checked={values.gender === PREFER_NOT_TO_SAY}
+            onChange={(e) => onChange('gender', e.target.checked ? PREFER_NOT_TO_SAY : '')}
+            className="w-4 h-4 accent-gray-900"
+          />
+          <label htmlFor="genderSkip" className="text-sm text-gray-600">
+            Prefer not to say
+          </label>
+        </div>
         {errors.gender && (
           <p className="text-xs text-red-500">{errors.gender}</p>
         )}

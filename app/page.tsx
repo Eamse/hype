@@ -6,7 +6,7 @@ import HeroCarousel from '@/components/hero-carousel';
 import SnsSidebar from '@/components/sns-sidebar';
 import ProductSections from './_components/product-sections';
 import HomeFooter from './_components/home-footer';
-import EditionalSection from './_components/editional-section';
+import EditorialSection from './_components/editorial-section';
 
 export default async function Home() {
   const heroRow = await prisma.siteConfig.findUnique({
@@ -58,38 +58,35 @@ export default async function Home() {
     <div
       style={{
         backgroundColor: '#fff',
-        color: '#191919',
+        color: '#000',
         minHeight: '100vh',
       }}
     >
       <Header />
 
       <main style={{ paddingTop: 56 }}>
-        <HeroCarousel images={heroImages} />
-
-        <section
-          style={{ maxWidth: 1200, margin: '0 auto', padding: '0 20px 24px' }}
-        >
+        <HeroCarousel images={heroImages}>
           <div className="dday-banner">
-            <span>
-              Register your wedding date and <strong>check your D-Day!</strong>
-            </span>
-            <a
-              href="https://forms.gle/3sWqu4NED5ruJEnN9"
-              style={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: '#191919',
-                border: '1px solid #191919',
-                borderRadius: 6,
-                padding: '6px 16px',
-                whiteSpace: 'nowrap',
-              }}
-            >
+            <div className="dday-banner-text">
+              <span className="dday-banner-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <line x1="16" y1="2" x2="16" y2="6" />
+                  <line x1="8" y1="2" x2="8" y2="6" />
+                  <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+              </span>
+              <span>
+                Register your wedding date and
+                <br />
+                <strong>check your D-Day!</strong>
+              </span>
+            </div>
+            <a href="https://forms.gle/3sWqu4NED5ruJEnN9" className="dday-banner-cta">
               Enter Wedding Info
             </a>
           </div>
-        </section>
+        </HeroCarousel>
 
         <ProductSections
           sections={[
@@ -104,7 +101,7 @@ export default async function Home() {
           ]}
         />
 
-        <EditionalSection magazines={magazines} />
+        <EditorialSection magazines={magazines} />
       </main>
 
       <SnsSidebar />

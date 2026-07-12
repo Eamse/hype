@@ -4,12 +4,13 @@ import { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import MagazineDetailView from '@/components/magazine-detail-view';
 import TiptapEditor from '@/components/tiptap-editor';
+import { resizeImageFile, resizeImageFiles } from '@/lib/client-image-resize';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '10px 12px',
   borderRadius: 6,
-  border: '1px solid #e0e0e0',
+  border: '1px solid #000',
   fontSize: 14,
 };
 
@@ -17,7 +18,7 @@ const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: 13,
   fontWeight: 600,
-  color: '#333',
+  color: '#000',
   marginBottom: 6,
 };
 
@@ -150,7 +151,7 @@ export default function MagazineWriteForm({
             top: 56,
             zIndex: 50,
             backgroundColor: '#fff',
-            borderBottom: '1px solid #e8e8e8',
+            borderBottom: '1px solid #000',
             padding: '12px 20px',
             display: 'flex',
             justifyContent: 'flex-end',
@@ -162,7 +163,7 @@ export default function MagazineWriteForm({
             style={{
               padding: '8px 16px',
               borderRadius: 6,
-              border: '1px solid #e0e0e0',
+              border: '1px solid #000',
               background: '#fff',
               cursor: 'pointer',
               fontSize: 13,
@@ -177,7 +178,7 @@ export default function MagazineWriteForm({
               padding: '8px 16px',
               borderRadius: 6,
               border: 'none',
-              background: '#191919',
+              background: '#000',
               color: '#fff',
               cursor: 'pointer',
               fontSize: 13,
@@ -226,14 +227,17 @@ export default function MagazineWriteForm({
         <div>
           <label style={labelStyle}>Cover Image</label>
           {existingImageUrl && !coverFile && (
-            <p style={{ fontSize: 12, color: '#888', margin: '0 0 6px' }}>
+            <p style={{ fontSize: 12, color: '#000', margin: '0 0 6px' }}>
               Current cover set. Choose a new file to replace it.
             </p>
           )}
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => setCoverFile(e.target.files?.[0] ?? null)}
+            onChange={async (e) => {
+              const file = e.target.files?.[0] ?? null;
+              setCoverFile(file ? await resizeImageFile(file) : null);
+            }}
             style={{ ...inputStyle, padding: '8px 10px' }}
           />
         </div>
@@ -259,7 +263,7 @@ export default function MagazineWriteForm({
                       height: 80,
                       objectFit: 'cover',
                       borderRadius: 6,
-                      border: '1px solid #e0e0e0',
+                      border: '1px solid #000',
                     }}
                   />
                   <button
@@ -291,7 +295,10 @@ export default function MagazineWriteForm({
             type="file"
             accept="image/*"
             multiple
-            onChange={(e) => setGalleryFiles(Array.from(e.target.files ?? []))}
+            onChange={async (e) => {
+              const files = Array.from(e.target.files ?? []);
+              setGalleryFiles(await resizeImageFiles(files));
+            }}
             style={{ ...inputStyle, padding: '8px 10px' }}
           />
         </div>
@@ -302,7 +309,7 @@ export default function MagazineWriteForm({
             alignItems: 'center',
             gap: 8,
             fontSize: 13,
-            color: '#333',
+            color: '#000',
           }}
         >
           <input
@@ -321,7 +328,7 @@ export default function MagazineWriteForm({
             style={{
               padding: '12px 20px',
               borderRadius: 8,
-              border: '1px solid #e0e0e0',
+              border: '1px solid #000',
               background: '#fff',
               cursor: 'pointer',
               fontSize: 14,
@@ -337,7 +344,7 @@ export default function MagazineWriteForm({
               padding: '12px 20px',
               borderRadius: 8,
               border: 'none',
-              background: '#191919',
+              background: '#000',
               color: '#fff',
               cursor: 'pointer',
               fontSize: 14,

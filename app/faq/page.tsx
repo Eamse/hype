@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Header from '@/components/header';
+import SubTabBar from '@/components/sub-tab-bar';
+import { inquirySubTabs } from '@/lib/inquiry-sub-tabs';
 import FaqClient from './_components/faq-client';
 
 export const metadata: Metadata = {
@@ -23,6 +25,7 @@ export default async function FaqPage({
     >
       <Header brand={activeBrand} />
       <main style={{ paddingTop: 56 }}>
+        <SubTabBar tabs={inquirySubTabs(activeBrand)} />
         <FaqClient />
       </main>
     </div>

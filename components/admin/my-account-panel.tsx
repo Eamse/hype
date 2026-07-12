@@ -43,19 +43,19 @@ export default function MyAccountPanel() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-      <div style={{ paddingBottom: 20, borderBottom: '1px solid #ede8de' }}>
+      <div style={{ paddingBottom: 20, borderBottom: '1px solid #000' }}>
         <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>
           MY ACCOUNT
         </p>
-        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#1a1a1a', letterSpacing: '-0.3px' }}>
+        <h2 style={{ fontSize: 22, fontWeight: 700, color: '#000', letterSpacing: '-0.3px' }}>
           Change Password
         </h2>
-        <p style={{ fontSize: 12, color: '#767676', marginTop: 4 }}>
+        <p style={{ fontSize: 12, color: '#000', marginTop: 4 }}>
           After changing your password, you will be logged out automatically.
         </p>
       </div>
 
-      <div style={{ background: '#fff', border: '1px solid #ede8de', borderRadius: 16, padding: 24, maxWidth: 480 }}>
+      <div style={{ background: '#fff', border: '1px solid #000', borderRadius: 16, padding: 24, maxWidth: 480 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           <div>
             <label style={labelStyle}>Current Password</label>
@@ -86,7 +86,7 @@ export default function MyAccountPanel() {
           </div>
           {error && <p style={{ fontSize: 12, color: '#e05555' }}>{error}</p>}
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
-            <button onClick={handleSubmit} disabled={loading} style={btnStyle('#191919', '#fff')}>
+            <button onClick={handleSubmit} disabled={loading} style={btnStyle('#000', '#fff')}>
               {loading ? 'Saving...' : 'Change Password'}
             </button>
           </div>

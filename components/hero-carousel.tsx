@@ -3,7 +3,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 
-export default function HeroCarousel({ images }: { images: string[] }) {
+export default function HeroCarousel({
+  images,
+  children,
+}: {
+  images: string[];
+  children?: React.ReactNode;
+}) {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
 
@@ -21,7 +27,8 @@ export default function HeroCarousel({ images }: { images: string[] }) {
 
   return (
     <section
-      style={{ position: 'relative', width: '100%', aspectRatio: '21/9', overflow: 'hidden', backgroundColor: '#111' }}
+      className="hero-carousel"
+      style={{ position: 'relative', width: '100%', overflow: 'hidden', backgroundColor: '#000' }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -48,10 +55,19 @@ export default function HeroCarousel({ images }: { images: string[] }) {
 
       {/* 라인 인디케이터 */}
       {images.length > 1 && (
-        <div style={{
-          position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)',
-          display: 'flex', gap: 6, zIndex: 2, width: '60%',
-        }}>
+        <div
+          style={{
+            position: 'absolute',
+            left: '50%',
+            bottom: 20,
+            transform: 'translateX(-50%)',
+            zIndex: 3,
+            display: 'flex',
+            gap: 6,
+            width: '60%',
+            maxWidth: 300,
+          }}
+        >
           {images.map((_, idx) => (
             <button
               key={idx}
@@ -68,6 +84,21 @@ export default function HeroCarousel({ images }: { images: string[] }) {
               }}
             />
           ))}
+        </div>
+      )}
+
+      {/* 왼쪽 하단 오버레이 콘텐츠 (예: D-day 배너) — 떠 있는 카드 형태 */}
+      {children && (
+        <div
+          style={{
+            position: 'absolute',
+            left: 24,
+            bottom: 24,
+            zIndex: 3,
+            maxWidth: 'calc(100% - 48px)',
+          }}
+        >
+          {children}
         </div>
       )}
     </section>

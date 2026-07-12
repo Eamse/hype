@@ -40,7 +40,7 @@ export default function BookmarkList({ bookmarks }: { bookmarks: Bookmark[] }) {
     >
       <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 24 }}>Saved</h1>
       {bookmarks.length === 0 ? (
-        <p style={{ color: '#767676', fontSize: 14 }}>저장된 상품이 없어요.</p>
+        <p style={{ color: '#000', fontSize: 14 }}>저장된 상품이 없어요.</p>
       ) : (
         <div
           style={{

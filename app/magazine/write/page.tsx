@@ -21,7 +21,7 @@ export default async function MagazineWritePage() {
         <MagazineWriteForm />
       ) : (
         <div style={{ padding: '160px 20px', textAlign: 'center' }}>
-          <p style={{ fontSize: 15, color: '#666' }}>
+          <p style={{ fontSize: 15, color: '#000' }}>
             You don&apos;t have permission to access this page.
           </p>
         </div>

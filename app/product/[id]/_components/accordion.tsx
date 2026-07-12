@@ -32,7 +32,7 @@ export default function Accordion({
 }) {
   const [open, setOpen] = useState(false);
   return (
-    <div style={{ borderTop: '1px solid #e8e8e8' }}>
+    <div style={{ borderTop: '1px solid #000' }}>
       <button
         onClick={() => setOpen((o) => !o)}
         style={{
@@ -43,7 +43,7 @@ export default function Accordion({
           padding: '16px 0',
           fontSize: 14,
           fontWeight: 500,
-          color: '#191919',
+          color: '#000',
           background: 'none',
           border: 'none',
           cursor: 'pointer',
@@ -57,7 +57,7 @@ export default function Accordion({
           style={{
             paddingBottom: 16,
             fontSize: 13,
-            color: '#666',
+            color: '#000',
             lineHeight: 1.8,
           }}
         >
