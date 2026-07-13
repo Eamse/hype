@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useBookmarks } from '@/components/bookmark-provider';
 
 const BOOKING_FORM_URL = 'https://forms.gle/3sWqu4NED5ruJEnN9';
@@ -62,19 +63,14 @@ export function BackButton() {
   );
 }
 
-export function StickyBottomBar({
-  userId,
-  productId,
-}: {
-  userId: string | null;
-  productId: number;
-}) {
+export function StickyBottomBar({ productId }: { productId: number }) {
+  const { data: session } = useSession();
   const { bookmarkedIds, toggleBookmark } = useBookmarks();
   const saved = bookmarkedIds.has(productId);
   const router = useRouter();
 
   async function handleBookmark() {
-    if (!userId) {
+    if (!session?.user?.id) {
       router.push('?auth=1');
       return;
     }

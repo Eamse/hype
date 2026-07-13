@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // 이미지 많은 매거진 상세 — 60초 캐싱
 
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';

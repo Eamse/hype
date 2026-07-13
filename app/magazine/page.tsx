@@ -1,11 +1,10 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // 이미지 많은 매거진 목록 — 60초 캐싱
 
 import Image from 'next/image';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import { auth } from '@/auth';
-import { isMagazineMaster } from '@/lib/magazine-auth';
 import Header from '@/components/header';
+import MagazineMasterActions from './_components/magazine-master-actions';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = { title: 'Magazine' };
@@ -23,8 +22,6 @@ export default async function MagazinePage({ searchParams }: Props) {
   });
 
   const [hero, ...rest] = magazines;
-  const session = await auth();
-  const isMaster = isMagazineMaster(session);
 
   return (
     <div>
@@ -62,22 +59,7 @@ export default async function MagazinePage({ searchParams }: Props) {
               Magazine
             </h1>
           </div>
-          {isMaster && (
-            <div style={{ display: 'flex', gap: 8, marginBottom: 4 }}>
-              <Link
-                href="/magazine/manage"
-                style={{ padding: '8px 14px', borderRadius: 6, border: '1px solid #000', fontSize: 12, color: '#000', textDecoration: 'none' }}
-              >
-                Manage
-              </Link>
-              <Link
-                href="/magazine/write"
-                style={{ padding: '8px 14px', borderRadius: 6, background: '#000', color: '#fff', fontSize: 12, fontWeight: 700, textDecoration: 'none' }}
-              >
-                + Write
-              </Link>
-            </div>
-          )}
+          <MagazineMasterActions />
         </div>
         <div style={{ borderTop: '1px solid #000', margin: '24px 0 48px' }} />
 

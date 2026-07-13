@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // 이미지 많은 상품 상세 — 60초 캐싱
 
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,7 +11,6 @@ import { BackButton, StickyBottomBar } from './_components/product-actions';
 import ImageGallery from './_components/image-gallery';
 import WeddingDetail from './_components/wedding-detail';
 import type { Metadata } from 'next';
-import { auth } from '@/auth';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -84,8 +83,6 @@ export default async function ProductDetailPage({ params }: Props) {
       })()
     : null;
 
-  const session = await auth();
-
   return (
     <div className="bg-white text-[#000] min-h-screen">
       <Header brand={headerBrand} />
@@ -139,10 +136,7 @@ export default async function ProductDetailPage({ params }: Props) {
       </main>
 
       <SnsSidebar />
-      <StickyBottomBar
-        userId={session?.user?.id ?? null}
-        productId={product.id}
-      />
+      <StickyBottomBar productId={product.id} />
     </div>
   );
 }
