@@ -4,9 +4,18 @@ import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
 import HeroCarousel from '@/components/hero-carousel';
 import SnsSidebar from '@/components/sns-sidebar';
+import ComingSoon from '@/components/coming-soon';
 import ProductSections from '../_components/product-sections';
 
+// 클라이언트 기획 미확정 — 아래 실제 페이지 로직은 그대로 두고 진입만 막아둠.
+// 기획 나오면 이 상수를 false로 바꾸면 원래 페이지가 다시 노출됨.
+const COMING_SOON = true;
+
 export default async function HypeSnapPage() {
+  if (COMING_SOON) {
+    return <ComingSoon brand="hype-snap" />;
+  }
+
   const [jeju, seoul, heroRow] = await Promise.all([
     prisma.product.findMany({
       where: { section: 'Casual Photoshoot in Jeju' },

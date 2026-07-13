@@ -16,11 +16,13 @@ const BRANDS = {
     label: 'HYPE WEDDING',
     description: 'Wedding Photography',
     href: '/',
+    comingSoon: false,
   },
   'hype-snap': {
     label: 'HYPE SNAP',
     description: 'Casual Photoshoot',
     href: '/hype-snap',
+    comingSoon: true,
   },
 } as const;
 
@@ -102,6 +104,15 @@ const NAV_LINKS: Record<
       ],
     },
   ],
+};
+
+// 드롭다운 메뉴 간격 조절용 상수들 — 숫자만 바꾸면 각 간격이 독립적으로 조절됨
+const DROPDOWN_GROUP_OFFSET = -14; // Service/Inquiry 등 메인 메뉴 ~ 드롭다운 전체 그룹 사이 간격
+const DROPDOWN_ITEM_GAP = 3; // 드롭다운 항목들 사이 기본 간격
+const DROPDOWN_ITEM_GAP_OVERRIDES: Record<number, number> = {
+  // key: 항목 인덱스(1부터, 이전 항목과의 간격), value: 이 간격만 따로 쓸 값
+  2: 2, // Packages → Jeju
+  3: 2, // Jeju → Seoul
 };
 
 function DropdownLink({
@@ -252,6 +263,12 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                 )}
                 <Link
                   href={BRANDS[b].href}
+                  onClick={(e) => {
+                    if (BRANDS[b].comingSoon) {
+                      e.preventDefault();
+                      alert(`${BRANDS[b].label} — Coming Soon`);
+                    }
+                  }}
                   style={{
                     fontSize: isMobile ? 13 : 15,
                     fontWeight: 800,
@@ -259,6 +276,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                     textTransform: 'uppercase',
                     color: brand === b ? '#000' : '#bbb',
                     textDecoration: 'none',
+                    cursor: BRANDS[b].comingSoon ? 'default' : 'pointer',
                   }}
                 >
                   {BRANDS[b].label}
@@ -354,7 +372,7 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                           pathname === '/' || pathname === '/hype-snap'
                             ? 'rgba(255, 255, 255, 0.5)'
                             : '#fff',
-                        padding: '12px 0 24px',
+                        padding: '4px 0 24px',
                       }}
                     >
                       <div style={{ position: 'relative', height: 130 }}>
@@ -367,37 +385,30 @@ export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
                               style={{
                                 position: 'absolute',
                                 left: left - 0,
-                                top: 0,
+                                top: DROPDOWN_GROUP_OFFSET,
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: 14,
                               }}
                             >
                               {group.dropdown!.map(
-                                ({ label: dLabel, href: dHref, indent }, i) => {
-                                  const prevIndent =
-                                    group.dropdown![i - 1]?.indent;
-                                  const isFirstIndent = indent && !prevIndent;
-                                  const isSecondIndent = indent && prevIndent;
-                                  return (
-                                    <div
-                                      key={dLabel}
-                                      style={
-                                        isFirstIndent
-                                          ? { marginTop: -8 }
-                                          : isSecondIndent
-                                            ? { marginTop: -8 }
-                                            : undefined
-                                      }
-                                    >
-                                      <DropdownLink
-                                        href={dHref}
-                                        label={dLabel}
-                                        indent={indent}
-                                      />
-                                    </div>
-                                  );
-                                },
+                                ({ label: dLabel, href: dHref, indent }, i) => (
+                                  <div
+                                    key={dLabel}
+                                    style={{
+                                      marginTop:
+                                        i === 0
+                                          ? 0
+                                          : (DROPDOWN_ITEM_GAP_OVERRIDES[i] ??
+                                            DROPDOWN_ITEM_GAP),
+                                    }}
+                                  >
+                                    <DropdownLink
+                                      href={dHref}
+                                      label={dLabel}
+                                      indent={indent}
+                                    />
+                                  </div>
+                                ),
                               )}
                             </div>
                           );

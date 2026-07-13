@@ -34,6 +34,26 @@ type Package = {
   partners: { partner: Partner }[];
 };
 
+function InstagramIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{ flexShrink: 0 }}
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
 function InstagramLink({ handle }: { handle: string | null }) {
   if (!handle) return null;
   const handles = handle.split(' / ');
@@ -47,9 +67,9 @@ function InstagramLink({ handle }: { handle: string | null }) {
             rel="noopener noreferrer"
             style={{
               color: '#000',
+              fontSize: '11.5px',
               textDecoration: 'none',
               borderBottom: '1px solid #000',
-              fontWeight: 'bold',
             }}
           >
             {h}
@@ -147,7 +167,7 @@ export default function WeddingDetail({
           className="font"
           style={{
             fontSize: '28px',
-            fontWeight: 400,
+            fontWeight: 'bold',
             color: '#2C2420',
             margin: '0 0 6px',
           }}
@@ -174,7 +194,18 @@ export default function WeddingDetail({
           {activePackage?.director.number} {activePackage?.director.name}
         </p>
         {activePackage?.director.instagram && (
-          <InstagramLink handle={activePackage.director.instagram} />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '4px',
+            }}
+          >
+            <InstagramIcon />
+            <span style={{ fontSize: '13px', color: '#000' }}>:</span>
+            <InstagramLink handle={activePackage.director.instagram} />
+          </div>
         )}
       </div>
 
@@ -311,7 +342,19 @@ export default function WeddingDetail({
                 >
                   {item.name}
                 </div>
-                <InstagramLink handle={item.instagram} />
+                {item.instagram && (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
+                    <InstagramIcon />
+                    <span style={{ fontSize: '13px', color: '#000' }}>:</span>
+                    <InstagramLink handle={item.instagram} />
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -409,7 +452,7 @@ export default function WeddingDetail({
               { label: 'Locations', value: activePackage.locations },
               { label: 'Original Photos', value: activePackage.originalPhotos },
               {
-                label: 'Retouched',
+                label: 'Detail-Retouched Photos',
                 value: `${activePackage.retouched} images`,
               },
             ].map((d) => (
@@ -427,7 +470,7 @@ export default function WeddingDetail({
                   className="font"
                   style={{
                     fontSize: '15px',
-                    fontWeight: 400,
+                    fontWeight: 'bold',
                     color: '#000',
                   }}
                 >
@@ -675,7 +718,7 @@ export default function WeddingDetail({
           Ready to book or have questions?
         </p>
         <a
-          href="https://wa.me/821062695990"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSf5wIchc4qYFhPbX1VOlMiFvkNugZpeFa16ArIjuuwd5EW6UA/viewform?usp=send_form"
           target="_blank"
           rel="noopener noreferrer"
           style={{
@@ -690,7 +733,7 @@ export default function WeddingDetail({
             fontWeight: 600,
           }}
         >
-          CONTACT US ON WHATSAPP
+          Submit your Inquiry
         </a>
         <p style={{ fontSize: '12px', color: '#000', marginTop: '14px' }}>
           Instagram:{' '}

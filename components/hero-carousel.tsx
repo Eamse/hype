@@ -28,7 +28,12 @@ export default function HeroCarousel({
   return (
     <section
       className="hero-carousel"
-      style={{ position: 'relative', width: '100%', overflow: 'hidden', backgroundColor: '#000' }}
+      style={{
+        position: 'relative',
+        width: '100%',
+        overflow: 'hidden',
+        backgroundColor: '#000',
+      }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -76,7 +81,10 @@ export default function HeroCarousel({
               style={{
                 flex: 1,
                 height: 2,
-                background: idx === current ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)',
+                background:
+                  idx === current
+                    ? 'rgba(255,255,255,0.9)'
+                    : 'rgba(255,255,255,0.35)',
                 border: 'none',
                 cursor: 'pointer',
                 transition: 'background 0.3s ease',
