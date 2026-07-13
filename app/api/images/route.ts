@@ -113,7 +113,8 @@ export async function POST(request: NextRequest) {
 
   try {
     await uploadToR2(filename, compress);
-  } catch {
+  } catch (e) {
+    console.error('[POST /api/images] R2 upload failed:', e);
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
   }
 

@@ -101,7 +101,8 @@ export async function validateAndCompressImage(
       .resize(resize)
       .webp({ quality })
       .toBuffer();
-  } catch {
+  } catch (e) {
+    console.error('[validateAndCompressImage] sharp processing failed:', e);
     throw new ImageProcessingError('Image processing failed');
   }
 }
