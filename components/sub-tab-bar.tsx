@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
@@ -27,6 +27,14 @@ function tabStyle(active: boolean): React.CSSProperties {
 
 /** 페이지 내 섹션 스크롤 이동 또는 다른 페이지 이동을 지원하는 서브탭 바 (헤더 드롭다운 항목과 짝을 이룸) */
 export default function SubTabBar({ tabs }: { tabs: SubTab[] }) {
+  return (
+    <Suspense fallback={null}>
+      <SubTabBarInner tabs={tabs} />
+    </Suspense>
+  );
+}
+
+function SubTabBarInner({ tabs }: { tabs: SubTab[] }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const scrollIds = tabs.map((t) => t.id).filter((id): id is string => !!id);

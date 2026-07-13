@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, startTransition, useRef } from 'react';
+import { useState, useEffect, startTransition, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
@@ -179,7 +179,15 @@ function CloseIcon() {
   );
 }
 
-export default function Header({ brand = 'hype-wedding' }: { brand?: Brand }) {
+export default function Header(props: { brand?: Brand }) {
+  return (
+    <Suspense fallback={<div style={{ height: 56 }} />}>
+      <HeaderInner {...props} />
+    </Suspense>
+  );
+}
+
+function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
   const pathname = usePathname();
   const [loginOpen, setLoginOpen] = useState(false);
   const searchParams = useSearchParams();
