@@ -8,6 +8,7 @@ type Director = {
   name: string;
   instagram: string | null;
 };
+
 type Addon = { id: number; name: string; price: number; desc: string | null };
 type Inclusion = { id: number; name: string };
 type Partner = {
@@ -172,7 +173,8 @@ export default function WeddingDetail({
             margin: '0 0 6px',
           }}
         >
-          {productNumber} {title}
+          {productNumber}. {title}
+          {directors.length > 1 && activePackage && ` (${activePackage.director.name})`}
         </h1>
         <div
           style={{
@@ -182,17 +184,6 @@ export default function WeddingDetail({
             margin: '12px auto',
           }}
         />
-        <p
-          style={{
-            fontSize: '11px',
-            color: '#000',
-            letterSpacing: '2px',
-            textTransform: 'uppercase',
-            margin: '0 0 8px',
-          }}
-        >
-          {activePackage?.director.number} {activePackage?.director.name}
-        </p>
         {activePackage?.director.instagram && (
           <div
             style={{

@@ -13,6 +13,7 @@ type Bookmark = {
     title: string;
     imageUrl: string | null;
     section: string;
+    number?: string | null;
   };
 };
 

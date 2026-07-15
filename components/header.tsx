@@ -378,7 +378,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                         zIndex: 99,
                         backgroundColor:
                           pathname === '/' || pathname === '/hype-snap'
-                            ? 'rgba(255, 255, 255, 0.5)'
+                            ? '#fff'
                             : '#fff',
                         padding: '4px 0 24px',
                       }}

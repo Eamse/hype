@@ -12,6 +12,7 @@ export default function ProductSection({
   products,
   saved,
   onToggleSave,
+  showAll = false,
 }: {
   id?: string;
   title: string;
@@ -19,11 +20,14 @@ export default function ProductSection({
   products: Product[];
   saved: Set<number>;
   onToggleSave: (id: number) => void;
+  /** true면 5개씩 슬라이드하지 않고 전체 상품을 그리드로 한 번에 보여줌 */
+  showAll?: boolean;
 }) {
   const isMobile = useIsMobile();
   const [page, setPage] = useState(0);
 
   useEffect(() => {
+    if (showAll) return;
     const timer = setInterval(() => {
       setPage((prev) => {
         const totalPage = Math.ceil(products.length / 5);
@@ -31,11 +35,10 @@ export default function ProductSection({
       });
     }, 4500);
     return () => clearInterval(timer);
-  }, [products.length]);
+  }, [products.length, showAll]);
 
-  const visibleProducts = isMobile
-    ? products
-    : products.slice(page * 5, page * 5 + 5);
+  const visibleProducts =
+    isMobile || showAll ? products : products.slice(page * 5, page * 5 + 5);
   if (products.length === 0) return null;
 
   return (
@@ -64,12 +67,14 @@ export default function ProductSection({
             <p style={{ fontSize: 12, color: '#000' }}>{subtitle}</p>
           )}
         </div>
-        <Link
-          href={`/products?section=${encodeURIComponent(title)}`}
-          className="text-[14px] text-[#000] flex items-center gap-1 transition-all hover:text-[#000] hover:gap-2 hover:!underline"
-        >
-          See All <span className="arrow-nudge">→</span>
-        </Link>
+        {!showAll && (
+          <Link
+            href={`/products?section=${encodeURIComponent(title)}`}
+            className="text-[14px] text-[#000] flex items-center gap-1 transition-all hover:text-[#000] hover:gap-2 hover:!underline"
+          >
+            See All <span className="arrow-nudge">→</span>
+          </Link>
+        )}
       </div>
 
       <div

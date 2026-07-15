@@ -1,6 +1,7 @@
 export const revalidate = 60;
 
 import { prisma } from '@/lib/prisma';
+import { getProductNumber } from '@/lib/product-number';
 import Header from '@/components/header';
 import HeroCarousel from '@/components/hero-carousel';
 import SnsSidebar from '@/components/sns-sidebar';
@@ -21,7 +22,7 @@ export default async function Home() {
     }
   })();
 
-  const [jejuWedding, seoulWedding, magazines] = await Promise.all([
+  const [jejuWeddingRaw, seoulWeddingRaw, magazines] = await Promise.all([
     prisma.product.findMany({
       where: { section: 'Photographers in Jeju' },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
@@ -30,6 +31,7 @@ export default async function Home() {
         title: true,
         imageUrl: true,
         section: true,
+        directors: { select: { director: { select: { number: true } } } },
       },
     }),
     prisma.product.findMany({
@@ -40,6 +42,7 @@ export default async function Home() {
         title: true,
         imageUrl: true,
         section: true,
+        directors: { select: { director: { select: { number: true } } } },
       },
     }),
     prisma.magazine.findMany({
@@ -53,6 +56,8 @@ export default async function Home() {
       },
     }),
   ]);
+  const jejuWedding = jejuWeddingRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
+  const seoulWedding = seoulWeddingRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
 
   return (
     <div

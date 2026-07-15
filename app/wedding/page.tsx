@@ -5,10 +5,11 @@ import Header from '@/components/header';
 import SnsSidebar from '@/components/sns-sidebar';
 import SubTabBar from '@/components/sub-tab-bar';
 import { serviceSubTabs } from '@/lib/service-sub-tabs';
+import { getProductNumber } from '@/lib/product-number';
 import ProductSections from '../_components/product-sections';
 
 export default async function WeddingPage() {
-  const [jeju, seoul] = await Promise.all([
+  const [jejuRaw, seoulRaw] = await Promise.all([
     prisma.product.findMany({
       where: { section: 'Photographers in Jeju' },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
@@ -17,6 +18,7 @@ export default async function WeddingPage() {
         title: true,
         imageUrl: true,
         section: true,
+        directors: { select: { director: { select: { number: true } } } },
       },
     }),
     prisma.product.findMany({
@@ -27,9 +29,12 @@ export default async function WeddingPage() {
         title: true,
         imageUrl: true,
         section: true,
+        directors: { select: { director: { select: { number: true } } } },
       },
     }),
   ]);
+  const jeju = jejuRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
+  const seoul = seoulRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
 
   return (
     <div

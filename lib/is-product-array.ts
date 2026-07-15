@@ -3,6 +3,7 @@ export type Product = {
   title: string;
   imageUrl: string | null;
   section?: string;
+  number?: string | null;
 };
 
 export function isProductArray(data: unknown): data is Product[] {

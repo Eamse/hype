@@ -12,7 +12,13 @@ type Product = {
   section?: string;
 };
 
-type Section = { id?: string; title: string; subtitle?: string; products: Product[] };
+type Section = {
+  id?: string;
+  title: string;
+  subtitle?: string;
+  products: Product[];
+  showAll?: boolean;
+};
 
 export default function ProductSections({ sections }: { sections: Section[] }) {
   const { bookmarkedIds, toggleBookmark } = useBookmarks();
@@ -38,6 +44,7 @@ export default function ProductSections({ sections }: { sections: Section[] }) {
           products={s.products}
           saved={bookmarkedIds}
           onToggleSave={toggleSave}
+          showAll={s.showAll}
         />
       ))}
     </>

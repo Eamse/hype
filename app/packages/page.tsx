@@ -1,7 +1,12 @@
+export const revalidate = 60;
+
 import type { Metadata } from 'next';
 import Header from '@/components/header';
 import SubTabBar from '@/components/sub-tab-bar';
 import { serviceSubTabs } from '@/lib/service-sub-tabs';
+import { prisma } from '@/lib/prisma';
+import { getProductNumber } from '@/lib/product-number';
+import ProductSections from '../_components/product-sections';
 
 export const metadata: Metadata = {
   title: 'Packages | HYPE WEDDING',
@@ -16,18 +21,49 @@ export default async function PackagesPage({
   const { brand } = await searchParams;
   const activeBrand = brand === 'hype-snap' ? 'hype-snap' : 'hype-wedding';
 
+  const jejuSection =
+    activeBrand === 'hype-snap' ? 'Casual Photoshoot in Jeju' : 'Photographers in Jeju';
+  const seoulSection =
+    activeBrand === 'hype-snap' ? 'Casual Photoshoot in Seoul' : 'Photographers in Seoul';
+
+  const [jejuRaw, seoulRaw] = await Promise.all([
+    prisma.product.findMany({
+      where: { section: jejuSection },
+      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+      select: {
+        id: true,
+        title: true,
+        imageUrl: true,
+        section: true,
+        directors: { select: { director: { select: { number: true } } } },
+      },
+    }),
+    prisma.product.findMany({
+      where: { section: seoulSection },
+      orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
+      select: {
+        id: true,
+        title: true,
+        imageUrl: true,
+        section: true,
+        directors: { select: { director: { select: { number: true } } } },
+      },
+    }),
+  ]);
+  const jeju = jejuRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
+  const seoul = seoulRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
+
   return (
     <div style={{ minHeight: '100vh' }}>
       <Header brand={activeBrand} />
       <main style={{ paddingTop: 56 }}>
         <SubTabBar tabs={serviceSubTabs(activeBrand)} />
-        <div style={{ maxWidth: 800, margin: '0 auto', padding: '60px 20px 120px' }}>
-          <h1 style={{ fontSize: 22, fontWeight: 700, margin: '0 0 20px' }}>Packages</h1>
-          {/* TODO: Packages 콘텐츠 추가 */}
-          <p style={{ color: '#000', fontSize: 14 }}>
-            {activeBrand === 'hype-snap' ? 'HYPE SNAP' : 'HYPE WEDDING'} 패키지 콘텐츠 들어갈 자리
-          </p>
-        </div>
+        <ProductSections
+          sections={[
+            { title: jejuSection, products: jeju, showAll: true },
+            { title: seoulSection, products: seoul, showAll: true },
+          ]}
+        />
       </main>
     </div>
   );

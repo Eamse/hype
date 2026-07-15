@@ -95,13 +95,14 @@ export default function HeroCarousel({
         </div>
       )}
 
-      {/* 왼쪽 하단 오버레이 콘텐츠 (예: D-day 배너) — 떠 있는 카드 형태 */}
+      {/* 하단 중앙 오버레이 콘텐츠 (예: D-day 배너) — 떠 있는 카드 형태 */}
       {children && (
         <div
           style={{
             position: 'absolute',
-            left: 24,
-            bottom: 24,
+            left: '50%',
+            bottom: 60,
+            transform: 'translateX(-50%)',
             zIndex: 3,
             maxWidth: 'calc(100% - 48px)',
           }}

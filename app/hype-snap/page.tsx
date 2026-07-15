@@ -5,6 +5,7 @@ import Header from '@/components/header';
 import HeroCarousel from '@/components/hero-carousel';
 import SnsSidebar from '@/components/sns-sidebar';
 import ComingSoon from '@/components/coming-soon';
+import { getProductNumber } from '@/lib/product-number';
 import ProductSections from '../_components/product-sections';
 
 // 클라이언트 기획 미확정 — 아래 실제 페이지 로직은 그대로 두고 진입만 막아둠.
@@ -16,7 +17,7 @@ export default async function HypeSnapPage() {
     return <ComingSoon brand="hype-snap" />;
   }
 
-  const [jeju, seoul, heroRow] = await Promise.all([
+  const [jejuRaw, seoulRaw, heroRow] = await Promise.all([
     prisma.product.findMany({
       where: { section: 'Casual Photoshoot in Jeju' },
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
@@ -26,6 +27,7 @@ export default async function HypeSnapPage() {
         title: true,
         imageUrl: true,
         section: true,
+        directors: { select: { director: { select: { number: true } } } },
       },
     }),
     prisma.product.findMany({
@@ -37,12 +39,15 @@ export default async function HypeSnapPage() {
         title: true,
         imageUrl: true,
         section: true,
+        directors: { select: { director: { select: { number: true } } } },
       },
     }),
     prisma.siteConfig.findUnique({
       where: { key: 'images_hero_snap' },
     }),
   ]);
+  const jeju = jejuRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
+  const seoul = seoulRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
   const heroImages: string[] = (() => {
     try {
       const parsed: unknown = JSON.parse(heroRow?.value ?? '[]');
