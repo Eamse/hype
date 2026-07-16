@@ -303,23 +303,35 @@ export default function WeddingDetail({
                 Shoot Details
               </div>
               <div className="grid grid-cols-2 gap-y-4 min-[480px]:grid-cols-4 min-[480px]:gap-y-0">
-                {shootDetails.map((d) => (
-                  <div
-                    key={d.label}
-                    className="pr-0 min-[480px]:pr-4 min-[480px]:last:pr-0"
-                  >
+                {shootDetails.map((d) => {
+                  const m = d.value.match(/^([\d,.+]+)\s*(.*)$/);
+                  const num = m ? m[1] : d.value;
+                  const unit = m ? m[2] : '';
+                  return (
                     <div
-                      className={`text-[11px] font-normal ${GRAY3} mb-[6px]`}
+                      key={d.label}
+                      className="pr-0 min-[480px]:pr-4 min-[480px]:last:pr-0"
                     >
-                      {d.label}
+                      <div
+                        className={`text-[11px] font-normal ${GRAY3} mb-[6px]`}
+                      >
+                        {d.label}
+                      </div>
+                      <div
+                        className={`text-[22px] font-bold ${BLACK} leading-none tracking-[-0.02em]`}
+                      >
+                        {num}
+                      </div>
+                      {unit && (
+                        <div
+                          className={`text-[11px] font-normal ${GRAY2} mt-[2px]`}
+                        >
+                          {unit}
+                        </div>
+                      )}
                     </div>
-                    <div
-                      className={`text-[15px] font-bold ${BLACK} leading-none tracking-[-0.02em]`}
-                    >
-                      {d.value}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
                 <div className="pr-0 min-[480px]:pr-4 min-[480px]:last:pr-0">
                   <div className={`text-[11px] font-normal ${GRAY3} mb-[6px]`}>
                     Retouched Photos
