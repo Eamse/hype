@@ -170,11 +170,6 @@ body {
   animation: dropdownFadeIn 0.18s ease-out;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
 .hide-scroll::-webkit-scrollbar {
   display: none;
 }

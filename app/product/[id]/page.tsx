@@ -103,6 +103,7 @@ export default async function ProductDetailPage({ params }: Props) {
             {isPackageProduct && weddingData ? (
               <WeddingDetail
                 title={product.title}
+                section={product.section}
                 directors={weddingData.directors}
                 packages={weddingData.packages}
               />

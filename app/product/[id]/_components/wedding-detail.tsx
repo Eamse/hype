@@ -35,43 +35,28 @@ type Package = {
   partners: { partner: Partner }[];
 };
 
-function InstagramIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ flexShrink: 0 }}
-    >
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-    </svg>
-  );
-}
+const INQUIRY_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSf5wIchc4qYFhPbX1VOlMiFvkNugZpeFa16ArIjuuwd5EW6UA/viewform?usp=send_form';
+
+const GREEN = 'text-[#2D5A45]';
+const GRAY1 = 'text-[#444444]';
+const GRAY2 = 'text-[#666666]';
+const GRAY3 = 'text-[#AAAAAA]';
+const BLACK = 'text-[#0D0D0D]';
+const BORDER = 'border-[#EEEEEE]';
 
 function InstagramLink({ handle }: { handle: string | null }) {
   if (!handle) return null;
   const handles = handle.split(' / ');
   return (
-    <span style={{ fontSize: '13px', wordBreak: 'break-all' }}>
+    <span>
       {handles.map((h, i) => (
         <span key={h}>
           <a
             href={`https://instagram.com/${h.replace('@', '')}`}
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              color: '#000',
-              fontSize: '11.5px',
-              textDecoration: 'none',
-              borderBottom: '1px solid #000',
-            }}
+            className={`text-[11px] font-normal ${GRAY2} no-underline hover:underline`}
           >
             {h}
           </a>
@@ -84,10 +69,12 @@ function InstagramLink({ handle }: { handle: string | null }) {
 
 export default function WeddingDetail({
   title,
+  section,
   directors,
   packages,
 }: {
   title: string;
+  section?: string;
   directors: Director[];
   packages: Package[];
 }) {
@@ -111,6 +98,17 @@ export default function WeddingDetail({
   }
 
   const productNumber = directors[0]?.number.split('-')[0];
+  const regionLabel = section?.includes('Jeju')
+    ? 'Jeju'
+    : section?.includes('Seoul')
+      ? 'Seoul'
+      : '';
+  const paddedNumber = productNumber
+    ? productNumber.replace('#', '').padStart(2, '0')
+    : '';
+  const pkgNumLabel = ['Photographer', regionLabel, paddedNumber]
+    .filter(Boolean)
+    .join(' ');
 
   const activePkgs = packages.filter((p) => p.directorId === activeDirectorId);
   const activePackage =
@@ -155,588 +153,338 @@ export default function WeddingDetail({
     instagram: string | null;
   }[];
 
+  const shootDetails = activePackage
+    ? [
+        { label: 'Duration', value: activePackage.shootingTime },
+        { label: 'Locations', value: activePackage.locations },
+        { label: 'Original Photos', value: activePackage.originalPhotos },
+      ]
+    : [];
+
+  const hasPartners = partnerRows.length > 0;
+  const hasInclusions = inclusions.length > 0;
+  const hasDetails = !!activePackage;
+  const inclusionsIsFirst = !hasPartners && hasInclusions;
+  const detailsIsFirst = !hasPartners && !hasInclusions && hasDetails;
+
+  const priceCount = activePackage
+    ? [activePackage.priceSNS > 0, activePackage.priceNoSNS > 0].filter(Boolean)
+        .length
+    : 0;
+
+  const secLabelBase = `text-[10px] font-semibold ${GRAY3} tracking-[0.12em] uppercase mb-4`;
+  const tabState = (active: boolean) =>
+    active
+      ? 'font-medium bg-[#0D0D0D] text-white border-[#0D0D0D]'
+      : `font-normal bg-white ${GRAY2} ${BORDER}`;
+
   return (
-    <div
-      style={{
-        color: '#2C2420',
-        maxWidth: 560,
-      }}
-    >
-      {/* 제목 헤더 */}
-      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-        <h1
-          className="font"
-          style={{
-            fontSize: '28px',
-            fontWeight: 'bold',
-            color: '#2C2420',
-            margin: '0 0 6px',
-          }}
-        >
-          {productNumber}. {title}
-          {directors.length > 1 && activePackage && ` (${activePackage.director.name})`}
-        </h1>
-        <div
-          style={{
-            width: '40px',
-            height: '1px',
-            background: '#000',
-            margin: '12px auto',
-          }}
-        />
-        {activePackage?.director.instagram && (
+    <div className={`max-w-[680px] ${BLACK}`}>
+      <div className={`bg-white border ${BORDER} rounded-2xl overflow-hidden`}>
+        {/* HEADER */}
+        <div className={`pt-8 px-8 pb-6 text-center border-b ${BORDER}`}>
           <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '4px',
-            }}
+            className={`text-[11px] font-medium ${GREEN} tracking-[0.12em] uppercase mb-2`}
           >
-            <InstagramIcon />
-            <span style={{ fontSize: '13px', color: '#000' }}>:</span>
-            <InstagramLink handle={activePackage.director.instagram} />
+            {pkgNumLabel}
           </div>
-        )}
-      </div>
-
-      {/* 작가 탭 (복수일 때만) */}
-      {directors.length > 1 && (
-        <div
-          style={{
-            display: 'flex',
-            gap: '8px',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            marginBottom: '24px',
-          }}
-        >
-          {directors.map((d) => (
-            <button
-              key={d.id}
-              onClick={() => handleDirectorSelect(d.id)}
-              style={{
-                padding: '8px 20px',
-                background: activeDirectorId === d.id ? '#2C2420' : '#fff',
-                color: activeDirectorId === d.id ? '#fff' : '#2C2420',
-                border: '1px solid #2C2420',
-                borderRadius: '2px',
-                cursor: 'pointer',
-                fontSize: '13px',
-                fontWeight: 500,
-                letterSpacing: '0.5px',
-              }}
-            >
-              {d.number} {d.name}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* 패키지 탭 */}
-      {activePkgs.length > 0 && (
-        <div
-          style={{
-            display: 'flex',
-            gap: '8px',
-            justifyContent: 'center',
-            flexWrap: 'wrap',
-            marginBottom: '32px',
-          }}
-        >
-          {activePkgs.map((pkg) => (
-            <button
-              key={pkg.id}
-              onClick={() => setActivePackageId(pkg.id)}
-              style={{
-                padding: '8px 22px',
-                background: activePackageId === pkg.id ? '#2C2420' : '#fff',
-                color: activePackageId === pkg.id ? '#fff' : '#2C2420',
-                border: '1px solid #2C2420',
-                borderRadius: '2px',
-                cursor: 'pointer',
-                fontSize: '13px',
-                fontWeight: 500,
-                letterSpacing: '0.5px',
-              }}
-            >
-              {pkg.name}
-            </button>
-          ))}
-        </div>
-      )}
-
-      {/* 패키지 서브타이틀 */}
-      {activePackage?.subtitle && (
-        <p
-          style={{
-            textAlign: 'center',
-            fontSize: '14px',
-            color: '#000',
-            fontWeight: 500,
-            margin: '0 0 28px',
-            letterSpacing: '0.3px',
-          }}
-        >
-          {activePackage.subtitle}
-        </p>
-      )}
-
-      {/* Partners */}
-      {partnerRows.length > 0 && (
-        <div
-          style={{
-            border: '1px solid #000',
-            borderRadius: '4px',
-            background: '#fff',
-            padding: '20px 24px',
-            marginBottom: '28px',
-          }}
-        >
-          <p
-            style={{
-              fontSize: '13px',
-              color: '#000',
-              fontWeight: 'bold',
-              letterSpacing: '2px',
-              textTransform: 'uppercase',
-              margin: '0 0 16px',
-            }}
-          >
-            Partners
-          </p>
           <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '14px 24px',
-            }}
+            className={`text-[24px] font-semibold ${BLACK} tracking-[-0.02em] mb-5`}
           >
-            {partnerRows.map((item) => (
-              <div key={item.role}>
-                <div
-                  style={{
-                    fontSize: '12px',
-                    color: '#000',
-                    marginBottom: '2px',
-                  }}
-                >
-                  {item.role}
-                </div>
-                <div
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    color: '#000',
-                    marginBottom: '2px',
-                  }}
-                >
-                  {item.name}
-                </div>
-                {item.instagram && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                    }}
-                  >
-                    <InstagramIcon />
-                    <span style={{ fontSize: '13px', color: '#000' }}>:</span>
-                    <InstagramLink handle={item.instagram} />
-                  </div>
-                )}
-              </div>
-            ))}
+            {title}
+            {/* 괄호 안 작가이름 */}
+            {/* {directors.length > 1 &&
+              activePackage &&
+              ` (${activePackage.director.name})`} */}
           </div>
-          <p
-            style={{
-              fontSize: '12px',
-              color: '#000',
-              margin: '16px 0 0',
-              fontStyle: 'italic',
-            }}
-          >
-            * Please check each studio&apos;s portfolio on Instagram
-          </p>
-        </div>
-      )}
 
-      {/* Package Inclusive */}
-      {inclusions.length > 0 && (
-        <div style={{ marginBottom: '28px' }}>
-          <p
-            style={{
-              fontSize: '12px',
-              fontWeight: 'bold',
-              color: '#000',
-              letterSpacing: '2px',
-              textTransform: 'uppercase',
-              margin: '0 0 12px',
-            }}
-          >
-            Package Inclusive
-          </p>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '6px 16px',
-            }}
-          >
-            {inclusions.map(({ inclusion }) => (
-              <div
-                key={inclusion.id}
-                style={{
-                  fontSize: '14px',
-                  color: '#000',
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '8px',
-                  lineHeight: 1.5,
-                }}
-              >
+          {directors.length > 1 && (
+            <div className="flex gap-[6px] justify-center flex-wrap mb-2">
+              {directors.map((d) => (
                 <span
-                  style={{ color: '#000', flexShrink: 0, marginTop: '1px' }}
+                  key={d.id}
+                  className={`text-[12px] py-[5px] px-[14px] border rounded-[20px] cursor-pointer ${tabState(
+                    activeDirectorId === d.id,
+                  )}`}
+                  onClick={() => handleDirectorSelect(d.id)}
                 >
-                  ✓
+                  {d.name}
                 </span>
-                <span>{inclusion.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+              ))}
+            </div>
+          )}
 
-      {/* Photography Details */}
-      {activePackage && (
-        <div
-          style={{
-            border: '1px solid #000',
-            background: '#fff',
-            borderRadius: '4px',
-            padding: '20px 24px',
-            marginBottom: '20px',
-          }}
-        >
-          <p
-            style={{
-              fontSize: '12px',
-              color: '#000',
-              letterSpacing: '2px',
-              textTransform: 'uppercase',
-              fontWeight: 'bold',
-              margin: '0 0 16px',
-            }}
-          >
-            Photography Details
-          </p>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '16px',
-            }}
-          >
-            {[
-              { label: 'Shooting Time', value: activePackage.shootingTime },
-              { label: 'Locations', value: activePackage.locations },
-              { label: 'Original Photos', value: activePackage.originalPhotos },
-              {
-                label: 'Detail-Retouched Photos',
-                value: `${activePackage.retouched} images`,
-              },
-            ].map((d) => (
-              <div key={d.label}>
-                <div
-                  style={{
-                    fontSize: '12px',
-                    color: '#000',
-                    marginBottom: '4px',
-                  }}
+          {activePkgs.length > 0 && (
+            <div className="flex gap-[6px] justify-center flex-wrap mb-2">
+              {activePkgs.map((pkg) => (
+                <span
+                  key={pkg.id}
+                  className={`text-[12px] py-[5px] px-[14px] border rounded-[6px] cursor-pointer ${tabState(
+                    activePackageId === pkg.id,
+                  )}`}
+                  onClick={() => setActivePackageId(pkg.id)}
                 >
-                  {d.label}
-                </div>
-                <div
-                  className="font"
-                  style={{
-                    fontSize: '15px',
-                    fontWeight: 'bold',
-                    color: '#000',
-                  }}
-                >
-                  {d.value}
-                </div>
-              </div>
-            ))}
-          </div>
-          {activePackage.retouchedDetail && (
-            <p
-              style={{
-                fontSize: '13px',
-                color: '#000',
-                margin: '16px 0 0',
-                lineHeight: 1.5,
-              }}
-            >
-              {activePackage.retouchedDetail}
-            </p>
+                  {pkg.name}
+                </span>
+              ))}
+            </div>
           )}
         </div>
-      )}
 
-      {/* Pricing */}
-      {activePackage &&
-        (activePackage.priceSNS > 0 || activePackage.priceNoSNS > 0) && (
-          <div style={{ marginBottom: '28px' }}>
+        {/* BODY */}
+        <div className="py-6 px-8">
+          {/* Partners */}
+          {hasPartners && (
+            <>
+              <div className={secLabelBase}>Partners</div>
+              <div className="grid grid-cols-2 gap-[10px]">
+                {partnerRows.map((item, i) => (
+                  <div
+                    key={item.role}
+                    className={`py-[10px] px-3 bg-[#F9F9F9] rounded-[8px] ${
+                      partnerRows.length % 2 === 1 &&
+                      i === partnerRows.length - 1
+                        ? 'col-span-2'
+                        : ''
+                    }`}
+                  >
+                    <div
+                      className={`text-[10px] font-normal ${GRAY3} mb-[2px]`}
+                    >
+                      {item.role}
+                    </div>
+                    <div
+                      className={`text-[13px] font-semibold ${BLACK} mb-[1px]`}
+                    >
+                      {item.name}
+                    </div>
+                    <InstagramLink handle={item.instagram} />
+                  </div>
+                ))}
+              </div>
+              <p className={`text-[11px] font-normal ${GRAY3} italic mt-2`}>
+                * Please check each studio&apos;s portfolio on Instagram
+              </p>
+            </>
+          )}
+
+          {/* Included */}
+          {hasInclusions && (
+            <>
+              <div
+                className={`${secLabelBase} ${inclusionsIsFirst ? '' : 'mt-7'}`}
+              >
+                What&apos;s Included
+              </div>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-0">
+                {inclusions.map(({ inclusion }) => (
+                  <div
+                    key={inclusion.id}
+                    className={`flex gap-2 items-start text-[13px] font-normal ${GRAY1} leading-[1.5] py-[6px] border-b border-[#F5F5F5] [&:nth-last-child(-n+2)]:border-b-0`}
+                  >
+                    <span
+                      className={`${GREEN} shrink-0 text-[12px] mt-[1px] font-semibold`}
+                    >
+                      ✓
+                    </span>
+                    {inclusion.name}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* Shoot Details */}
+          {hasDetails && activePackage && (
+            <>
+              <div
+                className={`${secLabelBase} ${detailsIsFirst ? '' : 'mt-7'}`}
+              >
+                Shoot Details
+              </div>
+              <div className="grid grid-cols-2 gap-y-4 min-[480px]:grid-cols-4 min-[480px]:gap-y-0">
+                {shootDetails.map((d) => (
+                  <div
+                    key={d.label}
+                    className="pr-0 min-[480px]:pr-4 min-[480px]:last:pr-0"
+                  >
+                    <div
+                      className={`text-[11px] font-normal ${GRAY3} mb-[6px]`}
+                    >
+                      {d.label}
+                    </div>
+                    <div
+                      className={`text-[15px] font-bold ${BLACK} leading-none tracking-[-0.02em]`}
+                    >
+                      {d.value}
+                    </div>
+                  </div>
+                ))}
+                <div className="pr-0 min-[480px]:pr-4 min-[480px]:last:pr-0">
+                  <div className={`text-[11px] font-normal ${GRAY3} mb-[6px]`}>
+                    Retouched Photos
+                  </div>
+                  <div
+                    className={`text-[22px] font-bold ${BLACK} leading-none tracking-[-0.02em]`}
+                  >
+                    {activePackage.retouched}
+                  </div>
+                  <div className={`text-[11px] font-normal ${GRAY2} mt-[2px]`}>
+                    photos
+                  </div>
+                  {activePackage.retouchedDetail && (
+                    <div
+                      className={`text-[10px] font-normal ${GRAY3} mt-1 leading-[1.5]`}
+                    >
+                      {activePackage.retouchedDetail}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* PRICE SECTION */}
+        {activePackage && priceCount > 0 && (
+          <div className={`border-t ${BORDER}`}>
             <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns:
-                  [
-                    activePackage.priceSNS > 0,
-                    activePackage.priceNoSNS > 0,
-                  ].filter(Boolean).length === 1
-                    ? '1fr'
-                    : '1fr 1fr',
-                gap: '12px',
-                marginBottom: '10px',
-              }}
+              className={`grid ${priceCount === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}
             >
               {activePackage.priceSNS > 0 && (
                 <div
-                  style={{
-                    background: '#2C2420',
-                    borderRadius: '4px',
-                    padding: '24px 16px',
-                    textAlign: 'center',
-                  }}
+                  className={`py-5 px-6 flex flex-col gap-1 ${
+                    priceCount > 1 ? `border-r ${BORDER}` : ''
+                  }`}
                 >
-                  <div
-                    style={{
-                      fontSize: '12px',
-                      color: 'rgba(255,255,255,0.75)',
-                      letterSpacing: '1px',
-                      textTransform: 'uppercase',
-                      marginBottom: '10px',
-                    }}
-                  >
+                  <span className="inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#EAF0EC] text-[#2D5A45]">
                     Agree to SNS Upload
-                  </div>
+                  </span>
                   <div
-                    className="font"
-                    style={{
-                      fontSize: '32px',
-                      fontWeight: 'bold',
-                      color: '#fff',
-                      lineHeight: 1,
-                    }}
+                    className={`text-[22px] font-bold ${BLACK} tracking-[-0.02em]`}
                   >
-                    ${activePackage.priceSNS.toLocaleString()}
+                    USD{activePackage.priceSNS.toLocaleString()}
                   </div>
-                  <div
-                    style={{
-                      fontSize: '12px',
-                      color: 'rgba(255,255,255,0.65)',
-                      marginTop: '4px',
-                    }}
+                  <a
+                    href={INQUIRY_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none w-full text-center no-underline bg-[#2D5A45] text-white"
                   >
-                    USD
-                  </div>
+                    Inquire Now →
+                  </a>
                 </div>
               )}
               {activePackage.priceNoSNS > 0 && (
-                <div
-                  style={{
-                    background: '#fff',
-                    border: '1px solid #000',
-                    borderRadius: '4px',
-                    padding: '24px 16px',
-                    textAlign: 'center',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: '12px',
-                      color: '#000',
-                      letterSpacing: '1px',
-                      textTransform: 'uppercase',
-                      marginBottom: '10px',
-                    }}
-                  >
+                <div className="py-5 px-6 flex flex-col gap-1">
+                  <span className="inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#F5F5F5] text-[#666666]">
                     Decline SNS Upload
-                  </div>
+                  </span>
                   <div
-                    className="font"
-                    style={{
-                      fontSize: '32px',
-                      fontWeight: 'bold',
-                      color: '#2C2420',
-                      lineHeight: 1,
-                    }}
+                    className={`text-[22px] font-bold ${BLACK} tracking-[-0.02em]`}
                   >
-                    ${activePackage.priceNoSNS.toLocaleString()}
+                    USD{activePackage.priceNoSNS.toLocaleString()}
                   </div>
-                  <div
-                    style={{
-                      fontSize: '12px',
-                      color: '#000',
-                      marginTop: '4px',
-                    }}
+                  <a
+                    href={INQUIRY_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none w-full text-center no-underline bg-[#0D0D0D] text-white"
                   >
-                    USD
-                  </div>
+                    Inquire Now →
+                  </a>
                 </div>
               )}
             </div>
-            <p style={{ fontSize: '12px', color: '#000', margin: '0 0 2px' }}>
-              * Final price is subject to change based on current USD exchange
-              rate and does NOT include add-ons.
-            </p>
-            <p style={{ fontSize: '12px', color: '#000', margin: 0 }}>
-              * SNS Upload: Hype Pig (Hype Wedding, Hype Snap) SNS, Photographer
-              SNS
+            <div className={`py-3 px-6 bg-[#FAFAFA] border-t ${BORDER}`}>
+              <p
+                className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
+              >
+                * Final price is subject to change based on current USD exchange
+                rate and does NOT include add-ons.
+              </p>
+              <p
+                className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
+              >
+                * SNS Upload: Hype Pig (Hype Wedding, Hype Snap) SNS,
+                Photographer SNS
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* ADD-ONS */}
+        {addons.length > 0 && (
+          <div className={`py-6 px-8 border-t ${BORDER} bg-[#FAFAFA]`}>
+            <div className={secLabelBase}>Add-ons</div>
+            {addons.map(({ addon }, i) => (
+              <div
+                key={addon.id}
+                className={i === addons.length - 1 ? '' : 'mb-2'}
+              >
+                <div
+                  className={`flex justify-between items-center py-[11px] px-[14px] border ${BORDER} rounded-[8px] bg-white cursor-pointer`}
+                  onClick={() =>
+                    setExpandedAddon(expandedAddon === i ? null : i)
+                  }
+                >
+                  <span className={`text-[13px] font-normal ${BLACK}`}>
+                    {addon.name}
+                  </span>
+                  <div
+                    className={`text-[13px] font-medium ${GRAY1} flex items-center gap-[6px]`}
+                  >
+                    {addon.price > 0
+                      ? `+$${addon.price.toLocaleString()}`
+                      : 'See details'}
+                    <div
+                      className={`w-5 h-5 rounded-full border ${BORDER} flex items-center justify-center text-[11px] ${GRAY3} shrink-0`}
+                    >
+                      {expandedAddon === i ? '−' : '+'}
+                    </div>
+                  </div>
+                </div>
+                {expandedAddon === i && addon.desc && (
+                  <p
+                    className={`text-[12px] ${GRAY2} leading-[1.6] -mt-[2px] mb-[10px] px-[14px]`}
+                  >
+                    {addon.desc}
+                  </p>
+                )}
+              </div>
+            ))}
+            <p className={`text-[11px] font-normal ${GRAY3} italic mt-[10px]`}>
+              * Add-ons are NOT included in the total price. Additional charges
+              will apply.
             </p>
           </div>
         )}
 
-      {/* Add-ons */}
-      {addons.length > 0 && (
-        <div style={{ marginBottom: '32px' }}>
-          <p
-            style={{
-              fontSize: '12px',
-              color: '#000',
-              letterSpacing: '2px',
-              textTransform: 'uppercase',
-              margin: '0 0 12px',
-              fontWeight: 'bold',
-            }}
-          >
-            Add-ons
+        {/* CTA */}
+        <div className={`py-6 px-8 border-t ${BORDER} text-center bg-white`}>
+          <p className={`text-[14px] font-normal ${GRAY2} mb-4`}>
+            Ready to book or have questions?
           </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {addons.map(({ addon }, i) => (
-              <div
-                key={addon.id}
-                style={{
-                  border: '1px solid #000',
-                  borderRadius: '4px',
-                  overflow: 'hidden',
-                }}
-              >
-                <button
-                  onClick={() =>
-                    setExpandedAddon(expandedAddon === i ? null : i)
-                  }
-                  style={{
-                    width: '100%',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    padding: '13px 16px',
-                    background:
-                      expandedAddon === i ? 'rgba(0,0,0,0.04)' : '#fff',
-                    border: 'none',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                  }}
-                >
-                  <span style={{ fontSize: '14px', color: '#000' }}>
-                    {addon.name}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: '13px',
-                      color: '#000',
-                      fontWeight: 500,
-                      flexShrink: 0,
-                      marginLeft: '12px',
-                    }}
-                  >
-                    {addon.price > 0
-                      ? `+$${addon.price.toLocaleString()}`
-                      : 'See details'}{' '}
-                    {expandedAddon === i ? '−' : '+'}
-                  </span>
-                </button>
-                {expandedAddon === i && addon.desc && (
-                  <div
-                    style={{
-                      padding: '0 16px 14px',
-                      background: '#fff',
-                      borderTop: '1px solid #000',
-                    }}
-                  >
-                    <p
-                      style={{
-                        fontSize: '13px',
-                        color: '#000',
-                        lineHeight: 1.6,
-                        margin: '12px 0 0',
-                      }}
-                    >
-                      {addon.desc}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-          <p
-            style={{
-              fontSize: '12px',
-              color: '#000',
-              margin: '10px 0 0',
-              fontStyle: 'italic',
-            }}
-          >
-            * Add-ons are NOT included in the total price. Additional charges
-            will apply.
-          </p>
-        </div>
-      )}
-
-      {/* CTA */}
-      <div
-        style={{
-          textAlign: 'center',
-          padding: '32px 0',
-          borderTop: '1px solid #000',
-        }}
-      >
-        <p style={{ fontSize: '14px', color: '#000', margin: '0 0 16px' }}>
-          Ready to book or have questions?
-        </p>
-        <a
-          href="https://docs.google.com/forms/d/e/1FAIpQLSf5wIchc4qYFhPbX1VOlMiFvkNugZpeFa16ArIjuuwd5EW6UA/viewform?usp=send_form"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: 'inline-block',
-            padding: '14px 40px',
-            background: '#2C2420',
-            color: '#fff',
-            textDecoration: 'none',
-            borderRadius: '2px',
-            fontSize: '13px',
-            letterSpacing: '1.5px',
-            fontWeight: 600,
-          }}
-        >
-          Submit your Inquiry
-        </a>
-        <p style={{ fontSize: '12px', color: '#000', marginTop: '14px' }}>
-          Instagram:{' '}
           <a
-            href="https://instagram.com/hypewedd_ing"
+            href={INQUIRY_FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: '#000', textDecoration: 'none' }}
+            className="block w-full py-[14px] bg-[#0D0D0D] text-white border-none rounded-[8px] text-[14px] font-medium cursor-pointer no-underline"
           >
-            @hypewedd_ing
+            Submit your Inquiry
           </a>
-        </p>
+          <p className={`text-[12px] font-normal ${GRAY3} mt-3`}>
+            Instagram:{' '}
+            <a
+              href="https://instagram.com/hypewedd_ing"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${GRAY3} no-underline`}
+            >
+              @hypewedd_ing
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
