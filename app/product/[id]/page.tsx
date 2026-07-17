@@ -7,7 +7,7 @@ import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
 import SnsSidebar from '@/components/sns-sidebar';
 import Accordion from './_components/accordion';
-import { BackButton, StickyBottomBar } from './_components/product-actions';
+import { BackButton } from './_components/product-actions';
 import ImageGallery from './_components/image-gallery';
 import WeddingDetail from './_components/wedding-detail';
 import type { Metadata } from 'next';
@@ -77,7 +77,20 @@ export default async function ProductDetailPage({ params }: Props) {
         });
 
         const directors = directorLinks.map((l) => l.director);
-        const packages = directors.flatMap((d) => d.packages);
+        // 가격은 로그인한 사용자에게만 별도 인증 API(/api/products/[id]/pricing)로 내려줌 —
+        // 여기서 실제 금액을 클라이언트 props로 보내면 비로그인 사용자도 페이지 소스에서 그대로 볼 수 있음.
+        const packages = directors.flatMap((d) =>
+          d.packages.map((pkg) => ({
+            ...pkg,
+            priceSNS: 0,
+            priceNoSNS: 0,
+            hasPriceSNS: pkg.priceSNS > 0,
+            hasPriceNoSNS: pkg.priceNoSNS > 0,
+            // SNS 동의/비동의 구분 없이 가격이 하나뿐인 작가(Rosemarry Snap 등) —
+            // Agree/Decline 두 컬럼 대신 "Package Price" 한 컬럼으로 합쳐서 보여줌
+            isSinglePrice: pkg.priceSNS > 0 && pkg.priceSNS === pkg.priceNoSNS,
+          })),
+        );
 
         return { directors, packages };
       })()
@@ -102,6 +115,7 @@ export default async function ProductDetailPage({ params }: Props) {
           <div className="p-5 lg:px-14 lg:py-16 pb-24">
             {isPackageProduct && weddingData ? (
               <WeddingDetail
+                productId={product.id}
                 title={product.title}
                 section={product.section}
                 directors={weddingData.directors}
@@ -137,7 +151,6 @@ export default async function ProductDetailPage({ params }: Props) {
       </main>
 
       <SnsSidebar />
-      <StickyBottomBar productId={product.id} />
     </div>
   );
 }

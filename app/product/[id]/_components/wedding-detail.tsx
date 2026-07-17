@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 type Director = {
   id: number;
@@ -22,8 +24,13 @@ type Package = {
   directorId: number;
   name: string;
   subtitle: string | null;
+  // 서버(page.tsx)에서 항상 0으로 마스킹해서 내려줌 — 실제 금액은 비로그인 사용자 페이지 소스에
+  // 노출되면 안 되므로 /api/products/[id]/pricing (인증 필요)에서 별도로 받아옴.
   priceSNS: number;
   priceNoSNS: number;
+  hasPriceSNS: boolean;
+  hasPriceNoSNS: boolean;
+  isSinglePrice: boolean;
   shootingTime: string;
   locations: string;
   originalPhotos: string;
@@ -68,16 +75,41 @@ function InstagramLink({ handle }: { handle: string | null }) {
 }
 
 export default function WeddingDetail({
+  productId,
   title,
   section,
   directors,
   packages,
 }: {
+  productId: number;
   title: string;
   section?: string;
   directors: Director[];
   packages: Package[];
 }) {
+  const router = useRouter();
+  const { data: session } = useSession();
+  const [prices, setPrices] = useState<
+    Record<number, { priceSNS: number; priceNoSNS: number }>
+  >({});
+
+  useEffect(() => {
+    if (!session) {
+      setPrices({});
+      return;
+    }
+    const controller = new AbortController();
+    fetch(`/api/products/${productId}/pricing`, { signal: controller.signal })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { prices?: typeof prices } | null) => {
+        if (data?.prices) setPrices(data.prices);
+      })
+      .catch((e: Error) => {
+        if (e.name !== 'AbortError') console.error(e);
+      });
+    return () => controller.abort();
+  }, [session, productId]);
+
   const firstDirectorId = directors[0]?.id ?? null;
   const [activeDirectorId, setActiveDirectorId] = useState<number | null>(
     firstDirectorId,
@@ -168,11 +200,16 @@ export default function WeddingDetail({
   const detailsIsFirst = !hasPartners && !hasInclusions && hasDetails;
 
   const priceCount = activePackage
-    ? [activePackage.priceSNS > 0, activePackage.priceNoSNS > 0].filter(Boolean)
-        .length
+    ? activePackage.isSinglePrice
+      ? activePackage.hasPriceSNS || activePackage.hasPriceNoSNS
+        ? 1
+        : 0
+      : [activePackage.hasPriceSNS, activePackage.hasPriceNoSNS].filter(Boolean)
+          .length
     : 0;
+  const activePrice = activePackage ? prices[activePackage.id] : undefined;
 
-  const secLabelBase = `text-[10px] font-semibold ${GRAY3} tracking-[0.12em] uppercase mb-4`;
+  const secLabelBase = `text-[12px] font-semibold ${GRAY3} tracking-[0.12em] uppercase mb-4`;
   const tabState = (active: boolean) =>
     active
       ? 'font-medium bg-[#0D0D0D] text-white border-[#0D0D0D]'
@@ -241,7 +278,7 @@ export default function WeddingDetail({
                 {partnerRows.map((item, i) => (
                   <div
                     key={item.role}
-                    className={`py-[10px] px-3 bg-[#F9F9F9] rounded-[8px] ${
+                    className={`py-[10px] px-3 bg-[#F9F9F9] rounded-[8px]  ${
                       partnerRows.length % 2 === 1 &&
                       i === partnerRows.length - 1
                         ? 'col-span-2'
@@ -360,68 +397,115 @@ export default function WeddingDetail({
         {/* PRICE SECTION */}
         {activePackage && priceCount > 0 && (
           <div className={`border-t ${BORDER}`}>
-            <div
-              className={`grid ${priceCount === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}
-            >
-              {activePackage.priceSNS > 0 && (
-                <div
-                  className={`py-5 px-6 flex flex-col gap-1 ${
-                    priceCount > 1 ? `border-r ${BORDER}` : ''
-                  }`}
+            {!session ? (
+              <div className="py-10 px-6 flex flex-col items-center gap-3">
+                <p className={`text-[13px] font-normal ${GRAY2}`}>
+                  Log in to check the price
+                </p>
+                <button
+                  onClick={() => router.push('?auth=1')}
+                  className="py-[9px] px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none bg-[#0D0D0D] text-white"
                 >
-                  <span className="inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#EAF0EC] text-[#2D5A45]">
-                    Agree to SNS Upload
-                  </span>
-                  <div
-                    className={`text-[22px] font-bold ${BLACK} tracking-[-0.02em]`}
-                  >
-                    USD{activePackage.priceSNS.toLocaleString()}
-                  </div>
-                  <a
-                    href={INQUIRY_FORM_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none w-full text-center no-underline bg-[#2D5A45] text-white"
-                  >
-                    Inquire Now →
-                  </a>
+                  Check Price
+                </button>
+              </div>
+            ) : (
+              <>
+                <div
+                  className={`grid ${priceCount === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}
+                >
+                  {activePackage.isSinglePrice ? (
+                    <div className="py-5 px-6 flex flex-col gap-1">
+                      <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#EAF0EC] text-[#2D5A45]">
+                        Package Price
+                      </span>
+                      <div
+                        className={`text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
+                      >
+                        {activePrice
+                          ? `USD${(
+                              activePrice.priceSNS || activePrice.priceNoSNS
+                            ).toLocaleString()}`
+                          : '···'}
+                      </div>
+                      <a
+                        href={INQUIRY_FORM_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#2D5A45] text-white"
+                      >
+                        Inquire Now →
+                      </a>
+                    </div>
+                  ) : (
+                    <>
+                      {activePackage.hasPriceSNS && (
+                        <div
+                          className={`py-5 px-6 flex flex-col gap-1 ${
+                            priceCount > 1 ? `border-r ${BORDER}` : ''
+                          }`}
+                        >
+                          <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#EAF0EC] text-[#2D5A45]">
+                            Agree to SNS Upload
+                          </span>
+                          <div
+                            className={`text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
+                          >
+                            {activePrice
+                              ? `USD${activePrice.priceSNS.toLocaleString()}`
+                              : '···'}
+                          </div>
+                          <a
+                            href={INQUIRY_FORM_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#2D5A45] text-white"
+                          >
+                            Inquire Now →
+                          </a>
+                        </div>
+                      )}
+                      {activePackage.hasPriceNoSNS && (
+                        <div className="py-5 px-6 flex flex-col gap-1">
+                          <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#F5F5F5] text-[#666666]">
+                            Decline SNS Upload
+                          </span>
+                          <div
+                            className={`text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
+                          >
+                            {activePrice
+                              ? `USD${activePrice.priceNoSNS.toLocaleString()}`
+                              : '···'}
+                          </div>
+                          <a
+                            href={INQUIRY_FORM_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#0D0D0D] text-white"
+                          >
+                            Inquire Now →
+                          </a>
+                        </div>
+                      )}
+                    </>
+                  )}
                 </div>
-              )}
-              {activePackage.priceNoSNS > 0 && (
-                <div className="py-5 px-6 flex flex-col gap-1">
-                  <span className="inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#F5F5F5] text-[#666666]">
-                    Decline SNS Upload
-                  </span>
-                  <div
-                    className={`text-[22px] font-bold ${BLACK} tracking-[-0.02em]`}
+                <div className={`py-3 px-6 bg-[#FAFAFA] border-t ${BORDER}`}>
+                  <p
+                    className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
                   >
-                    USD{activePackage.priceNoSNS.toLocaleString()}
-                  </div>
-                  <a
-                    href={INQUIRY_FORM_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none w-full text-center no-underline bg-[#0D0D0D] text-white"
+                    * Final price is subject to change based on current USD
+                    exchange rate and does NOT include add-ons.
+                  </p>
+                  <p
+                    className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
                   >
-                    Inquire Now →
-                  </a>
+                    * SNS Upload: Hype Pig (Hype Wedding, Hype Snap) SNS,
+                    Photographer SNS
+                  </p>
                 </div>
-              )}
-            </div>
-            <div className={`py-3 px-6 bg-[#FAFAFA] border-t ${BORDER}`}>
-              <p
-                className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
-              >
-                * Final price is subject to change based on current USD exchange
-                rate and does NOT include add-ons.
-              </p>
-              <p
-                className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
-              >
-                * SNS Upload: Hype Pig (Hype Wedding, Hype Snap) SNS,
-                Photographer SNS
-              </p>
-            </div>
+              </>
+            )}
           </div>
         )}
 
@@ -458,7 +542,7 @@ export default function WeddingDetail({
                 </div>
                 {expandedAddon === i && addon.desc && (
                   <p
-                    className={`text-[12px] ${GRAY2} leading-[1.6] -mt-[2px] mb-[10px] px-[14px]`}
+                    className={`text-[12px] pt-2 ${GRAY2} leading-[1.6] -mt-[2px] mb-[10px] px-[14px]`}
                   >
                     {addon.desc}
                   </p>
