@@ -45,6 +45,25 @@ type Package = {
 const INQUIRY_FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSf5wIchc4qYFhPbX1VOlMiFvkNugZpeFa16ArIjuuwd5EW6UA/viewform?usp=send_form';
 
+/** 문장이 2개 이상(마침표 2개 이상)이면 문장 단위로 줄바꿈, 한 문장뿐이면 그대로 둠 */
+function AddonDesc({ text }: { text: string }) {
+  const sentences = text
+    .split('.')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (sentences.length <= 1) return <>{text}</>;
+  return (
+    <>
+      {sentences.map((s, i) => (
+        <span key={i}>
+          {s}.
+          {i < sentences.length - 1 && <br />}
+        </span>
+      ))}
+    </>
+  );
+}
+
 const GREEN = 'text-[#2D5A45]';
 const GRAY1 = 'text-[#444444]';
 const GRAY2 = 'text-[#666666]';
@@ -544,7 +563,7 @@ export default function WeddingDetail({
                   <p
                     className={`text-[12px] pt-2 ${GRAY2} leading-[1.6] -mt-[2px] mb-[10px] px-[14px]`}
                   >
-                    {addon.desc}
+                    <AddonDesc text={addon.desc} />
                   </p>
                 )}
               </div>

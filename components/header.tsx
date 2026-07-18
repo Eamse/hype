@@ -106,15 +106,6 @@ const NAV_LINKS: Record<
   ],
 };
 
-// 드롭다운 메뉴 간격 조절용 상수들 — 숫자만 바꾸면 각 간격이 독립적으로 조절됨
-const DROPDOWN_GROUP_OFFSET = -14; // Service/Inquiry 등 메인 메뉴 ~ 드롭다운 전체 그룹 사이 간격
-const DROPDOWN_ITEM_GAP = 3; // 드롭다운 항목들 사이 기본 간격
-const DROPDOWN_ITEM_GAP_OVERRIDES: Record<number, number> = {
-  // key: 항목 인덱스(1부터, 이전 항목과의 간격), value: 이 간격만 따로 쓸 값
-  2: 2, // Packages → Jeju
-  3: 2, // Jeju → Seoul
-};
-
 function DropdownLink({
   href,
   label,
@@ -131,13 +122,20 @@ function DropdownLink({
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        fontSize: hovered ? 15 : 14,
-        fontWeight: 400,
-        color: '#000',
-        textDecoration: hovered ? 'underline' : 'none',
+        display: 'block',
+        padding: '14px 22px',
+        fontSize: hovered ? 14 : 13,
+        fontWeight: 700,
+        color: '#2D5A45',
+        textDecoration: 'none',
+        textTransform: 'uppercase',
+        letterSpacing: '0.5px',
         whiteSpace: 'nowrap',
-        transition: 'font-size 0.15s',
-        paddingLeft: indent ? 16 : 0,
+        backgroundColor: hovered ? '#f7f7f7' : 'transparent',
+        borderLeft: hovered ? '3px solid #2D5A45' : '3px solid transparent',
+        transition:
+          'background-color 0.15s, font-size 0.15s, border-color 0.15s',
+        paddingLeft: (indent ? 28 : 22) - 3,
       }}
     >
       {label}
@@ -208,6 +206,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
     setHoveredNav(label);
   };
   const closeNav = () => {
+    // TODO: 스타일링 끝나면 주석 해제
     closeTimer.current = setTimeout(() => setHoveredNav(null), 150);
   };
   const [openMobileDropdown, setOpenMobileDropdown] = useState<string | null>(
@@ -317,14 +316,32 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                           >
                             <span
                               style={{
+                                position: 'relative',
                                 fontSize: 14,
-                                fontWeight: active ? 600 : 400,
-                                color: '#000',
+                                fontWeight: active ? 600 : 'bold',
+                                color:
+                                  hoveredNav === label ? '#2D5A45' : '#000',
                                 padding: '4px 0',
                                 cursor: 'default',
+                                transition: 'color 0.15s',
                               }}
                             >
                               {label}
+                              {(hoveredNav !== null
+                                ? hoveredNav === label
+                                : active) && (
+                                <span
+                                  style={{
+                                    position: 'absolute',
+                                    bottom: -2,
+                                    left: 0,
+                                    right: 0,
+                                    height: 1.5,
+                                    background:
+                                      hoveredNav === label ? '#2D5A45' : '#000',
+                                  }}
+                                />
+                              )}
                             </span>
                           </div>
                         );
@@ -337,15 +354,18 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                           onMouseEnter={() => openNav(label)}
                           style={{
                             fontSize: 14,
-                            fontWeight: active ? 600 : 400,
-                            color: '#000',
+                            fontWeight: active ? 600 : 'bold',
+                            color: hoveredNav === label ? '#2D5A45' : '#000',
                             position: 'relative',
                             padding: '4px 0',
                             display: 'inline-block',
+                            transition: 'color 0.15s',
                           }}
                         >
                           {label}
-                          {active && (
+                          {(hoveredNav !== null
+                            ? hoveredNav === label
+                            : active) && (
                             <span
                               style={{
                                 position: 'absolute',
@@ -353,7 +373,8 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                                 left: 0,
                                 right: 0,
                                 height: 1.5,
-                                background: '#000',
+                                background:
+                                  hoveredNav === label ? '#2D5A45' : '#000',
                               }}
                             />
                           )}
@@ -361,69 +382,57 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                       );
                     })}
                   </nav>
-                  {/* 드롭다운 */}
-                  {hoveredNav !== null && (
-                    <div
-                      className="header-dropdown"
-                      onMouseEnter={() => {
-                        if (closeTimer.current)
-                          clearTimeout(closeTimer.current);
-                      }}
-                      onMouseLeave={closeNav}
-                      style={{
-                        position: 'fixed',
-                        top: 56,
-                        left: 0,
-                        right: 0,
-                        zIndex: 99,
-                        backgroundColor:
-                          pathname === '/' || pathname === '/hype-snap'
-                            ? 'rgba(255,255,255,0.7)'
-                            : '#fff',
-                        padding: '4px 0 24px',
-                      }}
-                    >
-                      <div style={{ position: 'relative', height: 130 }}>
-                        {allDropdownGroups.map((group) => {
-                          const el = navItemRefs.current.get(group.label);
-                          const left = el ? el.getBoundingClientRect().left : 0;
-                          return (
-                            <div
-                              key={group.label}
-                              style={{
-                                position: 'absolute',
-                                left: left - 0,
-                                top: DROPDOWN_GROUP_OFFSET,
-                                display: 'flex',
-                                flexDirection: 'column',
-                              }}
-                            >
-                              {group.dropdown!.map(
-                                ({ label: dLabel, href: dHref, indent }, i) => (
-                                  <div
-                                    key={dLabel}
-                                    style={{
-                                      marginTop:
-                                        i === 0
-                                          ? 0
-                                          : (DROPDOWN_ITEM_GAP_OVERRIDES[i] ??
-                                            DROPDOWN_ITEM_GAP),
-                                    }}
-                                  >
-                                    <DropdownLink
-                                      href={dHref}
-                                      label={dLabel}
-                                      indent={indent}
-                                    />
-                                  </div>
-                                ),
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  )}
+                  {/* 드롭다운 — 호버 중인 메뉴 하나만, 너비는 내용에 맞게 */}
+                  {hoveredNav !== null &&
+                    allDropdownGroups
+                      .filter((group) => group.label === hoveredNav)
+                      .map((group) => {
+                        const el = navItemRefs.current.get(group.label);
+                        const left = el ? el.getBoundingClientRect().left : 0;
+                        return (
+                          <div
+                            key={group.label}
+                            className="header-dropdown"
+                            onMouseEnter={() => {
+                              if (closeTimer.current)
+                                clearTimeout(closeTimer.current);
+                            }}
+                            onMouseLeave={closeNav}
+                            style={{
+                              position: 'fixed',
+                              top: 47,
+                              left,
+                              width: 'fit-content',
+                              minWidth: 180,
+                              zIndex: 99,
+                              backgroundColor: '#fff',
+                              borderRadius: 12,
+                              boxShadow: '0 8px 24px rgba(0,0,0,0.14)',
+                              overflow: 'hidden',
+                              display: 'flex',
+                              flexDirection: 'column',
+                            }}
+                          >
+                            {group.dropdown!.map(
+                              ({ label: dLabel, href: dHref, indent }, i) => (
+                                <div
+                                  key={dLabel}
+                                  style={{
+                                    borderTop:
+                                      i === 0 ? 'none' : '1px solid #eee',
+                                  }}
+                                >
+                                  <DropdownLink
+                                    href={dHref}
+                                    label={dLabel}
+                                    indent={indent}
+                                  />
+                                </div>
+                              ),
+                            )}
+                          </div>
+                        );
+                      })}
                 </div>
               );
             })()}
