@@ -31,9 +31,7 @@ export default function CommentSection({
   initialComments: CommentNode[];
 }) {
   const { data: session } = useSession();
-  // admin(리뷰 인라인 관리)과 master(매거진 작성 권한자)는 둘 다 모든 댓글을 관리할 수 있음
-  const isModerator =
-    session?.user?.role === 'admin' || session?.user?.role === 'master';
+  const isModerator = session?.user?.role === 'master';
   const [comments, setComments] = useState<CommentNode[]>(initialComments);
 
   const [content, setContent] = useState('');

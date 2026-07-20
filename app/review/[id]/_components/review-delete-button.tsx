@@ -16,7 +16,7 @@ export default function ReviewDeleteButton({
   const [deleting, setDeleting] = useState(false);
 
   const isOwner = !!session?.user?.id && session.user.id === authorUserId;
-  const isModerator = session?.user?.role === 'admin' || session?.user?.role === 'master';
+  const isModerator = session?.user?.role === 'master';
   const canManage = isOwner || isModerator || !authorUserId;
 
   if (!canManage) return null;

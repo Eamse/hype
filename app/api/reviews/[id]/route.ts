@@ -91,9 +91,9 @@ export async function PATCH(
       );
     }
   }
-  // 우수 리뷰 지정은 admin/master만 가능 (작성자 본인도 불가)
+  // 우수 리뷰 지정은 master만 가능 (작성자 본인도 불가)
   if (isFeatured !== undefined) {
-    const isModerator = session?.user?.role === 'admin' || session?.user?.role === 'master';
+    const isModerator = session?.user?.role === 'master';
     if (!isModerator || typeof isFeatured !== 'boolean') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

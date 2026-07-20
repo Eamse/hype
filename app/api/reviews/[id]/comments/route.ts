@@ -63,9 +63,14 @@ export async function POST(
   }
 
   let parent: { reviewId: number; userId: string | null } | null = null;
+  let parentIdNum: number | null = null;
   if (parentId !== undefined && parentId !== null) {
+    parentIdNum = parseId(String(parentId));
+    if (parentIdNum === null) {
+      return NextResponse.json({ error: 'invalid parentId' }, { status: 400 });
+    }
     parent = await prisma.comment.findUnique({
-      where: { id: Number(parentId) },
+      where: { id: parentIdNum },
       select: { reviewId: true, userId: true },
     });
     if (!parent || parent.reviewId !== reviewId) {
@@ -96,7 +101,7 @@ export async function POST(
         authorName: finalAuthorName,
         password: hashedPassword,
         userId: finalUserId,
-        parentId: parentId ? Number(parentId) : null,
+        parentId: parentIdNum,
       },
     });
 

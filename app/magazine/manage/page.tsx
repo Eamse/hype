@@ -37,7 +37,7 @@ export default async function MagazineManagePage() {
     <div style={{ minHeight: '100vh' }}>
       <Header brand="hype-wedding" />
       <div
-        style={{ maxWidth: 800, margin: '0 auto', padding: '40px 20px 80px' }}
+        style={{ maxWidth: 800, margin: '0 auto', padding: '80px 20px 80px' }}
       >
         <div
           style={{

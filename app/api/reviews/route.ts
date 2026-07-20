@@ -20,6 +20,9 @@ export async function GET(request: NextRequest) {
   if (location && !ALLOWED_LOCATIONS.has(location)) {
     return NextResponse.json({ error: 'invalid location' }, { status: 400 });
   }
+  if (directorId && !Number.isInteger(Number(directorId))) {
+    return NextResponse.json({ error: 'invalid directorId' }, { status: 400 });
+  }
 
   const pageSize = 12;
 
@@ -105,6 +108,9 @@ export async function POST(request: NextRequest) {
     if (typeof rating !== 'number' || rating < 1 || rating > 5) {
       return NextResponse.json({ error: 'rating must be between 1 and 5' }, { status: 400 });
     }
+  }
+  if (directorId && !Number.isInteger(Number(directorId))) {
+    return NextResponse.json({ error: 'invalid directorId' }, { status: 400 });
   }
 
   try {

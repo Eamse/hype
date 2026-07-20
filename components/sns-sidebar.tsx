@@ -68,7 +68,7 @@ export default function SnsSidebar() {
                   : undefined,
           }}
           onMouseEnter={(e) => {
-            (e.currentTarget as HTMLAnchorElement).style.background = '#F3F4F4';
+            (e.currentTarget as HTMLAnchorElement).style.background = '#8ECA3C'; // #F3F4F4 기존 색상
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLAnchorElement).style.background = 'white';

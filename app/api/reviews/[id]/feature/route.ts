@@ -8,13 +8,14 @@ function parseId(id: string): number | null {
   return n;
 }
 
-// 우수 리뷰 고정 토글 (어드민 전용)
+// 우수 리뷰 고정 토글 (master 전용)
 export async function PATCH(
   request: NextRequest,
   props: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
-  if (session?.user?.role !== 'admin') {
+  const isModerator = session?.user?.role === 'master';
+  if (!isModerator) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

@@ -23,7 +23,7 @@ type ReviewRow = {
 export default function ReviewListClient({ reviews }: { reviews: ReviewRow[] }) {
   const { data: session } = useSession();
   const router = useRouter();
-  const isModerator = session?.user?.role === 'admin' || session?.user?.role === 'master';
+  const isModerator = session?.user?.role === 'master';
   const [deleted, setDeleted] = useState<Set<number>>(new Set());
   const [featured, setFeatured] = useState<Map<number, boolean>>(
     () => new Map(reviews.map((r) => [r.id, r.isFeatured])),

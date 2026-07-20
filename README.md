@@ -17,6 +17,9 @@
 - Google OAuth 및 이메일/비밀번호 기반 회원 인증
 - 온보딩 정보 수집 및 사용자 프로필 생성 (이름 / 생년월일 / 성별 / 국가 / 전화번호)
 - 상품 북마크 저장 및 개인 북마크 리스트 관리
+- 사진작가 패키지 상세 조회 — 작가별 Package A/B/C, 파트너(헤어메이크업/드레스/수트/부케), 촬영 디테일, 애드온
+- **가격 정보는 로그인 사용자에게만 노출** — 인증된 API 별도 호출로 조회 (아래 보안 섹션 참고)
+- 리뷰 작성 · 댓글/대댓글 (회원은 세션 기반, 비회원은 비밀번호로 본인 확인)
 - 매거진 콘텐츠 열람 (촬영 스토리 / 가이드 콘텐츠)
 
 **관리자**
@@ -24,27 +27,34 @@
 - 서비스 운영 대시보드 (사용자 / 상품 통계 관리)
 - 히어로 이미지 업로드 및 삭제 (Cloudflare R2 연동)
 - 사진작가 상품 관리 (생성 / 수정 / 삭제 / 이미지 다중 업로드 / 노출 순서 제어)
+- 패키지 카탈로그 관리 — 작가(Director) / 패키지(Package) / 파트너(Partner) / 애드온(Addon) / 인클루전(Inclusion) CRUD
+- 리뷰 모더레이션 — 우수 리뷰 고정, 부적절한 리뷰·댓글 삭제
 - 매거진 콘텐츠 관리 (작성 / 발행 / 이미지 관리)
 - 지역 및 카테고리 기반 상품 분류 관리 (서울 / 제주 / 캐주얼)
 - 회원 데이터 조회 및 관리
-- 관리자 계정 관리 (master 권한 기반 계정 생성·삭제, manager 접근 제한)
+- 관리자 계정 관리 (master 권한 기반 계정 생성·삭제)
 
 **권한 구조**
 
 일반 유저와 관리자는 완전히 분리된 테이블과 인증 방식을 사용
 일반 유저는 Google OAuth 또는 이메일/비밀번호로 로그인하고, 관리자는 별도 Admin 테이블의 ID/PW로 JWT 인증
 
+일반 유저 쪽 `role` 필드는 `master`(매거진 작성 + 리뷰 모더레이션 권한)만 사용 — 관리자 대시보드(Admin 테이블)와는 별개의 권한 체계
+
 ## 서비스 구조
 
-사진작가 상품 탐색 → 북마크 저장 → 상담 문의
-관리자는 어드민 패널에서 상품·히어로 이미지·매거진 콘텐츠·회원을 관리
+사진작가 상품 탐색 → 패키지 상세(로그인 시 가격 확인) → 북마크 저장 → 상담 문의
+방문객은 리뷰/댓글로 후기를 남기고, 관리자는 어드민 패널에서 상품·카탈로그·히어로 이미지·매거진·회원·리뷰를 관리
 
 **주요 도메인**
 
-- `User` → Google OAuth 또는 Credentials 인증 · 온보딩 정보 포함
-- `Product` → `ProductImage` (섹션별 사진작가 상품)
+- `User` → Google OAuth 또는 Credentials 인증 · 온보딩 정보 포함 · `role`(master)
+- `Product` ⇄ `Director`(N:M, `ProductDirector`) → `ProductImage`
+- `Director` → `Package`(작가별 패키지 A/B/C)
+- `Package` → `Addon` / `Inclusion` / `Partner` (N:M 조인 테이블) · 가격(`priceSNS`/`priceNoSNS`)은 인증 API로만 조회
+- `Review` → `Comment`(대댓글 트리) · `Notification`(댓글 알림)
 - `Magazine` → `MagazineImage` (Cascade Delete)
-- `Admin` → role(master/manager) 기반 관리자 계정
+- `Admin` → role(`staff`/`master`) 기반 관리자 계정, User와 별개 테이블
 - `Bookmark` → 유저별 상품 북마크
 
 ---
@@ -68,15 +78,16 @@
 
 **보안**
 
-- NextAuth JWT 세션 (7일 만료) · Admin JWT 쿠키 (2시간 만료)
+- NextAuth JWT 세션 (7일 만료) · Admin JWT 쿠키 (httpOnly · `secure` in production · 2시간 만료)
 - Proxy 미들웨어로 `/admin`, `/onboarding` 접근 보호
+- **가격 데이터는 페이지 props로 절대 내려주지 않음** — ISR(60초 캐싱)로 캐시되는 상품 상세 페이지에 실제 금액을 props로 심으면 로그인 여부와 무관하게 모든 방문자에게 같은 캐시가 나가버리므로, 가격은 별도 인증 API(`/api/products/[id]/pricing`)에서 세션 검증 후에만 반환
 - Magic Bytes 검증 — MIME 스푸핑 방지 (JPEG/PNG/WEBP 실제 내용 확인)
 - Decompression Bomb 방지 — sharp `limitInputPixels: 40M`
 - AES-256-GCM으로 개인정보(이름·전화번호) 암호화 저장
 - Path Traversal 방지 — 이미지 키 패턴 검증
-- IP 기반 Rate Limiting (인메모리) — 로그인 10회/15분, 회원가입 5회/10분
+- IP 기반 Rate Limiting (인메모리) — 로그인 10회/15분, 회원가입 5회/10분, 리뷰/댓글 작성 제한
 - CSP · X-Frame-Options · X-Content-Type-Options 등 보안 헤더
-- master/manager role 기반 어드민 접근 제어
+- `master` role 기반 매거진 작성·리뷰 모더레이션 접근 제어 (일반 유저 role) / Admin 테이블 role 기반 어드민 접근 제어 (관리자, 별도 체계)
 - bcryptjs 비밀번호 해싱 (salt rounds: 12)
 
 ---
@@ -85,10 +96,12 @@
 
 - 인증 API — 회원가입, 로그인, 온보딩
 - 상품 API — 목록 조회, 상세 조회, 검색, CRUD
+- 가격 API — 로그인 사용자 전용 패키지 가격 조회 (`/api/products/[id]/pricing`)
+- 리뷰/댓글 API — 작성·수정·삭제(회원 세션 또는 비회원 비밀번호), 대댓글, 우수 리뷰 고정(master)
 - 북마크 API — 북마크 토글, 목록 조회
 - 매거진 API — 발행 콘텐츠 조회, 관리자 CRUD
 - 이미지 업로드 API — Hero 이미지 / 상품 이미지 / 매거진 이미지 관리 (R2 연동)
-- 관리자 API — 로그인, 계정 관리, 회원 조회, 통계
+- 관리자 API — 로그인, 계정 관리, 회원 조회, 통계, 패키지 카탈로그 CRUD
 
 ---
 
@@ -114,6 +127,26 @@
 **원인** `proxy.ts`(미들웨어)가 `/admin` 경로 처리 시 NextAuth를 초기화하는데, `auth.config.ts`에 크리덴셜 없는 Apple OAuth 프로바이더가 등록되어 초기화 중 멈춤
 
 **해결** Apple 프로바이더 제거, Google OAuth만 유지. 설정하지 않은 프로바이더가 아무 에러 없이 무응답을 만들 수 있다는 것을 확인
+
+---
+
+### 02. ISR 캐싱 전환 중, 가격 데이터가 로그인 여부와 무관하게 모든 방문자에게 노출될 뻔했습니다
+
+**발견** 상품 상세 페이지를 `force-dynamic`에서 `revalidate = 60`(ISR)으로 바꾸는 과정에서, 서버 컴포넌트가 조회한 패키지 가격을 그대로 client component props로 넘기고 있었음을 발견
+
+**원인** ISR 페이지는 첫 요청 시 렌더링된 HTML/RSC payload를 60초간 모든 방문자에게 동일하게 캐시해서 내려줌. 로그인 여부를 `!session`으로 화면에서만 가려도, 실제 가격 숫자는 이미 페이지 응답 자체에 포함되어 있어서 페이지 소스보기나 React DevTools로 누구나 확인 가능한 상태였음 — "화면에서 숨기기"와 "데이터를 안 보내기"는 다른 문제라는 걸 확인
+
+**해결** 가격 필드는 페이지 props에서 항상 `0`으로 마스킹하고, 실제 금액은 별도 인증 API(`/api/products/[id]/pricing`)에서 세션 검증 후에만 반환하도록 분리. 페이지 자체는 ISR 캐싱을 유지하면서, 민감한 데이터만 클라이언트가 로그인 시점에 별도로 fetch하는 구조로 전환
+
+---
+
+### 03. 관리자 로그인 쿠키가 `secure: false`로 설정되어 있었습니다
+
+**발견** 전체 API 라우트 보안 점검 중 `admin_token`(어드민 JWT) 쿠키에 `secure: false`가 하드코딩되어 있는 것을 발견
+
+**원인** 로컬 개발(HTTP) 환경에서 쿠키가 안 잡히는 문제를 임시로 우회하며 넣어둔 값이 그대로 남아있었음. HTTPS가 아닌 경로로 요청이 오갈 경우 이 쿠키가 그대로 노출되어 관리자 권한이 탈취될 수 있는 상태
+
+**해결** `secure: process.env.NODE_ENV === 'production'`으로 변경 — 로컬 개발 환경에서는 여전히 동작하면서, 배포 환경에서는 HTTPS 연결에서만 쿠키가 전송되도록 강제
 
 ---
 

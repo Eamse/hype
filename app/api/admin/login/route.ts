@@ -16,6 +16,10 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const { loginId, password } = body;
 
+  if (typeof loginId !== 'string' || typeof password !== 'string') {
+    return NextResponse.json({ message: 'Invalid request' }, { status: 400 });
+  }
+
   const login = await prisma.admin.findUnique({
     where: { loginId },
   });
@@ -42,7 +46,7 @@ export async function POST(request: NextRequest) {
   const response = NextResponse.json({ ok: true });
   response.cookies.set('admin_token', token, {
     httpOnly: true,
-    secure: false,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
     maxAge: 60 * 60 * 2,
     path: '/',
