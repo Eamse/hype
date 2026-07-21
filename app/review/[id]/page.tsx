@@ -1,3 +1,5 @@
+export const revalidate = 60; // 세션 의존 없음 — 캐싱해서 DB 왕복 줄임
+
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';

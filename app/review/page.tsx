@@ -1,3 +1,6 @@
+export const revalidate = 60; // 세션 의존 없음 — 캐싱해서 DB 왕복 줄임
+
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Header from '@/components/header';
@@ -62,11 +65,13 @@ export default async function ReviewPage({
             padding: '32px 20px 80px',
           }}
         >
-          <ReviewFilters
-            productType={productType}
-            location={location}
-            directorId={directorId}
-          />
+          <Suspense fallback={null}>
+            <ReviewFilters
+              productType={productType}
+              location={location}
+              directorId={directorId}
+            />
+          </Suspense>
           <ReviewListClient
             reviews={reviews.map((review) => ({
               id: review.id,
