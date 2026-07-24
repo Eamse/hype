@@ -156,7 +156,8 @@ async function main() {
         order: dirOrder++,
       },
     });
-    directorIdByNumber.set(dir.number, director.id);
+    // 번호(#3 등)는 제주/서울에서 각자 따로 매겨져서 지역 없이 키를 만들면 서로 덮어씀
+    directorIdByNumber.set(`${dir.location}:${dir.number}`, director.id);
 
     let pkgOrder = 0;
     for (const pkg of dir.packages) {
@@ -207,9 +208,10 @@ async function main() {
     ['jeju', 'Photographers in Jeju'],
     ['seoul', 'Photographers in Seoul'],
   ] as const) {
+    const region = key === 'jeju' ? 'Jeju' : 'Seoul';
     for (const [i, top] of data[key].entries()) {
       const subs = top.subPhotographers && top.subPhotographers.length > 0 ? top.subPhotographers : [top];
-      const directorIds = subs.map((s) => directorIdByNumber.get(s.number)!);
+      const directorIds = subs.map((s) => directorIdByNumber.get(`${region}:${s.number}`)!);
 
       const product = await prisma.product.create({
         data: { title: top.name, section, order: i },
