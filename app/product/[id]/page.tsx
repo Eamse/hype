@@ -1,7 +1,5 @@
 export const revalidate = 60; // 이미지 많은 상품 상세 — 60초 캐싱
 
-import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
@@ -11,14 +9,18 @@ import { BackButton } from './_components/product-actions';
 import ImageGallery from './_components/image-gallery';
 import WeddingDetail from './_components/wedding-detail';
 import type { Metadata } from 'next';
+import { cache } from 'react';
 
 type Props = { params: Promise<{ id: string }> };
-
+const getProduct = cache((id: number) =>
+  prisma.product.findUnique({
+    where: { id },
+    include: { images: { orderBy: { order: 'asc' } } },
+  }),
+);
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const product = await prisma.product.findUnique({
-    where: { id: Number(id) },
-  });
+  const product = await getProduct(Number(id));
   if (!product) return { title: 'Not Found' };
   return {
     title: product.title,
@@ -31,10 +33,35 @@ export default async function ProductDetailPage({ params }: Props) {
   const idNum = Number(id);
   if (!Number.isInteger(idNum) || idNum <= 0) notFound();
 
-  const product = await prisma.product.findUnique({
-    where: { id: idNum },
-    include: { images: { orderBy: { order: 'asc' } } },
-  });
+  const [product, directorLinks] = await Promise.all([
+    getProduct(Number(idNum)),
+    prisma.productDirector.findMany({
+      where: { productId: idNum },
+      include: {
+        director: {
+          include: {
+            packages: {
+              include: {
+                director: true,
+                addons: {
+                  include: { addon: true },
+                  orderBy: { order: 'asc' },
+                },
+                inclusions: {
+                  include: { inclusion: true },
+                  orderBy: { order: 'asc' },
+                },
+                partners: { include: { partner: true } },
+              },
+              orderBy: { order: 'asc' },
+            },
+          },
+        },
+      },
+      orderBy: { director: { order: 'asc' } },
+    }),
+  ]);
+
   if (!product) notFound();
 
   const isWedding =
@@ -50,35 +77,9 @@ export default async function ProductDetailPage({ params }: Props) {
 
   const weddingData = isPackageProduct
     ? await (async () => {
-        const directorLinks = await prisma.productDirector.findMany({
-          where: { productId: idNum },
-          include: {
-            director: {
-              include: {
-                packages: {
-                  include: {
-                    director: true,
-                    addons: {
-                      include: { addon: true },
-                      orderBy: { order: 'asc' },
-                    },
-                    inclusions: {
-                      include: { inclusion: true },
-                      orderBy: { order: 'asc' },
-                    },
-                    partners: { include: { partner: true } },
-                  },
-                  orderBy: { order: 'asc' },
-                },
-              },
-            },
-          },
-          orderBy: { director: { order: 'asc' } },
-        });
-
         const directors = directorLinks.map((l) => l.director);
         // 가격은 로그인한 사용자에게만 별도 인증 API(/api/products/[id]/pricing)로 내려줌 —
-        // 여기서 실제 금액을 클라이언트 props로 보내면 비로그인 사용자도 페이지 소스에서 그대로 볼 수 있음.
+        // 여기서 실제 금액을 클라이언트 props로 보내면 비로그인 사용자도 페이지 소스에서 그대로 볼 수 있음
         const packages = directors.flatMap((d) =>
           d.packages.map((pkg) => ({
             ...pkg,
