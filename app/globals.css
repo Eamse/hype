@@ -379,6 +379,22 @@ body {
   animation: fadeIn 0.8s ease-in-out;
 }
 
+@keyframes productMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* 리스트를 두 번 이어붙였으니, 정확히 절반만큼 옮기면 이어붙인 지점이 안 보이고 자연스럽게 반복됨 */
+    transform: translateX(-50%);
+  }
+}
+.product-marquee-track {
+  animation-name: productMarquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  width: fit-content;
+}
+
 /* ─── Magazine rich text content (TipTap) ─────────────── */
 .magazine-content,
 .ProseMirror {

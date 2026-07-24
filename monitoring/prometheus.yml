@@ -1,0 +1,6 @@
+global:
+  scrape_interval: 5s
+
+# k6가 --out으로 직접 메트릭을 push하는 방식(remote-write)이라
+# 별도 scrape 대상은 없음. remote-write-receiver 기능만 활성화해서 받음.
+scrape_configs: []

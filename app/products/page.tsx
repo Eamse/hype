@@ -61,11 +61,10 @@ function ProductsContent() {
         }}
       >
         <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>
-          {section ?? 'All Products'}
+          {products.length} {section ?? 'All Products'}
         </h1>
-        <p style={{ fontSize: 13, color: '#000', marginBottom: 32 }}>
-          {products.length} products
-        </p>
+
+        <p style={{ fontSize: 13, color: '#000', marginBottom: 32 }}></p>
 
         <div
           style={{
