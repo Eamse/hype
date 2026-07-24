@@ -27,7 +27,9 @@ export default function ProductSection({
 }) {
   const isMobile = useIsMobile();
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [containerWidth, setContainerWidth] = useState(0);
+  // 서버는 실제 화면 너비를 모르니 0 대신 데스크탑 기준 대략적인 기본값으로 시작 —
+  // 그래야 새로고침 시 "0(안 보임) → 갑자기 커짐"이 아니라 "비슷한 크기로 시작 → 살짝 보정"됨
+  const [containerWidth, setContainerWidth] = useState(1120);
 
   useLayoutEffect(() => {
     const el = wrapperRef.current;
