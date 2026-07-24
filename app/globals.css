@@ -391,7 +391,6 @@ body {
   animation-name: productMarquee;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  width: fit-content;
 }
 
 /* ─── Magazine rich text content (TipTap) ─────────────── */
