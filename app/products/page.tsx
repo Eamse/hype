@@ -1,5 +1,6 @@
+export const revalidate = 60;
+
 import Header from '@/components/header';
-import ProductCard from '@/components/product-card';
 import SubTabBar from '@/components/sub-tab-bar';
 import { serviceSubTabs } from '@/lib/service-sub-tabs';
 import { prisma } from '@/lib/prisma';
