@@ -3,7 +3,9 @@
 import ProductCard, { type Product } from '@/components/product-card';
 import Link from 'next/link';
 import { useIsMobile } from '@/hooks/useIsMobile';
-import { useState, useEffect } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
+
+const MARQUEE_PX_PER_SEC = 50; // 이 값만 바꾸면 전체 슬라이드 속도가 같이 조절됨
 
 export default function ProductSection({
   id,
@@ -20,26 +22,38 @@ export default function ProductSection({
   products: Product[];
   saved: Set<number>;
   onToggleSave: (id: number) => void;
-  /** true면 5개씩 슬라이드하지 않고 전체 상품을 그리드로 한 번에 보여줌 */
+  /** true면 슬라이드 없이 전체 상품을 그리드로 한 번에 보여줌 */
   showAll?: boolean;
 }) {
   const isMobile = useIsMobile();
-  const [page, setPage] = useState(0);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
 
-  useEffect(() => {
-    if (showAll) return;
-    const timer = setInterval(() => {
-      setPage((prev) => {
-        const totalPage = Math.ceil(products.length / 5);
-        return prev + 1 >= totalPage ? 0 : prev + 1;
-      });
-    }, 4500);
-    return () => clearInterval(timer);
-  }, [products.length, showAll]);
+  useLayoutEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const observer = new ResizeObserver((entries) => {
+      setContainerWidth(entries[0].contentRect.width);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
-  const visibleProducts =
-    isMobile || showAll ? products : products.slice(page * 5, page * 5 + 5);
   if (products.length === 0) return null;
+
+  const gap = isMobile ? 8 : 12;
+  const itemsPerView = isMobile ? 2 : 5;
+  // 퍼센트(%) 대신 실측 px로 카드 너비를 고정 — 상품 개수와 무관하게 항상 같은 px 크기가 되도록
+  const cardWidthPx =
+    containerWidth > 0
+      ? (containerWidth - gap * (itemsPerView - 1)) / itemsPerView
+      : 0;
+  // 무한 루프처럼 보이게 리스트를 두 번 이어붙여서, 트랙을 정확히 절반(-50%)만큼 옮기면 자연스럽게 이어짐
+  const trackProducts = [...products, ...products];
+  const oneSetWidthPx =
+    products.length * cardWidthPx + (products.length - 1) * gap;
+  // "초당 몇 px 움직일지"를 고정값으로 두고, 그 속도에 맞게 걸리는 시간을 역산 — 상품 개수 달라도 속도는 항상 동일
+  const durationSec = cardWidthPx > 0 ? oneSetWidthPx / MARQUEE_PX_PER_SEC : 0;
 
   return (
     <section
@@ -77,24 +91,49 @@ export default function ProductSection({
         )}
       </div>
 
-      <div
-        key={page}
-        className="animate-fade"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
-          gap: isMobile ? 8 : 12,
-        }}
-      >
-        {visibleProducts.map((p) => (
-          <ProductCard
-            key={p.id}
-            product={p}
-            isSaved={saved.has(p.id)}
-            onToggleSave={onToggleSave}
-          />
-        ))}
-      </div>
+      {showAll ? (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
+            gap: isMobile ? 8 : 12,
+          }}
+        >
+          {products.map((p) => (
+            <ProductCard
+              key={p.id}
+              product={p}
+              isSaved={saved.has(p.id)}
+              onToggleSave={onToggleSave}
+            />
+          ))}
+        </div>
+      ) : (
+        <div ref={wrapperRef} style={{ overflow: 'hidden' }}>
+          <div
+            className="product-marquee-track"
+            style={{
+              display: 'flex',
+              gap,
+              animationDuration: `${durationSec}s`,
+              animationPlayState: cardWidthPx > 0 ? 'running' : 'paused',
+            }}
+          >
+            {trackProducts.map((p, i) => (
+              <div
+                key={`${p.id}-${i}`}
+                style={{ flex: `0 0 ${cardWidthPx}px` }}
+              >
+                <ProductCard
+                  product={p}
+                  isSaved={saved.has(p.id)}
+                  onToggleSave={onToggleSave}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

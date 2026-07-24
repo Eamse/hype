@@ -2,7 +2,11 @@ import Header from '@/components/header';
 
 // 클라이언트 기획 확정 전까지 임시로 노출하는 빈 페이지.
 // 실제 페이지 로직/컴포넌트는 그대로 두고 진입만 이걸로 막아둔 것 — 기획 나오면 이 컴포넌트 대신 원래 페이지를 다시 렌더링하면 됨.
-export default function ComingSoon({ brand }: { brand: 'hype-wedding' | 'hype-snap' }) {
+export default function ComingSoon({
+  brand,
+}: {
+  brand: 'hype-wedding' | 'hype-snap';
+}) {
   return (
     <div style={{ backgroundColor: '#fff', color: '#000', minHeight: '100vh' }}>
       <Header brand={brand} />
@@ -28,7 +32,9 @@ export default function ComingSoon({ brand }: { brand: 'hype-wedding' | 'hype-sn
           >
             {brand === 'hype-snap' ? 'HYPE SNAP' : 'HYPE WEDDING'}
           </p>
-          <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.5px' }}>
+          <h1
+            style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.5px' }}
+          >
             COMING SOON
           </h1>
         </div>

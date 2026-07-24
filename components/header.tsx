@@ -193,6 +193,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [toast, setToast] = useState(false);
+  const [comingSoonBrand, setComingSoonBrand] = useState<Brand | null>(null); // 커스텀 "Coming Soon" 팝업용
   const { data: session } = useSession();
   const isMobile = useIsMobile();
   const { bookmarkedIds } = useBookmarks();
@@ -273,7 +274,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                   onClick={(e) => {
                     if (BRANDS[b].comingSoon) {
                       e.preventDefault();
-                      alert(`${BRANDS[b].label} — Coming Soon`);
+                      setComingSoonBrand(b);
                     }
                   }}
                   style={{
