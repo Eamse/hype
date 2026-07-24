@@ -56,8 +56,14 @@ export default async function Home() {
       },
     }),
   ]);
-  const jejuWedding = jejuWeddingRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
-  const seoulWedding = seoulWeddingRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
+  const jejuWedding = jejuWeddingRaw.map((p) => ({
+    ...p,
+    number: getProductNumber(p),
+  }));
+  const seoulWedding = seoulWeddingRaw.map((p) => ({
+    ...p,
+    number: getProductNumber(p),
+  }));
 
   return (
     <div
