@@ -34,6 +34,9 @@ export default function ProductSection({
   useLayoutEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
+    // ResizeObserver의 첫 콜백은 한 박자 늦게(비동기로) 실행되므로,
+    // 그걸 기다리지 않고 마운트되자마자 즉시(동기) 한 번 직접 측정해서 반영
+    setContainerWidth(el.getBoundingClientRect().width);
     const observer = new ResizeObserver((entries) => {
       setContainerWidth(entries[0].contentRect.width);
     });
