@@ -4,8 +4,6 @@ import ProductCard, { type Product } from '@/components/product-card';
 import Link from 'next/link';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
-const SECONDS_PER_ITEM = 2; // 상품 1개당 몇 초에 걸쳐 지나갈지 — 이 값만 바꾸면 속도 조절됨
-
 export default function ProductSection({
   id,
   title,
@@ -14,6 +12,7 @@ export default function ProductSection({
   saved,
   onToggleSave,
   showAll = false,
+  secondsPerItem = 2,
 }: {
   id?: string;
   title: string;
@@ -23,6 +22,7 @@ export default function ProductSection({
   onToggleSave: (id: number) => void;
   /** true면 슬라이드 없이 전체 상품을 그리드로 한 번에 보여줌 */
   showAll?: boolean;
+  secondsPerItem?: number;
 }) {
   const isMobile = useIsMobile();
 
@@ -33,7 +33,7 @@ export default function ProductSection({
   const cardWidthPercent = 100 / itemsPerView;
   // 무한 루프처럼 보이게 리스트를 두 번 이어붙여서, 트랙을 정확히 절반(-50%)만큼 옮기면 자연스럽게 이어짐
   const trackProducts = [...products, ...products];
-  const durationSec = products.length * SECONDS_PER_ITEM;
+  const durationSec = products.length * secondsPerItem;
 
   return (
     <section
