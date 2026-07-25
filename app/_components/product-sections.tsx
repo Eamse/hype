@@ -18,6 +18,7 @@ type Section = {
   subtitle?: string;
   products: Product[];
   showAll?: boolean;
+  secondsPerItem?: number;
 };
 
 export default function ProductSections({ sections }: { sections: Section[] }) {
@@ -45,6 +46,7 @@ export default function ProductSections({ sections }: { sections: Section[] }) {
           saved={bookmarkedIds}
           onToggleSave={toggleSave}
           showAll={s.showAll}
+          secondsPerItem={s.secondsPerItem}
         />
       ))}
     </>

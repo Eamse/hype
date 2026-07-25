@@ -1,9 +1,7 @@
 import { google } from 'googleapis';
 import path from 'path';
 import fs from 'fs';
-
-const SHEET_ID = '1HwYaGV4HpLmxChqE3_-Duc7jHgnmJw_ExwfOwXZ5Vds';
-const KEY_FILE = path.join(process.cwd(), 'google-service-account.json');
+import { getSheetsClient, SHEET_ID } from './sheets-client';
 
 type Partner = { name: string; instagram: string };
 type Addon = { name: string; price: number | null; desc?: string };
@@ -20,7 +18,12 @@ type Pkg = {
   retouchedDetail?: string;
   inclusiveItems: string[];
   addons: Addon[];
-  partners: { hmu?: Partner; dress?: Partner; suit?: Partner; bouquet?: Partner };
+  partners: {
+    hmu?: Partner;
+    dress?: Partner;
+    suit?: Partner;
+    bouquet?: Partner;
+  };
 };
 type RawDirector = {
   number: string;
@@ -32,7 +35,10 @@ type RawDirector = {
 type PhotogData = { jeju: RawDirector[]; seoul: RawDirector[] };
 
 const data: PhotogData = JSON.parse(
-  fs.readFileSync(path.join(process.cwd(), 'prisma/photographers.json'), 'utf8'),
+  fs.readFileSync(
+    path.join(process.cwd(), 'prisma/photographers.json'),
+    'utf8',
+  ),
 );
 
 const directorRows: string[][] = [];
@@ -50,10 +56,13 @@ function processLeaf(dir: RawDirector, location: 'jeju' | 'seoul') {
   directorRows.push([dir.number, dir.name, dir.instagram, location]);
   dir.packages.forEach((pkg) => {
     const letter = packageLetter(pkg.name);
-    const packageId = letter ? `${dir.number}-${letter}` : dir.number;
+    const packageId = letter
+      ? `${location}-${dir.number}-${letter}`
+      : `${location}-${dir.number}`;
     packageRows.push([
       packageId,
       dir.number,
+      location,
       pkg.name,
       pkg.subtitle ?? '',
       String(pkg.priceSNS),
@@ -66,14 +75,23 @@ function processLeaf(dir: RawDirector, location: 'jeju' | 'seoul') {
     ]);
     pkg.inclusiveItems.forEach((item) => inclusionRows.push([packageId, item]));
     pkg.addons.forEach((a) =>
-      addonRows.push([packageId, a.name, a.price === null ? '' : String(a.price), a.desc ?? '']),
+      addonRows.push([
+        packageId,
+        a.name,
+        a.price === null ? '' : String(a.price),
+        a.desc ?? '',
+      ]),
     );
     (['hmu', 'dress', 'suit'] as const).forEach((role) => {
       const p = pkg.partners[role];
       if (p) partnerRows.push([packageId, role, p.name, p.instagram]);
     });
     if (pkg.partners.bouquet) {
-      bouquetRows.push([packageId, pkg.partners.bouquet.name, pkg.partners.bouquet.instagram]);
+      bouquetRows.push([
+        packageId,
+        pkg.partners.bouquet.name,
+        pkg.partners.bouquet.instagram,
+      ]);
     }
   });
 }
@@ -91,7 +109,11 @@ function processRegion(directors: RawDirector[], location: 'jeju' | 'seoul') {
 processRegion(data.jeju, 'jeju');
 processRegion(data.seoul, 'seoul');
 
-async function writeTab(sheets: ReturnType<typeof google.sheets>, tab: string, rows: string[][]) {
+async function writeTab(
+  sheets: ReturnType<typeof google.sheets>,
+  tab: string,
+  rows: string[][],
+) {
   if (rows.length === 0) return;
   await sheets.spreadsheets.values.update({
     spreadsheetId: SHEET_ID,
@@ -103,11 +125,7 @@ async function writeTab(sheets: ReturnType<typeof google.sheets>, tab: string, r
 }
 
 async function main() {
-  const auth = new google.auth.GoogleAuth({
-    keyFile: KEY_FILE,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-  });
-  const sheets = google.sheets({ version: 'v4', auth });
+  const sheets = await getSheetsClient();
 
   await writeTab(sheets, '1_directors', directorRows);
   await writeTab(sheets, '2_packages', packageRows);

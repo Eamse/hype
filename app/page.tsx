@@ -93,20 +93,21 @@ export default async function Home() {
             </a>
           </div>
         </HeroCarousel>
-
+        {/* 속도조절 */}
         <ProductSections
           sections={[
             {
               title: 'Photographers in Jeju',
               products: jejuWedding,
+              secondsPerItem: 2,
             },
             {
               title: 'Photographers in Seoul',
               products: seoulWedding,
+              secondsPerItem: 2.85,
             },
           ]}
         />
-
         <EditorialSection magazines={magazines} />
       </main>
 
