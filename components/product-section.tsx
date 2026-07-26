@@ -31,9 +31,12 @@ export default function ProductSection({
   const itemsPerView = isMobile ? 2 : 5;
   // 퍼센트 기반이라 JS로 화면 크기를 잴 필요가 없음 — 새로고침 시 깜빡임(작아졌다 커짐) 자체가 안 생김
   const cardWidthPercent = 100 / itemsPerView;
-  // 무한 루프처럼 보이게 리스트를 두 번 이어붙여서, 트랙을 정확히 절반(-50%)만큼 옮기면 자연스럽게 이어짐
+  // 무한 루프처럼 보이게 리스트를 두 번 이어붙임. 트랙 자신의 박스 너비는 컨테이너 너비(=100%)로
+  // 고정되어 있고 카드들만 그 밖으로 넘쳐 흐르는 구조라서, "-50%"가 아니라 "카드 1개 너비% × 상품 개수"만큼
+  // 옮겨야 정확히 원본 리스트 1개 분량만큼 이동해 이어붙인 지점이 보이지 않음 (globals.css의 productMarquee 참고)
   const trackProducts = [...products, ...products];
   const durationSec = products.length * secondsPerItem;
+  const marqueeShiftPercent = products.length * cardWidthPercent;
 
   return (
     <section
@@ -92,10 +95,13 @@ export default function ProductSection({
         <div style={{ overflow: 'hidden' }}>
           <div
             className="product-marquee-track"
-            style={{
-              display: 'flex',
-              animationDuration: `${durationSec}s`,
-            }}
+            style={
+              {
+                display: 'flex',
+                animationDuration: `${durationSec}s`,
+                '--marquee-shift': `${marqueeShiftPercent}%`,
+              } as React.CSSProperties
+            }
           >
             {trackProducts.map((p, i) => (
               <div
