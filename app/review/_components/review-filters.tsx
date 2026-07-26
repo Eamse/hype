@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 type Director = { id: number; number: string; name: string };
 
@@ -27,6 +28,7 @@ export default function ReviewFilters({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const isMobile = useIsMobile();
   const [directors, setDirectors] = useState<Director[]>([]);
 
   useEffect(() => {
@@ -52,21 +54,28 @@ export default function ReviewFilters({
     <div
       style={{
         position: 'sticky',
-        top: 100,
+        top: isMobile ? 56 : 100,
         zIndex: 40,
         background: '#fff',
         display: 'flex',
+        flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
+        alignItems: isMobile ? 'stretch' : 'center',
         gap: 12,
         padding: '16px 0',
         borderBottom: '1px solid #000',
         marginBottom: 24,
       }}
     >
-      <div style={{ display: 'flex', gap: 12 }}>
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 12,
+        }}
+      >
         <select
-          style={selectStyle}
+          style={{ ...selectStyle, flex: isMobile ? '1 1 auto' : undefined }}
           value={productType ?? ''}
           onChange={(e) => updateParam('productType', e.target.value)}
         >
@@ -75,7 +84,7 @@ export default function ReviewFilters({
           <option value="snap">Snap</option>
         </select>
         <select
-          style={selectStyle}
+          style={{ ...selectStyle, flex: isMobile ? '1 1 auto' : undefined }}
           value={location ?? ''}
           onChange={(e) => updateParam('location', e.target.value)}
         >
@@ -84,7 +93,7 @@ export default function ReviewFilters({
           <option value="seoul">Seoul</option>
         </select>
         <select
-          style={selectStyle}
+          style={{ ...selectStyle, flex: isMobile ? '1 1 100%' : undefined }}
           value={directorId ?? ''}
           disabled={!location}
           onChange={(e) => updateParam('directorId', e.target.value)}
@@ -108,6 +117,7 @@ export default function ReviewFilters({
           fontWeight: 700,
           textDecoration: 'none',
           whiteSpace: 'nowrap',
+          textAlign: 'center',
         }}
       >
         Write a Review
