@@ -400,8 +400,10 @@ body {
     transform: translateX(0);
   }
   to {
-    /* 리스트를 두 번 이어붙였으니, 정확히 절반만큼 옮기면 이어붙인 지점이 안 보이고 자연스럽게 반복됨 */
-    transform: translateX(-50%);
+    /* --marquee-shift: 트랙 컴포넌트가 인라인으로 넘겨주는 값(카드 1개 너비% × 상품 개수).
+       트랙 자신의 박스 너비는 컨테이너 너비뿐이라 "-50%"로는 원본 리스트 폭만큼 못 옮겨가서
+       루프 지점에서 눈에 띄게 끊겨 보였음 — 실제 넘쳐 흐른 콘텐츠 폭 기준으로 계산한 값을 써야 함 */
+    transform: translateX(calc(-1 * var(--marquee-shift, 50%)));
   }
 }
 .product-marquee-track {

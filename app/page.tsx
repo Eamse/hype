@@ -99,12 +99,12 @@ export default async function Home() {
             {
               title: 'Photographers in Jeju',
               products: jejuWedding,
-              secondsPerItem: 2,
+              secondsPerItem: 4.85,
             },
             {
               title: 'Photographers in Seoul',
               products: seoulWedding,
-              secondsPerItem: 2.85,
+              secondsPerItem: 4.85,
             },
           ]}
         />
