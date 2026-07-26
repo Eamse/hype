@@ -211,6 +211,13 @@ body {
   }
 }
 
+/* 모바일 하단 네비게이션 바 높이(56px)만큼 콘텐츠가 가려지지 않게 여백 확보 */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 56px;
+  }
+}
+
 .product-card .card-img {
   transition: transform 0.35s ease;
 }
@@ -318,6 +325,16 @@ body {
 }
 
 /* ── Inquiry 페이지 애니메이션 ──────────────────────────────── */
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
 @keyframes fadeSlideUp {
   from {
     opacity: 0;

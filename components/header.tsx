@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import LoginModal from '@/components/login-modal';
 import SearchModal from '@/components/search-modal';
+import ComingSoonModal from './coming-soon-modal';
 import HeaderActionButtons from '@/components/header-action-buttons';
 import { useBookmarks } from '@/components/bookmark-provider';
 import { useSession, signOut } from 'next-auth/react';
@@ -176,6 +177,55 @@ function CloseIcon() {
     </svg>
   );
 }
+function HomeNavIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M3 10.5 12 3l9 7.5" />
+      <path d="M5 9.5V21h14V9.5" />
+    </svg>
+  );
+}
+function ReviewNavIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9" />
+    </svg>
+  );
+}
+function BookmarkNavIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+    </svg>
+  );
+}
 
 export default function Header(props: { brand?: Brand }) {
   return (
@@ -219,6 +269,12 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
       startTransition(() => setLoginOpen(true));
     }
   }, [searchParams]);
+
+  // 모바일 드로어 메뉴 — 클릭 즉시 닫으면 새 페이지가 로드되는 동안 이전 화면이 잠깐 노출됨.
+  // 대신 pathname이 실제로 바뀐 시점(=이동이 끝난 시점)에 닫아서 그 틈을 없앰.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   function handleSignClick() {
     if (session) {
@@ -498,7 +554,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
             <HeaderActionButtons
               session={session}
               bookmarkCount={bookmarkCount}
-              showBell={false}
+              showBell
               onSearchClick={() => {
                 setMenuOpen(false);
                 setSearchOpen(true);
@@ -561,10 +617,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                           <Link
                             key={dLabel}
                             href={dHref}
-                            onClick={() => {
-                              setMenuOpen(false);
-                              setOpenMobileDropdown(null);
-                            }}
+                            onClick={() => setOpenMobileDropdown(null)}
                             style={{
                               fontSize: 15,
                               color: '#000',
@@ -585,7 +638,6 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                 <Link
                   key={label}
                   href={href}
-                  onClick={() => setMenuOpen(false)}
                   style={{
                     fontSize: 22,
                     fontWeight: active ? 700 : 400,
@@ -645,6 +697,12 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
       )}
 
       {searchOpen && <SearchModal onClose={() => setSearchOpen(false)} />}
+      {comingSoonBrand && (
+        <ComingSoonModal
+          brand={comingSoonBrand}
+          onClose={() => setComingSoonBrand(null)}
+        />
+      )}
 
       {loginOpen && (
         <LoginModal
@@ -674,6 +732,72 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
         >
           You have been logged out.
         </div>
+      )}
+
+      {/* ── 모바일 전용 하단 네비게이션 ── */}
+      {isMobile && !menuOpen && (
+        <nav
+          style={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 150,
+            display: 'flex',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            height: 56,
+            backgroundColor: '#fff',
+            borderTop: '1px solid #eee',
+            boxShadow: '0 -4px 16px rgba(0,0,0,0.05)',
+          }}
+        >
+          {(
+            [
+              { label: 'Home', href: '/', icon: <HomeNavIcon /> },
+              { label: 'Review', href: '/review', icon: <ReviewNavIcon /> },
+              {
+                label: 'Saved',
+                icon: <BookmarkNavIcon />,
+                onClick: () =>
+                  session ? router.push('/bookmarks') : setLoginOpen(true),
+              },
+              {
+                label: 'Menu',
+                icon: <HamburgerIcon />,
+                onClick: () => setMenuOpen(true),
+              },
+            ] as const
+          ).map((item) => {
+            const active = 'href' in item && pathname === item.href;
+            const style: React.CSSProperties = {
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 2,
+              color: active ? '#000' : '#999',
+              background: 'none',
+              border: 'none',
+              textDecoration: 'none',
+              cursor: 'pointer',
+            };
+            const content = (
+              <>
+                {item.icon}
+                <span style={{ fontSize: 10 }}>{item.label}</span>
+              </>
+            );
+            return 'href' in item ? (
+              <Link key={item.label} href={item.href} style={style}>
+                {content}
+              </Link>
+            ) : (
+              <button key={item.label} onClick={item.onClick} style={style}>
+                {content}
+              </button>
+            );
+          })}
+        </nav>
       )}
     </>
   );
