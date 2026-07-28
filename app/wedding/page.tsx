@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
 import SnsSidebar from '@/components/sns-sidebar';
 import SubTabBar from '@/components/sub-tab-bar';
-import { serviceSubTabs } from '@/lib/service-sub-tabs';
+import { contentSubTabs } from '@/lib/service-sub-tabs';
 import { withProductNumbers } from '@/lib/product-number';
 import ProductSections from '../_components/product-sections';
 
@@ -46,7 +46,7 @@ export default async function WeddingPage() {
     >
       <Header />
       <main style={{ paddingTop: 56 }}>
-        <SubTabBar tabs={serviceSubTabs('hype-wedding')} />
+        <SubTabBar tabs={contentSubTabs('hype-wedding')} />
         <ProductSections
           sections={[
             {

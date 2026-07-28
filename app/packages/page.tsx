@@ -3,7 +3,7 @@ export const revalidate = 60;
 import type { Metadata } from 'next';
 import Header from '@/components/header';
 import SubTabBar from '@/components/sub-tab-bar';
-import { serviceSubTabs } from '@/lib/service-sub-tabs';
+import { contentSubTabs } from '@/lib/service-sub-tabs';
 import { prisma } from '@/lib/prisma';
 import { withProductNumbers } from '@/lib/product-number';
 import ProductSections from '../_components/product-sections';
@@ -61,7 +61,7 @@ export default async function PackagesPage({
     <div style={{ minHeight: '100vh' }}>
       <Header brand={activeBrand} />
       <main style={{ paddingTop: 56 }}>
-        <SubTabBar tabs={serviceSubTabs(activeBrand)} />
+        <SubTabBar tabs={contentSubTabs(activeBrand)} />
         <ProductSections
           sections={[
             { title: jejuSection, products: jeju, showAll: true },

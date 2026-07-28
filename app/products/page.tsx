@@ -2,7 +2,7 @@ export const revalidate = 60;
 
 import Header from '@/components/header';
 import SubTabBar from '@/components/sub-tab-bar';
-import { serviceSubTabs } from '@/lib/service-sub-tabs';
+import { regionSubTabs } from '@/lib/service-sub-tabs';
 import { prisma } from '@/lib/prisma';
 import { withProductNumbers } from '@/lib/product-number';
 import ProductsGrid from './_components/products-grid';
@@ -31,7 +31,7 @@ export default async function ProductPage({
     <div style={{ backgroundColor: '#fff', minHeight: '100vh' }}>
       <Header brand={brand} />
       <div style={{ paddingTop: 56 }}>
-        <SubTabBar tabs={serviceSubTabs(brand)} />
+        <SubTabBar tabs={regionSubTabs(brand)} />
       </div>
       <main className="products-main">
         <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>
