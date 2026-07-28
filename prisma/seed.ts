@@ -20,9 +20,21 @@ const ADMIN_MASTERS = [
 
 // 매거진 작성(/magazine/write) 마스터 계정 목록 — User 테이블, NextAuth 세션 기반, 어드민 대시보드와 별개 시스템
 const MAGAZINE_MASTERS = [
-  { email: 'minju@admin.com', name: 'Minju', password: process.env.MAGAZINE_MINJU_PASSWORD },
-  { email: 'morgan@admin.com', name: 'Morgan', password: process.env.MAGAZINE_MORGAN_PASSWORD },
-  { email: 'dev@admin.com', name: 'dev', password: process.env.MAGAZINE_DEV_PASSWORD },
+  {
+    email: 'minju@admin.com',
+    name: 'Minju',
+    password: process.env.MAGAZINE_MINJU_PASSWORD,
+  },
+  {
+    email: 'morgan@admin.com',
+    name: 'Morgan',
+    password: process.env.MAGAZINE_MORGAN_PASSWORD,
+  },
+  {
+    email: 'dev@admin.com',
+    name: 'dev',
+    password: process.env.MAGAZINE_DEV_PASSWORD,
+  },
 ];
 
 async function main() {
