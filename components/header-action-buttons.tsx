@@ -116,7 +116,7 @@ export default function HeaderActionButtons({
       {showBell && <NotificationBell />}
       <button
         onClick={onSignClick}
-        aria-label={session ? 'Sign out' : 'Sign in'}
+        aria-label={session ? 'Signed in' : 'Sign in'}
         style={{ ...iconBtnStyle, display: 'flex', alignItems: 'center' }}
       >
         {session?.user?.image ? (

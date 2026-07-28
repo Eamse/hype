@@ -42,7 +42,7 @@ const NAV_LINKS: Record<
     { label: 'About Us', href: '/about' },
     {
       label: 'Service',
-      href: '/wedding',
+      href: '/offer',
       dropdown: [
         { label: 'What We Offer', href: '/offer' },
         { label: 'Packages', href: '/packages' },
@@ -76,7 +76,7 @@ const NAV_LINKS: Record<
     { label: 'About Us', href: '/about?brand=hype-snap' },
     {
       label: 'Service',
-      href: '/casual',
+      href: '/offer?brand=hype-snap',
       dropdown: [
         { label: 'What We Offer', href: '/offer?brand=hype-snap' },
         { label: 'Packages', href: '/packages?brand=hype-snap' },
@@ -251,7 +251,8 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navItemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
-
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const openNav = (label: string) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     setHoveredNav(label);
@@ -274,17 +275,33 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
   // 대신 pathname이 실제로 바뀐 시점(=이동이 끝난 시점)에 닫아서 그 틈을 없앰.
   useEffect(() => {
     setMenuOpen(false);
+    setProfileMenuOpen(false);
   }, [pathname]);
 
+  function handleSignout() {
+    signOut();
+    setToast(true);
+    setTimeout(() => setToast(false), 3000);
+  }
   function handleSignClick() {
     if (session) {
-      signOut();
-      setToast(true);
-      setTimeout(() => setToast(false), 3000);
+      setProfileMenuOpen((v) => !v);
     } else {
       setLoginOpen(true);
     }
   }
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setProfileMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <>
@@ -371,7 +388,8 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                             onMouseEnter={() => openNav(label)}
                             style={{ display: 'flex', alignItems: 'center' }}
                           >
-                            <span
+                            <Link
+                              href={href}
                               style={{
                                 position: 'relative',
                                 fontSize: 14,
@@ -379,7 +397,8 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                                 color:
                                   hoveredNav === label ? '#2D5A45' : '#000',
                                 padding: '4px 0',
-                                cursor: 'default',
+                                display: 'inline-block',
+                                textDecoration: 'none',
                                 transition: 'color 0.15s',
                               }}
                             >
@@ -399,7 +418,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                                   }}
                                 />
                               )}
-                            </span>
+                            </Link>
                           </div>
                         );
                       }
@@ -497,11 +516,13 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
           {/* ── 데스크탑 Icons / 모바일 햄버거 ── */}
           <div
             style={{
+              position: 'relative',
               display: 'flex',
               gap: 16,
               alignItems: 'center',
               color: '#000',
             }}
+            ref={containerRef}
           >
             {!isMobile ? (
               <HeaderActionButtons
@@ -521,6 +542,50 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
               >
                 {menuOpen ? <CloseIcon /> : <HamburgerIcon />}
               </button>
+            )}
+            {profileMenuOpen && !isMobile && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: 12,
+                  width: 160,
+                  backgroundColor: '#fff',
+                  border: '1px solid #000',
+                  borderRadius: 8,
+                  boxShadow: '0 8px 24px rgba(0,0,0,.12)',
+                  zIndex: 300,
+                }}
+              >
+                <div
+                  onClick={() => {
+                    setProfileMenuOpen(false);
+                    router.push('/account');
+                  }}
+                  style={{
+                    padding: '12px 16px',
+                    fontSize: 13,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Change my Profile
+                </div>
+                <div
+                  onClick={() => {
+                    setProfileMenuOpen(false);
+                    handleSignout();
+                  }}
+                  style={{
+                    padding: '12px 16px',
+                    fontSize: 13,
+                    cursor: 'pointer',
+                    borderTop: '1px solid #eee',
+                  }}
+                >
+                  Sign out
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -564,6 +629,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                 session ? router.push('/bookmarks') : setLoginOpen(true);
               }}
               onSignClick={() => {
+                if (session) return;
                 setMenuOpen(false);
                 handleSignClick();
               }}
@@ -653,6 +719,48 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
               );
             })}
           </nav>
+
+          {session && (
+            <div
+              style={{
+                marginTop: 20,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                fontSize: 14,
+                color: '#000',
+              }}
+            >
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  handleSignout();
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  fontSize: 14,
+                  color: '#000',
+                  cursor: 'pointer',
+                }}
+              >
+                Sign out
+              </button>
+              <span style={{ color: '#bbb' }}>|</span>
+              <Link
+                href="/account"
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  fontSize: 14,
+                  color: '#000',
+                  textDecoration: 'none',
+                }}
+              >
+                Change my Profile
+              </Link>
+            </div>
+          )}
 
           {/* 하단: SNS */}
           <div style={{ marginTop: 24, display: 'flex', gap: 20 }}>
