@@ -5,7 +5,7 @@ import Header from '@/components/header';
 import HeroCarousel from '@/components/hero-carousel';
 import SnsSidebar from '@/components/sns-sidebar';
 import ComingSoon from '@/components/coming-soon';
-import { getProductNumber } from '@/lib/product-number';
+import { withProductNumbers } from '@/lib/product-number';
 import ProductSections from '../_components/product-sections';
 
 // 클라이언트 기획 미확정 — 아래 실제 페이지 로직은 그대로 두고 진입만 막아둠.
@@ -46,8 +46,8 @@ export default async function HypeSnapPage() {
       where: { key: 'images_hero_snap' },
     }),
   ]);
-  const jeju = jejuRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
-  const seoul = seoulRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
+  const jeju = withProductNumbers(jejuRaw);
+  const seoul = withProductNumbers(seoulRaw);
   const heroImages: string[] = (() => {
     try {
       const parsed: unknown = JSON.parse(heroRow?.value ?? '[]');

@@ -4,6 +4,7 @@ import Header from '@/components/header';
 import SubTabBar from '@/components/sub-tab-bar';
 import { serviceSubTabs } from '@/lib/service-sub-tabs';
 import { prisma } from '@/lib/prisma';
+import { withProductNumbers } from '@/lib/product-number';
 import ProductsGrid from './_components/products-grid';
 
 export default async function ProductPage({
@@ -12,7 +13,7 @@ export default async function ProductPage({
   searchParams: Promise<{ section?: string }>;
 }) {
   const { section } = await searchParams;
-  const products = await prisma.product.findMany({
+  const productsRaw = await prisma.product.findMany({
     where: { section },
     orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
     select: {
@@ -23,6 +24,7 @@ export default async function ProductPage({
       directors: { select: { director: { select: { number: true } } } },
     },
   });
+  const products = withProductNumbers(productsRaw);
   const brand = section?.includes('Casual') ? 'hype-snap' : 'hype-wedding';
 
   return (

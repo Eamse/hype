@@ -1,7 +1,7 @@
 export const revalidate = 60;
 
 import { prisma } from '@/lib/prisma';
-import { getProductNumber } from '@/lib/product-number';
+import { withProductNumbers } from '@/lib/product-number';
 import Header from '@/components/header';
 import HeroCarousel from '@/components/hero-carousel';
 import SnsSidebar from '@/components/sns-sidebar';
@@ -56,14 +56,8 @@ export default async function Home() {
       },
     }),
   ]);
-  const jejuWedding = jejuWeddingRaw.map((p) => ({
-    ...p,
-    number: getProductNumber(p),
-  }));
-  const seoulWedding = seoulWeddingRaw.map((p) => ({
-    ...p,
-    number: getProductNumber(p),
-  }));
+  const jejuWedding = withProductNumbers(jejuWeddingRaw);
+  const seoulWedding = withProductNumbers(seoulWeddingRaw);
 
   return (
     <div

@@ -17,3 +17,10 @@ export function getProductNumber(product: ProductWithDirectors): string | null {
 
   return region ? `${region} ${padded}.` : `${padded}.`;
 }
+
+/** 상품 목록에 getProductNumber() 결과를 number 필드로 붙여서 반환 */
+export function withProductNumbers<T extends ProductWithDirectors>(
+  products: T[],
+): (T & { number: string | null })[] {
+  return products.map((p) => ({ ...p, number: getProductNumber(p) }));
+}
