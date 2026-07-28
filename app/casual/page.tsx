@@ -5,7 +5,7 @@ import Header from '@/components/header';
 import SnsSidebar from '@/components/sns-sidebar';
 import SubTabBar from '@/components/sub-tab-bar';
 import { serviceSubTabs } from '@/lib/service-sub-tabs';
-import { getProductNumber } from '@/lib/product-number';
+import { withProductNumbers } from '@/lib/product-number';
 import ProductSections from '../_components/product-sections';
 
 export default async function CasualPage() {
@@ -33,8 +33,8 @@ export default async function CasualPage() {
       },
     }),
   ]);
-  const jeju = jejuRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
-  const seoul = seoulRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
+  const jeju = withProductNumbers(jejuRaw);
+  const seoul = withProductNumbers(seoulRaw);
 
   return (
     <div>

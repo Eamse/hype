@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAdminId } from '@/lib/admin-auth';
-import { getProductNumber } from '@/lib/product-number';
+import { withProductNumbers } from '@/lib/product-number';
 
 const ALLOWED_SECTIONS = new Set([
   'Photographers in Jeju',
@@ -21,8 +21,7 @@ export async function GET(request: NextRequest) {
         directors: { select: { director: { select: { number: true } } } },
       },
     });
-    const withNumber = products.map((p) => ({ ...p, number: getProductNumber(p) }));
-    return NextResponse.json(withNumber);
+    return NextResponse.json(withProductNumbers(products));
   } catch (e) {
     console.error('[GET /api/products]', e);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

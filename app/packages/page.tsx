@@ -5,7 +5,7 @@ import Header from '@/components/header';
 import SubTabBar from '@/components/sub-tab-bar';
 import { serviceSubTabs } from '@/lib/service-sub-tabs';
 import { prisma } from '@/lib/prisma';
-import { getProductNumber } from '@/lib/product-number';
+import { withProductNumbers } from '@/lib/product-number';
 import ProductSections from '../_components/product-sections';
 
 export const metadata: Metadata = {
@@ -22,9 +22,13 @@ export default async function PackagesPage({
   const activeBrand = brand === 'hype-snap' ? 'hype-snap' : 'hype-wedding';
 
   const jejuSection =
-    activeBrand === 'hype-snap' ? 'Casual Photoshoot in Jeju' : 'Photographers in Jeju';
+    activeBrand === 'hype-snap'
+      ? 'Casual Photoshoot in Jeju'
+      : 'Photographers in Jeju';
   const seoulSection =
-    activeBrand === 'hype-snap' ? 'Casual Photoshoot in Seoul' : 'Photographers in Seoul';
+    activeBrand === 'hype-snap'
+      ? 'Casual Photoshoot in Seoul'
+      : 'Photographers in Seoul';
 
   const [jejuRaw, seoulRaw] = await Promise.all([
     prisma.product.findMany({
@@ -50,8 +54,8 @@ export default async function PackagesPage({
       },
     }),
   ]);
-  const jeju = jejuRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
-  const seoul = seoulRaw.map((p) => ({ ...p, number: getProductNumber(p) }));
+  const jeju = withProductNumbers(jejuRaw);
+  const seoul = withProductNumbers(seoulRaw);
 
   return (
     <div style={{ minHeight: '100vh' }}>
