@@ -98,7 +98,7 @@ export default async function ProductDetailPage({ params }: Props) {
     : null;
 
   return (
-    <div className="bg-white text-[#000] min-h-screen">
+    <div className="bg-white text-[black] min-h-screen">
       <Header brand={headerBrand} />
 
       <main className="pt-14">
@@ -128,7 +128,7 @@ export default async function ProductDetailPage({ params }: Props) {
                   {product.title}
                 </h1>
 
-                <div className="h-px bg-[#000] mb-6" />
+                <div className="h-px bg-[black] mb-6" />
 
                 <div className="mb-6">
                   <Accordion title="Booking Guide">
@@ -143,7 +143,7 @@ export default async function ProductDetailPage({ params }: Props) {
                       refund · After 14 days: no refund
                     </p>
                   </Accordion>
-                  <div className="border-t border-[#000]" />
+                  <div className="border-t border-[black]" />
                 </div>
               </>
             )}

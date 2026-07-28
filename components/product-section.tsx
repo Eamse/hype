@@ -34,7 +34,7 @@ export default function ProductSection({
     if (showAll || totalPages <= 1) return;
     const timer = setInterval(() => {
       setIndex((prev) => prev + 1);
-    }, 4500);
+    }, 3000);
     return () => clearInterval(timer);
   }, [totalPages, showAll]);
 
@@ -102,7 +102,7 @@ export default function ProductSection({
         {!showAll && (
           <Link
             href={`/products?section=${encodeURIComponent(title)}`}
-            className="text-[14px] text-[#000] flex items-center gap-1 transition-all hover:text-[#000] hover:gap-2 hover:!underline"
+            className="text-[14px] text-[black] flex items-center gap-1 transition-all hover:text-[black] hover:gap-2 hover:underline"
           >
             See All <span className="arrow-nudge">→</span>
           </Link>
