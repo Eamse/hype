@@ -107,8 +107,8 @@ model Admin {
   loginId           String   @unique
   password          String
   name              String
-  phone             String
   role              String   @default("staff")
+  phone             String
   isActive          Boolean  @default(true)
   isPasswordChanged Boolean  @default(false)
   createdAt         DateTime @default(now())

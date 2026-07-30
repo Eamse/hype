@@ -104,7 +104,7 @@ export default async function ProductDetailPage({ params }: Props) {
       <main className="pt-14">
         <div className="grid grid-cols-1 lg:grid-cols-2">
           {/* 왼쪽: 이미지 */}
-          <div className="hide-scroll lg:sticky lg:top-14 lg:h-[calc(100vh-56px)] lg:overflow-y-auto p-5 lg:p-16 lg:pb-24">
+          <div className="hide-scroll lg:sticky lg:top-14 lg:h-[calc(100vh-56px)] lg:overflow-y-auto p-5 mb-6 lg:mb-0 lg:p-16 lg:pb-24">
             <BackButton />
             <ImageGallery
               mainImageUrl={product.imageUrl}

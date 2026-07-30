@@ -13,27 +13,25 @@ export default function EditorialSection({
   magazines: Magazine[];
 }) {
   if (magazines.length === 0) return null;
-
   return (
     <section className="max-w-[1200px] mx-auto px-5 py-16">
       {/* 섹션 헤더 */}
       <div className="flex items-end justify-between mb-8">
         <div>
-          <p className="text-[10px] tracking-[3px] uppercase text-[#000] mb-2">
+          <p className="text-[10px] tracking-[3px] uppercase text-[black] mb-2">
             From the editors
           </p>
-          <h2 className="text-3xl font-bold text-[#000] tracking-tight">
+          <h2 className="text-3xl font-bold text-[black] tracking-tight">
             Editorial
           </h2>
         </div>
         <Link
           href="/magazine"
-          className="text-[11px] tracking-[2px] uppercase text-[#000] border-b border-[#000] pb-0.5 hover:text-[#000] hover:border-[#000] transition-colors"
+          className="text-[11px] tracking-[2px] uppercase text-[black] border-b border-[black] pb-0.5 hover:text-[black] hover:border-[black] transition-colors"
         >
           View All
         </Link>
       </div>
-
       {/* 그리드 */}
       <div className="grid grid-cols-2 gap-x-8 gap-y-12">
         {magazines.map((magazine) => (
@@ -52,14 +50,13 @@ export default function EditorialSection({
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               ) : (
-                <div className="w-full h-full bg-[#fff] flex items-center justify-center text-[#000] text-xs">
+                <div className="w-full h-full bg-[white] flex items-center justify-center text-[black] text-xs">
                   No Image
                 </div>
               )}
             </div>
-
             {/* 제목 */}
-            <p className="text-sm font-semibold text-[#000] leading-snug group-hover:underline">
+            <p className="text-sm font-semibold text-[black] leading-snug group-hover:underline">
               {magazine.title}
             </p>
           </Link>

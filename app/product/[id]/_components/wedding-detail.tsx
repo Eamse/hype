@@ -56,8 +56,7 @@ function AddonDesc({ text }: { text: string }) {
     <>
       {sentences.map((s, i) => (
         <span key={i}>
-          {s}.
-          {i < sentences.length - 1 && <br />}
+          {s}.{i < sentences.length - 1 && <br />}
         </span>
       ))}
     </>
@@ -235,17 +234,19 @@ export default function WeddingDetail({
       : `font-normal bg-white ${GRAY2} ${BORDER}`;
 
   return (
-    <div className={`max-w-[680px] ${BLACK}`}>
+    <div className={`w-full lg:max-w-[680px] ${BLACK}`}>
       <div className={`bg-white border ${BORDER} rounded-2xl overflow-hidden`}>
         {/* HEADER */}
-        <div className={`pt-8 px-8 pb-6 text-center border-b ${BORDER}`}>
+        <div
+          className={`pt-6 px-4 pb-5 sm:pt-8 sm:px-8 sm:pb-6 text-center border-b ${BORDER}`}
+        >
           <div
             className={`text-[11px] font-medium ${GREEN} tracking-[0.12em] uppercase mb-2`}
           >
             {pkgNumLabel}
           </div>
           <div
-            className={`text-[24px] font-semibold ${BLACK} tracking-[-0.02em] mb-5`}
+            className={`text-[20px] sm:text-[24px] font-semibold ${BLACK} tracking-[-0.02em] mb-5`}
           >
             {title}
             {/* 괄호 안 작가이름 */}
@@ -288,12 +289,12 @@ export default function WeddingDetail({
         </div>
 
         {/* BODY */}
-        <div className="py-6 px-8">
+        <div className="py-5 px-4 sm:py-6 sm:px-8">
           {/* Partners */}
           {hasPartners && (
             <>
               <div className={secLabelBase}>Partners</div>
-              <div className="grid grid-cols-2 gap-[10px]">
+              <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-[10px]">
                 {partnerRows.map((item, i) => (
                   <div
                     key={item.role}
@@ -332,11 +333,11 @@ export default function WeddingDetail({
               >
                 What&apos;s Included
               </div>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-0">
+              <div className="grid grid-cols-2 gap-x-3 sm:gap-x-4 gap-y-0">
                 {inclusions.map(({ inclusion }) => (
                   <div
                     key={inclusion.id}
-                    className={`flex gap-2 items-start text-[13px] font-normal ${GRAY1} leading-[1.5] py-[6px] border-b border-[#F5F5F5] [&:nth-last-child(-n+2)]:border-b-0`}
+                    className={`flex gap-2 items-start text-[12px] sm:text-[13px] font-normal ${GRAY1} leading-[1.5] py-[6px] border-b border-[#F5F5F5] [&:nth-last-child(-n+2)]:border-b-0`}
                   >
                     <span
                       className={`${GREEN} shrink-0 text-[12px] mt-[1px] font-semibold`}
@@ -413,124 +414,11 @@ export default function WeddingDetail({
           )}
         </div>
 
-        {/* PRICE SECTION */}
-        {activePackage && priceCount > 0 && (
-          <div className={`border-t ${BORDER}`}>
-            {!session ? (
-              <div className="py-10 px-6 flex flex-col items-center gap-3">
-                <p className={`text-[13px] font-normal ${GRAY2}`}>
-                  Log in to check the price
-                </p>
-                <button
-                  onClick={() => router.push('?auth=1')}
-                  className="py-[9px] px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none bg-[#0D0D0D] text-white"
-                >
-                  Check Price
-                </button>
-              </div>
-            ) : (
-              <>
-                <div
-                  className={`grid ${priceCount === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}
-                >
-                  {activePackage.isSinglePrice ? (
-                    <div className="py-5 px-6 flex flex-col gap-1">
-                      <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#EAF0EC] text-[#2D5A45]">
-                        Package Price
-                      </span>
-                      <div
-                        className={`text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
-                      >
-                        {activePrice
-                          ? `USD${(
-                              activePrice.priceSNS || activePrice.priceNoSNS
-                            ).toLocaleString()}`
-                          : '···'}
-                      </div>
-                      <a
-                        href={INQUIRY_FORM_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#2D5A45] text-white"
-                      >
-                        Inquire Now →
-                      </a>
-                    </div>
-                  ) : (
-                    <>
-                      {activePackage.hasPriceSNS && (
-                        <div
-                          className={`py-5 px-6 flex flex-col gap-1 ${
-                            priceCount > 1 ? `border-r ${BORDER}` : ''
-                          }`}
-                        >
-                          <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#EAF0EC] text-[#2D5A45]">
-                            Agree to SNS Upload
-                          </span>
-                          <div
-                            className={`text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
-                          >
-                            {activePrice
-                              ? `USD${activePrice.priceSNS.toLocaleString()}`
-                              : '···'}
-                          </div>
-                          <a
-                            href={INQUIRY_FORM_URL}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#2D5A45] text-white"
-                          >
-                            Inquire Now →
-                          </a>
-                        </div>
-                      )}
-                      {activePackage.hasPriceNoSNS && (
-                        <div className="py-5 px-6 flex flex-col gap-1">
-                          <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#F5F5F5] text-[#666666]">
-                            Decline SNS Upload
-                          </span>
-                          <div
-                            className={`text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
-                          >
-                            {activePrice
-                              ? `USD${activePrice.priceNoSNS.toLocaleString()}`
-                              : '···'}
-                          </div>
-                          <a
-                            href={INQUIRY_FORM_URL}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#0D0D0D] text-white"
-                          >
-                            Inquire Now →
-                          </a>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </div>
-                <div className={`py-3 px-6 bg-[#FAFAFA] border-t ${BORDER}`}>
-                  <p
-                    className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
-                  >
-                    * Final price is subject to change based on current USD
-                    exchange rate and does NOT include add-ons.
-                  </p>
-                  <p
-                    className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
-                  >
-                    * SNS Upload: Hype Pig (Hype Wedding, Hype Snap) SNS,
-                    Photographer SNS
-                  </p>
-                </div>
-              </>
-            )}
-          </div>
-        )}
-
         {/* ADD-ONS */}
         {addons.length > 0 && (
-          <div className={`py-6 px-8 border-t ${BORDER} bg-[#FAFAFA]`}>
+          <div
+            className={`py-5 px-4 sm:py-6 sm:px-8 border-t ${BORDER} bg-[#FAFAFA]`}
+          >
             <div className={secLabelBase}>Add-ons</div>
             {addons.map(({ addon }, i) => (
               <div
@@ -538,16 +426,16 @@ export default function WeddingDetail({
                 className={i === addons.length - 1 ? '' : 'mb-2'}
               >
                 <div
-                  className={`flex justify-between items-center py-[11px] px-[14px] border ${BORDER} rounded-[8px] bg-white cursor-pointer`}
+                  className={`flex justify-between items-center gap-2 py-[10px] px-3 sm:py-[11px] sm:px-[14px] border ${BORDER} rounded-[8px] bg-white cursor-pointer`}
                   onClick={() =>
                     setExpandedAddon(expandedAddon === i ? null : i)
                   }
                 >
-                  <span className={`text-[13px] font-normal ${BLACK}`}>
+                  <span className={`text-[12px] sm:text-[13px] font-normal ${BLACK}`}>
                     {addon.name}
                   </span>
                   <div
-                    className={`text-[13px] font-medium ${GRAY1} flex items-center gap-[6px]`}
+                    className={`text-[12px] sm:text-[13px] font-medium ${GRAY1} flex items-center gap-[6px] shrink-0`}
                   >
                     {addon.price > 0
                       ? `+$${addon.price.toLocaleString()}`
@@ -561,7 +449,7 @@ export default function WeddingDetail({
                 </div>
                 {expandedAddon === i && addon.desc && (
                   <p
-                    className={`text-[12px] pt-2 ${GRAY2} leading-[1.6] -mt-[2px] mb-[10px] px-[14px]`}
+                    className={`text-[11px] sm:text-[12px] pt-2 ${GRAY2} leading-[1.6] -mt-[2px] mb-[10px] px-3 sm:px-[14px]`}
                   >
                     <AddonDesc text={addon.desc} />
                   </p>
@@ -575,19 +463,153 @@ export default function WeddingDetail({
           </div>
         )}
 
+        {/* PRICE SECTION */}
+        {activePackage && priceCount > 0 && session && (
+          <div className={`border-t ${BORDER}`}>
+            <div
+              className={`grid ${priceCount === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}
+            >
+              {activePackage.isSinglePrice ? (
+                <div className="py-4 px-3 sm:py-5 sm:px-6 flex flex-col gap-1">
+                  <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#EAF0EC] text-[#2D5A45]">
+                    Package Price
+                  </span>
+                  <div
+                    className={`text-[18px] sm:text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
+                  >
+                    {activePrice
+                      ? `USD${(
+                          activePrice.priceSNS || activePrice.priceNoSNS
+                        ).toLocaleString()}`
+                      : '···'}
+                  </div>
+                  <a
+                    href={INQUIRY_FORM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#2D5A45] text-white"
+                  >
+                    Inquire Now →
+                  </a>
+                </div>
+              ) : (
+                <>
+                  {activePackage.hasPriceSNS && (
+                    <div
+                      className={`py-4 px-3 sm:py-5 sm:px-6 flex flex-col gap-1 ${
+                        priceCount > 1 ? `border-r ${BORDER}` : ''
+                      }`}
+                    >
+                      <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#EAF0EC] text-[#2D5A45]">
+                        Agree to SNS Upload
+                      </span>
+                      <div
+                        className={`text-[18px] sm:text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
+                      >
+                        {activePrice
+                          ? `USD${activePrice.priceSNS.toLocaleString()}`
+                          : '···'}
+                      </div>
+                      <a
+                        href={INQUIRY_FORM_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#2D5A45] text-white"
+                      >
+                        Inquire Now →
+                      </a>
+                    </div>
+                  )}
+                  {activePackage.hasPriceNoSNS && (
+                    <div className="py-4 px-3 sm:py-5 sm:px-6 flex flex-col gap-1">
+                      <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#F5F5F5] text-[#666666]">
+                        Decline SNS Upload
+                      </span>
+                      <div
+                        className={`text-[18px] sm:text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
+                      >
+                        {activePrice
+                          ? `USD${activePrice.priceNoSNS.toLocaleString()}`
+                          : '···'}
+                      </div>
+                      <a
+                        href={INQUIRY_FORM_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#0D0D0D] text-white"
+                      >
+                        Inquire Now →
+                      </a>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+            <div className={`py-3 px-4 sm:px-6 bg-[#FAFAFA] border-t ${BORDER}`}>
+              <p
+                className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
+              >
+                * Final price is subject to change based on current USD exchange
+                rate and does NOT include add-ons.
+              </p>
+              <p
+                className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
+              >
+                * SNS Upload: Hype Pig (Hype Wedding, Hype Snap) SNS,
+                Photographer SNS
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* CTA */}
-        <div className={`py-6 px-8 border-t ${BORDER} text-center bg-white`}>
-          <p className={`text-[14px] font-normal ${GRAY2} mb-4`}>
-            Ready to book or have questions?
-          </p>
-          <a
-            href={INQUIRY_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full py-[14px] bg-[#0D0D0D] text-white border-none rounded-[8px] text-[14px] font-medium cursor-pointer no-underline"
-          >
-            Submit your Inquiry
-          </a>
+        <div
+          className={`py-5 px-4 sm:py-6 sm:px-8 border-t ${BORDER} text-center bg-white`}
+        >
+          {!session ? (
+            <div
+              className={`grid grid-cols-2 gap-2 sm:gap-4 mb-4 divide-x ${BORDER}`}
+            >
+              <div className="flex flex-col items-center gap-3 px-1">
+                <p className={`text-[11px] sm:text-[13px] font-normal ${GRAY2}`}>
+                  Log in to check the price
+                </p>
+                <button
+                  onClick={() => router.push('?auth=1')}
+                  className="py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none bg-[#0D0D0D] text-white"
+                >
+                  Check Price
+                </button>
+              </div>
+              <div className="flex flex-col items-center gap-3 px-1">
+                <p className={`text-[11px] sm:text-[13px] font-normal ${GRAY2}`}>
+                  Ready to book or have questions?
+                </p>
+                <a
+                  href={INQUIRY_FORM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none no-underline bg-[#0D0D0D] text-white"
+                >
+                  Submit your Inquiry
+                </a>
+              </div>
+            </div>
+          ) : (
+            <>
+              <p className={`text-[14px] font-normal ${GRAY2} mb-4`}>
+                Ready to book or have questions?
+              </p>
+              <a
+                href={INQUIRY_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full py-[14px] bg-[#0D0D0D] text-white border-none rounded-[8px] text-[14px] font-medium cursor-pointer no-underline"
+              >
+                Submit your Inquiry
+              </a>
+            </>
+          )}
           <p className={`text-[12px] font-normal ${GRAY3} mt-3`}>
             Instagram:{' '}
             <a

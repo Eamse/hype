@@ -29,7 +29,7 @@ export default function ProductSection({
   const totalPages = Math.max(1, Math.ceil(products.length / itemsPerView));
   const [index, setIndex] = useState(0);
   const [withTransition, setWithTransition] = useState(true);
-
+  // 3초
   useEffect(() => {
     if (showAll || totalPages <= 1) return;
     const timer = setInterval(() => {
@@ -40,6 +40,7 @@ export default function ProductSection({
 
   // index가 totalPages(= 복제해둔 첫 페이지)에 도달하면, 슬라이드가 끝난 뒤
   // 애니메이션 없이 진짜 0번 페이지로 순간이동시켜 무한 루프처럼 보이게 함
+  //0.6초
   useEffect(() => {
     if (index !== totalPages) return;
     const timeout = setTimeout(() => {
