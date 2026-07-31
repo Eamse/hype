@@ -47,7 +47,10 @@ export default async function ReviewPage({
       orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
       skip: (currentPage - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
-      include: { images: true },
+      include: {
+        images: true,
+        _count: { select: { comments: { where: { deletedAt: null } } } },
+      },
     }),
     prisma.review.count({ where }),
   ]);
@@ -84,6 +87,7 @@ export default async function ReviewPage({
               title: review.title,
               content: review.content,
               isFeatured: review.isFeatured,
+              commentCount: review._count.comments,
             }))}
           />
 

@@ -59,41 +59,76 @@ export default async function ReviewDetailPage({ params }: Props) {
       <Header brand="hype-wedding" />
       <main style={{ paddingTop: 56 }}>
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '40px 20px 80px' }}>
-          <p style={{ fontSize: 12, color: '#000', margin: '0 0 8px', display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span>
-              {maskName(review.name)} · {getName(review.country) ?? review.country} · {review.shootingDate} ·{' '}
-              {review.productType} · {review.location}
-              {review.director && ` · ${review.director.number} ${review.director.name}`}
-              {/* 추후 사용 예정 — 별점 표시 임시 비활성화
-              {review.rating && ` · ★ ${review.rating}`}
-              */}
-            </span>
-            <ReviewDeleteButton reviewId={reviewId} authorUserId={review.userId} />
-          </p>
-          <h1 style={{ fontSize: 24, fontWeight: 700, margin: '0 0 20px' }}>
-            {review.title}
-          </h1>
-
-          {review.images.length > 0 && (
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
-                gap: 8,
-                marginBottom: 24,
-              }}
-            >
-              {review.images.map((img) => (
-                <div key={img.id} style={{ position: 'relative', width: '100%', aspectRatio: '1', borderRadius: 6, overflow: 'hidden' }}>
-                  <Image src={img.url} alt="" fill sizes="200px" style={{ objectFit: 'cover' }} />
+          <div className="rounded-2xl border border-[#eee] bg-white p-6 sm:p-8">
+            <div className="mb-5 flex items-start gap-3">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#0D0D0D] text-[16px] font-bold text-white">
+                {maskName(review.name).charAt(0).toUpperCase()}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="mb-1 flex flex-wrap items-center gap-1.5">
+                  <span
+                    className={`rounded-full px-2 py-[2px] text-[10px] font-semibold uppercase tracking-wide ${
+                      review.location === 'jeju'
+                        ? 'bg-[#eaf5ee] text-[#2D5A45]'
+                        : 'bg-[#eef2fb] text-[#2b4c8c]'
+                    }`}
+                  >
+                    {review.location}
+                  </span>
+                  <span className="rounded-full bg-[#f2f2f2] px-2 py-[2px] text-[10px] font-semibold uppercase tracking-wide text-[#777]">
+                    {review.productType}
+                  </span>
+                  <span className="text-[12px] text-[#999]">
+                    {maskName(review.name)} · {getName(review.country) ?? review.country}
+                    {review.director && ` · ${review.director.number} ${review.director.name}`}
+                  </span>
                 </div>
-              ))}
+                <p className="text-[11px] text-[#bbb]">
+                  Shot on {review.shootingDate} · Posted{' '}
+                  {new Date(review.createdAt).toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit',
+                  })}
+                  {/* 추후 사용 예정 — 별점 표시 임시 비활성화
+                  {review.rating && ` · ★ ${review.rating}`}
+                  */}
+                </p>
+              </div>
+              <ReviewDeleteButton reviewId={reviewId} authorUserId={review.userId} />
             </div>
-          )}
 
-          <p style={{ fontSize: 15, lineHeight: 1.7, color: '#000', whiteSpace: 'pre-wrap' }}>
-            {review.content}
-          </p>
+            <h1 className="mb-5 text-[22px] font-bold leading-snug text-[#111]">
+              {review.title}
+            </h1>
+
+            {review.images.length > 0 && (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+                  gap: 8,
+                  marginBottom: 24,
+                }}
+              >
+                {review.images.map((img) => (
+                  <div
+                    key={img.id}
+                    className="relative w-full overflow-hidden rounded-xl"
+                    style={{ aspectRatio: '1' }}
+                  >
+                    <Image src={img.url} alt="" fill sizes="200px" style={{ objectFit: 'cover' }} />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <p className="whitespace-pre-wrap text-[15px] leading-[1.7] text-[#333]">
+              {review.content}
+            </p>
+          </div>
 
           <CommentSection reviewId={reviewId} initialComments={initialComments} />
         </div>
