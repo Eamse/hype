@@ -89,7 +89,7 @@ export default function ImageGallery({
       {/* 오른쪽: 메인 이미지 */}
       <div
         className="relative flex-1 rounded-xl overflow-hidden bg-black"
-        style={{ aspectRatio: '3/4' }}
+        style={{ aspectRatio: '4/5' }}
       >
         {selected ? (
           <Image

@@ -63,7 +63,7 @@ export default function ProductCard({
           style={{
             position: 'relative',
             width: '100%',
-            aspectRatio: '1/1',
+            aspectRatio: '4/5',
             borderRadius: 6,
             overflow: 'hidden',
             backgroundColor: '#000',
