@@ -192,6 +192,18 @@ model Package {
   addons          PackageAddon[]
   inclusions      PackageInclusion[]
   partners        PackagePartner[]
+  images          PackageImage[]
+}
+
+model PackageImage {
+  id         Int     @id @default(autoincrement())
+  packageId  Int
+  webUrl     String  // 압축본 — 갤러리에서 평소 노출
+  originalUrl String // 원본 — 클릭 확대 시 노출
+  order      Int     @default(0)
+  package    Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
+
+  @@index([packageId])
 }
 
 model Addon {

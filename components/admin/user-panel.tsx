@@ -121,7 +121,7 @@ export default function UserPanel() {
                     ) : (
                       <span
                         style={{
-                          background: '#000',
+                          background: 'white',
                           color: '#000',
                           padding: '2px 8px',
                           borderRadius: 4,

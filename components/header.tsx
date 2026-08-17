@@ -594,6 +594,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
       {/* ── 모바일 드로어 메뉴 ── */}
       {isMobile && menuOpen && (
         <div
+          className="mobile-drawer"
           style={{
             position: 'fixed',
             top: 56,
@@ -666,12 +667,16 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                       }}
                     >
                       {label}
-                      <span style={{ fontSize: 16, color: '#000' }}>
-                        {isOpen ? '−' : '+'}
+                      <span
+                        className={`mobile-drawer-toggle-icon${isOpen ? ' open' : ''}`}
+                        style={{ fontSize: 16, color: '#000' }}
+                      >
+                        +
                       </span>
                     </button>
                     {isOpen && (
                       <div
+                        className="mobile-subdrawer"
                         style={{
                           display: 'flex',
                           flexDirection: 'column',
@@ -790,6 +795,13 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 36,
+                  height: 36,
+                }}
               >
                 <Image
                   src={src}

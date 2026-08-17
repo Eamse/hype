@@ -171,6 +171,43 @@ body {
   opacity: 1;
 }
 
+@keyframes drawerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.mobile-drawer {
+  animation: drawerFadeIn 0.28s ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes subDropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.mobile-subdrawer {
+  animation: subDropdownFadeIn 0.2s ease-out;
+  animation-fill-mode: both;
+}
+.mobile-drawer-toggle-icon {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+.mobile-drawer-toggle-icon.open {
+  transform: rotate(45deg);
+}
+
 .hide-scroll::-webkit-scrollbar {
   display: none;
 }
@@ -191,6 +228,492 @@ body {
 .arrow-nudge {
   display: inline-block;
   animation: nudge 1.2s ease-in-out infinite;
+}
+
+/* About > History: 참고 시안처럼 텍스트와 사진을 화면 전체 폭에서 62:38로 배치 */
+.about-page-content {
+  /* 화면 가장자리와 콘텐츠 사이의 공통 여백 */
+  padding-inline: clamp(20px, 4vw, 64px);
+}
+
+/* About Introduction 우측 패널: 긴 이미지의 중앙이 아닌 상단 흐름에 텍스트를 둔다. */
+.about-intro-copy {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: clamp(72px, 7.5vw, 124px) clamp(28px, 5vw, 80px);
+}
+
+/* History와 동일하게 두 패널의 비율 합을 100%로 고정한다. */
+.about-intro-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.about-intro-image {
+  position: relative;
+  aspect-ratio: 2 / 3;
+}
+
+.about-intro-title {
+  max-width: 720px;
+  margin: 0 0 clamp(32px, 3.2vw, 52px);
+  font-size: clamp(46px, 2vw, 68px);
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+}
+
+.about-intro-body {
+  max-width: 640px;
+  margin: 0 0 clamp(22px, 2vw, 34px);
+  font-size: clamp(16px, 1.7vw, 27px);
+  letter-spacing: -0.035em;
+  line-height: 1.35;
+}
+
+.about-intro-quote {
+  max-width: 660px;
+  margin: clamp(18px, 2vw, 32px) 0 0;
+  color: #666;
+  font-size: clamp(20px, 2.7vw, 40px);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.045em;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.how-started-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 62.25fr) minmax(0, 37.75fr);
+  margin-bottom: 64px;
+  background: #fff;
+}
+
+.how-started-copy {
+  padding: clamp(72px, 7vw, 116px) clamp(24px, 3vw, 48px) 64px;
+}
+
+.how-started-number {
+  margin: 0 0 2px;
+  font-size: clamp(20px, 1.7vw, 28px);
+  line-height: 1.2;
+}
+
+.how-started-eyebrow {
+  margin: 0 0 clamp(34px, 3.1vw, 50px);
+  font-size: clamp(28px, 2.5vw, 41px);
+  font-weight: 400;
+  line-height: 1.1;
+}
+
+.how-started-title {
+  margin: 0 0 clamp(34px, 3vw, 48px);
+  font-size: clamp(58px, 5vw, 96px);
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  line-height: 1.05;
+}
+
+.how-started-description {
+  max-width: 590px;
+  margin: 0;
+  font-size: clamp(21px, 1.55vw, 34px);
+  line-height: 1.23;
+  letter-spacing: -0.035em;
+}
+
+.how-started-image {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  min-height: 100%;
+}
+
+.how-started-caption {
+  position: absolute;
+  right: clamp(28px, 4.6vw, 76px);
+  bottom: clamp(24px, 2.4vw, 40px);
+  color: #000;
+  font-size: clamp(22px, 1.8vw, 30px);
+  line-height: 1.1;
+  right: 30px;
+}
+
+.how-started-caption p {
+  margin: 0;
+}
+
+/* History 텍스트: 아래에서 떠오르며 순차적으로 등장 */
+.history-rise {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.65s ease-out,
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.history-rise.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 인용구: 가려진 영역이 열리면서 위로 떠오르는 splice/lift 효과 */
+.history-quote-lift {
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(32px) scale(0.98);
+  transition:
+    clip-path 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.5s ease-out,
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.history-quote-lift.visible {
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  transform: translateY(0) scale(1);
+}
+
+/* Part 1에서 Part 2로 이어질 때 우측에서 들어오는 pan/slide 전환 */
+.history-panel-slide {
+  opacity: 0;
+  transform: translateX(8vw);
+  transition:
+    opacity 0.8s ease-out,
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.history-panel-slide.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.how-started-followup-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 62.75fr) minmax(0, 37.25fr);
+  min-height: 56.25vw;
+  margin-bottom: 64px;
+  background: #fff;
+}
+
+.how-started-followup-copy {
+  padding: clamp(72px, 5.5vw, 92px) clamp(24px, 2vw, 32px) 64px;
+}
+
+.how-started-followup-description {
+  max-width: 620px;
+  margin: 0 0 clamp(54px, 4.4vw, 72px);
+  font-size: clamp(22px, 1.55vw, 34px);
+  line-height: 1.23;
+  letter-spacing: -0.035em;
+}
+
+.how-started-quote {
+  max-width: 650px;
+  margin: 0 0 clamp(66px, 5vw, 82px);
+  padding-left: 24px;
+  border-left: 2px solid #000;
+  font-size: clamp(23px, 2.05vw, 34px);
+  font-weight: 700;
+  line-height: 1.28;
+  letter-spacing: -0.04em;
+}
+
+.how-started-quote p,
+.how-started-goal p {
+  margin: 0;
+}
+
+.how-started-goal p {
+  margin-bottom: 10px;
+  color: #666;
+  font-size: clamp(28px, 2.55vw, 42px);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.how-started-goal strong {
+  display: block;
+  max-width: 680px;
+  font-size: clamp(22px, 2.05vw, 34px);
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+}
+
+.how-started-followup-media {
+  position: relative;
+  min-height: 0;
+}
+
+.how-started-followup-caption {
+  position: absolute;
+  z-index: 1;
+  top: clamp(40px, 3.3vw, 54px);
+  left: clamp(32px, 2.4vw, 40px);
+  padding: 0;
+  font-size: clamp(22px, 1.8vw, 30px);
+  line-height: 1.15;
+}
+
+.how-started-followup-caption p {
+  margin: 0;
+}
+
+.how-started-followup-image {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+}
+
+/* About > Philosophy: 아이콘은 추후 추가하며, 원칙 텍스트는 대각선 흐름으로 배치 */
+.philosophy-content {
+  padding: clamp(56px, 5.5vw, 90px) clamp(24px, 2vw, 32px)
+    clamp(120px, 13vw, 210px);
+}
+
+.philosophy-intro {
+  display: block;
+}
+
+.philosophy-title-row {
+  display: flex;
+  align-items: end;
+  gap: clamp(28px, 4vw, 64px);
+  margin-top: clamp(38px, 4vw, 64px);
+}
+
+.philosophy-number,
+.philosophy-eyebrow,
+.philosophy-summary {
+  margin: 0;
+}
+
+.philosophy-number {
+  margin-bottom: 4px;
+  font-size: clamp(20px, 1.7vw, 28px);
+}
+
+.philosophy-eyebrow {
+  font-size: clamp(28px, 2.5vw, 41px);
+  line-height: 1.1;
+}
+
+.philosophy-heading {
+  margin: 0;
+  font-size: clamp(54px, 5.8vw, 96px);
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+  white-space: nowrap;
+}
+
+.philosophy-summary {
+  padding-bottom: 4px;
+  font-size: clamp(18px, 1.55vw, 26px);
+  line-height: 1.2;
+}
+
+.philosophy-principles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: clamp(40px, 8vw, 132px);
+  row-gap: clamp(90px, 13vw, 210px);
+  padding-top: clamp(90px, 9vw, 150px);
+}
+
+.philosophy-principle {
+  max-width: 650px;
+}
+
+.philosophy-principle h3,
+.philosophy-principle p {
+  margin: 0;
+}
+
+.philosophy-principle h3 {
+  margin-bottom: 18px;
+  font-size: clamp(40px, 4.2vw, 70px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+}
+
+.philosophy-principle p {
+  max-width: 580px;
+  font-size: clamp(20px, 1.8vw, 30px);
+  letter-spacing: -0.04em;
+  line-height: 1.22;
+}
+
+.philosophy-principle-2 {
+  margin-top: clamp(90px, 12vw, 195px);
+}
+
+.philosophy-principle-3 {
+  margin-top: clamp(20px, 4vw, 64px);
+}
+
+.philosophy-principle-4 {
+  margin-top: clamp(100px, 14vw, 230px);
+  /* 우측 카드지만 제목은 시안처럼 중앙 쪽으로 길게 뻗는다. */
+  max-width: none;
+  margin-left: clamp(-150px, -8vw, -64px);
+}
+
+.philosophy-principle-4 h3 {
+  white-space: nowrap;
+}
+
+.philosophy-principle-4 p {
+  margin-left: clamp(80px, 10vw, 164px);
+}
+
+/* 각 원칙은 확대되며 제자리로 들어와, 쌓이는 레이어 감각을 만든다. */
+.philosophy-pop {
+  opacity: 0;
+  transform: translateY(24px) scale(0.94);
+  transition:
+    opacity 0.45s ease-out,
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.philosophy-pop.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+@media (max-width: 767px) {
+  .about-intro-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .about-intro-copy {
+    padding: 48px 24px 56px;
+  }
+
+  .about-intro-title {
+    font-size: 40px;
+  }
+
+  .about-intro-body {
+    font-size: 19px;
+  }
+
+  .about-intro-quote {
+    font-size: 23px;
+  }
+
+  .how-started-layout {
+    grid-template-columns: 1fr;
+    margin-bottom: 40px;
+  }
+
+  .how-started-copy {
+    order: 2;
+    padding: 48px 24px 56px;
+  }
+
+  .how-started-image {
+    order: 1;
+    aspect-ratio: 4 / 5;
+  }
+
+  .how-started-description {
+    font-size: 20px;
+  }
+
+  .how-started-followup-layout {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    margin-bottom: 40px;
+  }
+
+  .how-started-followup-copy {
+    order: 2;
+    padding: 48px 24px 56px;
+  }
+
+  .how-started-followup-media {
+    order: 1;
+    min-height: max(420px, 125vw);
+  }
+
+  .how-started-followup-caption {
+    top: 32px;
+    left: 24px;
+    padding: 0;
+  }
+
+  .how-started-followup-description,
+  .how-started-quote,
+  .how-started-goal strong {
+    font-size: 20px;
+  }
+
+  .philosophy-content {
+    padding: 48px 24px 96px;
+  }
+
+  .philosophy-intro {
+    display: block;
+  }
+
+  .philosophy-title-row {
+    display: block;
+    margin-top: 42px;
+  }
+
+  .philosophy-heading {
+    margin: 0 0 20px;
+    white-space: normal;
+  }
+
+  .philosophy-principles {
+    grid-template-columns: 1fr;
+    gap: 72px;
+    padding-top: 72px;
+  }
+
+  .philosophy-principle-2,
+  .philosophy-principle-3,
+  .philosophy-principle-4 {
+    margin-top: 0;
+  }
+
+  .philosophy-principle-4 {
+    margin-left: 0;
+  }
+
+  .philosophy-principle-4 h3 {
+    white-space: normal;
+  }
+
+  .philosophy-principle-4 p {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .history-rise,
+  .history-quote-lift,
+  .history-panel-slide {
+    opacity: 1;
+    clip-path: none;
+    transform: none;
+    transition: none;
+  }
+
+  .philosophy-pop {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 /* ── 반응형 레이아웃 ─────────────────────────────────────── */
@@ -369,6 +892,31 @@ body {
 .inquiry-step.visible {
   opacity: 1;
   transform: translateY(0);
+}
+.about-rise {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+.about-rise.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.about-fade {
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.about-fade.visible {
+  opacity: 1;
+}
+.about-fade-slow {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.about-fade-slow.visible {
+  opacity: 1;
 }
 @keyframes cursorBlink {
   0%,
