@@ -62,6 +62,11 @@ const iconBtnStyle: React.CSSProperties = {
   border: 'none',
   cursor: 'pointer',
   padding: 0,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: 28,
+  height: 28,
 };
 
 /** 헤더 검색/북마크/알림/로그인·아웃 버튼 — 데스크탑 헤더 + 모바일 드로어 양쪽에서 공용 */
@@ -88,7 +93,7 @@ export default function HeaderActionButtons({
       <button
         onClick={onBookmarkClick}
         aria-label="Bookmarks"
-        style={{ ...iconBtnStyle, position: 'relative', display: 'flex', alignItems: 'center' }}
+        style={{ ...iconBtnStyle, position: 'relative' }}
       >
         <BookmarkIcon />
         {bookmarkCount > 0 && (
@@ -117,7 +122,7 @@ export default function HeaderActionButtons({
       <button
         onClick={onSignClick}
         aria-label={session ? 'Signed in' : 'Sign in'}
-        style={{ ...iconBtnStyle, display: 'flex', alignItems: 'center' }}
+        style={iconBtnStyle}
       >
         {session?.user?.image ? (
           <Image

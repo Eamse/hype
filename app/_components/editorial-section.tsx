@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -12,6 +15,30 @@ export default function EditorialSection({
 }: {
   magazines: Magazine[];
 }) {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  // 카드들이 화면에 들어오면 순차적으로 페이드인 + 위로 슬라이드
+  useEffect(() => {
+    const el = gridRef.current;
+    if (!el) return;
+    const cards = el.querySelectorAll('.inquiry-step');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            cards.forEach((card, idx) => {
+              setTimeout(() => card.classList.add('visible'), idx * 100);
+            });
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.1 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [magazines.length]);
+
   if (magazines.length === 0) return null;
   return (
     <section className="max-w-[1200px] mx-auto px-5 py-16">
@@ -33,12 +60,12 @@ export default function EditorialSection({
         </Link>
       </div>
       {/* 그리드 */}
-      <div className="grid grid-cols-2 gap-x-8 gap-y-12">
+      <div ref={gridRef} className="grid grid-cols-2 gap-x-8 gap-y-12">
         {magazines.map((magazine) => (
           <Link
             key={magazine.id}
             href={`/magazine/${magazine.id}`}
-            className="group block"
+            className="inquiry-step group block"
           >
             {/* 이미지 */}
             <div className="relative w-full aspect-square overflow-hidden mb-4 rounded-md">
@@ -54,6 +81,12 @@ export default function EditorialSection({
                   No Image
                 </div>
               )}
+              {/* hover 오버레이 */}
+              <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/55 via-black/0 to-black/0 p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <span className="text-[12px] font-semibold tracking-wide text-white">
+                  Read more <span className="arrow-nudge">→</span>
+                </span>
+              </div>
             </div>
             {/* 제목 */}
             <p className="text-sm font-semibold text-[black] leading-snug group-hover:underline">

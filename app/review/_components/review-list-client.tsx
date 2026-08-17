@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useSelection } from '@/components/admin/use-selection';
 import BulkActions from '@/components/admin/bulk-actions';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 type ReviewRow = {
   id: number;
@@ -56,38 +57,39 @@ function ReviewMeta({ review }: { review: ReviewRow }) {
 
 /** 우수 리뷰 하이라이트 스트립용 카드 — 가로 스크롤, 큰따옴표 장식 */
 function FeaturedCard({ review }: { review: ReviewRow }) {
+  const isMobile = useIsMobile();
   return (
     <Link
       href={`/review/${review.id}`}
-      className="group relative flex w-[280px] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#e8d9b0] bg-gradient-to-b from-[#fdf9ef] to-white p-6 text-inherit no-underline transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_8px_24px_rgba(201,169,110,0.25)]"
+      className="group relative flex w-[220px] sm:w-[280px] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#e8d9b0] bg-gradient-to-b from-[#fdf9ef] to-white p-4 sm:p-6 text-inherit no-underline transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_8px_24px_rgba(201,169,110,0.25)]"
     >
       <span
         aria-hidden
-        className="pointer-events-none absolute -top-3 right-3 select-none text-[80px] font-serif leading-none text-[#c9a96e]/15"
+        className="pointer-events-none absolute -top-3 right-3 select-none text-[60px] sm:text-[80px] font-serif leading-none text-[#c9a96e]/15"
       >
         &rdquo;
       </span>
       <span className="mb-3 inline-flex w-fit items-center gap-1 rounded-full bg-[#c9a96e] px-2.5 py-[3px] text-[10px] font-bold text-white">
         ✦ 우수 리뷰
       </span>
-      <div className="mb-3 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#0D0D0D] text-[15px] font-bold text-white">
+      <div className="mb-3 flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full bg-[#0D0D0D] text-[14px] sm:text-[15px] font-bold text-white">
         {review.name.charAt(0).toUpperCase()}
       </div>
-      <h3 className="mb-1.5 text-[16px] font-bold text-[#111] transition-colors group-hover:text-[#2D5A45]">
+      <h3 className="mb-1.5 text-[15px] sm:text-[16px] font-bold text-[#111] transition-colors group-hover:text-[#2D5A45]">
         {review.title}
       </h3>
       <p
-        className="mb-3 flex-1 text-[13px] leading-[1.6] text-[#555]"
+        className="mb-3 flex-1 text-[12px] sm:text-[13px] leading-[1.6] text-[#555]"
         style={{
           display: '-webkit-box',
-          WebkitLineClamp: 4,
+          WebkitLineClamp: isMobile ? 1 : 4,
           WebkitBoxOrient: 'vertical',
           overflow: 'hidden',
         }}
       >
         {review.content}
       </p>
-      <div className="flex items-center justify-between gap-2 border-t border-[#f0e4c4] pt-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#f0e4c4] pt-3">
         <ReviewMeta review={review} />
         <CommentCount count={review.commentCount} />
       </div>
@@ -97,41 +99,42 @@ function FeaturedCard({ review }: { review: ReviewRow }) {
 
 /** 일반 리뷰 그리드용 카드 */
 function GridCard({ review }: { review: ReviewRow }) {
+  const isMobile = useIsMobile();
   return (
     <Link
       href={`/review/${review.id}`}
-      className="group relative flex flex-1 min-w-0 items-start gap-4 overflow-hidden rounded-xl border border-[#eee] bg-white p-5 text-inherit no-underline transition-all duration-200 hover:-translate-y-[2px] hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)]"
+      className="group relative flex flex-1 min-w-0 items-start gap-3 sm:gap-4 overflow-hidden rounded-xl border border-[#eee] bg-white p-4 sm:p-5 text-inherit no-underline transition-all duration-200 hover:-translate-y-[2px] hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)]"
     >
       <span
         aria-hidden
-        className="pointer-events-none absolute -top-4 right-4 select-none text-[72px] font-serif leading-none text-black/[0.04]"
+        className="pointer-events-none absolute -top-4 right-4 select-none text-[52px] sm:text-[72px] font-serif leading-none text-black/[0.04]"
       >
         &rdquo;
       </span>
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#0D0D0D] text-[16px] font-bold text-white ring-4 ring-[#f7f7f7]">
+      <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full bg-[#0D0D0D] text-[14px] sm:text-[16px] font-bold text-white ring-4 ring-[#f7f7f7]">
         {review.name.charAt(0).toUpperCase()}
       </div>
       <div className="min-w-0 flex-1">
         <div className="mb-2">
           <ReviewMeta review={review} />
         </div>
-        <h3 className="mb-1.5 text-[16px] font-bold text-[#111] transition-colors group-hover:text-[#2D5A45]">
+        <h3 className="mb-1.5 text-[15px] sm:text-[16px] font-bold text-[#111] transition-colors group-hover:text-[#2D5A45]">
           {review.title}
         </h3>
         <p
-          className="text-[14px] leading-[1.6] text-[#555]"
+          className="text-[13px] sm:text-[14px] leading-[1.6] text-[#555]"
           style={{
             display: '-webkit-box',
-            WebkitLineClamp: 3,
+            WebkitLineClamp: isMobile ? 1 : 3,
             WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
           }}
         >
           {review.content}
         </p>
-        <div className="mt-3 flex items-center justify-between gap-2 border-t border-[#f2f2f2] pt-2.5">
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[#f2f2f2] pt-2.5">
           <CommentCount count={review.commentCount} />
-          <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#2D5A45] opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#2D5A45] opacity-100 transition-opacity duration-200 sm:opacity-0 sm:group-hover:opacity-100">
             Read review <span className="arrow-nudge">→</span>
           </span>
         </div>
@@ -194,7 +197,7 @@ export default function ReviewListClient({ reviews }: { reviews: ReviewRow[] }) 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 32 }}>
       {isModerator && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>
           <BulkActions
             total={visibleReviews.length}
             selectedCount={selectedIds.size}

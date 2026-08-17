@@ -619,7 +619,7 @@ export default function FaqClient() {
                       letterSpacing: '0.5px',
                       textTransform: 'uppercase',
                       color: isActive
-                        ? '#e8000d'
+                        ? '#2D5A45'
                         : hoveredTab === cat
                           ? '#000'
                           : '#000',
@@ -628,7 +628,7 @@ export default function FaqClient() {
                       borderLeft: 'none',
                       borderRight: 'none',
                       borderBottom: isActive
-                        ? '2px solid #e8000d'
+                        ? '2px solid #2D5A45'
                         : hoveredTab === cat
                           ? '2px solid #000'
                           : '2px solid transparent',

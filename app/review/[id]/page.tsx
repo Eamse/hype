@@ -2,6 +2,7 @@ export const revalidate = 60; // 세션 의존 없음 — 캐싱해서 DB 왕복
 
 import type { Metadata } from 'next';
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import Header from '@/components/header';
 import { prisma } from '@/lib/prisma';
@@ -59,6 +60,12 @@ export default async function ReviewDetailPage({ params }: Props) {
       <Header brand="hype-wedding" />
       <main style={{ paddingTop: 56 }}>
         <div style={{ maxWidth: 800, margin: '0 auto', padding: '40px 20px 80px' }}>
+          <Link
+            href="/review"
+            className="mb-4 inline-flex items-center gap-1 text-[13px] font-medium text-[#666] no-underline hover:text-[#111]"
+          >
+            ← Back to Reviews
+          </Link>
           <div className="rounded-2xl border border-[#eee] bg-white p-6 sm:p-8">
             <div className="mb-5 flex items-start gap-3">
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#0D0D0D] text-[16px] font-bold text-white">

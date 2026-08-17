@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
 import MagazineMasterActions from './_components/magazine-master-actions';
+import MagazineGrid from './_components/magazine-grid';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = { title: 'Magazine' };
@@ -56,7 +57,7 @@ export default async function MagazinePage({ searchParams }: Props) {
                 letterSpacing: '-0.5px',
               }}
             >
-              Magazine
+              Editorial
             </h1>
           </div>
           <MagazineMasterActions />
@@ -171,77 +172,7 @@ export default async function MagazinePage({ searchParams }: Props) {
                 >
                   Latest Stories
                 </p>
-                <div className="magazine-list-grid">
-                  {rest.map((m) => (
-                    <Link
-                      key={m.id}
-                      href={`/magazine/${m.id}`}
-                      style={{ textDecoration: 'none', color: 'inherit' }}
-                    >
-                      <div>
-                        <div
-                          style={{
-                            position: 'relative',
-                            width: '100%',
-                            aspectRatio: '3/4',
-                            overflow: 'hidden',
-                            marginBottom: 12,
-                          }}
-                        >
-                          {m.imageUrl ? (
-                            <Image
-                              src={m.imageUrl}
-                              alt={m.title}
-                              fill
-                              sizes="400px"
-                              style={{ objectFit: 'cover' }}
-                            />
-                          ) : (
-                            <div
-                              style={{
-                                width: '100%',
-                                height: '100%',
-                                backgroundColor: '#fff',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: '#000',
-                                fontSize: 13,
-                              }}
-                            >
-                              No Image
-                            </div>
-                          )}
-                        </div>
-                        <p
-                          style={{
-                            fontSize: 10,
-                            letterSpacing: '2px',
-                            color: '#000',
-                            textTransform: 'uppercase',
-                            marginBottom: 6,
-                          }}
-                        >
-                          {new Date(m.createdAt).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
-                        </p>
-                        <p
-                          style={{
-                            fontSize: 16,
-                            fontWeight: 700,
-                            color: '#000',
-                            lineHeight: 1.3,
-                          }}
-                        >
-                          {m.title}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+                <MagazineGrid items={rest} />
               </>
             )}
           </>
