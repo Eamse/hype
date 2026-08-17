@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 import Image from 'next/image';
 import SubTabBar from '@/components/sub-tab-bar';
 import StatsBar from './stats-bar';
@@ -10,6 +10,101 @@ const SECTIONS = [
   { id: 'history', label: 'History' },
   { id: 'philosophy', label: 'Philosophy' },
   { id: 'achievement', label: 'Achievement' },
+];
+
+type JourneyItem = {
+  date: string;
+  bold: boolean;
+  content: ReactNode;
+};
+
+const JOURNEY_2025: JourneyItem[] = [
+  {
+    date: 'Feb 27',
+    bold: true,
+    content: 'Hype Pig founded',
+  },
+  {
+    date: 'Apr',
+    bold: true,
+    content: (
+      <>
+        Launched first brand — <strong>Hype Wedding</strong>
+      </>
+    ),
+  },
+  {
+    date: 'May',
+    bold: false,
+    content: (
+      <>
+        First influencer collab — <strong>Angel Dei</strong>, Philippines
+      </>
+    ),
+  },
+  {
+    date: 'May',
+    bold: false,
+    content: (
+      <>
+        Featured in <strong>Wedding Essentials Magazine</strong>, Philippines
+      </>
+    ),
+  },
+  {
+    date: 'Jul',
+    bold: true,
+    content: 'First client photoshoot',
+  },
+  {
+    date: 'Oct',
+    bold: false,
+    content: (
+      <>
+        Featured in <strong>Bridal and Breakfast</strong>, Philippines
+      </>
+    ),
+  },
+];
+
+const JOURNEY_2026: JourneyItem[] = [
+  {
+    date: 'Mar',
+    bold: false,
+    content: (
+      <>
+        First int&apos;l exhibition — <strong>Hitcheed Fair, Singapore</strong>
+      </>
+    ),
+  },
+  {
+    date: 'Apr',
+    bold: false,
+    content: (
+      <>
+        Influencer collab — <strong>Meryem Gündüz, Turkey</strong>
+      </>
+    ),
+  },
+  {
+    date: 'May',
+    bold: true,
+    content: (
+      <>
+        Launched second brand — <strong>Hype Snap</strong>
+      </>
+    ),
+  },
+  {
+    date: 'Jun',
+    bold: true,
+    content: '70th client booking milestone',
+  },
+  {
+    date: 'Jul',
+    bold: true,
+    content: 'Singapore Meet-up Event',
+  },
 ];
 
 export default function AboutClient({
@@ -131,7 +226,7 @@ export default function AboutClient({
                       priority
                       sizes="(min-width: 768px) 50vw, 100vw"
                     />
-                    <div className="absolute top-30 left-25 text-white">
+                    <div className="absolute top-[30px] left-[25px] text-white">
                       <p className="text-sm tracking-[3px]">01</p>
                       <p className="text-2xl font-bold tracking-wide">
                         ABOUT US
@@ -276,7 +371,7 @@ export default function AboutClient({
                   <div className="how-started-followup-media">
                     <div className="how-started-followup-image">
                       <Image
-                        src="/about/morgan.JPG"
+                        src="/about/morgan.jpg"
                         alt="Saeyoung (Morgan), Co-founder"
                         fill
                         className="object-cover"
@@ -365,6 +460,88 @@ export default function AboutClient({
                   </article>
                 </div>
               </div>
+            ) : section.id === 'achievement' ? (
+              <>
+                <div className="journey-header">
+                  <p className="journey-number">04</p>
+                  <p className="journey-eyebrow">HISTORY</p>
+                  <h2 className="journey-heading">Our journey so far.</h2>
+                  <p className="journey-subtext">
+                    From a single photo shoot in Korea to an international
+                    pre-wedding brand trusted by couples from 16 countries.
+                  </p>
+                </div>
+
+                {/* 2025 */}
+                <div className="journey-year-block">
+                  <div className="journey-year-copy">
+                    <p className="journey-year-title journey-year-title--2025">
+                      2025
+                    </p>
+                    <div className="journey-timeline">
+                      {JOURNEY_2025.map((item, idx) => (
+                        <div key={idx} className="journey-timeline-item">
+                          <span className="journey-dot" />
+                          <p className="journey-date">{item.date}</p>
+                          <p
+                            className={
+                              item.bold
+                                ? 'journey-milestone journey-milestone--bold'
+                                : 'journey-milestone'
+                            }
+                          >
+                            {item.content}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* 사진은 별도 전달 예정 — 자리만 확보 */}
+                  <div className="journey-photo">
+                    <Image
+                      src="/about/journey-2025.jpg"
+                      alt="2025"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+
+                {/* 2026 */}
+                <div className="journey-year-block">
+                  <div className="journey-year-copy">
+                    <p className="journey-year-title journey-year-title--2026">
+                      2026
+                    </p>
+                    <div className="journey-timeline">
+                      {JOURNEY_2026.map((item, idx) => (
+                        <div key={idx} className="journey-timeline-item">
+                          <span className="journey-dot" />
+                          <p className="journey-date">{item.date}</p>
+                          <p
+                            className={
+                              item.bold
+                                ? 'journey-milestone journey-milestone--bold'
+                                : 'journey-milestone'
+                            }
+                          >
+                            {item.content}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* 사진은 별도 전달 예정 — 자리만 확보 */}
+                  <div className="journey-photo">
+                    <Image
+                      src="/about/journey-2026.jpg"
+                      alt="2026"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+              </>
             ) : (
               <>
                 <h2

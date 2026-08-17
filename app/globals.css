@@ -254,7 +254,7 @@ body {
 
 .about-intro-image {
   position: relative;
-  aspect-ratio: 2 / 3;
+  aspect-ratio: 4 / 5;
 }
 
 .about-intro-title {
@@ -341,7 +341,6 @@ body {
   color: #000;
   font-size: clamp(22px, 1.8vw, 30px);
   line-height: 1.1;
-  right: 30px;
 }
 
 .how-started-caption p {
@@ -586,6 +585,135 @@ body {
 .philosophy-pop.visible {
   opacity: 1;
   transform: translateY(0) scale(1);
+}
+
+/* About > 04 History("Our journey so far"): 연도별 타임라인 + 사진 */
+.journey-header {
+  padding: clamp(56px, 5.5vw, 90px) clamp(24px, 2vw, 32px) 0;
+}
+
+.journey-number {
+  margin: 0 0 4px;
+  font-size: clamp(20px, 1.7vw, 28px);
+}
+
+.journey-eyebrow {
+  margin: 0;
+  font-size: clamp(28px, 2.5vw, 41px);
+  line-height: 1.1;
+}
+
+.journey-heading {
+  margin: clamp(28px, 3vw, 44px) 0 clamp(20px, 2vw, 28px);
+  font-size: clamp(46px, 4.5vw, 76px);
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  line-height: 0.98;
+}
+
+.journey-subtext {
+  max-width: 620px;
+  margin: 0;
+  font-size: clamp(17px, 1.4vw, 22px);
+  line-height: 1.4;
+}
+
+.journey-year-block {
+  display: grid;
+  grid-template-columns: minmax(0, 62.25fr) minmax(0, 37.75fr);
+  margin-top: clamp(56px, 6vw, 96px);
+  background: #fff;
+}
+
+.journey-year-copy {
+  padding: clamp(48px, 5vw, 80px) clamp(24px, 3vw, 48px);
+}
+
+.journey-year-title {
+  margin: 0 0 clamp(32px, 3.2vw, 52px);
+  font-size: clamp(56px, 5.5vw, 92px);
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.journey-year-title--2025 {
+  color: #9ca3af;
+}
+
+.journey-year-title--2026 {
+  color: #3f6b52;
+}
+
+.journey-timeline {
+  position: relative;
+  padding-left: 34px;
+}
+
+.journey-timeline-item {
+  position: relative;
+  padding-bottom: clamp(28px, 2.6vw, 40px);
+}
+
+.journey-timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+/* 이 점의 중심에서 다음 점의 중심까지만 선을 그림 — 첫/마지막 점 밖으로 삐져나오지 않게 */
+.journey-timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 13px;
+  bottom: -13px;
+  left: -35px;
+  width: 2px;
+  background: #000;
+}
+
+.journey-dot {
+  position: absolute;
+  top: 6px;
+  left: -41px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #000;
+}
+
+.journey-date {
+  margin: 0 0 4px;
+  font-size: clamp(15px, 1.1vw, 18px);
+  font-weight: 700;
+}
+
+.journey-milestone {
+  margin: 0;
+  max-width: 480px;
+  font-size: clamp(15px, 1.1vw, 18px);
+  line-height: 1.4;
+}
+
+.journey-milestone--bold {
+  font-weight: 700;
+}
+
+.journey-photo {
+  position: relative;
+  min-height: 320px;
+}
+
+@media (max-width: 767px) {
+  .journey-year-block {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-photo {
+    order: -1;
+    aspect-ratio: 4 / 5;
+    min-height: 0;
+  }
 }
 
 @media (max-width: 767px) {
