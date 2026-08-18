@@ -59,8 +59,15 @@ async function main() {
   console.log(`bouquet: ${bouquetByPackage.size}개 패키지 동기화 완료`);
 }
 
+// DB의 Director.location은 "Jeju"/"Seoul"(대문자 시작)로 통일되어 있음 —
+// 시트/JSON 쪽은 소문자를 쓰기 때문에, DB에 쓰기 전에 항상 맞춰줘야 중복 생성을 막을 수 있음
+function normalizeLocation(location: string): string {
+  return location.charAt(0).toUpperCase() + location.slice(1).toLowerCase();
+}
+
 async function upsertDirector(row: string[]) {
-  const [number, name, instagram, location] = row;
+  const [number, name, instagram, rawLocation] = row;
+  const location = normalizeLocation(rawLocation);
   const existing = await prisma.director.findFirst({
     where: { number, location },
   });
@@ -84,7 +91,7 @@ async function upsertPackage(row: string[]) {
   const [
     packageId,
     directorNumber,
-    location,
+    rawLocation,
     name,
     subtitle,
     priceSNS,
@@ -95,6 +102,7 @@ async function upsertPackage(row: string[]) {
     retouched,
     retouchedDetail,
   ] = row;
+  const location = normalizeLocation(rawLocation);
   const director = await prisma.director.findFirst({
     where: { number: directorNumber, location },
   });

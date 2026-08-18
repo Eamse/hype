@@ -228,109 +228,6 @@ export default function AdminPage() {
         ::-webkit-scrollbar-thumb { background: rgba(180,120,140,0.35); border-radius: 4px; }
       `}</style>
 
-      {/* 정적 하트 데코 */}
-      {[
-        { top: '8%', left: '4%', size: 32, color: 'rgba(220,60,100,0.5)' },
-        { top: '15%', right: '6%', size: 20, color: 'rgba(200,80,130,0.45)' },
-        { top: '65%', left: '3%', size: 26, color: 'rgba(230,90,140,0.5)' },
-        { top: '72%', right: '5%', size: 40, color: 'rgba(180,40,90,0.45)' },
-        { top: '42%', right: '2%', size: 16, color: 'rgba(215,70,115,0.5)' },
-        { top: '3%', left: '48%', size: 13, color: 'rgba(240,100,150,0.45)' },
-        { top: '52%', left: '1%', size: 18, color: 'rgba(190,50,95,0.5)' },
-        { top: '88%', left: '38%', size: 14, color: 'rgba(225,80,125,0.45)' },
-        { top: '30%', left: '7%', size: 11, color: 'rgba(210,60,110,0.4)' },
-        { top: '80%', right: '15%', size: 22, color: 'rgba(200,70,120,0.45)' },
-      ].map((h, i) => (
-        <div
-          key={i}
-          style={{
-            position: 'absolute',
-            top: h.top,
-            left: 'left' in h ? h.left : undefined,
-            right: 'right' in h ? h.right : undefined,
-            width: h.size,
-            height: h.size,
-            pointerEvents: 'none',
-            zIndex: 0,
-          }}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill={h.color}
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-          </svg>
-        </div>
-      ))}
-
-      {/* 대각선 라인 패턴 */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(184,134,90,0.12) 40px, rgba(184,134,90,0.12) 41px)`,
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `repeating-linear-gradient(-45deg, transparent, transparent 80px, rgba(201,149,106,0.07) 80px, rgba(201,149,106,0.07) 81px)`,
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-
-      {/* 정적 블러 오브 */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '-10%',
-          left: '-5%',
-          width: 500,
-          height: 500,
-          borderRadius: '50%',
-          background:
-            'radial-gradient(circle, rgba(210,120,150,0.55) 0%, transparent 65%)',
-          pointerEvents: 'none',
-          filter: 'blur(60px)',
-          zIndex: 0,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '-15%',
-          right: '-8%',
-          width: 600,
-          height: 600,
-          borderRadius: '50%',
-          background:
-            'radial-gradient(circle, rgba(200,130,80,0.45) 0%, transparent 65%)',
-          pointerEvents: 'none',
-          filter: 'blur(70px)',
-          zIndex: 0,
-        }}
-      />
-      <div
-        style={{
-          position: 'absolute',
-          top: '35%',
-          left: '60%',
-          width: 350,
-          height: 350,
-          borderRadius: '50%',
-          background:
-            'radial-gradient(circle, rgba(230,140,170,0.5) 0%, transparent 65%)',
-          pointerEvents: 'none',
-          filter: 'blur(50px)',
-          zIndex: 0,
-        }}
-      />
-
       {/* 탑바 */}
       <header
         style={{
@@ -526,7 +423,7 @@ export default function AdminPage() {
               </div>
               <div>
                 <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a' }}>
-                  {admin.loginId}님 환영해용 🩷
+                  {admin.loginId}님 환영합니다.
                 </p>
                 <p
                   style={{
@@ -537,7 +434,7 @@ export default function AdminPage() {
                     letterSpacing: '1px',
                   }}
                 >
-                  {admin.role}
+                  Role: {admin.role}
                 </p>
               </div>
             </div>

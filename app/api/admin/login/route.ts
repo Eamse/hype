@@ -20,6 +20,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: 'Invalid request' }, { status: 400 });
   }
 
+  // 계정 기준으로도 제한 — 여러 IP를 돌려가며 한 계정을 노리는 것도 방어.
+  // 마스터가 Account Setting에서 해당 계정 잠금을 풀어줄 수 있음(app/api/admin/accounts/[id]/unlock)
+  if (!checkRateLimit(`admin_login_account:${loginId}`, 10, 15 * 60 * 1000)) {
+    return NextResponse.json(
+      { message: 'Too many login attempts. Please try again later.' },
+      { status: 429 },
+    );
+  }
+
   const login = await prisma.admin.findUnique({
     where: { loginId },
   });

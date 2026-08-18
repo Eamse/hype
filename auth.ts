@@ -4,16 +4,33 @@ import { prisma } from '@/lib/prisma';
 import { authConfig } from '@/auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import bcrypt from 'bcryptjs';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     ...(authConfig.providers ?? []),
     Credentials({
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         const { email, password } = credentials as {
           email: string;
           password: string;
         };
+
+        // 계정+IP 둘 다 제한 — 특정 계정 노리는 것과, 한 IP로 여러 계정 돌려 찍는 것 둘 다 방어.
+        // 시간 지나면 자동 해제되는 방식이라 별도 잠금 해제 절차가 필요 없음.
+        const ip = getClientIp(request as Request);
+        const emailOk = checkRateLimit(
+          `credentials_login:${email}`,
+          10,
+          15 * 60 * 1000,
+        );
+        const ipOk = checkRateLimit(
+          `credentials_login_ip:${ip}`,
+          20,
+          15 * 60 * 1000,
+        );
+        if (!emailOk || !ipOk) return null;
+
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user || !user.password) return null;
 

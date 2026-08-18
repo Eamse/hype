@@ -3,6 +3,7 @@ import { requireMaster } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { encrypt, decrypt } from '@/lib/encryption';
+import { peekRateLimitLocked } from '@/lib/rate-limit';
 
 export async function GET(request: NextRequest) {
   const adminId = await requireMaster(request);
@@ -33,6 +34,7 @@ export async function GET(request: NextRequest) {
       role: u.role,
       isActive: u.isActive,
       createdAt: u.createdAt,
+      locked: peekRateLimitLocked(`admin_login_account:${u.loginId}`, 10),
     };
   });
 

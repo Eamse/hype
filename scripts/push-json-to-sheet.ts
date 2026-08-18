@@ -115,6 +115,11 @@ async function writeTab(
   rows: string[][],
 ) {
   if (rows.length === 0) return;
+  // 이전 실행 때 남은 행이 새 데이터보다 많으면 뒷부분이 안 지워지고 남으므로, 먼저 전체를 비운다
+  await sheets.spreadsheets.values.clear({
+    spreadsheetId: SHEET_ID,
+    range: `${tab}!A2:Z`,
+  });
   await sheets.spreadsheets.values.update({
     spreadsheetId: SHEET_ID,
     range: `${tab}!A2`,

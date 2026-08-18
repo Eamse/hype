@@ -43,6 +43,18 @@ export function checkRateLimit(
   return true;
 }
 
+/** 특정 키의 제한을 즉시 해제 (예: 마스터가 잠긴 어드민 계정을 풀어줄 때) */
+export function resetRateLimit(key: string): void {
+  store.delete(key);
+}
+
+/** 카운트를 늘리지 않고 현재 잠김 상태만 확인 */
+export function peekRateLimitLocked(key: string, limit: number): boolean {
+  const entry = store.get(key);
+  if (!entry || Date.now() > entry.resetAt) return false;
+  return entry.count >= limit;
+}
+
 /** Vercel/프록시 환경에서 실제 클라이언트 IP 추출 */
 export function getClientIp(request: Request): string {
   return (

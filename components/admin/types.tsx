@@ -34,6 +34,7 @@ export type Account = {
   role: string;
   isActive: boolean;
   createdAt: string;
+  locked: boolean;
 };
 
 export const INCLUSIONS = [
