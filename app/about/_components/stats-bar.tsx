@@ -38,7 +38,10 @@ function useCountUp(target: number, start: boolean, delay: number) {
   const [value, setValue] = useState(0);
 
   useEffect(() => {
-    if (!start) return;
+    if (!start) {
+      setValue(0); // 뷰포트를 벗어나면 리셋 — 다음에 다시 들어올 때 0부터 재생
+      return;
+    }
     let raf: number;
     const startTime = performance.now() + delay;
 
@@ -93,13 +96,8 @@ export default function StatsBar() {
     const el = ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            observer.disconnect();
-          }
-        });
+      ([entry]) => {
+        setVisible(entry.isIntersecting);
       },
       { threshold: 0.3 },
     );

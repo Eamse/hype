@@ -118,68 +118,103 @@ export default function AboutClient({
   const philosophyRef = useRef<HTMLDivElement>(null);
 
   // 헤드라인 → 본문1 → 본문2 → 인용구 순서로 스크롤 진입 시 순차 페이드인
+  // 뷰포트를 벗어나면 리셋해서, 다시 스크롤해 들어올 때마다 재생된다.
   useEffect(() => {
     const el = introRef.current;
     if (!el) return;
     const targets = el.querySelectorAll<HTMLElement>('[data-reveal]');
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            targets.forEach((target) => {
-              const delay = Number(target.dataset.revealDelay ?? 0);
-              setTimeout(() => target.classList.add('visible'), delay);
-            });
-            observer.disconnect();
-          }
-        });
+      ([entry]) => {
+        timers.forEach(clearTimeout);
+        timers.length = 0;
+        if (entry.isIntersecting) {
+          targets.forEach((target) => {
+            const delay = Number(target.dataset.revealDelay ?? 0);
+            timers.push(
+              setTimeout(() => target.classList.add('visible'), delay),
+            );
+          });
+        } else {
+          targets.forEach((target) => target.classList.remove('visible'));
+        }
       },
       { threshold: 0.2 },
     );
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      timers.forEach(clearTimeout);
+    };
   }, []);
 
-  // Philosophy: 원칙 카드를 겹친 레이어처럼 순차 Pop 한다.
+  // Philosophy: 원칙 카드를 겹친 레이어처럼 순차 Pop 한다. (재진입 시 재생)
   useEffect(() => {
     const section = philosophyRef.current;
     if (!section) return;
+    const targets = section.querySelectorAll<HTMLElement>(
+      '[data-philosophy-reveal]',
+    );
+    const timers: number[] = [];
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return;
-        section
-          .querySelectorAll<HTMLElement>('[data-philosophy-reveal]')
-          .forEach((target) => {
+        timers.forEach(clearTimeout);
+        timers.length = 0;
+        if (entry.isIntersecting) {
+          targets.forEach((target) => {
             const delay = Number(target.dataset.philosophyReveal ?? 0);
-            window.setTimeout(() => target.classList.add('visible'), delay);
+            timers.push(
+              window.setTimeout(() => target.classList.add('visible'), delay),
+            );
           });
-        observer.disconnect();
+        } else {
+          targets.forEach((target) => target.classList.remove('visible'));
+        }
       },
       { threshold: 0.12 },
     );
     observer.observe(section);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      timers.forEach(clearTimeout);
+    };
   }, []);
 
-  // History: 각 문단은 순서대로, Part 2 전체는 옆에서 밀려 들어온다.
+  // History: 각 문단은 순서대로, Part 2 전체는 옆에서 밀려 들어온다. (재진입 시 재생)
   useEffect(() => {
     const sections = [startedRef.current, followupRef.current].filter(
       (section): section is HTMLDivElement => section !== null,
     );
+    const timerMap = new Map<Element, number[]>();
+
     const observers = sections.map((section) => {
+      const targets = section.querySelectorAll<HTMLElement>(
+        '[data-history-reveal]',
+      );
       const observer = new IntersectionObserver(
         ([entry]) => {
-          if (!entry.isIntersecting) return;
+          const timers = timerMap.get(section) ?? [];
+          timers.forEach(clearTimeout);
+          timers.length = 0;
 
-          section.classList.add('visible');
-          section
-            .querySelectorAll<HTMLElement>('[data-history-reveal]')
-            .forEach((target) => {
+          if (entry.isIntersecting) {
+            section.classList.add('visible');
+            targets.forEach((target) => {
               const delay = Number(target.dataset.historyReveal ?? 0);
-              window.setTimeout(() => target.classList.add('visible'), delay);
+              timers.push(
+                window.setTimeout(
+                  () => target.classList.add('visible'),
+                  delay,
+                ),
+              );
             });
-          observer.disconnect();
+          } else {
+            section.classList.remove('visible');
+            targets.forEach((target) => target.classList.remove('visible'));
+          }
+          timerMap.set(section, timers);
         },
         { threshold: 0.18 },
       );
@@ -187,7 +222,10 @@ export default function AboutClient({
       return observer;
     });
 
-    return () => observers.forEach((observer) => observer.disconnect());
+    return () => {
+      observers.forEach((observer) => observer.disconnect());
+      timerMap.forEach((timers) => timers.forEach(clearTimeout));
+    };
   }, []);
 
   return (

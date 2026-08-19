@@ -21,7 +21,11 @@ export default function AdminSignIn() {
       body: JSON.stringify({ loginId, password }),
     });
     if (!result.ok) {
-      setErrors('Please check your ID and password.');
+      if (result.status === 429) {
+        setErrors('Too many attempts. Please try again later.');
+      } else {
+        setErrors('Please check your ID and password.');
+      }
     } else {
       router.push('/admin');
     }

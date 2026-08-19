@@ -2,17 +2,9 @@ import { prisma } from '@/lib/prisma';
 import { NextResponse, NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { SignJWT } from 'jose';
-import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
-  const ip = getClientIp(request);
-  if (!checkRateLimit(`admin_login:${ip}`, 10, 15 * 60 * 1000)) {
-    return NextResponse.json(
-      { message: 'Too many login attempts. Please try again later.' },
-      { status: 429 },
-    );
-  }
-
   const body = await request.json();
   const { loginId, password } = body;
 
