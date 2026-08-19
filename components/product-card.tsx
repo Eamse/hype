@@ -95,8 +95,7 @@ export default function ProductCard({
             // WebkitTextStroke: '0.3px #000',
           }}
         >
-          {product.number ? `${product.number} ` : ''}
-          {product.title}
+          {product.number}
         </p>
       </Link>
       <button
