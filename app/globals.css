@@ -241,8 +241,22 @@ body {
   display: flex;
   width: 100%;
   flex-direction: column;
+  align-items: flex-start;
   justify-content: flex-start;
-  padding: clamp(72px, 7.5vw, 124px) clamp(28px, 5vw, 80px);
+  text-align: left;
+  padding: 0 clamp(28px, 5vw, 80px) clamp(72px, 7.5vw, 124px);
+}
+
+.about-intro-number {
+  margin: 0 0 4px;
+  font-size: clamp(20px, 1.7vw, 28px);
+}
+
+.about-intro-eyebrow {
+  margin: 0 0 clamp(34px, 3.1vw, 50px);
+  font-size: clamp(28px, 2.5vw, 41px);
+  font-weight: 400;
+  line-height: 1.1;
 }
 
 /* History와 동일하게 두 패널의 비율 합을 100%로 고정한다. */
@@ -254,7 +268,8 @@ body {
 
 .about-intro-image {
   position: relative;
-  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  /* aspect-ratio: 1 / 2; */
 }
 
 .about-intro-title {
@@ -277,7 +292,8 @@ body {
 
 .about-intro-quote {
   max-width: 660px;
-  margin: clamp(18px, 2vw, 32px) 0 0;
+  margin: clamp(18px, 2vw, 32px) auto 0;
+  align-self: center;
   color: #666;
   font-size: clamp(20px, 2.7vw, 40px);
   font-weight: 700;
@@ -322,7 +338,7 @@ body {
 
 .how-started-description {
   max-width: 590px;
-  margin: 0;
+  margin: 0 0 clamp(28px, 2.6vw, 40px);
   font-size: clamp(21px, 1.55vw, 34px);
   line-height: 1.23;
   letter-spacing: -0.035em;
@@ -330,8 +346,10 @@ body {
 
 .how-started-image {
   position: relative;
+  width: 100%;
   aspect-ratio: 2 / 3;
   min-height: 100%;
+  overflow: hidden;
 }
 
 .how-started-caption {
@@ -378,49 +396,59 @@ body {
   transform: translateY(0) scale(1);
 }
 
-/* Part 1에서 Part 2로 이어질 때 우측에서 들어오는 pan/slide 전환 */
+/* Part 1에서 Part 2로 이어질 때 페이드 전환 (translateX는 레이아웃 폭 계산에 영향을 줘서 제거) */
 .history-panel-slide {
   opacity: 0;
-  transform: translateX(8vw);
-  transition:
-    opacity 0.8s ease-out,
-    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: opacity 0.8s ease-out;
 }
 
 .history-panel-slide.visible {
   opacity: 1;
-  transform: translateX(0);
 }
 
 .how-started-followup-layout {
   display: grid;
-  grid-template-columns: minmax(0, 62.75fr) minmax(0, 37.25fr);
+  grid-template-columns: minmax(0, 62.25fr) minmax(0, 37.75fr);
   min-height: 56.25vw;
   margin-bottom: 64px;
   background: #fff;
 }
 
 .how-started-followup-copy {
-  padding: clamp(72px, 5.5vw, 92px) clamp(24px, 2vw, 32px) 64px;
+  padding: clamp(72px, 6.5vw, 94px) clamp(24px, 8vw, 100px) 64px;
 }
 
 .how-started-followup-description {
   max-width: 620px;
   margin: 0 0 clamp(54px, 4.4vw, 72px);
-  font-size: clamp(22px, 1.55vw, 34px);
-  line-height: 1.23;
+  font-size: clamp(25px, 1.85vw, 40px);
+  line-height: 1.25;
   letter-spacing: -0.035em;
 }
 
 .how-started-quote {
+  position: relative;
   max-width: 650px;
-  margin: 0 0 clamp(66px, 5vw, 82px);
+  margin: 0 0 clamp(40px, 3.2vw, 52px);
   padding-left: 24px;
-  border-left: 2px solid #000;
   font-size: clamp(23px, 2.05vw, 34px);
   font-weight: 700;
   line-height: 1.28;
   letter-spacing: -0.04em;
+}
+
+.how-started-quote::before {
+  content: '';
+  position: absolute;
+  top: 0.58em;
+  bottom: 0.58em;
+  left: 0;
+  width: 2px;
+  background: #000;
+}
+
+.how-started-goal {
+  margin-top: clamp(40px, 4vw, 64px);
 }
 
 .how-started-quote p,
@@ -431,21 +459,24 @@ body {
 .how-started-goal p {
   margin-bottom: 10px;
   color: #666;
-  font-size: clamp(28px, 2.55vw, 42px);
+  font-size: clamp(31px, 2.9vw, 48px);
   font-weight: 700;
+  font-style: italic;
   line-height: 1;
 }
 
 .how-started-goal strong {
   display: block;
-  max-width: 680px;
-  font-size: clamp(22px, 2.05vw, 34px);
-  line-height: 1.25;
+  max-width: 720px;
+  font-size: clamp(25px, 2.35vw, 40px);
+  font-style: italic;
+  line-height: 1.27;
   letter-spacing: -0.04em;
 }
 
 .how-started-followup-media {
   position: relative;
+  width: 100%;
   min-height: 0;
 }
 
@@ -465,8 +496,10 @@ body {
 
 .how-started-followup-image {
   position: relative;
+  width: 100%;
   height: 100%;
   min-height: 0;
+  overflow: hidden;
 }
 
 /* About > Philosophy: 아이콘은 추후 추가하며, 원칙 텍스트는 대각선 흐름으로 배치 */
@@ -481,8 +514,10 @@ body {
 
 .philosophy-title-row {
   display: flex;
-  align-items: end;
-  gap: clamp(28px, 4vw, 64px);
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: clamp(8px, 1vw, 16px);
   margin-top: clamp(38px, 4vw, 64px);
 }
 
@@ -504,6 +539,7 @@ body {
 
 .philosophy-heading {
   margin: 0;
+  margin-left: -0.17em;
   font-size: clamp(54px, 5.8vw, 96px);
   font-style: italic;
   font-weight: 800;
@@ -552,6 +588,8 @@ body {
 
 .philosophy-principle-2 {
   margin-top: clamp(90px, 12vw, 195px);
+  text-align: right;
+  margin-left: auto;
 }
 
 .philosophy-principle-3 {
@@ -560,22 +598,14 @@ body {
 
 .philosophy-principle-4 {
   margin-top: clamp(100px, 14vw, 230px);
-  /* 우측 카드지만 제목은 시안처럼 중앙 쪽으로 길게 뻗는다. */
-  max-width: none;
-  margin-left: clamp(-150px, -8vw, -64px);
-}
-
-.philosophy-principle-4 h3 {
-  white-space: nowrap;
-}
-
-.philosophy-principle-4 p {
-  margin-left: clamp(80px, 10vw, 164px);
+  text-align: right;
+  margin-left: auto;
 }
 
 /* 각 원칙은 확대되며 제자리로 들어와, 쌓이는 레이어 감각을 만든다. */
 .philosophy-pop {
   opacity: 0;
+  transform-origin: left;
   transform: translateY(24px) scale(0.94);
   transition:
     opacity 0.45s ease-out,
@@ -652,8 +682,15 @@ body {
   padding-left: 34px;
 }
 
+.journey-timeline--2026 {
+  margin-top: -43px;
+}
+
 .journey-timeline-item {
   position: relative;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
   padding-bottom: clamp(28px, 2.6vw, 40px);
 }
 
@@ -683,20 +720,34 @@ body {
 }
 
 .journey-date {
-  margin: 0 0 4px;
-  font-size: clamp(15px, 1.1vw, 18px);
+  flex: 0 0 auto;
+  min-width: 100px;
+  margin: 0;
+  font-size: clamp(23px, 2vw, 34px);
   font-weight: 700;
 }
 
 .journey-milestone {
   margin: 0;
-  max-width: 480px;
-  font-size: clamp(15px, 1.1vw, 18px);
+  white-space: nowrap;
+  font-size: clamp(18px, 1.4vw, 23px);
   line-height: 1.4;
 }
 
 .journey-milestone--bold {
   font-weight: 700;
+}
+
+.journey-logo-badge {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin-left: 6px;
+  border-radius: 50%;
+  overflow: hidden;
+  vertical-align: middle;
+  transform: translateY(-2px);
 }
 
 .journey-photo {
@@ -713,6 +764,80 @@ body {
     order: -1;
     aspect-ratio: 4 / 5;
     min-height: 0;
+  }
+}
+
+/* History 스크롤 pin + 사진 크로스페이드 (JourneyPin 컴포넌트) */
+.journey-pin-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 62.25fr) minmax(0, 37.75fr);
+  align-items: stretch;
+  margin-top: clamp(56px, 6vw, 96px);
+  background: #fff;
+}
+
+.journey-pin-left {
+  padding: clamp(48px, 5vw, 80px) clamp(24px, 3vw, 48px);
+}
+
+.journey-year-title--pin {
+  margin-top: clamp(48px, 5vw, 80px);
+}
+
+.journey-pin-right {
+  position: relative;
+  width: 100%;
+  min-height: 0;
+}
+
+.journey-photo-frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.journey-photo-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.journey-photo-slide.active {
+  opacity: 1;
+}
+
+.journey-timeline-item--active .journey-dot {
+  transform: scale(1.5);
+}
+
+.journey-timeline-item--active .journey-milestone {
+  font-weight: 700;
+}
+
+.journey-dot,
+.journey-milestone {
+  transition:
+    transform 0.3s ease,
+    font-weight 0.2s ease;
+}
+
+@media (max-width: 767px) {
+  .journey-pin-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-photo-frame {
+    position: relative;
+    top: 0;
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
+
+  .journey-milestone {
+    white-space: normal;
   }
 }
 
@@ -1096,6 +1221,10 @@ body {
     grid-template-columns: 1fr;
   }
 
+  .about-intro-image {
+    aspect-ratio: 4 / 5;
+  }
+
   .about-intro-copy {
     padding: 48px 24px 56px;
   }
@@ -1156,7 +1285,7 @@ body {
   .how-started-followup-description,
   .how-started-quote,
   .how-started-goal strong {
-    font-size: 20px;
+    font-size: 23px;
   }
 
   .philosophy-content {
@@ -1173,7 +1302,7 @@ body {
   }
 
   .philosophy-heading {
-    margin: 0 0 20px;
+    margin: 0 0 20px -0.17em;
     white-space: normal;
   }
 
@@ -1187,18 +1316,6 @@ body {
   .philosophy-principle-3,
   .philosophy-principle-4 {
     margin-top: 0;
-  }
-
-  .philosophy-principle-4 {
-    margin-left: 0;
-  }
-
-  .philosophy-principle-4 h3 {
-    white-space: normal;
-  }
-
-  .philosophy-principle-4 p {
-    margin-left: 0;
   }
 }
 

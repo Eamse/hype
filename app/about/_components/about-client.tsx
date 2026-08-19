@@ -4,12 +4,14 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import Image from 'next/image';
 import SubTabBar from '@/components/sub-tab-bar';
 import StatsBar from './stats-bar';
+import JourneyPin from './journey-pin';
 
 const SECTIONS = [
   { id: 'introduction', label: 'Introduction' },
-  { id: 'history', label: 'History' },
-  { id: 'philosophy', label: 'Philosophy' },
   { id: 'achievement', label: 'Achievement' },
+  { id: 'story', label: 'Story' },
+  { id: 'philosophy', label: 'Philosophy' },
+  { id: 'history', label: 'History' },
 ];
 
 type JourneyItem = {
@@ -204,10 +206,7 @@ export default function AboutClient({
             targets.forEach((target) => {
               const delay = Number(target.dataset.historyReveal ?? 0);
               timers.push(
-                window.setTimeout(
-                  () => target.classList.add('visible'),
-                  delay,
-                ),
+                window.setTimeout(() => target.classList.add('visible'), delay),
               );
             });
           } else {
@@ -246,8 +245,8 @@ export default function AboutClient({
             style={{
               scrollMarginTop: 106,
               minHeight: '50vh',
-              // History의 첫 사진은 섹션 시작 지점부터 전체 폭으로 보여준다.
-              paddingTop: section.id === 'history' ? 0 : 60,
+              // Story의 첫 사진은 섹션 시작 지점부터 전체 폭으로 보여준다.
+              paddingTop: section.id === 'story' ? 0 : 60,
               borderBottom: '1px solid #000',
             }}
           >
@@ -261,19 +260,28 @@ export default function AboutClient({
                       alt="Hype Wedding"
                       fill
                       className="object-cover"
+                      // style={{ objectPosition: 'center', transform: 'scale(1.15) translateY(-8%)' }}
                       priority
                       sizes="(min-width: 768px) 50vw, 100vw"
                     />
-                    <div className="absolute top-[30px] left-[25px] text-white">
-                      <p className="text-sm tracking-[3px]">01</p>
-                      <p className="text-2xl font-bold tracking-wide">
-                        ABOUT US
-                      </p>
-                    </div>
                   </div>
 
                   {/* 우측 55% 텍스트 */}
                   <div ref={introRef} className="about-intro-copy">
+                    <p
+                      data-reveal
+                      data-reveal-delay="0"
+                      className="about-intro-number about-rise"
+                    >
+                      01
+                    </p>
+                    <p
+                      data-reveal
+                      data-reveal-delay="0"
+                      className="about-intro-eyebrow about-rise"
+                    >
+                      ABOUT US
+                    </p>
                     <h2
                       data-reveal
                       data-reveal-delay="0"
@@ -287,9 +295,9 @@ export default function AboutClient({
                       className="about-intro-body about-fade"
                     >
                       <strong>Hype Wedding</strong> curates every detail of your
-                      Korean pre-wedding — from award-winning photographers to
-                      top-tier hair, makeup, and styling — so all you have to do
-                      is show up and be yourselves.
+                      Korean pre-wedding — from Korea&apos;s leading
+                      photographers to top-tier hair, makeup, and styling — so
+                      all you have to do is show up and be yourselves.
                     </p>
                     <p
                       data-reveal
@@ -307,14 +315,23 @@ export default function AboutClient({
                       data-reveal-delay="700"
                       className="about-intro-quote about-fade-slow"
                     >
-                      &quot;Bringing Korea&apos;s finest wedding artistry to the
-                      world — with full transparency and zero stress.&quot;
+                      &quot;Bringing Korea&apos;s finest wedding
+                      <br />
+                      artistry to the world
+                      <br />— with full transparency and zero stress.&quot;
                     </p>
                   </div>
                 </div>
+              </>
+            ) : section.id === 'achievement' ? (
+              <>
+                <div className="journey-header">
+                  <p className="journey-number">02</p>
+                  <p className="journey-eyebrow">ACHIEVEMENT</p>
+                </div>
                 <StatsBar />
               </>
-            ) : section.id === 'history' ? (
+            ) : section.id === 'story' ? (
               <>
                 {/* part 1: 텍스트 좌 / 이미지 우 — Minju */}
                 <div ref={startedRef} className="how-started-layout">
@@ -323,7 +340,7 @@ export default function AboutClient({
                       data-history-reveal="0"
                       className="how-started-number history-rise"
                     >
-                      02
+                      03
                     </p>
                     <p
                       data-history-reveal="100"
@@ -343,12 +360,21 @@ export default function AboutClient({
                       data-history-reveal="420"
                       className="how-started-description history-rise"
                     >
-                      Co-founder <strong>Minju</strong>, while living abroad,
-                      flew back to Korea to shoot her own pre-wedding with her
-                      fiancé. When she shared them overseas, the response was
-                      instant:{' '}
-                      <strong>&quot;How do I get this done?&quot;</strong>
+                      <strong>Minju</strong> was living abroad when she flew
+                      back to Korea to shoot her own pre-wedding photos. When
+                      she shared the final gallery with friends overseas, the
+                      reaction was instant: &quot;Wait, this is a thing? How do
+                      I get this done?&quot;
                     </p>
+                    <blockquote
+                      data-history-reveal="600"
+                      className="how-started-quote history-quote-lift"
+                    >
+                      <p>
+                        &quot;What if I could connect global couples to the same
+                        artists, the same quality, the same experience?&quot;
+                      </p>
+                    </blockquote>
                   </div>
                   <div className="how-started-image">
                     <Image
@@ -374,26 +400,21 @@ export default function AboutClient({
                       data-history-reveal="120"
                       className="how-started-followup-description history-rise"
                     >
-                      She brought the idea to <strong>Morgan</strong>, who had
-                      spent years abroad herself. Both knew firsthand what
-                      international couples need — and what they worry about.
+                      She brought that idea to <strong>Morgan</strong>, who had
+                      worked with Minju abroad. Both knew firsthand what
+                      international couples need, and what they worry about:
+                      unfamiliar vendors, language barriers, hidden costs, and
+                      the fear of getting a different result from what was
+                      promised.
                     </p>
-                    <blockquote
-                      data-history-reveal="300"
-                      className="how-started-quote history-quote-lift"
-                    >
-                      <p>
-                        &quot;Transparency isn&apos;t a feature — it&apos;s how
-                        we operate.&quot;
-                      </p>
-                    </blockquote>
                     <p
                       data-history-reveal="500"
                       className="how-started-followup-description history-rise"
                     >
                       Together they returned to Korea in 2025, flew to Jeju, and
-                      met top-tier photographers face to face — building real
-                      partnerships from the ground up.
+                      met top-tier photographers face to face, building real
+                      partnerships from the ground up.{' '}
+                      <strong>And that&apos;s how Hype Wedding began.</strong>
                     </p>
                     <div
                       data-history-reveal="700"
@@ -401,8 +422,9 @@ export default function AboutClient({
                     >
                       <p>THE GOAL</p>
                       <strong>
-                        Same quality, same artists, fully transparent — minus
-                        the stress.
+                        Top Korean artists. Full transparency.
+                        <br />
+                        Zero stress.
                       </strong>
                     </div>
                   </div>
@@ -413,6 +435,11 @@ export default function AboutClient({
                         alt="Saeyoung (Morgan), Co-founder"
                         fill
                         className="object-cover"
+                        style={{
+                          objectPosition: 'top',
+                          transform: 'scale(1.25)',
+                          transformOrigin: 'top',
+                        }}
                       />
                       <div className="how-started-followup-caption">
                         <p className="font-bold">Saeyoung (Morgan)</p>
@@ -423,85 +450,87 @@ export default function AboutClient({
                 </div>
               </>
             ) : section.id === 'philosophy' ? (
-              <div ref={philosophyRef} className="philosophy-content">
-                <div className="philosophy-intro">
-                  <div>
-                    <p
-                      data-philosophy-reveal="0"
-                      className="philosophy-number philosophy-pop"
+              <>
+                <div ref={philosophyRef} className="philosophy-content">
+                  <div className="philosophy-intro">
+                    <div>
+                      <p
+                        data-philosophy-reveal="0"
+                        className="philosophy-number philosophy-pop"
+                      >
+                        04
+                      </p>
+                      <p
+                        data-philosophy-reveal="80"
+                        className="philosophy-eyebrow philosophy-pop"
+                      >
+                        PHILOSOPHY
+                      </p>
+                    </div>
+                  </div>
+                  <div className="philosophy-title-row">
+                    <h2
+                      data-philosophy-reveal="180"
+                      className="philosophy-heading philosophy-pop"
                     >
-                      03
-                    </p>
+                      What we believe in
+                    </h2>
                     <p
-                      data-philosophy-reveal="80"
-                      className="philosophy-eyebrow philosophy-pop"
+                      data-philosophy-reveal="280"
+                      className="philosophy-summary philosophy-pop"
                     >
-                      PHILOSOPHY
+                      Four principles that guide every decision
                     </p>
                   </div>
-                </div>
-                <div className="philosophy-title-row">
-                  <h2
-                    data-philosophy-reveal="180"
-                    className="philosophy-heading philosophy-pop"
-                  >
-                    What we believe in
-                  </h2>
-                  <p
-                    data-philosophy-reveal="280"
-                    className="philosophy-summary philosophy-pop"
-                  >
-                    Four principles that guide every decision
-                  </p>
-                </div>
 
-                <div className="philosophy-principles">
-                  <article
-                    data-philosophy-reveal="420"
-                    className="philosophy-principle philosophy-principle-1 philosophy-pop"
-                  >
-                    <h3>The Korean Edit</h3>
-                    <p>
-                      Korean beauty trends meet high-fashion editorial — never
-                      cookie-cutter.
-                    </p>
-                  </article>
-                  <article
-                    data-philosophy-reveal="560"
-                    className="philosophy-principle philosophy-principle-2 philosophy-pop"
-                  >
-                    <h3>Coast to Concrete</h3>
-                    <p>
-                      From Jeju&apos;s wild landscapes to Seoul&apos;s urban
-                      grit — one country, endless contrast.
-                    </p>
-                  </article>
-                  <article
-                    data-philosophy-reveal="700"
-                    className="philosophy-principle philosophy-principle-3 philosophy-pop"
-                  >
-                    <h3>Authenticity</h3>
-                    <p>
-                      We capture what&apos;s genuine — your chemistry,
-                      unscripted.
-                    </p>
-                  </article>
-                  <article
-                    data-philosophy-reveal="840"
-                    className="philosophy-principle philosophy-principle-4 philosophy-pop"
-                  >
-                    <h3>Effortless. End to End.</h3>
-                    <p>
-                      From first inquiry to final gallery — we handle everything
-                      so you don&apos;t have to.
-                    </p>
-                  </article>
+                  <div className="philosophy-principles">
+                    <article
+                      data-philosophy-reveal="420"
+                      className="philosophy-principle philosophy-principle-1 philosophy-pop"
+                    >
+                      <h3>The Korean Edit</h3>
+                      <p>
+                        Korean beauty trends meet high-fashion editorial — never
+                        cookie-cutter.
+                      </p>
+                    </article>
+                    <article
+                      data-philosophy-reveal="560"
+                      className="philosophy-principle philosophy-principle-2 philosophy-pop"
+                    >
+                      <h3>Coast to Concrete</h3>
+                      <p>
+                        From Jeju&apos;s wild landscapes to Seoul&apos;s urban
+                        grit — one country, endless contrast.
+                      </p>
+                    </article>
+                    <article
+                      data-philosophy-reveal="700"
+                      className="philosophy-principle philosophy-principle-3 philosophy-pop"
+                    >
+                      <h3>Authenticity</h3>
+                      <p>
+                        We capture what&apos;s genuine — your chemistry,
+                        unscripted.
+                      </p>
+                    </article>
+                    <article
+                      data-philosophy-reveal="840"
+                      className="philosophy-principle philosophy-principle-4 philosophy-pop"
+                    >
+                      <h3>Effortless. End to End.</h3>
+                      <p>
+                        From first inquiry to final gallery — we handle
+                        everything so you don&apos;t have to.
+                      </p>
+                    </article>
+                  </div>
                 </div>
-              </div>
-            ) : section.id === 'achievement' ? (
+              </>
+            ) : section.id === 'history' ? (
               <>
                 <div className="journey-header">
-                  <p className="journey-number">04</p>
+                  <p className="journey-number">05</p>
                   <p className="journey-eyebrow">HISTORY</p>
                   <h2 className="journey-heading">Our journey so far.</h2>
                   <p className="journey-subtext">
@@ -510,75 +539,7 @@ export default function AboutClient({
                   </p>
                 </div>
 
-                {/* 2025 */}
-                <div className="journey-year-block">
-                  <div className="journey-year-copy">
-                    <p className="journey-year-title journey-year-title--2025">
-                      2025
-                    </p>
-                    <div className="journey-timeline">
-                      {JOURNEY_2025.map((item, idx) => (
-                        <div key={idx} className="journey-timeline-item">
-                          <span className="journey-dot" />
-                          <p className="journey-date">{item.date}</p>
-                          <p
-                            className={
-                              item.bold
-                                ? 'journey-milestone journey-milestone--bold'
-                                : 'journey-milestone'
-                            }
-                          >
-                            {item.content}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* 사진은 별도 전달 예정 — 자리만 확보 */}
-                  <div className="journey-photo">
-                    <Image
-                      src="/about/journey-2025.jpg"
-                      alt="2025"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-
-                {/* 2026 */}
-                <div className="journey-year-block">
-                  <div className="journey-year-copy">
-                    <p className="journey-year-title journey-year-title--2026">
-                      2026
-                    </p>
-                    <div className="journey-timeline">
-                      {JOURNEY_2026.map((item, idx) => (
-                        <div key={idx} className="journey-timeline-item">
-                          <span className="journey-dot" />
-                          <p className="journey-date">{item.date}</p>
-                          <p
-                            className={
-                              item.bold
-                                ? 'journey-milestone journey-milestone--bold'
-                                : 'journey-milestone'
-                            }
-                          >
-                            {item.content}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* 사진은 별도 전달 예정 — 자리만 확보 */}
-                  <div className="journey-photo">
-                    <Image
-                      src="/about/journey-2026.jpg"
-                      alt="2026"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
+                <JourneyPin journey2025={JOURNEY_2025} journey2026={JOURNEY_2026} />
               </>
             ) : (
               <>

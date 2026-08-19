@@ -69,21 +69,21 @@ function StatColumn({ stat, start, delay }: { stat: Stat; start: boolean; delay:
   return (
     <div className="flex-1 px-6 last:pr-0">
       {/* 모든 컬럼에 동일한 높이를 예약해서 숫자 줄 baseline을 맞춤 */}
-      <p className="text-sm font-bold italic mb-0.5 h-5 leading-5">
+      <p className="text-base font-bold italic mb-0.5 h-6 leading-6">
         {stat.topLabel ?? ' '}
       </p>
       <div className="flex items-baseline gap-2">
-        <span className="text-4xl md:text-5xl font-bold italic tracking-tight">
+        <span className="text-5xl md:text-6xl font-bold italic tracking-tight">
           {value}
           {stat.suffix}
         </span>
         {stat.label && (
-          <span className="text-lg md:text-xl font-bold italic">
+          <span className="text-xl md:text-2xl font-bold italic">
             {stat.label}
           </span>
         )}
       </div>
-      <p className="text-sm text-gray-500 mt-2 leading-snug">{stat.sublabel}</p>
+      <p className="text-base text-gray-500 mt-2 leading-snug">{stat.sublabel}</p>
     </div>
   );
 }
@@ -108,7 +108,7 @@ export default function StatsBar() {
   return (
     <div
       ref={ref}
-      className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-black/15 py-12"
+      className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-black/15 py-20"
     >
       {STATS.map((stat, idx) => (
         <StatColumn
