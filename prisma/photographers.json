@@ -80,8 +80,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 25 + Color Correction: 15",
-              "priceSNS": 2690,
-              "priceNoSNS": 2830
+              "priceSNS": 2730,
+              "priceNoSNS": 2870
             },
             {
               "name": "Package B",
@@ -152,8 +152,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 25 + Color Correction: 15",
-              "priceSNS": 2700,
-              "priceNoSNS": 2835
+              "priceSNS": 2740,
+              "priceNoSNS": 2880
             },
             {
               "name": "Package C",
@@ -229,8 +229,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 25 + Color Correction: 15",
-              "priceSNS": 2835,
-              "priceNoSNS": 2975
+              "priceSNS": 2880,
+              "priceNoSNS": 3020
             }
           ]
         },
@@ -303,8 +303,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 25 + Color Correction: 15",
-              "priceSNS": 2415,
-              "priceNoSNS": 2555
+              "priceSNS": 2450,
+              "priceNoSNS": 2590
             },
             {
               "name": "Package B",
@@ -370,8 +370,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 25 + Color Correction: 15",
-              "priceSNS": 2425,
-              "priceNoSNS": 2560
+              "priceSNS": 2455,
+              "priceNoSNS": 2595
             },
             {
               "name": "Package C",
@@ -442,8 +442,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 25 + Color Correction: 15",
-              "priceSNS": 2560,
-              "priceNoSNS": 2700
+              "priceSNS": 2595,
+              "priceNoSNS": 2740
             }
           ]
         }
@@ -533,8 +533,8 @@
           "originalPhotos": "1,000+",
           "retouched": 30,
           "retouchedDetail": "Customer Selected: 30",
-          "priceSNS": 2350,
-          "priceNoSNS": 2440
+          "priceSNS": 2450,
+          "priceNoSNS": 2545
         },
         {
           "name": "Package B",
@@ -615,8 +615,8 @@
           "originalPhotos": "1,000+",
           "retouched": 30,
           "retouchedDetail": "Customer Selected: 30",
-          "priceSNS": 2415,
-          "priceNoSNS": 2505
+          "priceSNS": 2520,
+          "priceNoSNS": 2610
         },
         {
           "name": "Package C",
@@ -697,8 +697,8 @@
           "originalPhotos": "1,000+",
           "retouched": 30,
           "retouchedDetail": "Customer Selected: 30",
-          "priceSNS": 2465,
-          "priceNoSNS": 2555
+          "priceSNS": 2570,
+          "priceNoSNS": 2665
         }
       ]
     },
@@ -772,8 +772,8 @@
           "originalPhotos": "1,000+",
           "retouched": 60,
           "retouchedDetail": "Detailed retouch: 30 (each in 3 tones: Natural / Film / B&W) + Color correction only: 30",
-          "priceSNS": 2285,
-          "priceNoSNS": 2375
+          "priceSNS": 2385,
+          "priceNoSNS": 2480
         },
         {
           "name": "Package B",
@@ -840,8 +840,8 @@
           "originalPhotos": "1,000+",
           "retouched": 60,
           "retouchedDetail": "Detailed retouch: 30 (each in 3 tones: Natural / Film / B&W) + Color correction only: 30",
-          "priceSNS": 2415,
-          "priceNoSNS": 2505
+          "priceSNS": 2520,
+          "priceNoSNS": 2610
         },
         {
           "name": "Package C",
@@ -908,8 +908,8 @@
           "originalPhotos": "1,000+",
           "retouched": 60,
           "retouchedDetail": "Detailed retouch: 30 (each in 3 tones: Natural / Film / B&W) + Color correction only: 30",
-          "priceSNS": 2430,
-          "priceNoSNS": 2520
+          "priceSNS": 2530,
+          "priceNoSNS": 2625
         },
         {
           "name": "Package D",
@@ -976,8 +976,8 @@
           "originalPhotos": "1,000+",
           "retouched": 60,
           "retouchedDetail": "Detailed retouch: 30 (each in 3 tones: Natural / Film / B&W) + Color correction only: 30",
-          "priceSNS": 2465,
-          "priceNoSNS": 2555
+          "priceSNS": 2570,
+          "priceNoSNS": 2665
         }
       ]
     },
@@ -1056,8 +1056,8 @@
               "originalPhotos": "1,000+",
               "retouched": 25,
               "retouchedDetail": "Customer Selected: 25 +Special Offer: 2 color tones (Natural / B&W)",
-              "priceSNS": 2375,
-              "priceNoSNS": 2375
+              "priceSNS": 2480,
+              "priceNoSNS": 2480
             },
             {
               "name": "Package B",
@@ -1123,8 +1123,8 @@
               "originalPhotos": "1,000+",
               "retouched": 25,
               "retouchedDetail": "Customer Selected: 25 +Special Offer: 2 color tones (Natural / B&W)",
-              "priceSNS": 2520,
-              "priceNoSNS": 2520
+              "priceSNS": 2625,
+              "priceNoSNS": 2625
             },
             {
               "name": "Package C",
@@ -1190,8 +1190,8 @@
               "originalPhotos": "1,000+",
               "retouched": 25,
               "retouchedDetail": "Customer Selected: 25 +Special Offer: 2 color tones (Natural / B&W)",
-              "priceSNS": 2555,
-              "priceNoSNS": 2555
+              "priceSNS": 2665,
+              "priceNoSNS": 2665
             },
             {
               "name": "Package D",
@@ -1262,8 +1262,8 @@
               "originalPhotos": "1,000+",
               "retouched": 25,
               "retouchedDetail": "Customer Selected: 25 +Special Offer: 2 color tones (Natural / B&W)",
-              "priceSNS": 2650,
-              "priceNoSNS": 2650
+              "priceSNS": 2765,
+              "priceNoSNS": 2765
             }
           ]
         },
@@ -1273,7 +1273,7 @@
           "instagram": "@rosemarry_snap",
           "packages": [
             {
-              "name": "Package B",
+              "name": "Package A",
               "subtitle": "Rosemarry & Han Scene, K Salon",
               "partners": {
                 "dress": {
@@ -1333,11 +1333,11 @@
               "originalPhotos": "1,000+",
               "retouched": 25,
               "retouchedDetail": "Customer Selected: 25 +Special Offer: 2 color tones (Natural / B&W)",
-              "priceSNS": 3095,
-              "priceNoSNS": 3095
+              "priceSNS": 3225,
+              "priceNoSNS": 3225
             },
             {
-              "name": "Package C",
+              "name": "Package B",
               "subtitle": "Rosemarry & Han Scene, Deibe",
               "partners": {
                 "hmu": {
@@ -1401,11 +1401,11 @@
               "originalPhotos": "1,000+",
               "retouched": 25,
               "retouchedDetail": "Customer Selected: 25 +Special Offer: 2 color tones (Natural / B&W)",
-              "priceSNS": 3235,
-              "priceNoSNS": 3235
+              "priceSNS": 3375,
+              "priceNoSNS": 3375
             },
             {
-              "name": "Package D",
+              "name": "Package C",
               "subtitle": "Rosemarry & Han Scene, Jeju You 1",
               "partners": {
                 "hmu": {
@@ -1469,81 +1469,8 @@
               "originalPhotos": "1,000+",
               "retouched": 25,
               "retouchedDetail": "Customer Selected: 25 +Special Offer: 2 color tones (Natural / B&W)",
-              "priceSNS": 3270,
-              "priceNoSNS": 3270
-            },
-            {
-              "name": "Package E",
-              "subtitle": "Rosemarry & Han Scene, Ettera",
-              "partners": {
-                "hmu": {
-                  "name": "Ettera",
-                  "instagram": "@ettera__official"
-                },
-                "dress": {
-                  "name": "Ettera",
-                  "instagram": "@ettera__official"
-                },
-                "suit": {
-                  "name": "The Suit Homme",
-                  "instagram": "@thesuit_rentalcenter"
-                },
-                "bouquet": {
-                  "name": "Hatt",
-                  "instagram": "@hatt__flower"
-                }
-              },
-              "inclusiveItems": [
-                "Photography Session",
-                "Hair & Makeup for Bride and Groom",
-                "2 Dress (Shoes NOT included)",
-                "2 Suits (Shirt and shoes NOT included)",
-                "Accessories (Veil, Earrings, Hair acc)",
-                "Stylist (On Shoot Day)",
-                "1 Fresh Flower Bouquet",
-                "4K Cinematic Videography (3-4 min video + 15-30 sec highlight)",
-                "Interpreter (On Shoot Day)",
-                "Private Van with Driver (On Shoot Day)"
-              ],
-              "addons": [
-                {
-                  "name": "Ettera Dress Upgrade",
-                  "price": 220,
-                  "desc": "Basic dresses: No extra charge. Upgrade line (non-basic): USD 220 per dress. Can be paid on-site by credit card."
-                },
-                {
-                  "name": "Film Photography",
-                  "price": 128,
-                  "desc": "2 rolls of Film included. Inclusive Printing & Scanning service fee."
-                },
-                {
-                  "name": "Additional Shooting Time and Location",
-                  "price": 128,
-                  "desc": "Based on 1 hour and 1 location. Additional stylist accompaniment fees apply for time extension. Available upon booking."
-                },
-                {
-                  "name": "Studio Photography Addition",
-                  "price": 85,
-                  "desc": "Includes Studio Rental. 2 hours of studio photography before outdoor shooting. Additional stylist accompaniment, interpreter and transportation fees apply for time extension. Note: Props such as confetti must be prepared by the couple with advanced notification to Hype Wedding."
-                },
-                {
-                  "name": "Premium Leather Album",
-                  "price": null,
-                  "desc": "30 Pages: USD 170. Size: 10x14 inch Album + Leather Cover. Production: approx. 3 weeks. Shipped directly to customer. All shipping costs are the customer's responsibility."
-                },
-                {
-                  "name": "Express Retouching Service",
-                  "price": 124,
-                  "desc": "Completed within 7-10 days from photo selection date."
-                }
-              ],
-              "shootingTime": "5 hours",
-              "locations": "3-4 sites",
-              "originalPhotos": "1,000+",
-              "retouched": 25,
-              "retouchedDetail": "Customer Selected: 25 +Special Offer: 2 color tones (Natural / B&W)",
-              "priceSNS": 3370,
-              "priceNoSNS": 3370
+              "priceSNS": 3410,
+              "priceNoSNS": 3410
             }
           ]
         }
@@ -1629,8 +1556,8 @@
           "originalPhotos": "1,000+",
           "retouched": 20,
           "retouchedDetail": "Customer Selected: 20 (Retouched + Color Correction)",
-          "priceSNS": 2750,
-          "priceNoSNS": 2840
+          "priceSNS": 2870,
+          "priceNoSNS": 2960
         },
         {
           "name": "Package B",
@@ -1707,8 +1634,8 @@
           "originalPhotos": "1,000+",
           "retouched": 20,
           "retouchedDetail": "Customer Selected: 20 (Retouched + Color Correction)",
-          "priceSNS": 2565,
-          "priceNoSNS": 2650
+          "priceSNS": 2675,
+          "priceNoSNS": 2765
         },
         {
           "name": "Package C",
@@ -1790,8 +1717,8 @@
           "originalPhotos": "1,000+",
           "retouched": 20,
           "retouchedDetail": "Customer Selected: 20 (Retouched + Color Correction)",
-          "priceSNS": 2705,
-          "priceNoSNS": 2795
+          "priceSNS": 2825,
+          "priceNoSNS": 2915
         }
       ]
     },
@@ -1864,8 +1791,8 @@
           "originalPhotos": "1,000+",
           "retouched": 30,
           "retouchedDetail": "Customer Selected: 25 + Photographer Selected: 5",
-          "priceSNS": 2355,
-          "priceNoSNS": 2445
+          "priceSNS": 2455,
+          "priceNoSNS": 2550
         },
         {
           "name": "Package B",
@@ -1931,8 +1858,8 @@
           "originalPhotos": "1,000+",
           "retouched": 30,
           "retouchedDetail": "Customer Selected: 25 + Photographer Selected: 5",
-          "priceSNS": 2430,
-          "priceNoSNS": 2520
+          "priceSNS": 2530,
+          "priceNoSNS": 2625
         },
         {
           "name": "Package C",
@@ -1998,8 +1925,8 @@
           "originalPhotos": "1,000+",
           "retouched": 30,
           "retouchedDetail": "Customer Selected: 25 + Photographer Selected: 5",
-          "priceSNS": 2530,
-          "priceNoSNS": 2615
+          "priceSNS": 2635,
+          "priceNoSNS": 2730
         },
         {
           "name": "Package D",
@@ -2070,8 +1997,8 @@
           "originalPhotos": "1,000+",
           "retouched": 30,
           "retouchedDetail": "Customer Selected: 25 + Photographer Selected: 5",
-          "priceSNS": 2645,
-          "priceNoSNS": 2735
+          "priceSNS": 2760,
+          "priceNoSNS": 2850
         }
       ]
     },
@@ -2161,8 +2088,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 20 + Photographer Selected: 20",
-              "priceSNS": 3040,
-              "priceNoSNS": 3130
+              "priceSNS": 3175,
+              "priceNoSNS": 3265
             },
             {
               "name": "Package B",
@@ -2239,8 +2166,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 20 + Photographer Selected: 20",
-              "priceSNS": 3050,
-              "priceNoSNS": 3140
+              "priceSNS": 3180,
+              "priceNoSNS": 3275
             },
             {
               "name": "Package C",
@@ -2317,8 +2244,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 20 + Photographer Selected: 20",
-              "priceSNS": 3080,
-              "priceNoSNS": 3170
+              "priceSNS": 3215,
+              "priceNoSNS": 3305
             }
           ]
         },
@@ -2402,8 +2329,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 20 + Photographer Selected: 20",
-              "priceSNS": 2685,
-              "priceNoSNS": 2775
+              "priceSNS": 2800,
+              "priceNoSNS": 2890
             },
             {
               "name": "Package B",
@@ -2480,8 +2407,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 20 + Photographer Selected: 20",
-              "priceSNS": 2690,
-              "priceNoSNS": 2780
+              "priceSNS": 2805,
+              "priceNoSNS": 2900
             },
             {
               "name": "Package C",
@@ -2558,8 +2485,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 20 + Photographer Selected: 20",
-              "priceSNS": 2725,
-              "priceNoSNS": 2815
+              "priceSNS": 2840,
+              "priceNoSNS": 2935
             }
           ]
         },
@@ -2643,8 +2570,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 20 + Photographer Selected: 20",
-              "priceSNS": 2595,
-              "priceNoSNS": 2685
+              "priceSNS": 2705,
+              "priceNoSNS": 2800
             },
             {
               "name": "Package B",
@@ -2721,8 +2648,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 20 + Photographer Selected: 20",
-              "priceSNS": 2600,
-              "priceNoSNS": 2690
+              "priceSNS": 2710,
+              "priceNoSNS": 2805
             },
             {
               "name": "Package C",
@@ -2799,8 +2726,8 @@
               "originalPhotos": "1,000+",
               "retouched": 40,
               "retouchedDetail": "Customer Selected: 20 + Photographer Selected: 20",
-              "priceSNS": 2635,
-              "priceNoSNS": 2725
+              "priceSNS": 2745,
+              "priceNoSNS": 2840
             }
           ]
         }
@@ -2866,8 +2793,8 @@
           "originalPhotos": "1,000+",
           "retouched": 25,
           "retouchedDetail": "Outdoor: 20 + Studio: 5 (Customer Selected)",
-          "priceSNS": 2490,
-          "priceNoSNS": 2580
+          "priceSNS": 2595,
+          "priceNoSNS": 2690
         }
       ]
     },
@@ -2941,8 +2868,8 @@
               "originalPhotos": "1,000+",
               "retouched": 30,
               "retouchedDetail": "Customer Selected: 30",
-              "priceSNS": 2735,
-              "priceNoSNS": 2910
+              "priceSNS": 2850,
+              "priceNoSNS": 3035
             },
             {
               "name": "Package B",
@@ -3003,8 +2930,8 @@
               "originalPhotos": "1,000+",
               "retouched": 30,
               "retouchedDetail": "Customer Selected: 30",
-              "priceSNS": 2805,
-              "priceNoSNS": 2985
+              "priceSNS": 2925,
+              "priceNoSNS": 3110
             },
             {
               "name": "Package C",
@@ -3070,8 +2997,8 @@
               "originalPhotos": "1,000+",
               "retouched": 30,
               "retouchedDetail": "Customer Selected: 30",
-              "priceSNS": 2830,
-              "priceNoSNS": 3010
+              "priceSNS": 2955,
+              "priceNoSNS": 3140
             }
           ]
         },
@@ -3139,8 +3066,8 @@
               "originalPhotos": "1,000+",
               "retouched": 30,
               "retouchedDetail": "Customer Selected: 30",
-              "priceSNS": 2500,
-              "priceNoSNS": 2690
+              "priceSNS": 2615,
+              "priceNoSNS": 2805
             },
             {
               "name": "Package B",
@@ -3201,8 +3128,8 @@
               "originalPhotos": "1,000+",
               "retouched": 30,
               "retouchedDetail": "Customer Selected: 30",
-              "priceSNS": 2580,
-              "priceNoSNS": 2760
+              "priceSNS": 2690,
+              "priceNoSNS": 2880
             },
             {
               "name": "Package C",
@@ -3268,8 +3195,8 @@
               "originalPhotos": "1,000+",
               "retouched": 30,
               "retouchedDetail": "Customer Selected: 30",
-              "priceSNS": 2605,
-              "priceNoSNS": 2785
+              "priceSNS": 2720,
+              "priceNoSNS": 2905
             }
           ]
         }
@@ -3330,8 +3257,8 @@
               "originalPhotos": "1,000+",
               "retouched": 35,
               "retouchedDetail": "Customer Selected: 35",
-              "priceSNS": 2585,
-              "priceNoSNS": 2585
+              "priceSNS": 2695,
+              "priceNoSNS": 2695
             },
             {
               "name": "Package B",
@@ -3377,8 +3304,8 @@
               "originalPhotos": "1,000+",
               "retouched": 35,
               "retouchedDetail": "Customer Selected: 35",
-              "priceSNS": 2450,
-              "priceNoSNS": 2450
+              "priceSNS": 2555,
+              "priceNoSNS": 2555
             }
           ]
         },
@@ -3431,8 +3358,8 @@
               "originalPhotos": "1,000+",
               "retouched": 35,
               "retouchedDetail": "Customer Selected: 35",
-              "priceSNS": 2780,
-              "priceNoSNS": 2780
+              "priceSNS": 2900,
+              "priceNoSNS": 2900
             },
             {
               "name": "Package B",
@@ -3478,8 +3405,8 @@
               "originalPhotos": "1,000+",
               "retouched": 35,
               "retouchedDetail": "Customer Selected: 35",
-              "priceSNS": 2845,
-              "priceNoSNS": 2845
+              "priceSNS": 2970,
+              "priceNoSNS": 2970
             }
           ]
         },
@@ -3532,8 +3459,8 @@
               "originalPhotos": "1,000+",
               "retouched": 35,
               "retouchedDetail": "Customer Selected: 35",
-              "priceSNS": 3125,
-              "priceNoSNS": 3125
+              "priceSNS": 3485,
+              "priceNoSNS": 3485
             },
             {
               "name": "Package B",
@@ -3579,8 +3506,8 @@
               "originalPhotos": "1,000+",
               "retouched": 35,
               "retouchedDetail": "Customer Selected: 35",
-              "priceSNS": 3340,
-              "priceNoSNS": 3340
+              "priceSNS": 3260,
+              "priceNoSNS": 3260
             }
           ]
         }
@@ -4030,7 +3957,9 @@
           "name": "Package C",
           "subtitle": "Snap Package (Photo Only)",
           "partners": {},
-          "inclusiveItems": ["Photography Session (Morning Shoot Only)"],
+          "inclusiveItems": [
+            "Photography Session (Morning Shoot Only)"
+          ],
           "addons": [
             {
               "name": "Interpreter (English)",
@@ -4340,7 +4269,9 @@
           "name": "Package B",
           "subtitle": "Eo.ways (3 hr) Snap",
           "partners": {},
-          "inclusiveItems": ["Photography Session"],
+          "inclusiveItems": [
+            "Photography Session"
+          ],
           "addons": [
             {
               "name": "Hair & Makeup for Bride and Groom",
@@ -4360,7 +4291,9 @@
           "name": "Package C",
           "subtitle": "Eo.ways (2 hr) Snap",
           "partners": {},
-          "inclusiveItems": ["Photography Session (Up to 1 Outfit)"],
+          "inclusiveItems": [
+            "Photography Session (Up to 1 Outfit)"
+          ],
           "addons": [
             {
               "name": "Hair & Makeup for Bride and Groom",

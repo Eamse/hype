@@ -58,6 +58,21 @@ export default function AccountsPanel() {
     setAccounts((prev) => prev.filter((a) => a.id !== id));
   }
 
+  async function handleUnlock(id: string) {
+    if (!confirm('잠금을 해제하시겠습니까?')) return;
+    const res = await fetch(`/api/admin/accounts/${id}/unlock`, {
+      method: 'POST',
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      alert(data.message);
+      return;
+    }
+    setAccounts((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, locked: false } : a)),
+    );
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       {/* 헤더 */}
@@ -249,6 +264,7 @@ export default function AccountsPanel() {
                     'Phone',
                     'Role',
                     'Active',
+                    'Locked',
                     'Joined At',
                     '',
                   ].map((h) => (
@@ -315,6 +331,35 @@ export default function AccountsPanel() {
                       >
                         {a.isActive ? 'Active' : 'Inactive'}
                       </span>
+                    </td>
+                    <td style={{ padding: '14px 16px' }}>
+                      {a.locked ? (
+                        <span
+                          onClick={() =>
+                            a.role !== 'master' && handleUnlock(a.id)
+                          }
+                          title={
+                            a.role === 'master'
+                              ? undefined
+                              : '클릭하여 잠금 해제'
+                          }
+                          style={{
+                            background: '#fce4ec',
+                            color: '#c62828',
+                            padding: '2px 8px',
+                            borderRadius: 4,
+                            fontSize: 11,
+                            fontWeight: 600,
+                            cursor: a.role === 'master' ? 'default' : 'pointer',
+                            textDecoration:
+                              a.role === 'master' ? 'none' : 'underline',
+                          }}
+                        >
+                          Locked
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: 11, color: '#000' }}>—</span>
+                      )}
                     </td>
                     <td
                       style={{

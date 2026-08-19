@@ -716,6 +716,381 @@ body {
   }
 }
 
+/* /offer — "What makes us different" 롱폼 스크롤 섹션 */
+.offer-page {
+  padding-inline: clamp(20px, 4vw, 64px);
+}
+
+.offer-header {
+  padding: clamp(72px, 8vw, 130px) 0 clamp(40px, 5vw, 72px);
+}
+
+.offer-number {
+  margin: 0 0 4px;
+  font-size: clamp(20px, 1.7vw, 28px);
+}
+
+.offer-eyebrow {
+  margin: 0 0 clamp(24px, 2.4vw, 38px);
+  font-size: clamp(28px, 2.5vw, 41px);
+  line-height: 1.1;
+}
+
+.offer-headline {
+  margin: 0;
+  max-width: 900px;
+  font-size: clamp(46px, 5vw, 84px);
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+
+.offer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  text-align: center;
+  padding: clamp(24px, 3vw, 48px) 0;
+}
+
+.offer-item-title {
+  margin: 0;
+  font-size: clamp(44px, 6vw, 96px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.offer-item-subtitle {
+  margin: clamp(16px, 1.6vw, 24px) 0 0;
+  font-size: clamp(16px, 1.6vw, 24px);
+  color: #666;
+}
+
+/* 헤더/각 항목 페이드·라이즈 — 벗어나면 리셋되어 재진입 시 다시 재생됨 */
+.offer-fade {
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+.offer-fade.visible {
+  opacity: 1;
+}
+
+.offer-rise {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.7s ease-out,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.offer-rise.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* /offer — "Our Service" 4컬럼 스펙 표 */
+.service-grid {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: clamp(60px, 8vw, 110px);
+}
+
+@media (min-width: 768px) {
+  .service-grid {
+    flex-direction: row;
+  }
+}
+
+.service-col {
+  flex: 1;
+  position: relative;
+  padding: 0 clamp(16px, 2vw, 32px);
+}
+
+.service-col:first-child {
+  padding-left: 0;
+}
+
+.service-col:last-child {
+  padding-right: 0;
+}
+
+/* 컬럼 사이 세로 구분선 — 컬럼 텍스트보다 살짝 먼저 페이드 */
+.service-divider {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  width: 1px;
+  background: #000;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+.service-divider.visible {
+  opacity: 0.15;
+}
+
+.service-col-title {
+  margin: 0 0 8px;
+  font-size: clamp(20px, 1.7vw, 26px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.service-col-tagline {
+  margin: 0 0 clamp(18px, 1.8vw, 26px);
+  font-size: clamp(14px, 1.1vw, 16px);
+  font-style: italic;
+  color: #666;
+  line-height: 1.35;
+}
+
+.service-col-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.7;
+  color: #000;
+}
+
+.service-col-list.bulleted {
+  padding-left: 18px;
+  list-style: disc;
+}
+
+.service-col-note {
+  margin-top: 6px;
+  font-size: 12px;
+  font-style: italic;
+  color: #888;
+}
+
+/* /offer — 3-1 Shoot Schedule */
+.schedule-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(16px, 2vw, 24px);
+  margin-bottom: clamp(40px, 5vw, 64px);
+}
+
+@media (max-width: 767px) {
+  .schedule-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.schedule-card {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  padding: clamp(24px, 2.4vw, 36px) clamp(20px, 2vw, 28px);
+  min-height: 220px;
+}
+
+.schedule-card--emphasis {
+  border: 2px solid #000;
+}
+
+.schedule-card-step {
+  margin: 0 0 6px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: #666;
+}
+
+.schedule-card-title {
+  margin: 0 0 18px;
+  font-size: clamp(20px, 1.8vw, 26px);
+  font-weight: 800;
+}
+
+.schedule-card-list {
+  margin: 0;
+  padding-left: 18px;
+  list-style: disc;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.schedule-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-bottom: clamp(60px, 7vw, 96px);
+  font-size: clamp(22px, 2.4vw, 34px);
+  font-weight: 800;
+  color: #3f6b52;
+}
+
+@keyframes timeline-arrow-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
+  }
+}
+
+.schedule-cta-arrow {
+  display: inline-block;
+  animation: timeline-arrow-bounce 1.4s ease-in-out infinite;
+}
+
+/* 카드 팝 — Step 03 강조 */
+.card-pop {
+  opacity: 0;
+  transform: translateY(24px) scale(0.95);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card-pop.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* /offer — 3-2 Shoot Day Timeline */
+.timeline-wrap {
+  padding-bottom: clamp(48px, 6vw, 80px);
+}
+
+.timeline-row {
+  display: grid;
+  grid-template-columns: 140px repeat(6, 1fr);
+  align-items: center;
+  column-gap: 4px;
+}
+
+.timeline-label {
+  font-size: clamp(15px, 1.3vw, 19px);
+  font-weight: 800;
+}
+
+.timeline-label-sub {
+  font-size: 12px;
+  font-weight: 400;
+  color: #666;
+  margin-left: 4px;
+}
+
+.timeline-label--summer {
+  color: #333;
+}
+
+.timeline-label--winter {
+  color: #3f6b52;
+}
+
+.timeline-time {
+  text-align: center;
+  font-size: clamp(13px, 1.1vw, 16px);
+  font-weight: 700;
+  color: #333;
+}
+
+.timeline-time--winter {
+  color: #3f6b52;
+}
+
+.timeline-line-row {
+  display: grid;
+  grid-template-columns: 140px repeat(6, 1fr);
+  height: 24px;
+}
+
+.timeline-connector-line {
+  grid-row: 1;
+  grid-column: 2 / -1;
+  align-self: center;
+  height: 2px;
+  background: #999;
+}
+
+.timeline-connector-line--winter {
+  background: #7fa38c;
+}
+
+.timeline-dot-cell {
+  grid-row: 1;
+  position: relative;
+  height: 100%;
+}
+
+.timeline-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #555;
+  transform: translate(-50%, -50%);
+}
+
+.timeline-dot--winter {
+  background: #3f6b52;
+}
+
+.timeline-boxes {
+  display: grid;
+  grid-template-columns: 140px repeat(6, 1fr);
+  column-gap: 4px;
+}
+
+.timeline-box {
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  min-height: 140px;
+  padding: 14px 12px;
+}
+
+.timeline-box-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.timeline-box-desc {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #444;
+}
+
+.timeline-box--finish {
+  background: #000;
+  color: #fff;
+}
+
+.timeline-box--finish .timeline-box-desc {
+  color: #ddd;
+}
+
+.timeline-footnotes {
+  margin: clamp(28px, 3vw, 44px) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #555;
+}
+
+@media (max-width: 900px) {
+  .timeline-row,
+  .timeline-boxes {
+    grid-template-columns: 90px repeat(6, minmax(90px, 1fr));
+  }
+  .timeline-wrap {
+    overflow-x: auto;
+  }
+}
+
 @media (max-width: 767px) {
   .about-intro-layout {
     grid-template-columns: 1fr;
