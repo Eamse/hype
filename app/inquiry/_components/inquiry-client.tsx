@@ -1,579 +1,225 @@
 'use client';
 
-import { useIsMobile } from '@/hooks/useIsMobile';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
+import {
+  Send,
+  PackageSearch,
+  FileSignature,
+  Wallet,
+  CalendarCheck,
+  Receipt,
+  Camera,
+  ArrowRight,
+} from 'lucide-react';
 
 // ── Google Form URLs ──────────────────────────────────────────────
 const WEDDING_FORM_URL = 'https://forms.gle/oJu6ZPBdhiLWaELDA'; // 웨딩
 const SNAP_FORM_URL = 'https://forms.gle/3sWqu4NED5ruJEnN9'; // 스냅
 
-const STEPS = [
+type Step = {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  badge?: string;
+};
+
+const ICON_PROPS = { size: 36, strokeWidth: 1.5 };
+
+const STEPS: Step[] = [
   {
-    icon: <InquiryIcon />,
-    title: 'Initial Inquiry',
-    bullets: [
-      'Fill out inquiry form',
-      'Tell us preferred dates',
-      'Receive initial info',
-    ],
+    icon: <Send {...ICON_PROPS} />,
+    title: 'Send Your Plan',
+    description: 'DM WhatsApp · Inquiry form · 1:1 consultation',
   },
   {
-    icon: <ConsultIcon />,
-    title: 'Free Consultation',
-    tag: 'Optional',
-    bullets: ['Discuss your vision', 'Review portfolios', 'Get detailed quote'],
+    icon: <PackageSearch {...ICON_PROPS} />,
+    title: 'Choose Package',
+    description: 'We match you with the right photographer',
   },
   {
-    icon: <ContractIcon />,
-    title: 'Booking Confirmation',
-    bullets: ['Sign contract', 'Pay 70% deposit', 'Get confirmation'],
+    icon: <FileSignature {...ICON_PROPS} />,
+    title: 'Sign Contract',
+    description: 'Full terms outlined — sign when comfortable',
+    badge: 'Secure Date',
   },
   {
-    icon: <PrepIcon />,
-    title: 'Pre-Shoot Preparation',
-    bullets: [
-      'Final consultation',
-      'Confirm weather plans',
-      'Share detailed schedule',
-      'Complete payment (1 week before)',
-    ],
+    icon: <Wallet {...ICON_PROPS} />,
+    title: 'Pay Deposit',
+    description:
+      '70% deposit to lock in your date within 7 days of the contract signing date',
   },
   {
-    icon: <CameraIcon />,
-    title: 'Shoot Day & Delivery',
-    bullets: [
-      'Professional shoot',
-      'Edited photos in 8-9 weeks',
-      'Download via shared cloud',
-      'Complete payment (1 week before)',
-    ],
+    icon: <CalendarCheck {...ICON_PROPS} />,
+    title: 'Planning & Coordination',
+    description: 'We coordinate every detail for you',
+  },
+  {
+    icon: <Receipt {...ICON_PROPS} />,
+    title: 'Settle Balance',
+    description: '30% remaining balance due 7 days prior to the scheduled photoshoot date',
+  },
+  {
+    icon: <Camera {...ICON_PROPS} />,
+    title: 'Shoot & Final Edits',
+    description: 'All raw images in 2 weeks. Final edits in 8–9 weeks from selection date.',
   },
 ];
 
-// ── 아이콘 ────────────────────────────────────────────────────────
-function InquiryIcon() {
+// ── 스텝 한 개 (아이콘 → 번호 점 → 타이틀 → 설명) ────────────────────
+function StepColumn({ step, num }: { step: Step; num: number }) {
   return (
-    <svg
-      width="52"
-      height="52"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#000"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-      <line x1="12" y1="17" x2="12.01" y2="17" />
-    </svg>
-  );
-}
-function ConsultIcon() {
-  return (
-    <svg
-      width="52"
-      height="52"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#000"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}
-function ContractIcon() {
-  return (
-    <svg
-      width="52"
-      height="52"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#000"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-      <polyline points="9 16 11 18 15 14" />
-    </svg>
-  );
-}
-function PrepIcon() {
-  return (
-    <svg
-      width="52"
-      height="52"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#000"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z" />
-      <path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
-    </svg>
-  );
-}
-function CameraIcon() {
-  return (
-    <svg
-      width="52"
-      height="52"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#000"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
-      <circle cx="12" cy="13" r="4" />
-    </svg>
-  );
-}
-function ChevronRight() {
-  return (
-    <svg
-      width="28"
-      height="28"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#000"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="9 18 15 12 9 6" />
-    </svg>
-  );
-}
-
-// ── 스텝 카드 ─────────────────────────────────────────────────────
-function StepCard({
-  step,
-  num,
-}: {
-  step: (typeof STEPS)[number];
-  num: number;
-}) {
-  return (
-    <div
-      style={{
-        flex: 1,
-        minWidth: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >
+    <div className="inquiry-step-col">
+      {step.badge && (
+        <span
+          className="inquiry-step-badge inquiry-fade"
+          data-reveal
+          data-reveal-delay={`${(num - 1) * 120 + 260}`}
+        >
+          {step.badge}
+        </span>
+      )}
       <div
-        style={{
-          marginBottom: 16,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-        }}
+        className="inquiry-step-icon inquiry-rise"
+        data-reveal
+        data-reveal-delay={`${(num - 1) * 120}`}
       >
         {step.icon}
-        {step.tag && (
-          <span
-            style={{
-              fontSize: 12,
-              fontWeight: 600,
-              color: '#000',
-            }}
-          >
-            ({step.tag})
-          </span>
-        )}
+      </div>
+      <div
+        className="inquiry-step-dot inquiry-rise"
+        data-reveal
+        data-reveal-delay={`${(num - 1) * 120 + 60}`}
+      >
+        {num}
       </div>
       <p
-        style={{
-          fontSize: 18,
-          fontWeight: 800,
-          color: '#000',
-          marginBottom: 12,
-          lineHeight: 1.3,
-        }}
+        className="inquiry-step-title inquiry-fade"
+        data-reveal
+        data-reveal-delay={`${(num - 1) * 120 + 200}`}
       >
-        STEP {num} | {step.title}
+        {step.title}
       </p>
-      <ul
-        style={{
-          listStyle: 'none',
-          padding: 0,
-          margin: '0 auto',
-          width: 'fit-content',
-        }}
+      <p
+        className="inquiry-step-desc inquiry-fade"
+        data-reveal
+        data-reveal-delay={`${(num - 1) * 120 + 260}`}
       >
-        {step.bullets.map((b) => (
-          <li
-            key={b}
-            style={{
-              fontSize: 16,
-              color: '#000',
-              lineHeight: 1.9,
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: 8,
-            }}
-          >
-            <span style={{ marginTop: 3, flexShrink: 0 }}>•</span>
-            {b}
-          </li>
-        ))}
-      </ul>
+        {step.description}
+      </p>
     </div>
   );
 }
 
-// ── 메인 ─────────────────────────────────────────────────────────
-export default function InquiryClient() {
-  const isMobile = useIsMobile();
+function StepRow({ steps, startNum }: { steps: Step[]; startNum: number }) {
+  return (
+    <div className="inquiry-step-row">
+      <div className="inquiry-step-line" />
+      {steps.map((step, idx) => (
+        <StepColumn key={step.title + idx} step={step} num={startNum + idx} />
+      ))}
+    </div>
+  );
+}
 
-  // B) 타이핑 효과
-  const FULL_TEXT = 'INQUIRY';
-  const [typed, setTyped] = useState('');
+// ── 스크롤 재등장 훅: 섹션 전체가 아니라 [data-reveal] 요소 각각을 개별 관찰한다.
+// 섹션이 뷰포트보다 커서 "섹션 전체 threshold" 방식으로는 진입/이탈이 제대로 안 잡히기 때문.
+function useReplayReveal(ref: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      i++;
-      setTyped(FULL_TEXT.slice(0, i));
-      if (i >= FULL_TEXT.length) clearInterval(timer);
-    }, 110);
-    return () => clearInterval(timer);
-  }, []);
-
-  // D) 버튼 hover
-  const [hovered, setHovered] = useState<'wedding' | 'snap' | null>(null);
-
-  // A) 히어로 섹션 fade-up
-  const heroRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = heroRef.current;
+    const el = ref.current;
     if (!el) return;
-    const items = el.querySelectorAll('.inquiry-fade-up');
+    const targets = el.querySelectorAll<HTMLElement>('[data-reveal]');
+    const timers = new Map<Element, number>();
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add('visible');
-        });
-      },
-      { threshold: 0.1 },
-    );
-    items.forEach((item) => observer.observe(item));
-    return () => observer.disconnect();
-  }, []);
+          const target = entry.target as HTMLElement;
+          const existing = timers.get(target);
+          if (existing) clearTimeout(existing);
 
-  // A+C) 스텝 섹션 순차 등장
-  const stepsRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = stepsRef.current;
-    if (!el) return;
-    const cards = el.querySelectorAll('.inquiry-step');
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            cards.forEach((card, idx) => {
-              setTimeout(() => card.classList.add('visible'), idx * 150);
-            });
-            observer.disconnect();
+            const delay = Number(target.dataset.revealDelay ?? 0);
+            const timer = window.setTimeout(() => target.classList.add('visible'), delay);
+            timers.set(target, timer);
+          } else {
+            target.classList.remove('visible');
           }
         });
       },
-      { threshold: 0.15 },
+      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' },
     );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    targets.forEach((target) => observer.observe(target));
+    return () => {
+      observer.disconnect();
+      timers.forEach((timer) => clearTimeout(timer));
+    };
+  }, [ref]);
+}
+
+export default function InquiryClient() {
+  const processRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  useReplayReveal(processRef);
+  useReplayReveal(ctaRef);
 
   const row1 = STEPS.slice(0, 3);
-  const row2 = STEPS.slice(3, 5);
+  const row2 = STEPS.slice(3, 7);
 
   return (
     <>
-      {/* ── 히어로 ── */}
-      <section
-        ref={heroRef}
-        style={{
-          minHeight: isMobile ? '20vh' : '30vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          textAlign: 'center',
-          padding: isMobile ? '60px 24px' : '80px 40px',
-          borderBottom: '1px solid #000',
-        }}
-      >
-        {/* 서브 레이블 */}
-        <p
-          className="inquiry-fade-up"
-          style={{
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: '3px',
-            textTransform: 'uppercase',
-            color: '#000',
-            marginBottom: 20,
-            animationDelay: '0.1s',
-          }}
-        >
-          Book Your Session
+      {/* ── 1. 예약 프로세스 (7단계) ── */}
+      <section ref={processRef} className="inquiry-process">
+        <p className="inquiry-eyebrow inquiry-fade" data-reveal data-reveal-delay="0">
+          LET&apos;S GET STARTED!
         </p>
+        <h2 className="inquiry-heading inquiry-fade" data-reveal data-reveal-delay="80">
+          How to book your slot
+        </h2>
 
-        {/* B) 타이핑 타이틀 */}
-        <h1
-          style={{
-            fontSize: isMobile ? 48 : 80,
-            fontWeight: 900,
-            letterSpacing: '-2px',
-            color: '#000',
-            lineHeight: 1,
-            marginBottom: 20,
-            minWidth: isMobile ? 240 : 420,
-          }}
-        >
-          {typed}
-          <span
-            className="cursor-blink"
-            style={{
-              display: 'inline-block',
-              width: 3,
-              height: isMobile ? 44 : 72,
-              backgroundColor: '#000',
-              marginLeft: 4,
-              verticalAlign: 'middle',
-            }}
-          />
-        </h1>
+        <div className="inquiry-steps">
+          <StepRow steps={row1} startNum={1} />
+          <StepRow steps={row2} startNum={4} />
+        </div>
+      </section>
 
-        <p
-          className="inquiry-fade-up"
-          style={{
-            fontSize: isMobile ? 14 : 16,
-            color: '#000',
-            lineHeight: 1.7,
-            maxWidth: 480,
-            marginBottom: 48,
-            animationDelay: '0.8s',
-          }}
-        >
+      {/* ── 2. Inquiry CTA ── */}
+      <section ref={ctaRef} className="inquiry-cta">
+        <div className="inquiry-cta-divider inquiry-fade" data-reveal data-reveal-delay="0" />
+        <p className="inquiry-eyebrow inquiry-fade" data-reveal data-reveal-delay="120">
+          YOUR NEXT STEP
+        </p>
+        <h2 className="inquiry-heading inquiry-fade" data-reveal data-reveal-delay="200">
+          Start your Inquiry
+        </h2>
+        <p className="inquiry-cta-body inquiry-fade" data-reveal data-reveal-delay="320">
           Choose your session type and fill out the form.
           <br />
           We will be in touch within 1–2 business days.
         </p>
-
-        {/* D) hover 버튼 */}
-        <div
-          className="inquiry-fade-up"
-          style={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            gap: 16,
-            width: isMobile ? '100%' : 'auto',
-            animationDelay: '1s',
-          }}
-        >
+        <div className="inquiry-cta-buttons">
           <a
             href={WEDDING_FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            onMouseEnter={() => setHovered('wedding')}
-            onMouseLeave={() => setHovered(null)}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              padding: isMobile ? '18px 32px' : '20px 48px',
-              backgroundColor: hovered === 'wedding' ? '#fff' : '#000',
-              color: hovered === 'wedding' ? '#000' : '#fff',
-              border: '1.5px solid #000',
-              fontSize: 14,
-              fontWeight: 700,
-              letterSpacing: '1.5px',
-              textTransform: 'uppercase',
-              borderRadius: 4,
-              textDecoration: 'none',
-              width: isMobile ? '100%' : 'auto',
-              transition: 'background-color 0.25s ease, color 0.25s ease',
-            }}
+            className="inquiry-btn inquiry-btn--filled inquiry-rise"
+            data-reveal
+            data-reveal-delay="440"
           >
             HYPE WEDDING
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
+            <ArrowRight size={16} strokeWidth={2.5} />
           </a>
           <a
             href={SNAP_FORM_URL}
             target="_blank"
             rel="noopener noreferrer"
-            onMouseEnter={() => setHovered('snap')}
-            onMouseLeave={() => setHovered(null)}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 10,
-              padding: isMobile ? '18px 32px' : '20px 48px',
-              backgroundColor: hovered === 'snap' ? '#000' : '#fff',
-              color: hovered === 'snap' ? '#fff' : '#000',
-              border: '1.5px solid #000',
-              fontSize: 14,
-              fontWeight: 700,
-              letterSpacing: '1.5px',
-              textTransform: 'uppercase',
-              borderRadius: 4,
-              textDecoration: 'none',
-              width: isMobile ? '100%' : 'auto',
-              transition: 'background-color 0.25s ease, color 0.25s ease',
-            }}
+            className="inquiry-btn inquiry-btn--outline inquiry-rise"
+            data-reveal
+            data-reveal-delay="440"
           >
             HYPE SNAP
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
+            <ArrowRight size={16} strokeWidth={2.5} />
           </a>
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ── */}
-      <section
-        style={{
-          backgroundColor: '#fff',
-          padding: isMobile ? '20px 24px 80px' : '20px 60px 100px',
-        }}
-      >
-        <p
-          className="inquiry-fade-up"
-          style={{
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: '3px',
-            textTransform: 'uppercase',
-            color: '#000',
-            marginBottom: 12,
-            textAlign: 'center',
-          }}
-        >
-          Booking Process
-        </p>
-        <h2
-          className="inquiry-fade-up"
-          style={{
-            fontSize: isMobile ? 28 : 36,
-            fontWeight: 800,
-            color: '#000',
-            textAlign: 'center',
-            letterSpacing: '-0.5px',
-            animationDelay: '0.15s',
-          }}
-        >
-          How It Works
-        </h2>
-
-        {/* C) 스텝 순차 등장 */}
-        <div ref={stepsRef} style={{ maxWidth: 1100, margin: '0 auto' }}>
-          {/* 1행 */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: isMobile ? 'column' : 'row',
-              alignItems: 'flex-start',
-              justifyContent: 'space-between',
-              gap: isMobile ? 40 : 0,
-              marginBottom: isMobile ? 0 : 60,
-            }}
-          >
-            {row1.map((step, idx) => (
-              <div
-                key={step.title}
-                className="inquiry-step"
-                style={{
-                  display: 'flex',
-                  // flex: 1,
-                  alignItems: 'flex-start',
-
-                  minWidth: 0,
-                  transitionDelay: `${idx * 0.15}s`,
-                }}
-              >
-                <StepCard step={step} num={idx + 1} />
-                {idx < row1.length - 1 && !isMobile && (
-                  <div
-                    style={{ flexShrink: 0, paddingTop: 20, margin: '0 8px' }}
-                  >
-                    <ChevronRight />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* 2행 */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: isMobile ? 'column' : 'row',
-              alignItems: 'flex-start',
-              justifyContent: 'space-evenly',
-              gap: isMobile ? 40 : 0,
-              marginTop: isMobile ? 40 : 0,
-            }}
-          >
-            {row2.map((step, idx) => (
-              <div
-                key={step.title}
-                className="inquiry-step"
-                style={{
-                  display: 'flex',
-                  // flex: isMobile ? 1 : '0 0 calc(33.33% + 28px)',
-                  alignItems: 'flex-start',
-                  minWidth: 0,
-                  transitionDelay: `${(idx + 3) * 0.15}s`,
-                }}
-              >
-                <StepCard step={step} num={idx + 4} />
-                {idx < row2.length - 1 && !isMobile && (
-                  <div
-                    style={{ flexShrink: 0, paddingTop: 20, margin: '0 8px' }}
-                  >
-                    <ChevronRight />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
         </div>
       </section>
     </>
