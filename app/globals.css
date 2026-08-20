@@ -1653,3 +1653,600 @@ body {
     gap: 12px;
   }
 }
+
+/* ── Inquiry 페이지: 예약 프로세스 7단계 + Inquiry CTA (챕터 번호 없는 하나의 연속 페이지) ── */
+.inquiry-eyebrow {
+  margin: 0 0 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.inquiry-heading {
+  margin: 0 0 clamp(48px, 6vw, 84px);
+  font-size: clamp(32px, 4.2vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.inquiry-process {
+  padding: clamp(64px, 7vw, 100px) clamp(20px, 4vw, 60px) clamp(40px, 5vw, 64px);
+}
+
+.inquiry-steps {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(56px, 7vw, 92px);
+}
+
+.inquiry-step-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.inquiry-step-col {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.inquiry-step-col:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 69px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #000;
+  z-index: 0;
+}
+
+.inquiry-step-col:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  top: 63px;
+  left: 100%;
+  width: 12px;
+  height: 2px;
+  background: #000;
+  transform: translateX(-6px) rotate(28deg);
+  z-index: 0;
+}
+
+.inquiry-step-icon {
+  position: relative;
+  z-index: 1;
+  height: 44px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inquiry-step-dot {
+  position: relative;
+  z-index: 1;
+  width: 22px;
+  height: 22px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: #000;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inquiry-step-title {
+  margin: 0 0 6px;
+  font-size: clamp(15px, 1.2vw, 18px);
+  font-weight: 800;
+}
+
+.inquiry-step-desc {
+  margin: 0;
+  max-width: 220px;
+  font-size: clamp(12px, 0.95vw, 14px);
+  line-height: 1.5;
+  color: #555;
+}
+
+.inquiry-step-badge {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: #2d5a45;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.inquiry-cta {
+  padding: clamp(80px, 9vw, 140px) clamp(20px, 4vw, 60px)
+    clamp(100px, 10vw, 160px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inquiry-cta-divider {
+  width: 100%;
+  max-width: 1120px;
+  height: 1px;
+  background: #000;
+  margin-bottom: clamp(56px, 7vw, 96px);
+}
+
+.inquiry-cta-body {
+  margin: 0 0 clamp(36px, 4vw, 52px);
+  max-width: 480px;
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.7;
+  color: #555;
+  text-align: center;
+}
+
+.inquiry-cta-buttons {
+  display: flex;
+  gap: 16px;
+}
+
+.inquiry-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 40px;
+  border: 1.5px solid #000;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.inquiry-btn--filled {
+  background-color: #000;
+  color: #fff;
+}
+
+.inquiry-btn--filled:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.inquiry-btn--outline {
+  background-color: #fff;
+  color: #000;
+}
+
+.inquiry-btn--outline:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+/* 등장 애니메이션: 재진입할 때마다 재생 (visible 클래스는 JS에서 토글) */
+.inquiry-fade {
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+
+.inquiry-fade.visible {
+  opacity: 1;
+}
+
+.inquiry-rise {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.inquiry-rise.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  .inquiry-step-desc {
+    max-width: 160px;
+  }
+}
+
+@media (max-width: 767px) {
+  .inquiry-step-row {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .inquiry-step-col:not(:last-child)::after,
+  .inquiry-step-col:not(:last-child)::before {
+    display: none;
+  }
+
+  .inquiry-step-desc {
+    max-width: 260px;
+  }
+
+  .inquiry-cta-buttons {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inquiry-fade,
+  .inquiry-rise {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ── Partnership 페이지: Hero → Influencer Portfolio → Booking Process → Partners & Press → Get the full story ── */
+.partnership-page {
+  padding-inline: clamp(20px, 4vw, 64px);
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.partnership-section {
+  padding: clamp(64px, 7vw, 100px) 0;
+  border-top: 1px solid #000;
+}
+
+.partnership-section--last {
+  padding-bottom: clamp(90px, 9vw, 140px);
+}
+
+.partnership-hero {
+  padding: clamp(72px, 8vw, 120px) 0 clamp(56px, 6vw, 84px);
+}
+
+.partnership-hero-title-en {
+  margin: 0 0 8px;
+  font-size: clamp(44px, 5.2vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: #2d5a45;
+}
+
+.partnership-hero-title-kr {
+  margin: 0 0 clamp(28px, 3vw, 40px);
+  font-size: clamp(25px, 3vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #000;
+}
+
+.partnership-subcopy-en {
+  margin: 0 0 8px;
+  max-width: 640px;
+  font-size: clamp(17px, 1.4vw, 20px);
+  font-weight: 700;
+  line-height: 1.55;
+  color: #000;
+}
+
+.partnership-subcopy-kr {
+  margin: 0 0 clamp(28px, 3vw, 40px);
+  max-width: 640px;
+  font-size: clamp(15px, 1.2vw, 17px);
+  font-weight: 700;
+  line-height: 1.65;
+  color: #666;
+}
+
+.partnership-contact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.partnership-contact a {
+  color: #000;
+  text-decoration: none;
+}
+
+.partnership-contact a:hover {
+  text-decoration: underline;
+}
+
+.partnership-eyebrow {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.partnership-heading {
+  margin: 0 0 4px;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.partnership-heading-kr {
+  margin: 0 0 clamp(18px, 2vw, 26px);
+  font-size: clamp(20px, 2.3vw, 28px);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #000;
+}
+
+/* 2. Influencer Portfolio */
+.partnership-influencer-group {
+  margin-top: clamp(44px, 5vw, 64px);
+}
+
+.partnership-influencer-name {
+  margin: 0 0 14px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.partnership-photo-row {
+  display: flex;
+  gap: 12px;
+}
+
+.partnership-photo {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  display: block;
+}
+
+.partnership-photo img {
+  transition: transform 0.4s ease;
+}
+
+.partnership-photo:hover img {
+  transform: scale(1.06);
+}
+
+.partnership-photo-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: rgba(0, 0, 0, 0);
+  opacity: 0;
+  transition:
+    opacity 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.partnership-photo:hover .partnership-photo-overlay {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.28);
+}
+
+/* 3. Booking Process — 얇은 그리드 라인 박스 (채움 카드 아님) */
+.partnership-steps-grid {
+  margin-top: clamp(36px, 4vw, 52px);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.partnership-step-box {
+  padding: clamp(22px, 2.2vw, 30px);
+  border: 1px solid #d5d5d5;
+}
+
+.partnership-step-label {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #888;
+}
+
+.partnership-step-title-en {
+  margin: 0 0 2px;
+  font-size: clamp(18px, 1.5vw, 20px);
+  font-weight: 800;
+}
+
+.partnership-step-title-kr {
+  margin: 0 0 14px;
+  font-size: clamp(15px, 1.2vw, 16px);
+  font-weight: 700;
+  color: #000;
+}
+
+.partnership-step-desc-en {
+  margin: 0 0 6px;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: #000;
+}
+
+.partnership-step-desc-kr {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: #000;
+}
+
+/* 4. Partners & Press — 로고 자리에 텍스트 placeholder, 유연한 그리드 (5개 이상 대비) */
+.partnership-logo-grid {
+  margin-top: clamp(36px, 4vw, 52px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.partnership-logo-box {
+  flex: 1 1 200px;
+  min-width: 180px;
+  aspect-ratio: 16 / 9;
+  border: 1px solid #d5d5d5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #444;
+}
+
+/* 5. Get the full story */
+.partnership-doc-buttons {
+  margin-top: clamp(32px, 3.5vw, 44px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.partnership-doc-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 280px;
+  padding: 22px 28px;
+  border: 1.5px solid #000;
+  text-decoration: none;
+}
+
+.partnership-doc-btn-en {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.partnership-doc-btn-kr {
+  display: block;
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.partnership-doc-btn--filled {
+  background: #2d5a45;
+  border-color: #2d5a45;
+  color: #fff;
+}
+
+.partnership-doc-btn--outline {
+  background: #fff;
+  color: #000;
+}
+
+.partnership-contact--footer {
+  margin-top: clamp(56px, 6vw, 84px);
+}
+
+.partnership-contact-title {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.partnership-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.partnership-contact-row a {
+  color: #000;
+  text-decoration: none;
+}
+
+.partnership-contact-row a:hover {
+  text-decoration: underline;
+}
+
+/* 등장 애니메이션: 재진입할 때마다 재생 */
+.partnership-fade {
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+
+.partnership-fade.visible {
+  opacity: 1;
+}
+
+.partnership-rise {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.5s ease-out,
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.partnership-rise.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 900px) {
+  .partnership-steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .partnership-photo-row {
+    flex-wrap: wrap;
+  }
+
+  .partnership-photo {
+    flex: 1 1 45%;
+  }
+
+  .partnership-steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .partnership-doc-btn {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partnership-fade,
+  .partnership-rise {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Header from '@/components/header';
 import SubTabBar from '@/components/sub-tab-bar';
 import { inquirySubTabs } from '@/lib/inquiry-sub-tabs';
+import PartnershipClient from './_components/partnership-client';
 
 export const metadata: Metadata = {
   title: 'Partnership | HYPE WEDDING',
@@ -20,10 +21,8 @@ export default async function PartnershipPage({
     <div style={{ minHeight: '100vh' }}>
       <Header brand={activeBrand} />
       <SubTabBar tabs={inquirySubTabs(activeBrand)} />
-      <main style={{ maxWidth: 800, margin: '0 auto', padding: '60px 20px 120px' }}>
-        <h1 style={{ fontSize: 22, fontWeight: 700, margin: '0 0 20px' }}>Partnership</h1>
-        {/* TODO: 파트너십 문의 콘텐츠 추가 */}
-        <p style={{ color: '#000', fontSize: 14 }}>파트너십 안내 콘텐츠 들어갈 자리</p>
+      <main className="partnership-page">
+        <PartnershipClient />
       </main>
     </div>
   );
