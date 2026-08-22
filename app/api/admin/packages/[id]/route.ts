@@ -29,7 +29,7 @@ export async function PATCH(
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
 
-  const { name, subtitle, priceSNS, priceNoSNS, shootingTime, locations, originalPhotos, retouched, retouchedDetail } =
+  const { name, subtitle, priceSNS, priceNoSNS, shootingTime, locations, originalPhotos, retouched, retouchedDetail, thumbnailUrl } =
     body as Record<string, unknown>;
 
   try {
@@ -45,6 +45,7 @@ export async function PATCH(
         ...(typeof originalPhotos === 'string' && { originalPhotos: originalPhotos.trim() }),
         ...(retouched !== undefined && { retouched: Number(retouched) || 0 }),
         ...(retouchedDetail !== undefined && { retouchedDetail: typeof retouchedDetail === 'string' ? retouchedDetail.trim() : null }),
+        ...(thumbnailUrl !== undefined && { thumbnailUrl: typeof thumbnailUrl === 'string' ? thumbnailUrl : null }),
       },
     });
     return NextResponse.json(pkg);

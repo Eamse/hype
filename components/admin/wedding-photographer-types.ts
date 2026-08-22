@@ -46,6 +46,7 @@ export type Package = {
   originalPhotos: string;
   retouched: number;
   retouchedDetail: string | null;
+  thumbnailUrl: string | null;
   addons: { addon: Addon }[];
   inclusions: { inclusion: Inclusion }[];
   partners: { partner: Partner }[];
@@ -69,6 +70,7 @@ export const emptyPkgForm = {
   originalPhotos: '',
   retouched: '',
   retouchedDetail: '',
+  thumbnailUrl: '' as string | null,
   inclusionIds: [] as number[],
   addonIds: [] as number[],
   hmuId: null as number | null,
@@ -89,6 +91,7 @@ export function pkgFormFromPackage(pkg: Package): PkgForm {
     originalPhotos: pkg.originalPhotos,
     retouched: String(pkg.retouched),
     retouchedDetail: pkg.retouchedDetail ?? '',
+    thumbnailUrl: pkg.thumbnailUrl,
     inclusionIds: pkg.inclusions.map((i) => i.inclusion.id),
     addonIds: pkg.addons.map((a) => a.addon.id),
     hmuId:

@@ -329,6 +329,7 @@ export default function DirectorRow({
                       onSave={() => onSaveEditPkg(pkg.id)}
                       onCancel={onCancelEditPkg}
                       saving={saving}
+                      packageId={pkg.id}
                     />
                   </div>
                 ) : (
