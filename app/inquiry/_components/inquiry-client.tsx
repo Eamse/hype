@@ -1,125 +1,11 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import {
-  Send,
-  PackageSearch,
-  FileSignature,
-  Wallet,
-  CalendarCheck,
-  Receipt,
-  Camera,
-  ArrowRight,
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 // ── Google Form URLs ──────────────────────────────────────────────
 const WEDDING_FORM_URL = 'https://forms.gle/oJu6ZPBdhiLWaELDA'; // 웨딩
 const SNAP_FORM_URL = 'https://forms.gle/3sWqu4NED5ruJEnN9'; // 스냅
-
-type Step = {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-  badge?: string;
-};
-
-const ICON_PROPS = { size: 36, strokeWidth: 1.5 };
-
-const STEPS: Step[] = [
-  {
-    icon: <Send {...ICON_PROPS} />,
-    title: 'Send Your Plan',
-    description: 'DM WhatsApp · Inquiry form · 1:1 consultation',
-  },
-  {
-    icon: <PackageSearch {...ICON_PROPS} />,
-    title: 'Choose Package',
-    description: 'We match you with the right photographer',
-  },
-  {
-    icon: <FileSignature {...ICON_PROPS} />,
-    title: 'Sign Contract',
-    description: 'Full terms outlined — sign when comfortable',
-    badge: 'Secure Date',
-  },
-  {
-    icon: <Wallet {...ICON_PROPS} />,
-    title: 'Pay Deposit',
-    description:
-      '70% deposit to lock in your date within 7 days of the contract signing date',
-  },
-  {
-    icon: <CalendarCheck {...ICON_PROPS} />,
-    title: 'Planning & Coordination',
-    description: 'We coordinate every detail for you',
-  },
-  {
-    icon: <Receipt {...ICON_PROPS} />,
-    title: 'Settle Balance',
-    description: '30% remaining balance due 7 days prior to the scheduled photoshoot date',
-  },
-  {
-    icon: <Camera {...ICON_PROPS} />,
-    title: 'Shoot & Final Edits',
-    description: 'All raw images in 2 weeks. Final edits in 8–9 weeks from selection date.',
-  },
-];
-
-// ── 스텝 한 개 (아이콘 → 번호 점 → 타이틀 → 설명) ────────────────────
-function StepColumn({ step, num }: { step: Step; num: number }) {
-  return (
-    <div className="inquiry-step-col">
-      {step.badge && (
-        <span
-          className="inquiry-step-badge inquiry-fade"
-          data-reveal
-          data-reveal-delay={`${(num - 1) * 120 + 260}`}
-        >
-          {step.badge}
-        </span>
-      )}
-      <div
-        className="inquiry-step-icon inquiry-rise"
-        data-reveal
-        data-reveal-delay={`${(num - 1) * 120}`}
-      >
-        {step.icon}
-      </div>
-      <div
-        className="inquiry-step-dot inquiry-rise"
-        data-reveal
-        data-reveal-delay={`${(num - 1) * 120 + 60}`}
-      >
-        {num}
-      </div>
-      <p
-        className="inquiry-step-title inquiry-fade"
-        data-reveal
-        data-reveal-delay={`${(num - 1) * 120 + 200}`}
-      >
-        {step.title}
-      </p>
-      <p
-        className="inquiry-step-desc inquiry-fade"
-        data-reveal
-        data-reveal-delay={`${(num - 1) * 120 + 260}`}
-      >
-        {step.description}
-      </p>
-    </div>
-  );
-}
-
-function StepRow({ steps, startNum }: { steps: Step[]; startNum: number }) {
-  return (
-    <div className="inquiry-step-row">
-      <div className="inquiry-step-line" />
-      {steps.map((step, idx) => (
-        <StepColumn key={step.title + idx} step={step} num={startNum + idx} />
-      ))}
-    </div>
-  );
-}
 
 // ── 스크롤 재등장 훅: 섹션 전체가 아니라 [data-reveal] 요소 각각을 개별 관찰한다.
 // 섹션이 뷰포트보다 커서 "섹션 전체 threshold" 방식으로는 진입/이탈이 제대로 안 잡히기 때문.
@@ -157,71 +43,46 @@ function useReplayReveal(ref: React.RefObject<HTMLElement | null>) {
 }
 
 export default function InquiryClient() {
-  const processRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
-
-  useReplayReveal(processRef);
   useReplayReveal(ctaRef);
 
-  const row1 = STEPS.slice(0, 3);
-  const row2 = STEPS.slice(3, 7);
-
   return (
-    <>
-      {/* ── 1. 예약 프로세스 (7단계) ── */}
-      <section ref={processRef} className="inquiry-process">
-        <p className="inquiry-eyebrow inquiry-fade" data-reveal data-reveal-delay="0">
-          LET&apos;S GET STARTED!
-        </p>
-        <h2 className="inquiry-heading inquiry-fade" data-reveal data-reveal-delay="80">
-          How to book your slot
-        </h2>
-
-        <div className="inquiry-steps">
-          <StepRow steps={row1} startNum={1} />
-          <StepRow steps={row2} startNum={4} />
-        </div>
-      </section>
-
-      {/* ── 2. Inquiry CTA ── */}
-      <section ref={ctaRef} className="inquiry-cta">
-        <div className="inquiry-cta-divider inquiry-fade" data-reveal data-reveal-delay="0" />
-        <p className="inquiry-eyebrow inquiry-fade" data-reveal data-reveal-delay="120">
-          YOUR NEXT STEP
-        </p>
-        <h2 className="inquiry-heading inquiry-fade" data-reveal data-reveal-delay="200">
-          Start your Inquiry
-        </h2>
-        <p className="inquiry-cta-body inquiry-fade" data-reveal data-reveal-delay="320">
-          Choose your session type and fill out the form.
-          <br />
-          We will be in touch within 1–2 business days.
-        </p>
-        <div className="inquiry-cta-buttons">
-          <a
-            href={WEDDING_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inquiry-btn inquiry-btn--filled inquiry-rise"
-            data-reveal
-            data-reveal-delay="440"
-          >
-            HYPE WEDDING
-            <ArrowRight size={16} strokeWidth={2.5} />
-          </a>
-          <a
-            href={SNAP_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inquiry-btn inquiry-btn--outline inquiry-rise"
-            data-reveal
-            data-reveal-delay="440"
-          >
-            HYPE SNAP
-            <ArrowRight size={16} strokeWidth={2.5} />
-          </a>
-        </div>
-      </section>
-    </>
+    <section ref={ctaRef} className="inquiry-cta">
+      <p className="inquiry-eyebrow inquiry-fade" data-reveal data-reveal-delay="0">
+        YOUR NEXT STEP
+      </p>
+      <h2 className="inquiry-heading inquiry-fade" data-reveal data-reveal-delay="200">
+        Start your Inquiry
+      </h2>
+      <p className="inquiry-cta-body inquiry-fade" data-reveal data-reveal-delay="320">
+        Choose your session type and fill out the form.
+        <br />
+        We will be in touch within 1–2 business days.
+      </p>
+      <div className="inquiry-cta-buttons">
+        <a
+          href={WEDDING_FORM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inquiry-btn inquiry-btn--filled inquiry-rise"
+          data-reveal
+          data-reveal-delay="440"
+        >
+          HYPE WEDDING
+          <ArrowRight size={16} strokeWidth={2.5} />
+        </a>
+        <a
+          href={SNAP_FORM_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inquiry-btn inquiry-btn--outline inquiry-rise"
+          data-reveal
+          data-reveal-delay="440"
+        >
+          HYPE SNAP
+          <ArrowRight size={16} strokeWidth={2.5} />
+        </a>
+      </div>
+    </section>
   );
 }

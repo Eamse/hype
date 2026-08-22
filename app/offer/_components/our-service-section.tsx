@@ -64,19 +64,27 @@ const TITLE_OFFSET = 0;
 const TAGLINE_OFFSET = 150;
 const LIST_OFFSET = 300;
 
-export default function OurServiceSection() {
+export default function OurServiceSection({
+  showHeader = true,
+}: {
+  showHeader?: boolean;
+}) {
   const rootRef = useRef<HTMLDivElement>(null);
   useScrollReveal(rootRef, 0.2);
 
   return (
     <div ref={rootRef} className="offer-page">
       <div className="offer-header">
-        <p data-offer-reveal className="offer-number offer-fade">
-          02
-        </p>
-        <p data-offer-reveal className="offer-eyebrow offer-fade">
-          WHY HYPE WEDDING?
-        </p>
+        {showHeader && (
+          <>
+            <p data-offer-reveal className="offer-number offer-fade">
+              02
+            </p>
+            <p data-offer-reveal className="offer-eyebrow offer-fade">
+              WHY HYPE WEDDING?
+            </p>
+          </>
+        )}
         <h2 data-offer-reveal className="offer-headline offer-fade">
           Our Service
         </h2>

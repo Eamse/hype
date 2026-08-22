@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Header from '@/components/header';
 import PrivacyPolicyContent from '@/components/privacy-policy-content';
+import HomeFooter from '@/app/_components/home-footer';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | HYPE WEDDING',
@@ -16,13 +17,15 @@ export default async function PrivacyPolicyPage({
   const activeBrand = brand === 'hype-snap' ? 'hype-snap' : 'hype-wedding';
 
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header brand={activeBrand} />
       <main
         style={{
           maxWidth: 760,
           margin: '0 auto',
           padding: '120px 24px 120px',
+          flex: 1,
+          width: '100%',
         }}
       >
         <h1
@@ -38,6 +41,7 @@ export default async function PrivacyPolicyPage({
 
         <PrivacyPolicyContent />
       </main>
+      <HomeFooter />
     </div>
   );
 }

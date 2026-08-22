@@ -3,8 +3,8 @@ export const revalidate = 60; // 이미지 많은 상품 상세 — 60초 캐싱
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
-import SnsSidebar from '@/components/sns-sidebar';
 import ProductGalleryLayout from './_components/product-gallery-layout';
+import HomeFooter from '@/app/_components/home-footer';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 
@@ -96,10 +96,10 @@ export default async function ProductDetailPage({ params }: Props) {
     : null;
 
   return (
-    <div className="bg-white text-[black] min-h-screen">
+    <div className="bg-white text-[black] min-h-screen flex flex-col">
       <Header brand={headerBrand} />
 
-      <main className="pt-14">
+      <main className="pt-14 flex-1">
         <ProductGalleryLayout
           product={product}
           section={product.section}
@@ -107,8 +107,7 @@ export default async function ProductDetailPage({ params }: Props) {
           weddingData={weddingData}
         />
       </main>
-
-      <SnsSidebar />
+      <HomeFooter />
     </div>
   );
 }

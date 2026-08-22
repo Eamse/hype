@@ -11,6 +11,7 @@ import CommentSection from './_components/comment-section';
 import ReviewDeleteButton from './_components/review-delete-button';
 import { maskName } from '@/lib/mask-name';
 import { getName } from 'country-list';
+import HomeFooter from '@/app/_components/home-footer';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -140,6 +141,7 @@ export default async function ReviewDetailPage({ params }: Props) {
           <CommentSection reviewId={reviewId} initialComments={initialComments} />
         </div>
       </main>
+      <HomeFooter />
     </div>
   );
 }

@@ -87,6 +87,36 @@ export default function HeaderActionButtons({
 }) {
   return (
     <>
+      <a
+        href="https://www.instagram.com/hypewedd_ing/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Instagram"
+        style={iconBtnStyle}
+      >
+        <Image
+          src="/instagram.png"
+          alt="Instagram"
+          width={23}
+          height={23}
+          style={{ objectFit: 'contain', maxWidth: 'none' }}
+        />
+      </a>
+      <a
+        href="https://www.tiktok.com/@hypewedd_ing?is_from_webapp=1&sender_device=pc"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="TikTok"
+        style={iconBtnStyle}
+      >
+        <Image
+          src="/tik-tok-.png"
+          alt="TikTok"
+          width={35}
+          height={35}
+          style={{ objectFit: 'contain', maxWidth: 'none' }}
+        />
+      </a>
       <button onClick={onSearchClick} aria-label="Search" style={iconBtnStyle}>
         <SearchIcon />
       </button>
@@ -147,7 +177,9 @@ export default function HeaderActionButtons({
               fontWeight: 700,
             }}
           >
-            {(session.user?.name ?? session.user?.email)?.charAt(0).toUpperCase() ?? '?'}
+            {(session.user?.name ?? session.user?.email)
+              ?.charAt(0)
+              .toUpperCase() ?? '?'}
           </div>
         ) : (
           <UserIcon />

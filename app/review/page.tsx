@@ -10,6 +10,7 @@ import ReviewFeatured from './_components/review-featured';
 import { prisma } from '@/lib/prisma';
 import { getName } from 'country-list';
 import { maskName } from '@/lib/mask-name';
+import HomeFooter from '@/app/_components/home-footer';
 
 export const metadata: Metadata = {
   title: 'Review | HYPE WEDDING',
@@ -79,9 +80,9 @@ export default async function ReviewPage({
   });
 
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header brand={activeBrand} />
-      <main style={{ paddingTop: 56 }}>
+      <main style={{ paddingTop: 56, flex: 1 }}>
         <div
           style={{
             maxWidth: 1200,
@@ -162,6 +163,7 @@ export default async function ReviewPage({
           </div>
         </div>
       </main>
+      <HomeFooter />
 
       <style>{`
         @media (max-width: 900px) {
