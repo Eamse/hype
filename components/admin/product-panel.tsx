@@ -84,7 +84,9 @@ export default function ProductPanel({ category }: { category: Category }) {
   const [editDirIds, setEditDirIds] = useState<number[]>([]);
   const [editDetailFiles, setEditDetailFiles] = useState<File[]>([]);
   const [editSaving, setEditSaving] = useState(false);
+  const [editThumbUploading, setEditThumbUploading] = useState(false);
   const editDetailRef = useRef<HTMLInputElement>(null);
+  const editThumbRef = useRef<HTMLInputElement>(null);
 
   const { selectedIds, toggleSelect, toggleAll, clearSelection } = useSelection(products);
 
@@ -188,6 +190,24 @@ export default function ProductPanel({ category }: { category: Category }) {
     setEditDetailFiles([]);
     const data = await fetch(`/api/admin/wedding-directors/${product.id}`).then((r) => r.json());
     setEditDirIds(Array.isArray(data) ? data.map((d: Director) => d.id) : []);
+  }
+
+  async function handleEditThumbUpload(file: File) {
+    if (!editingProduct) return;
+    setEditThumbUploading(true);
+    try {
+      const resized = await resizeImageFile(file);
+      const url = await uploadImage(resized, `product_thumb_${editingProduct.id}_${Date.now()}`);
+      await fetch(`/api/admin/products/${editingProduct.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl: url }),
+      });
+      setEditingProduct((prev) => (prev ? { ...prev, imageUrl: url } : prev));
+      await loadProducts();
+    } finally {
+      setEditThumbUploading(false);
+    }
   }
 
   async function handleEditSave() {
@@ -352,6 +372,27 @@ export default function ProductPanel({ category }: { category: Category }) {
         >
           <div style={{ background: '#fff', borderRadius: 16, padding: 32, width: '100%', maxWidth: 520, maxHeight: '90vh', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: '#7a5520', letterSpacing: '2px' }}>상품 수정</p>
+
+            <div>
+              <label style={labelStyle}>썸네일 이미지</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <button type="button" style={btnStyle('transparent', '#000', '#000')} onClick={() => editThumbRef.current?.click()} disabled={editThumbUploading}>
+                  {editThumbUploading ? '업로드 중...' : '파일 선택'}
+                </button>
+                {editingProduct.imageUrl && (
+                  <div style={{ position: 'relative', width: 48, height: 48, borderRadius: 6, overflow: 'hidden' }}>
+                    <Image src={editingProduct.imageUrl} alt="thumb" fill style={{ objectFit: 'cover' }} />
+                  </div>
+                )}
+                <input ref={editThumbRef} type="file" accept="image/*" style={{ display: 'none' }}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    if (f) handleEditThumbUpload(f);
+                    e.target.value = '';
+                  }}
+                />
+              </div>
+            </div>
 
             <div>
               <label style={labelStyle}>상세 이미지 추가</label>
