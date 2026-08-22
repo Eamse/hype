@@ -171,24 +171,24 @@ export default function AccountClient() {
       ) : (
         <>
           <EditRow label="Name">
-            <div style={{ display: 'flex', gap: 8 }}>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               <input
                 value={form.firstName}
                 onChange={(e) => updateField('firstName', e.target.value)}
                 placeholder="First name"
-                style={{ ...inputStyle, flex: 1 }}
+                style={{ ...inputStyle, flex: '1 1 100px' }}
               />
               <input
                 value={form.middleName}
                 onChange={(e) => updateField('middleName', e.target.value)}
                 placeholder="Middle name"
-                style={{ ...inputStyle, flex: 1 }}
+                style={{ ...inputStyle, flex: '1 1 100px' }}
               />
               <input
                 value={form.lastName}
                 onChange={(e) => updateField('lastName', e.target.value)}
                 placeholder="Last name"
-                style={{ ...inputStyle, flex: 1 }}
+                style={{ ...inputStyle, flex: '1 1 100px' }}
               />
             </div>
           </EditRow>

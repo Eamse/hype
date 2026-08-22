@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import Image from 'next/image';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 type ProductImage = {
   id: number;
@@ -16,6 +17,8 @@ export default function ImageGallery({
   mainImageUrl: string | null;
   images: ProductImage[];
 }) {
+  const isMobile = useIsMobile(1024); // lg 브레이크포인트와 맞춤
+
   const allImages = [
     ...(mainImageUrl
       ? [{ id: 0, url: mainImageUrl, description: '', order: -1 }]
@@ -27,7 +30,7 @@ export default function ImageGallery({
     allImages[0]?.url ?? null,
   );
   const trackRef = useRef<HTMLDivElement>(null);
-  const [trackHeight, setTrackHeight] = useState(0);
+  const [trackSize, setTrackSize] = useState(0);
 
   // 갤러리 소스가 바뀌면(예: 패키지/작가 전환) 선택된 큰 이미지도 새 목록 기준으로 리셋
   useEffect(() => {
@@ -35,38 +38,31 @@ export default function ImageGallery({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainImageUrl, images]);
 
-  // 썸네일 목록을 두 번 이어붙여 무한 루프처럼 보이게 하고, 실제 높이(gap 포함)를 측정해
-  // 정확히 그 거리만큼 계속 흐르도록 함 — 매 N초마다 점프하는 대신 끊김 없이 스크롤됨
+  // 데스크탑: 썸네일 목록을 두 번 이어붙여 무한 루프처럼 보이게 하고, 실제 높이(gap 포함)를
+  // 측정해 정확히 그 거리만큼 계속 흐르도록 함 — 매 N초마다 점프하는 대신 끊김 없이 스크롤됨.
+  // 모바일: 이미지 아래로 내려가는 가로 스크롤 목록이라 자동 애니메이션 없이 손으로 스와이프.
   useLayoutEffect(() => {
+    if (isMobile) return;
     const el = trackRef.current;
     if (!el) return;
-    setTrackHeight(el.scrollHeight / 2);
-  }, [allImages.length]);
+    setTrackSize(el.scrollHeight / 2);
+  }, [allImages.length, isMobile]);
 
-  const canLoop = allImages.length > 1;
+  const canLoop = !isMobile && allImages.length > 1;
 
   return (
-    <div
-      className="flex gap-3 h-full"
-      style={{ display: 'flex', flexDirection: 'row-reverse' }}
-    >
-      {/* 왼쪽: 세로 썸네일 — 끊김 없이 계속 흐르는 자동 스크롤 */}
+    <div className="flex flex-col-reverse gap-3 lg:h-full lg:flex-row-reverse">
+      {/* 썸네일 목록 — 모바일: 메인 이미지 아래 가로 스크롤 / 데스크탑: 오른쪽 세로 자동 스크롤 */}
       {allImages.length > 0 && (
-        <div
-          className="hide-scroll overflow-hidden"
-          style={{ width: 64 }}
-        >
+        <div className="hide-scroll flex-shrink-0 overflow-x-auto lg:w-16 lg:overflow-hidden">
           <div
             ref={trackRef}
-            className={canLoop ? 'gallery-thumb-track' : undefined}
+            className={`flex flex-row gap-2 lg:flex-col ${canLoop ? 'gallery-thumb-track' : ''}`}
             style={
               {
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 8,
                 ...(canLoop && {
-                  '--thumb-scroll-distance': `${trackHeight}px`,
-                  animationDuration: `${Math.max(trackHeight / 20, 4)}s`,
+                  '--thumb-scroll-distance': `${trackSize}px`,
+                  animationDuration: `${Math.max(trackSize / 20, 4)}s`,
                 }),
               } as React.CSSProperties
             }
@@ -101,7 +97,7 @@ export default function ImageGallery({
         </div>
       )}
 
-      {/* 오른쪽: 메인 이미지 */}
+      {/* 메인 이미지 */}
       <div
         className="relative flex-1 rounded-xl overflow-hidden bg-black"
         style={{ aspectRatio: '4/5' }}

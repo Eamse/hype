@@ -118,33 +118,42 @@ function JourneyYearPin({
   titleClassName: string;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  // pin 구간 길이는 사진 개수가 아니라 타임라인 항목 수 기준 — 사진(2025는 2장)만 기준으로
+  // 잡으면 구간이 너무 짧아서 급하게 끝나버림. 항목 수(2025는 6개)로 잡으면 텍스트 읽는
+  // 속도에 맞춰 훨씬 여유로워짐. 사진은 그 안에서 milestoneIndex 기준으로 순서대로 전환.
+  const [activeMilestoneIndex, setActiveMilestoneIndex] = useState(0);
 
   useEffect(() => {
     const wrap = wrapRef.current;
-    if (!wrap || photos.length <= 1) return;
+    if (!wrap || items.length <= 1) return;
 
     const trigger = ScrollTrigger.create({
       trigger: wrap,
       start: 'top top+=106',
-      end: () => `+=${window.innerHeight * (photos.length - 1) * 0.9}`,
+      end: () => `+=${window.innerHeight * (items.length - 1) * 1.1}`,
       pin: true,
-      scrub: 0.4,
+      scrub: 0.6,
+      anticipatePin: 1, // 연속으로 붙어있는 pin 섹션 사이 전환 시 튀는 현상 완화
+      fastScrollEnd: true, // 빠른 스크롤로 트리거 경계를 확 지나칠 때 애니메이션이 튀지 않게 함
       onUpdate: (self) => {
         const idx = Math.min(
-          photos.length - 1,
-          Math.floor(self.progress * photos.length),
+          items.length - 1,
+          Math.floor(self.progress * items.length),
         );
-        setActiveIndex(idx);
+        setActiveMilestoneIndex(idx);
       },
     });
 
     return () => {
       trigger.kill();
     };
-  }, [photos.length]);
+  }, [items.length]);
 
-  const activeMilestoneIndex = photos[activeIndex]?.milestoneIndex ?? -1;
+  // 현재 활성 타임라인 항목 이전(또는 같은) milestoneIndex를 가진 사진 중 가장 가까운 것을 표시
+  let activeIndex = 0;
+  for (let i = 0; i < photos.length; i++) {
+    if (photos[i].milestoneIndex <= activeMilestoneIndex) activeIndex = i;
+  }
 
   return (
     <div ref={wrapRef} className="journey-pin-wrap">

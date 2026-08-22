@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -52,6 +53,7 @@ export default function ProductCard({
   isSaved: boolean;
   onToggleSave: (id: number) => void;
 }) {
+  const [loaded, setLoaded] = useState(false);
   return (
     <div style={{ position: 'relative' }}>
       <Link
@@ -66,19 +68,30 @@ export default function ProductCard({
             aspectRatio: '4/5',
             borderRadius: 6,
             overflow: 'hidden',
-            backgroundColor: '#000',
             marginBottom: 8,
           }}
         >
           {product.imageUrl ? (
-            <Image
-              src={product.imageUrl}
-              alt={product.title}
-              fill
-              sizes="(max-width: 768px) 50vw, 25vw"
-              className="card-img"
-              style={{ objectFit: 'cover' }}
-            />
+            <>
+              {!loaded && (
+                <div style={{ position: 'absolute', inset: 0 }}>
+                  <ImgBox />
+                </div>
+              )}
+              <Image
+                src={product.imageUrl}
+                alt={product.title}
+                fill
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className="card-img"
+                style={{
+                  objectFit: 'cover',
+                  opacity: loaded ? 1 : 0,
+                  transition: 'opacity 0.3s ease',
+                }}
+                onLoad={() => setLoaded(true)}
+              />
+            </>
           ) : (
             <ImgBox />
           )}
