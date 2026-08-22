@@ -13,19 +13,32 @@ export async function GET(request: NextRequest) {
   const q = request.nextUrl.searchParams.get('q');
   if (!q || q.trim().length < 1) return NextResponse.json([]);
 
+  const insensitive = { contains: q, mode: 'insensitive' as const };
+
   const [products, magazines, reviews] = await Promise.all([
     prisma.product.findMany({
-      where: { title: { contains: q, mode: 'insensitive' } },
+      where: {
+        OR: [
+          { title: insensitive },
+          { directors: { some: { director: { name: insensitive } } } },
+          { directors: { some: { director: { number: insensitive } } } },
+        ],
+      },
       select: { id: true, title: true, imageUrl: true, section: true },
       take: 8,
     }),
     prisma.magazine.findMany({
-      where: { published: true, title: { contains: q, mode: 'insensitive' } },
+      where: {
+        published: true,
+        OR: [{ title: insensitive }, { content: insensitive }],
+      },
       select: { id: true, title: true, imageUrl: true },
       take: 8,
     }),
     prisma.review.findMany({
-      where: { title: { contains: q, mode: 'insensitive' } },
+      where: {
+        OR: [{ title: insensitive }, { content: insensitive }, { name: insensitive }],
+      },
       select: {
         id: true,
         title: true,

@@ -776,6 +776,12 @@ body {
   background: #fff;
 }
 
+/* 2025 → 2026 pin 섹션 전환이 뚝뚝 끊기지 않도록, 둘 사이 여백을 넉넉히 둬서
+   완전히 풀렸다가 다시 걸리는 구간에 스크롤 여유를 준다 */
+.journey-pin-wrap + .journey-pin-wrap {
+  margin-top: clamp(160px, 18vw, 280px);
+}
+
 .journey-pin-left {
   padding: clamp(48px, 5vw, 80px) clamp(24px, 3vw, 48px);
 }
@@ -916,7 +922,7 @@ body {
   transform: translateY(0);
 }
 
-/* /offer — "Our Service" 4컬럼 스펙 표 */
+/* /offer — "Our Service" 4개 항목 — 데스크탑: 세로 구분선, 모바일: 얇은 그리드라인 카드 */
 .service-grid {
   display: flex;
   flex-direction: column;
@@ -943,7 +949,7 @@ body {
   padding-right: 0;
 }
 
-/* 컬럼 사이 세로 구분선 — 컬럼 텍스트보다 살짝 먼저 페이드 */
+/* 컬럼 사이 세로 구분선 (데스크탑 전용) — 컬럼 텍스트보다 살짝 먼저 페이드 */
 .service-divider {
   position: absolute;
   top: 4px;
@@ -956,6 +962,23 @@ body {
 }
 .service-divider.visible {
   opacity: 0.15;
+}
+
+@media (max-width: 767px) {
+  .service-grid {
+    gap: 16px;
+  }
+  .service-col {
+    padding: clamp(24px, 6vw, 32px) clamp(20px, 5vw, 28px);
+    border: 1px solid #d5d5d5;
+  }
+  .service-col:first-child,
+  .service-col:last-child {
+    padding: clamp(24px, 6vw, 32px) clamp(20px, 5vw, 28px);
+  }
+  .service-divider {
+    display: none;
+  }
 }
 
 .service-col-title {
@@ -1878,6 +1901,7 @@ body {
 @media (max-width: 767px) {
   .inquiry-step-row {
     flex-direction: column;
+    align-items: center;
     gap: 40px;
   }
 
@@ -2267,6 +2291,70 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .gallery-thumb-track {
+    animation: none;
+  }
+}
+
+/* ── 검색 모달 ─────────────────────────────────────────────── */
+@keyframes searchOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes searchCardPopIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.search-overlay {
+  padding: 10vh 20px 40px;
+  animation: searchOverlayFadeIn 0.18s ease-out;
+}
+.search-card {
+  max-height: 72vh;
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+  animation: searchCardPopIn 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.search-result-row {
+  transition: background-color 0.15s ease;
+}
+.search-result-row:hover {
+  background-color: #f7f7f7;
+}
+.search-result-arrow {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.search-result-row:hover .search-result-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .search-overlay,
+  .search-card {
+    animation: none;
+  }
+}
+@media (max-width: 640px) {
+  .search-overlay {
+    padding: 0;
+    align-items: stretch;
+  }
+  .search-card {
+    max-width: none;
+    max-height: none;
+    height: 100%;
+    border-radius: 0;
     animation: none;
   }
 }
