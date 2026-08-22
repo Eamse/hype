@@ -1,8 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 import CountryCombobox from '@/components/country-combobox';
+import PrivacyPolicyModal from '@/components/privacy-policy-modal';
+import TermsOfServiceModal from '@/components/terms-of-service-modal';
+import PrivacyPolicyContent from '@/components/privacy-policy-content';
+import TermsOfServiceContent from '@/components/terms-of-service-content';
 
 // "선택 안 함" 체크 시 저장되는 값 — 서버가 이미 허용하는 'other'를 재사용
 const PREFER_NOT_TO_SAY = 'other';
@@ -53,6 +58,17 @@ export default function UserInfoFields({
 }: Props) {
   const errorBorder = 'border-red-400 focus:border-red-500';
   const normalBorder = 'border-gray-200 focus:border-gray-900';
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  // 이용약관 + 개인정보처리방침 둘 다 동의해야 termsAgreement=true — 외부(onChange)에는 합쳐진 값만 전달
+  const [tosAgreed, setTosAgreed] = useState(false);
+  const [privacyAgreed, setPrivacyAgreed] = useState(false);
+
+  function updateConsent(tos: boolean, privacy: boolean) {
+    setTosAgreed(tos);
+    setPrivacyAgreed(privacy);
+    onChange('termsAgreement', tos && privacy);
+  }
 
   return (
     <>
@@ -215,26 +231,90 @@ export default function UserInfoFields({
         )}
       </div>
 
-      {/* 이용약관 */}
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
+      {/* 약관 동의 */}
+      <div className="flex flex-col gap-4 border border-gray-200 rounded-lg p-4">
+        <p className="text-sm font-semibold text-gray-800">Terms Agreement</p>
+
+        {/* 전체 동의 */}
+        <div className="flex items-center gap-2 pb-3 border-b border-gray-200">
           <input
             type="checkbox"
-            id="terms"
-            checked={values.termsAgreement}
-            onChange={(e) => onChange('termsAgreement', e.target.checked)}
+            id="allAgree"
+            checked={tosAgreed && privacyAgreed}
+            onChange={(e) => updateConsent(e.target.checked, e.target.checked)}
             className="w-4 h-4 accent-gray-900"
           />
-          <label htmlFor="terms" className="text-sm text-gray-600">
-            I agree to the{' '}
-            <span className="underline cursor-pointer">Terms of Service</span>{' '}
-            <span className="text-red-500">*</span>
+          <label htmlFor="allAgree" className="text-sm font-semibold text-gray-800">
+            I agree to all of the following: Terms of Service, and Collection and Use of
+            Personal Information.
           </label>
         </div>
+
+        {/* 1. 이용약관 동의 */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="tosAgree"
+              checked={tosAgreed}
+              onChange={(e) => updateConsent(e.target.checked, privacyAgreed)}
+              className="w-4 h-4 accent-gray-900"
+            />
+            <label htmlFor="tosAgree" className="text-sm text-gray-700">
+              I agree to the Terms of Service{' '}
+              <span className="text-red-500">(Required)</span>
+            </label>
+          </div>
+          <div className="consent-preview-box">
+            <TermsOfServiceContent />
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowTermsModal(true)}
+            className="self-start text-xs underline text-gray-500"
+          >
+            View full text
+          </button>
+        </div>
+
+        {/* 2. 개인정보 수집·이용 동의 */}
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              id="privacyAgree"
+              checked={privacyAgreed}
+              onChange={(e) => updateConsent(tosAgreed, e.target.checked)}
+              className="w-4 h-4 accent-gray-900"
+            />
+            <label htmlFor="privacyAgree" className="text-sm text-gray-700">
+              I agree to the Collection and Use of Personal Information{' '}
+              <span className="text-red-500">(Required)</span>
+            </label>
+          </div>
+          <div className="consent-preview-box">
+            <PrivacyPolicyContent />
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowPrivacyModal(true)}
+            className="self-start text-xs underline text-gray-500"
+          >
+            View full text
+          </button>
+        </div>
+
         {errors.termsAgreement && (
           <p className="text-xs text-red-500">{errors.termsAgreement}</p>
         )}
       </div>
+
+      {showPrivacyModal && (
+        <PrivacyPolicyModal onClose={() => setShowPrivacyModal(false)} />
+      )}
+      {showTermsModal && (
+        <TermsOfServiceModal onClose={() => setShowTermsModal(false)} />
+      )}
     </>
   );
 }

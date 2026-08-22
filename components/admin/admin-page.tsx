@@ -185,7 +185,7 @@ export default function AdminPage() {
   }, [active]);
   const logout = async () => {
     await fetch('/api/admin/logout', { method: 'POST' }).catch(() => null);
-    router.replace('/admin/login');
+    router.replace('/gatekeeper-7f3k9');
   };
 
   useEffect(() => {

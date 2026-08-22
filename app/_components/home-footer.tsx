@@ -1,6 +1,8 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import PrivacyPolicyModal from '@/components/privacy-policy-modal';
 
 function ChevronDownIcon({ open }: { open: boolean }) {
   return (
@@ -25,6 +27,8 @@ function ChevronDownIcon({ open }: { open: boolean }) {
 
 export default function HomeFooter() {
   const [open, setOpen] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const router = useRouter();
 
   return (
     <footer
@@ -49,6 +53,7 @@ export default function HomeFooter() {
             Terms of Service
           </button>
           <button
+            onClick={() => setShowPrivacyModal(true)}
             style={{
               fontSize: 12,
               fontWeight: 700,
@@ -61,6 +66,7 @@ export default function HomeFooter() {
             Privacy Policy
           </button>
           <button
+            onClick={() => router.push('/partnership')}
             style={{
               fontSize: 12,
               color: '#000',
@@ -115,6 +121,10 @@ export default function HomeFooter() {
           © 2024 Name A Corp. All rights reserved.
         </p>
       </div>
+
+      {showPrivacyModal && (
+        <PrivacyPolicyModal onClose={() => setShowPrivacyModal(false)} />
+      )}
     </footer>
   );
 }
