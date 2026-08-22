@@ -38,23 +38,22 @@ export default function ImageGallery({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainImageUrl, images]);
 
-  // 데스크탑: 썸네일 목록을 두 번 이어붙여 무한 루프처럼 보이게 하고, 실제 높이(gap 포함)를
-  // 측정해 정확히 그 거리만큼 계속 흐르도록 함 — 매 N초마다 점프하는 대신 끊김 없이 스크롤됨.
-  // 모바일: 이미지 아래로 내려가는 가로 스크롤 목록이라 자동 애니메이션 없이 손으로 스와이프.
+  // 썸네일 목록을 두 번 이어붙여 무한 루프처럼 보이게 하고, 실제 크기(gap 포함)를 측정해
+  // 정확히 그 거리만큼 계속 흐르도록 함 — 매 N초마다 점프하는 대신 끊김 없이 스크롤됨.
+  // 데스크탑은 세로(높이), 모바일은 가로(너비) 기준으로 측정. 스와이프로 직접 넘기는 것도 그대로 가능.
   useLayoutEffect(() => {
-    if (isMobile) return;
     const el = trackRef.current;
     if (!el) return;
-    setTrackSize(el.scrollHeight / 2);
+    setTrackSize(isMobile ? el.scrollWidth / 2 : el.scrollHeight / 2);
   }, [allImages.length, isMobile]);
 
-  const canLoop = !isMobile && allImages.length > 1;
+  const canLoop = allImages.length > 1;
 
   return (
     <div className="flex flex-col-reverse gap-3 lg:h-full lg:flex-row-reverse">
       {/* 썸네일 목록 — 모바일: 메인 이미지 아래 가로 스크롤 / 데스크탑: 오른쪽 세로 자동 스크롤 */}
       {allImages.length > 0 && (
-        <div className="hide-scroll flex-shrink-0 overflow-x-auto lg:w-16 lg:overflow-hidden">
+        <div className="hide-scroll gallery-thumb-scroll-area flex-shrink-0 overflow-hidden lg:w-16">
           <div
             ref={trackRef}
             className={`flex flex-row gap-2 lg:flex-col ${canLoop ? 'gallery-thumb-track' : ''}`}

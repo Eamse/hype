@@ -56,6 +56,7 @@ export async function PATCH(request: NextRequest) {
     birthDay,
     password,
     confirmPassword,
+    currentPassword,
   } = body;
 
   const strFields: Record<string, unknown> = {
@@ -122,6 +123,29 @@ export async function PATCH(request: NextRequest) {
     if (password !== confirmPassword) {
       return NextResponse.json({ error: 'Passwords do not match' }, { status: 400 });
     }
+
+    // 세션 탈취만으로 비밀번호를 바꿔치기해 계정을 뺏을 수 없도록, 기존 비밀번호가
+    // 설정돼 있는 계정은 현재 비밀번호 확인을 반드시 거치게 함
+    const existing = await prisma.user.findUnique({
+      where: { id: session.user.id },
+      select: { password: true },
+    });
+    if (existing?.password) {
+      if (typeof currentPassword !== 'string' || !currentPassword) {
+        return NextResponse.json(
+          { error: 'Current password is required' },
+          { status: 400 },
+        );
+      }
+      const isValid = await bcrypt.compare(currentPassword, existing.password);
+      if (!isValid) {
+        return NextResponse.json(
+          { error: 'Current password is incorrect' },
+          { status: 400 },
+        );
+      }
+    }
+
     data.password = await bcrypt.hash(password, 12);
   }
 
