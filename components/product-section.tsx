@@ -10,16 +10,12 @@ export default function ProductSection({
   title,
   subtitle,
   products,
-  saved,
-  onToggleSave,
   showAll = false,
 }: {
   id?: string;
   title: string;
   subtitle?: string;
   products: Product[];
-  saved: Set<number>;
-  onToggleSave: (id: number) => void;
   /** true면 슬라이드 없이 전체 상품을 그리드로 한 번에 보여줌 */
   showAll?: boolean;
   secondsPerItem?: number;
@@ -119,12 +115,7 @@ export default function ProductSection({
           }}
         >
           {products.map((p) => (
-            <ProductCard
-              key={p.id}
-              product={p}
-              isSaved={saved.has(p.id)}
-              onToggleSave={onToggleSave}
-            />
+            <ProductCard key={p.id} product={p} />
           ))}
         </div>
       ) : (
@@ -152,12 +143,7 @@ export default function ProductSection({
                 }}
               >
                 {pageProducts.map((p) => (
-                  <ProductCard
-                    key={p.id}
-                    product={p}
-                    isSaved={saved.has(p.id)}
-                    onToggleSave={onToggleSave}
-                  />
+                  <ProductCard key={p.id} product={p} />
                 ))}
               </div>
             ))}

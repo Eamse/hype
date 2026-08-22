@@ -16,7 +16,8 @@ export type JourneyItem = {
 };
 
 type Photo = {
-  src: string;
+  // 사진 1장이면 문자열, 같은 자리에서 여러 장을 순환시키고 싶으면 배열로
+  src: string | string[];
   alt: string;
   // 해당 연도 배열(journey2025 또는 journey2026) 안에서의 인덱스
   milestoneIndex: number;
@@ -31,43 +32,98 @@ const LOGO_BADGES_2026: Record<number, { src: string; alt: string }> = {
   2: { src: '/about/history/history-06-hype-snap.png', alt: 'Hype Snap' },
 };
 
-// 원본 스펙: 하이라이트 3개(★)만 사진 확정, 나머지 비하이라이트 슬롯은 추후 전달 예정이라 아직 비움
+// 사진 하이라이트 스펙 (2026-08-23 확정):
+// history-02(Angel Dei), history-03(First client photoshoot), history-06(Meryem)만 하이라이트(★) —
+// 정확히 해당 마일스톤에 매칭. 나머지(비하이라이트) 사진은 그 해 타임라인 순서에 맞게 앞/뒤로 배치.
 const PHOTOS_2025: Photo[] = [
+  // {
+  //   src: '/about/history/history-03b-angel-dei.jpg',
+  //   alt: 'Hype Wedding history',
+  //   milestoneIndex: 0,
+  // },
   {
-    src: '/about/history/history-03-angel-dei.jpg',
-    alt: 'Angel Dei collaboration',
+    src: [
+      '/about/history/History-2025-May-First influencer collab — Angel Dei, Philippines(1).jpg',
+      '/about/history/History-2025-May-First influencer collab — Angel Dei, Philippines(2).jpg',
+      '/about/history/History-2025-May-First influencer collab — Angel Dei, Philippines(3).jpg',
+    ],
+    alt: 'Angel Dei collaboration', // ★ 하이라이트
     milestoneIndex: 2,
   },
   {
-    src: '/about/history/history-04-first-shoot.jpg',
-    alt: 'First client photoshoot',
+    src: [
+      '/about/history/History-2025-Jul-First client photoshoot(1).jpg',
+      '/about/history/History-2025-Jul-First client photoshoot(2).jpg',
+    ],
+    alt: 'First client photoshoot', // ★ 하이라이트
     milestoneIndex: 4,
   },
+  // {
+  //   src: '/about/history/history-04b-first-shoot.jpg',
+  //   alt: 'Hype Wedding history',
+  //   milestoneIndex: 5,
+  // },
 ];
 
-// TODO: 2026 나머지 마일스톤 사진 받으면 교체 — 지금은 pin 시퀀스 테스트용으로 기존 사진을 임시로 채워둠
 const PHOTOS_2026: Photo[] = [
+  // {
+  //   src: '/about/history/history-05b-meryem.jpg',
+  //   alt: 'Hype Wedding history',
+  //   milestoneIndex: 0,
+  // },
   {
-    src: '/about/history/history-01-founded.png',
-    alt: '(테스트용 임시 이미지)',
-    milestoneIndex: 0,
-  },
-  {
-    src: '/about/history/history-05-meryem.jpg',
-    alt: 'Meryem Gündüz collaboration',
+    src: [
+      '/about/history/History-2026-Apr-Influencer collab — Meryem Gündüz, Turkey(1).jpg',
+      '/about/history/History-2026-Apr-Influencer collab — Meryem Gündüz, Turkey(2).jpg',
+      '/about/history/History-2026-Apr-Influencer collab — Meryem Gündüz, Turkey(3).jpg',
+    ],
+    alt: 'Meryem Gündüz collaboration', // ★ 하이라이트
     milestoneIndex: 1,
   },
-  {
-    src: '/about/history/history-03-angel-dei.jpg',
-    alt: '(테스트용 임시 이미지)',
-    milestoneIndex: 2,
-  },
-  {
-    src: '/about/history/history-04-first-shoot.jpg',
-    alt: '(테스트용 임시 이미지)',
-    milestoneIndex: 4,
-  },
+  // {
+  //   src: '/about/history/history-05c-meryem.jpg',
+  //   alt: 'Hype Wedding history',
+  //   milestoneIndex: 4,
+  // },
 ];
+
+// 사진 슬롯 하나에 여러 장이 들어오면(Photo.src가 배열) — 타이머가 아니라 이 milestone
+// 구간 안에서의 스크롤 진행도(0~1)에 따라 어떤 사진을 보여줄지 결정 (스크롤해야만 사진이 바뀜)
+function PhotoSlideImages({
+  src,
+  alt,
+  active,
+  progress,
+}: {
+  src: string | string[];
+  alt: string;
+  active: boolean;
+  /** 이 milestone 구간 안에서의 스크롤 진행도 (0~1) */
+  progress: number;
+}) {
+  const srcs = Array.isArray(src) ? src : [src];
+  const subIndex = active
+    ? Math.min(srcs.length - 1, Math.floor(progress * srcs.length))
+    : 0;
+
+  return (
+    <>
+      {srcs.map((s, i) => (
+        <Image
+          key={s}
+          src={s}
+          alt={alt}
+          fill
+          className="object-cover"
+          style={{
+            opacity: i === subIndex ? 1 : 0,
+            transition: 'opacity 0.6s ease',
+          }}
+        />
+      ))}
+    </>
+  );
+}
 
 function TimelineRow({
   item,
@@ -90,13 +146,20 @@ function TimelineRow({
       <p className="journey-date">{item.date}</p>
       <p
         className={
-          item.bold ? 'journey-milestone journey-milestone--bold' : 'journey-milestone'
+          item.bold
+            ? 'journey-milestone journey-milestone--bold'
+            : 'journey-milestone'
         }
       >
         {item.content}
         {logo && (
           <span className="journey-logo-badge">
-            <Image src={logo.src} alt={logo.alt} fill className="object-cover" />
+            <Image
+              src={logo.src}
+              alt={logo.alt}
+              fill
+              className="object-cover"
+            />
           </span>
         )}
       </p>
@@ -122,6 +185,9 @@ function JourneyYearPin({
   // 잡으면 구간이 너무 짧아서 급하게 끝나버림. 항목 수(2025는 6개)로 잡으면 텍스트 읽는
   // 속도에 맞춰 훨씬 여유로워짐. 사진은 그 안에서 milestoneIndex 기준으로 순서대로 전환.
   const [activeMilestoneIndex, setActiveMilestoneIndex] = useState(0);
+  // 현재 activeMilestoneIndex 구간 안에서의 스크롤 진행도(0~1) — 한 milestone에
+  // 사진이 여러 장 걸려있을 때 스크롤에 따라 그 안에서 사진을 전환하는 데 사용
+  const [milestoneProgress, setMilestoneProgress] = useState(0);
 
   useEffect(() => {
     const wrap = wrapRef.current;
@@ -136,11 +202,10 @@ function JourneyYearPin({
       anticipatePin: 1, // 연속으로 붙어있는 pin 섹션 사이 전환 시 튀는 현상 완화
       fastScrollEnd: true, // 빠른 스크롤로 트리거 경계를 확 지나칠 때 애니메이션이 튀지 않게 함
       onUpdate: (self) => {
-        const idx = Math.min(
-          items.length - 1,
-          Math.floor(self.progress * items.length),
-        );
+        const scaled = self.progress * items.length;
+        const idx = Math.min(items.length - 1, Math.floor(scaled));
         setActiveMilestoneIndex(idx);
+        setMilestoneProgress(scaled - idx);
       },
     });
 
@@ -158,7 +223,13 @@ function JourneyYearPin({
   return (
     <div ref={wrapRef} className="journey-pin-wrap">
       <div className="journey-pin-left">
-        <div className={year === '2026' ? 'journey-timeline journey-timeline--2026' : 'journey-timeline'}>
+        <div
+          className={
+            year === '2026'
+              ? 'journey-timeline journey-timeline--2026'
+              : 'journey-timeline'
+          }
+        >
           <p className={titleClassName}>{year}</p>
           {items.map((item, idx) => (
             <TimelineRow
@@ -174,12 +245,25 @@ function JourneyYearPin({
         <div className="journey-photo-frame">
           {photos.map((photo, idx) => (
             <div
-              key={photo.src}
+              key={Array.isArray(photo.src) ? photo.src.join('|') : photo.src}
               className={
-                idx === activeIndex ? 'journey-photo-slide active' : 'journey-photo-slide'
+                idx === activeIndex
+                  ? 'journey-photo-slide active'
+                  : 'journey-photo-slide'
               }
             >
-              <Image src={photo.src} alt={photo.alt} fill className="object-cover" />
+              <PhotoSlideImages
+                src={photo.src}
+                alt={photo.alt}
+                active={idx === activeIndex}
+                progress={
+                  photo.milestoneIndex === activeMilestoneIndex
+                    ? milestoneProgress
+                    : photo.milestoneIndex < activeMilestoneIndex
+                      ? 1
+                      : 0
+                }
+              />
             </div>
           ))}
         </div>

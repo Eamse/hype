@@ -12,23 +12,6 @@ export type Product = {
   number?: string | null;
 };
 
-function BookmarkIcon({ active }: { active: boolean }) {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill={active ? '#000' : 'none'}
-      stroke={active ? '#000' : '#bbb'}
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}
-
 function ImgBox() {
   return (
     <div
@@ -44,93 +27,62 @@ function ImgBox() {
   );
 }
 
-export default function ProductCard({
-  product,
-  isSaved,
-  onToggleSave,
-}: {
-  product: Product;
-  isSaved: boolean;
-  onToggleSave: (id: number) => void;
-}) {
+export default function ProductCard({ product }: { product: Product }) {
   const [loaded, setLoaded] = useState(false);
   return (
-    <div style={{ position: 'relative' }}>
-      <Link
-        href={`/product/${product.id}`}
-        className="product-card"
-        style={{ cursor: 'pointer', display: 'block' }}
-      >
-        <div
-          style={{
-            position: 'relative',
-            width: '100%',
-            aspectRatio: '4/5',
-            borderRadius: 6,
-            overflow: 'hidden',
-            marginBottom: 8,
-          }}
-        >
-          {product.imageUrl ? (
-            <>
-              {!loaded && (
-                <div style={{ position: 'absolute', inset: 0 }}>
-                  <ImgBox />
-                </div>
-              )}
-              <Image
-                src={product.imageUrl}
-                alt={product.title}
-                fill
-                sizes="(max-width: 768px) 50vw, 25vw"
-                className="card-img"
-                style={{
-                  objectFit: 'cover',
-                  opacity: loaded ? 1 : 0,
-                  transition: 'opacity 0.3s ease',
-                }}
-                onLoad={() => setLoaded(true)}
-              />
-            </>
-          ) : (
-            <ImgBox />
-          )}
-        </div>
-        <p
-          className="card-title"
-          style={{
-            fontSize: 14,
-            color: '#000',
-            marginBottom: 3,
-            lineHeight: 1.4,
-            textAlign: 'center',
-            letterSpacing: '0.5px',
-            // WebkitTextStroke: '0.3px #000',
-          }}
-        >
-          {product.number}
-        </p>
-      </Link>
-      <button
-        onClick={() => onToggleSave(product.id)}
+    <Link
+      href={`/product/${product.id}`}
+      className="product-card"
+      style={{ cursor: 'pointer', display: 'block' }}
+    >
+      <div
         style={{
-          position: 'absolute',
-          top: 6,
-          right: 6,
-          width: 26,
-          height: 26,
-          borderRadius: '50%',
-          background: 'rgba(255,255,255,0.85)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: 'none',
-          cursor: 'pointer',
-          zIndex: 1,
+          position: 'relative',
+          width: '100%',
+          aspectRatio: '4/5',
+          borderRadius: 6,
+          overflow: 'hidden',
+          marginBottom: 8,
         }}
       >
-        <BookmarkIcon active={isSaved} />
-      </button>
-    </div>
+        {product.imageUrl ? (
+          <>
+            {!loaded && (
+              <div style={{ position: 'absolute', inset: 0 }}>
+                <ImgBox />
+              </div>
+            )}
+            <Image
+              src={product.imageUrl}
+              alt={product.title}
+              fill
+              sizes="(max-width: 768px) 50vw, 25vw"
+              className="card-img"
+              style={{
+                objectFit: 'cover',
+                opacity: loaded ? 1 : 0,
+                transition: 'opacity 0.3s ease',
+              }}
+              onLoad={() => setLoaded(true)}
+            />
+          </>
+        ) : (
+          <ImgBox />
+        )}
+      </div>
+      <p
+        className="card-title"
+        style={{
+          fontSize: 14,
+          color: '#000',
+          marginBottom: 3,
+          lineHeight: 1.4,
+          textAlign: 'center',
+          letterSpacing: '0.5px',
+        }}
+      >
+        {product.number}
+      </p>
+    </Link>
   );
 }

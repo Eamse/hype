@@ -1,5 +1,6 @@
 export const revalidate = 60;
 
+import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { withProductNumbers } from '@/lib/product-number';
 import Header from '@/components/header';
@@ -74,19 +75,16 @@ export default async function Home() {
       <main style={{ paddingTop: 56, flex: 1 }}>
         <HeroCarousel images={heroImages}>
           <div className="dday-banner">
-            <div className="dday-banner-text">
-              <span>
-                Register your wedding date and
-                <br />
-                <strong>check your D-Day!</strong>
-              </span>
-            </div>
-            <a
-              href="https://forms.gle/3sWqu4NED5ruJEnN9"
-              className="dday-banner-cta"
-            >
-              Enter Wedding Info
-            </a>
+            <div className="dday-banner-text"></div>
+            <Link href="/inquiry" className="dday-banner-cta">
+              Inquiry
+            </Link>
+          </div>
+          <div className="dday-banner">
+            <div className="dday-banner-text"></div>
+            <Link href="/packages" className="dday-banner-cta">
+              Package
+            </Link>
           </div>
         </HeroCarousel>
         {/* 속도조절 */}

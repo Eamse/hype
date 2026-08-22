@@ -8,7 +8,6 @@ import LoginModal from '@/components/login-modal';
 import SearchModal from '@/components/search-modal';
 import ComingSoonModal from './coming-soon-modal';
 import HeaderActionButtons from '@/components/header-action-buttons';
-import { useBookmarks } from '@/components/bookmark-provider';
 import { useSession, signOut } from 'next-auth/react';
 import { useIsMobile } from '@/hooks/useIsMobile';
 
@@ -212,23 +211,6 @@ function ReviewNavIcon() {
     </svg>
   );
 }
-function BookmarkNavIcon() {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}
-
 export default function Header(props: { brand?: Brand }) {
   return (
     <Suspense fallback={<div style={{ height: 56 }} />}>
@@ -248,8 +230,6 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
   const [comingSoonBrand, setComingSoonBrand] = useState<Brand | null>(null); // 커스텀 "Coming Soon" 팝업용
   const { data: session } = useSession();
   const isMobile = useIsMobile(930);
-  const { bookmarkedIds } = useBookmarks();
-  const bookmarkCount = bookmarkedIds.size;
   const [hoveredNav, setHoveredNav] = useState<string | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navItemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
@@ -527,12 +507,8 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
             {!isMobile ? (
               <HeaderActionButtons
                 session={session}
-                bookmarkCount={bookmarkCount}
                 showBell
                 onSearchClick={() => setSearchOpen(true)}
-                onBookmarkClick={() =>
-                  session ? router.push('/bookmarks') : setLoginOpen(true)
-                }
                 onSignClick={handleSignClick}
               />
             ) : (
@@ -619,15 +595,10 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
           >
             <HeaderActionButtons
               session={session}
-              bookmarkCount={bookmarkCount}
               showBell
               onSearchClick={() => {
                 setMenuOpen(false);
                 setSearchOpen(true);
-              }}
-              onBookmarkClick={() => {
-                setMenuOpen(false);
-                session ? router.push('/bookmarks') : setLoginOpen(true);
               }}
               onSignClick={() => {
                 if (session) return;
@@ -876,12 +847,6 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
             [
               { label: 'Home', href: '/', icon: <HomeNavIcon /> },
               { label: 'Review', href: '/review', icon: <ReviewNavIcon /> },
-              {
-                label: 'Saved',
-                icon: <BookmarkNavIcon />,
-                onClick: () =>
-                  session ? router.push('/bookmarks') : setLoginOpen(true),
-              },
               {
                 label: 'Menu',
                 icon: <HamburgerIcon />,

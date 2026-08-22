@@ -306,7 +306,6 @@ body {
 .how-started-layout {
   display: grid;
   grid-template-columns: minmax(0, 62.25fr) minmax(0, 37.75fr);
-  margin-bottom: 64px;
   background: #fff;
 }
 
@@ -415,7 +414,7 @@ body {
 }
 
 .how-started-followup-copy {
-  padding: clamp(72px, 6.5vw, 94px) clamp(24px, 8vw, 100px) 64px;
+  padding: clamp(72px, 6.5vw, 94px) clamp(24px, 3vw, 48px) 64px;
 }
 
 .how-started-followup-description {
@@ -661,7 +660,7 @@ body {
 }
 
 .journey-year-title {
-  margin: 0 0 clamp(32px, 3.2vw, 52px);
+  margin: 0 0 clamp(32px, 3.2vw, 52px) -40px;
   font-size: clamp(56px, 5.5vw, 92px);
   font-weight: 800;
   font-style: italic;
@@ -734,8 +733,12 @@ body {
   line-height: 1.4;
 }
 
+/* 하이라이트 마일스톤(Angel Dei / First client photoshoot / Meryem)만 —
+   스크롤로 해당 항목이 활성화됐을 때만 글씨가 커지며 강조됨 */
 .journey-milestone--bold {
-  font-weight: 700;
+  display: inline-block;
+  transform-origin: left center;
+  transition: transform 0.3s ease, font-weight 0.2s ease;
 }
 
 .journey-logo-badge {
@@ -819,7 +822,8 @@ body {
   transform: scale(1.5);
 }
 
-.journey-timeline-item--active .journey-milestone {
+.journey-timeline-item--active .journey-milestone--bold {
+  transform: scale(1.15);
   font-weight: 700;
 }
 
@@ -1404,6 +1408,34 @@ body {
   }
 }
 
+/* ── 히어로 캐러셀 스와이프 가능 힌트 — 마우스 커서를 그대로 따라다니는 커스텀 커서 ── */
+.hero-carousel-swipe-hint {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  will-change: transform;
+}
+@media (max-width: 768px) {
+  .hero-carousel-swipe-hint {
+    display: none;
+  }
+}
+
 /* ── D-Day 배너 (히어로 이미지 좌하단 플로팅 카드) ────────────────── */
 .dday-banner {
   display: inline-flex;
@@ -1429,6 +1461,10 @@ body {
   color: #fff;
 }
 .dday-banner-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 96px;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.3px;
