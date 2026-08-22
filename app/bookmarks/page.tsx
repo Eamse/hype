@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { getProductNumber } from '@/lib/product-number';
 import BookmarkList from './_components/bookmark-list';
 import Header from '@/components/header';
+import HomeFooter from '@/app/_components/home-footer';
 
 export default async function Bookmarks() {
   const session = await auth();
@@ -32,6 +33,7 @@ export default async function Bookmarks() {
     <>
       <Header />
       <BookmarkList bookmarks={bookmarks} />
+      <HomeFooter />
     </>
   );
 }

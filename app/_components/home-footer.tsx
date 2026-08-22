@@ -34,11 +34,11 @@ export default function HomeFooter() {
     <footer
       style={{
         borderTop: '1px solid silver',
-        padding: '24px 20px',
+        padding: '24px 40px',
         backgroundColor: '#fff',
       }}
     >
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+      <div>
         <div style={{ display: 'flex', gap: 16, marginBottom: 14 }}>
           <button
             style={{

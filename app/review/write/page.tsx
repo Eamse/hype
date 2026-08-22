@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Header from '@/components/header';
+import HomeFooter from '@/app/_components/home-footer';
 import ReviewForm from './_components/review-form';
 
 export const dynamic = 'force-dynamic';
@@ -22,6 +23,7 @@ export default function ReviewWritePage() {
           <ReviewForm />
         </div>
       </main>
+      <HomeFooter />
     </div>
   );
 }

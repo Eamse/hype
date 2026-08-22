@@ -247,7 +247,6 @@ export default function AboutClient({
               minHeight: '50vh',
               // Story의 첫 사진은 섹션 시작 지점부터 전체 폭으로 보여준다.
               paddingTop: section.id === 'story' ? 0 : 60,
-              borderBottom: '1px solid #000',
             }}
           >
             {section.id === 'introduction' ? (

@@ -7,6 +7,7 @@ import { contentSubTabs } from '@/lib/service-sub-tabs';
 import { prisma } from '@/lib/prisma';
 import { withProductNumbers } from '@/lib/product-number';
 import ProductSections from '../_components/product-sections';
+import HomeFooter from '../_components/home-footer';
 
 export const metadata: Metadata = {
   title: 'Packages | HYPE WEDDING',
@@ -58,9 +59,9 @@ export default async function PackagesPage({
   const seoul = withProductNumbers(seoulRaw);
 
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header brand={activeBrand} />
-      <main style={{ paddingTop: 56 }}>
+      <main style={{ paddingTop: 56, flex: 1 }}>
         <SubTabBar tabs={contentSubTabs(activeBrand)} />
         <ProductSections
           sections={[
@@ -69,6 +70,7 @@ export default async function PackagesPage({
           ]}
         />
       </main>
+      <HomeFooter />
     </div>
   );
 }

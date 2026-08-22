@@ -3,10 +3,10 @@ export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
 import HeroCarousel from '@/components/hero-carousel';
-import SnsSidebar from '@/components/sns-sidebar';
 import ComingSoon from '@/components/coming-soon';
 import { withProductNumbers } from '@/lib/product-number';
 import ProductSections from '../_components/product-sections';
+import HomeFooter from '../_components/home-footer';
 
 // 클라이언트 기획 미확정 — 아래 실제 페이지 로직은 그대로 두고 진입만 막아둠.
 // 기획 나오면 이 상수를 false로 바꾸면 원래 페이지가 다시 노출됨.
@@ -63,11 +63,13 @@ export default async function HypeSnapPage() {
         backgroundColor: '#fff',
         color: '#000',
         minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       <Header brand="hype-snap" />
 
-      <main style={{ paddingTop: 56 }}>
+      <main style={{ paddingTop: 56, flex: 1 }}>
         <HeroCarousel images={heroImages}>
           <div className="dday-banner">
             <div className="dday-banner-text">
@@ -108,8 +110,7 @@ export default async function HypeSnapPage() {
           ]}
         />
       </main>
-
-      <SnsSidebar />
+      <HomeFooter />
     </div>
   );
 }

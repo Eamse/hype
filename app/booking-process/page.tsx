@@ -2,15 +2,15 @@ import type { Metadata } from 'next';
 import Header from '@/components/header';
 import SubTabBar from '@/components/sub-tab-bar';
 import { inquirySubTabs } from '@/lib/inquiry-sub-tabs';
-import InquiryClient from './_components/inquiry-client';
+import BookingProcessClient from './_components/booking-process-client';
 import HomeFooter from '@/app/_components/home-footer';
 
 export const metadata: Metadata = {
-  title: 'Inquiry | HYPE WEDDING',
-  description: 'Book your photoshoot with HYPE WEDDING or HYPE SNAP.',
+  title: 'Booking Process | HYPE WEDDING',
+  description: 'How to book your HYPE WEDDING or HYPE SNAP photoshoot.',
 };
 
-export default async function InquiryPage({
+export default async function BookingProcessPage({
   searchParams,
 }: {
   searchParams: Promise<{ brand?: string }>;
@@ -29,7 +29,7 @@ export default async function InquiryPage({
       <Header brand={activeBrand} />
       <main style={{ paddingTop: 56, flex: 1 }}>
         <SubTabBar tabs={inquirySubTabs(activeBrand)} />
-        <InquiryClient />
+        <BookingProcessClient />
       </main>
       <HomeFooter />
     </div>

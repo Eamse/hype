@@ -66,6 +66,7 @@ const NAV_LINKS: Record<
       href: '/inquiry',
       dropdown: [
         { label: 'Inquiry', href: '/inquiry' },
+        { label: 'Booking Process', href: '/booking-process' },
         { label: 'FAQ', href: '/faq' },
         { label: 'Partnership', href: '/partnership' },
       ],
@@ -100,6 +101,7 @@ const NAV_LINKS: Record<
       href: '/inquiry?brand=hype-snap',
       dropdown: [
         { label: 'Inquiry', href: '/inquiry?brand=hype-snap' },
+        { label: 'Booking Process', href: '/booking-process?brand=hype-snap' },
         { label: 'FAQ', href: '/faq?brand=hype-snap' },
         { label: 'Partnership', href: '/partnership?brand=hype-snap' },
       ],
@@ -319,9 +321,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
       >
         <div
           style={{
-            maxWidth: 1200,
-            margin: '0 auto',
-            padding: '0 20px',
+            padding: '0 40px',
             height: '100%',
             display: 'flex',
             alignItems: 'center',
@@ -351,7 +351,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
                     }
                   }}
                   style={{
-                    fontSize: isMobile ? 13 : 15,
+                    fontSize: isMobile ? 13 : 16,
                     fontWeight: 800,
                     letterSpacing: '1px',
                     textTransform: 'uppercase',

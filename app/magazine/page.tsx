@@ -6,6 +6,7 @@ import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
 import MagazineMasterActions from './_components/magazine-master-actions';
 import MagazineGrid from './_components/magazine-grid';
+import HomeFooter from '@/app/_components/home-footer';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = { title: 'Magazine' };
@@ -178,6 +179,7 @@ export default async function MagazinePage({ searchParams }: Props) {
           </>
         )}
       </div>
+      <HomeFooter />
     </div>
   );
 }

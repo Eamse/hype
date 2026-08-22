@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma';
 import { withProductNumbers } from '@/lib/product-number';
 import Header from '@/components/header';
 import HeroCarousel from '@/components/hero-carousel';
-import SnsSidebar from '@/components/sns-sidebar';
 import ProductSections from './_components/product-sections';
 import HomeFooter from './_components/home-footer';
 import EditorialSection from './_components/editorial-section';
+import OurServiceSection from '@/app/offer/_components/our-service-section';
 
 export default async function Home() {
   const heroRow = await prisma.siteConfig.findUnique({
@@ -65,11 +65,13 @@ export default async function Home() {
         backgroundColor: '#fff',
         color: '#000',
         minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       <Header />
 
-      <main style={{ paddingTop: 56 }}>
+      <main style={{ paddingTop: 56, flex: 1 }}>
         <HeroCarousel images={heroImages}>
           <div className="dday-banner">
             <div className="dday-banner-text">
@@ -102,10 +104,10 @@ export default async function Home() {
             },
           ]}
         />
+        <OurServiceSection showHeader={false} />
         <EditorialSection magazines={magazines} />
       </main>
 
-      <SnsSidebar />
       <HomeFooter />
     </div>
   );

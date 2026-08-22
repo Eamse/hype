@@ -3,6 +3,7 @@ export const revalidate = 60; // 이미지 많은 매거진 상세 — 60초 캐
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
+import HomeFooter from '@/app/_components/home-footer';
 import MagazineDetailView from '@/components/magazine-detail-view';
 import type { Metadata } from 'next';
 
@@ -33,9 +34,12 @@ export default async function MagazineDetailPage({ params }: Props) {
   if (!magazine) notFound();
 
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header brand="hype-wedding" />
-      <MagazineDetailView magazine={magazine} backHref="/magazine" />
+      <div style={{ flex: 1 }}>
+        <MagazineDetailView magazine={magazine} backHref="/magazine" />
+      </div>
+      <HomeFooter />
     </div>
   );
 }
