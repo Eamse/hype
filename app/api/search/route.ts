@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 export type SearchResult = {
   type: 'product' | 'magazine' | 'review';
@@ -10,6 +11,11 @@ export type SearchResult = {
 };
 
 export async function GET(request: NextRequest) {
+  const ip = getClientIp(request);
+  if (!checkRateLimit(`search:${ip}`, 30, 60 * 1000)) {
+    return NextResponse.json({ message: 'Too many requests' }, { status: 429 });
+  }
+
   const q = request.nextUrl.searchParams.get('q');
   if (!q || q.trim().length < 1) return NextResponse.json([]);
 

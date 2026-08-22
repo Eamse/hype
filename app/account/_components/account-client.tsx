@@ -65,6 +65,7 @@ export default function AccountClient() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState<UserData>(EMPTY_USER);
+  const [currentPassword, setCurrentPassword] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -82,6 +83,7 @@ export default function AccountClient() {
 
   function startEdit() {
     setForm(user);
+    setCurrentPassword('');
     setPassword('');
     setConfirmPassword('');
     setError('');
@@ -90,6 +92,7 @@ export default function AccountClient() {
 
   function cancelEdit() {
     setForm(user);
+    setCurrentPassword('');
     setPassword('');
     setConfirmPassword('');
     setError('');
@@ -104,6 +107,10 @@ export default function AccountClient() {
     setError('');
     if (password && password !== confirmPassword) {
       setError('Passwords do not match.');
+      return;
+    }
+    if (password && user.hasPassword && !currentPassword) {
+      setError('Please enter your current password.');
       return;
     }
 
@@ -122,7 +129,7 @@ export default function AccountClient() {
         birthYear: form.birthYear,
         birthMonth: form.birthMonth,
         birthDay: form.birthDay,
-        ...(password ? { password, confirmPassword } : {}),
+        ...(password ? { password, confirmPassword, currentPassword } : {}),
       }),
     });
     setSaving(false);
@@ -135,6 +142,7 @@ export default function AccountClient() {
 
     const updated = { ...form, hasPassword: password ? true : form.hasPassword };
     setUser(updated);
+    setCurrentPassword('');
     setPassword('');
     setConfirmPassword('');
     setEditing(false);
@@ -229,6 +237,18 @@ export default function AccountClient() {
               </p>
             </div>
           </EditRow>
+
+          {user.hasPassword && password && (
+            <EditRow label="Current Password">
+              <input
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Enter your current password"
+                style={inputStyle}
+              />
+            </EditRow>
+          )}
 
           <EditRow label="Password">
             <input
