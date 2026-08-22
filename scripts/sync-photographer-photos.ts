@@ -108,11 +108,11 @@ async function main() {
         console.log(`  ⬇️  (${index}/${imageFiles.length}) ${file.name}`);
         const original = await downloadFile(drive, file.id);
 
-        const webBuffer = await sharp(original, { limitInputPixels: 40_000_000 })
+        const webBuffer = await sharp(original, { limitInputPixels: 300_000_000 })
           .resize(1600)
           .webp({ quality: 82 })
           .toBuffer();
-        const originalBuffer = await sharp(original, { limitInputPixels: 40_000_000 })
+        const originalBuffer = await sharp(original, { limitInputPixels: 300_000_000 })
           .resize(3840)
           .webp({ quality: 92 })
           .toBuffer();

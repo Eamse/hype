@@ -185,6 +185,7 @@ model Package {
   originalPhotos  String             // "800+"
   retouched       Int
   retouchedDetail String?
+  thumbnailUrl    String?
   order           Int                @default(0)
   createdAt       DateTime           @default(now())
   updatedAt       DateTime           @updatedAt
