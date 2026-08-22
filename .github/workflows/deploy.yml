@@ -22,8 +22,11 @@ jobs:
             set -e
             cd /root/hypepig
             git pull origin main
-            npm run build
+            npm install
+            npx prisma db push
+            NODE_OPTIONS="--max-old-space-size=3072" npm run build
             cp -r .next/static .next/standalone/.next/static
             cp -r public .next/standalone/public
+            cp .env .next/standalone/.env
             pm2 restart hypepig
             pm2 save
