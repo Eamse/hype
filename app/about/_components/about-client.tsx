@@ -23,12 +23,12 @@ type JourneyItem = {
 const JOURNEY_2025: JourneyItem[] = [
   {
     date: 'Feb 27',
-    bold: true,
+    bold: false,
     content: 'Hype Pig founded',
   },
   {
     date: 'Apr',
-    bold: true,
+    bold: false,
     content: (
       <>
         Launched first brand — <strong>Hype Wedding</strong>
@@ -37,7 +37,7 @@ const JOURNEY_2025: JourneyItem[] = [
   },
   {
     date: 'May',
-    bold: false,
+    bold: true,
     content: (
       <>
         First influencer collab — <strong>Angel Dei</strong>, Philippines
@@ -81,7 +81,7 @@ const JOURNEY_2026: JourneyItem[] = [
   },
   {
     date: 'Apr',
-    bold: false,
+    bold: true,
     content: (
       <>
         Influencer collab — <strong>Meryem Gündüz, Turkey</strong>
@@ -90,7 +90,7 @@ const JOURNEY_2026: JourneyItem[] = [
   },
   {
     date: 'May',
-    bold: true,
+    bold: false,
     content: (
       <>
         Launched second brand — <strong>Hype Snap</strong>
@@ -99,12 +99,12 @@ const JOURNEY_2026: JourneyItem[] = [
   },
   {
     date: 'Jun',
-    bold: true,
+    bold: false,
     content: '70th client booking milestone',
   },
   {
     date: 'Jul',
-    bold: true,
+    bold: false,
     content: 'Singapore Meet-up Event',
   },
 ];

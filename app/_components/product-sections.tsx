@@ -1,9 +1,6 @@
 'use client';
 
 import ProductSection from '@/components/product-section';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { useBookmarks } from '@/components/bookmark-provider';
 
 type Product = {
   id: number;
@@ -22,18 +19,6 @@ type Section = {
 };
 
 export default function ProductSections({ sections }: { sections: Section[] }) {
-  const { bookmarkedIds, toggleBookmark } = useBookmarks();
-  const { data: session } = useSession();
-  const router = useRouter();
-
-  async function toggleSave(id: number) {
-    if (!session) {
-      router.push('?auth=1');
-      return;
-    }
-    await toggleBookmark(id);
-  }
-
   return (
     <>
       {sections.map((s) => (
@@ -43,8 +28,6 @@ export default function ProductSections({ sections }: { sections: Section[] }) {
           title={s.title}
           subtitle={s.subtitle}
           products={s.products}
-          saved={bookmarkedIds}
-          onToggleSave={toggleSave}
           showAll={s.showAll}
           secondsPerItem={s.secondsPerItem}
         />

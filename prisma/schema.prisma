@@ -33,7 +33,6 @@ model Product {
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
   images    ProductImage[]
-  bookmarks Bookmark[]
   directors ProductDirector[]
 }
 
@@ -70,7 +69,6 @@ model User {
   updatedAt        DateTime  @updatedAt
   accounts         Account[]
   sessions         Session[]
-  bookmarks        Bookmark[]
   reviews          Review[]
   comments         Comment[]
   notifications    Notification[]
@@ -138,17 +136,6 @@ model MagazineImage {
   magazine   Magazine @relation(fields: [magazineId], references: [id], onDelete: Cascade)
 
   @@index([magazineId])
-}
-
-model Bookmark {
-    id        Int      @id @default(autoincrement())                                                                   
-    userId    String                                                                                                   
-    productId Int                                                                                                      
-    createdAt DateTime @default(now())                                                                                 
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)                                
-    product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)                             
-   
-    @@unique([userId, productId])
 }
 
 model Director {

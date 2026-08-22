@@ -22,23 +22,6 @@ function SearchIcon() {
   );
 }
 
-function BookmarkIcon() {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-    </svg>
-  );
-}
-
 function UserIcon() {
   return (
     <svg
@@ -72,17 +55,13 @@ const iconBtnStyle: React.CSSProperties = {
 /** 헤더 검색/북마크/알림/로그인·아웃 버튼 — 데스크탑 헤더 + 모바일 드로어 양쪽에서 공용 */
 export default function HeaderActionButtons({
   session,
-  bookmarkCount,
   showBell,
   onSearchClick,
-  onBookmarkClick,
   onSignClick,
 }: {
   session: Session | null;
-  bookmarkCount: number;
   showBell: boolean;
   onSearchClick: () => void;
-  onBookmarkClick: () => void;
   onSignClick: () => void;
 }) {
   return (
@@ -119,34 +98,6 @@ export default function HeaderActionButtons({
       </a>
       <button onClick={onSearchClick} aria-label="Search" style={iconBtnStyle}>
         <SearchIcon />
-      </button>
-      <button
-        onClick={onBookmarkClick}
-        aria-label="Bookmarks"
-        style={{ ...iconBtnStyle, position: 'relative' }}
-      >
-        <BookmarkIcon />
-        {bookmarkCount > 0 && (
-          <span
-            style={{
-              position: 'absolute',
-              top: -6,
-              right: -6,
-              width: 16,
-              height: 16,
-              borderRadius: '50%',
-              backgroundColor: '#ef4444',
-              color: '#fff',
-              fontSize: 10,
-              fontWeight: 700,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            {bookmarkCount}
-          </span>
-        )}
       </button>
       {showBell && <NotificationBell />}
       <button

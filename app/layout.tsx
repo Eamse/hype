@@ -4,7 +4,6 @@ import { Geist } from 'next/font/google';
 import localFont from 'next/font/local';
 import { cn } from '@/lib/utils';
 import NextSessionProvider from '@/components/session-provider';
-import { BookmarkProvider } from '@/components/bookmark-provider';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -34,9 +33,7 @@ export default function RootLayout({
       className={cn('h-full', 'font-sans', geist.variable, pretendard.variable)}
     >
       <body className="min-h-full flex flex-col">
-        <NextSessionProvider>
-          <BookmarkProvider>{children}</BookmarkProvider>
-        </NextSessionProvider>
+        <NextSessionProvider>{children}</NextSessionProvider>
       </body>
     </html>
   );
