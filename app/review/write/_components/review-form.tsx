@@ -15,6 +15,8 @@ const inputStyle: React.CSSProperties = {
   borderRadius: 6,
   border: '1px solid #000',
   fontSize: 14,
+  background: '#fff',
+  color: '#000',
 };
 
 const DateInput = forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
@@ -50,6 +52,7 @@ export default function ReviewForm() {
   const [directorId, setDirectorId] = useState('');
   const [guestName, setGuestName] = useState('');
   const [guestPassword, setGuestPassword] = useState('');
+  const [guestPasswordConfirm, setGuestPasswordConfirm] = useState('');
 
   const [directors, setDirectors] = useState<Director[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -81,6 +84,10 @@ export default function ReviewForm() {
     }
     if (!session && (!guestName.trim() || !guestPassword.trim())) {
       alert('Please enter your name and password.');
+      return;
+    }
+    if (!session && guestPassword !== guestPasswordConfirm) {
+      alert('Passwords do not match.');
       return;
     }
 
@@ -219,6 +226,7 @@ export default function ReviewForm() {
             <label style={labelStyle}>Name *</label>
             <input style={inputStyle} value={guestName} onChange={(e) => setGuestName(e.target.value)} />
           </div>
+          <div />
           <div>
             <label style={labelStyle}>Password * (needed to edit/delete)</label>
             <input
@@ -226,6 +234,15 @@ export default function ReviewForm() {
               type="password"
               value={guestPassword}
               onChange={(e) => setGuestPassword(e.target.value)}
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>Verify Password *</label>
+            <input
+              style={inputStyle}
+              type="password"
+              value={guestPasswordConfirm}
+              onChange={(e) => setGuestPasswordConfirm(e.target.value)}
             />
           </div>
         </div>
@@ -236,7 +253,7 @@ export default function ReviewForm() {
         disabled={submitting}
         style={{
           padding: '14px',
-          background: '#000',
+          background: '#2d5a45',
           color: '#fff',
           border: 'none',
           borderRadius: 8,
@@ -245,7 +262,7 @@ export default function ReviewForm() {
           cursor: 'pointer',
         }}
       >
-        {submitting ? 'Submitting...' : 'Submit Review'}
+        {submitting ? 'Submitting...' : 'Submit a Review'}
       </button>
     </form>
   );

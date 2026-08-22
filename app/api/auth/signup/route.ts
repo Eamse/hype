@@ -34,9 +34,14 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  if (typeof password !== 'string' || password.length < 8) {
+  const PASSWORD_RULE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+  if (typeof password !== 'string' || !PASSWORD_RULE.test(password)) {
     return NextResponse.json(
-      { success: false, message: 'Password must be at least 8 characters' },
+      {
+        success: false,
+        message:
+          'Password must be at least 8 characters and include uppercase, lowercase, a number, and a special character',
+      },
       { status: 400 },
     );
   }

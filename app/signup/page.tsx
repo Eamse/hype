@@ -105,8 +105,12 @@ export default function SignupPage() {
 
   function validate(): Errors {
     const e: Errors = {};
+    const PASSWORD_RULE = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
     if (!credentials.email) e.email = 'Email is required.';
     if (!credentials.password) e.password = 'Password is required.';
+    else if (!PASSWORD_RULE.test(credentials.password))
+      e.password =
+        'Min 8 characters, with uppercase, lowercase, a number, and a special character.';
     if (credentials.password !== credentials.passwordConfirm)
       e.passwordConfirm = 'Passwords do not match.';
     if (!userInfo.firstName) e.firstName = 'First name is required.';
@@ -217,8 +221,12 @@ export default function SignupPage() {
               placeholder="••••••••"
               className={`w-full border rounded-lg px-3 py-2 text-sm outline-none ${errors.password ? 'border-red-400' : 'border-gray-200 focus:border-gray-900'}`}
             />
-            {errors.password && (
+            {errors.password ? (
               <p className="text-xs text-red-500">{errors.password}</p>
+            ) : (
+              <p className="text-xs text-gray-400">
+                Min 8 characters, with uppercase, lowercase, a number, and a special character.
+              </p>
             )}
           </div>
 
@@ -267,6 +275,7 @@ export default function SignupPage() {
               Continue with Google
             </button>
 
+            {/* Apple 로그인 — 당분간 비활성화
             <button
               type="button"
               onClick={() => signIn('apple', { callbackUrl: '/onboarding' })}
@@ -275,6 +284,7 @@ export default function SignupPage() {
               <AppleIcon />
               Continue with Apple
             </button>
+            */}
           </div>
           <button
             type="submit"

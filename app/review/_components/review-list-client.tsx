@@ -1,12 +1,48 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useSelection } from '@/components/admin/use-selection';
 import BulkActions from '@/components/admin/bulk-actions';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { countryFlag } from '@/lib/country-flag';
+import { Badge } from './review-featured';
+
+// 섹션 전체가 아니라 [data-reveal] 요소 각각을 개별 관찰 — 목록이 뷰포트보다 길어도 정상 동작
+function useReplayReveal(ref: React.RefObject<HTMLElement | null>, deps: unknown[]) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const targets = el.querySelectorAll<HTMLElement>('[data-reveal]');
+    const timers = new Map<Element, number>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const target = entry.target as HTMLElement;
+          const existing = timers.get(target);
+          if (existing) clearTimeout(existing);
+
+          if (entry.isIntersecting) {
+            const delay = Number(target.dataset.revealDelay ?? 0);
+            const timer = window.setTimeout(() => target.classList.add('visible'), delay);
+            timers.set(target, timer);
+          } else {
+            target.classList.remove('visible');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' },
+    );
+    targets.forEach((target) => observer.observe(target));
+    return () => {
+      observer.disconnect();
+      timers.forEach((timer) => clearTimeout(timer));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
+}
 
 type ReviewRow = {
   id: number;
@@ -18,127 +54,83 @@ type ReviewRow = {
   rating: number | null;
   title: string;
   content: string;
+  shootingDate: string;
   isFeatured: boolean;
   commentCount: number;
 };
 
-function CommentCount({ count }: { count: number }) {
-  return (
-    <span className="inline-flex items-center gap-1 text-[12px] text-[#999]">
-      💬 {count}
-    </span>
-  );
-}
+function ReviewCard({ review, index }: { review: ReviewRow; index: number }) {
+  const [expanded, setExpanded] = useState(false);
+  const isLong = review.content.length > 160;
 
-function ReviewMeta({ review }: { review: ReviewRow }) {
-  const locationStyle =
-    review.location === 'jeju'
-      ? 'bg-[#eaf5ee] text-[#2D5A45]'
-      : 'bg-[#eef2fb] text-[#2b4c8c]';
-  return (
-    <div className="flex flex-wrap items-center gap-1.5">
-      <span
-        className={`rounded-full px-2 py-[2px] text-[10px] font-semibold uppercase tracking-wide ${locationStyle}`}
-      >
-        {review.location}
-      </span>
-      <span className="rounded-full bg-[#f2f2f2] px-2 py-[2px] text-[10px] font-semibold uppercase tracking-wide text-[#777]">
-        {review.productType}
-      </span>
-      <span className="text-[12px] text-[#999]">
-        {review.name} · {review.countryName}
-        {/* 추후 사용 예정 — 별점 표시 임시 비활성화
-        {review.rating && ` · ★ ${review.rating}`}
-        */}
-      </span>
-    </div>
-  );
-}
-
-/** 우수 리뷰 하이라이트 스트립용 카드 — 가로 스크롤, 큰따옴표 장식 */
-function FeaturedCard({ review }: { review: ReviewRow }) {
-  const isMobile = useIsMobile();
   return (
     <Link
       href={`/review/${review.id}`}
-      className="group relative flex w-[220px] sm:w-[280px] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-[#e8d9b0] bg-gradient-to-b from-[#fdf9ef] to-white p-4 sm:p-6 text-inherit no-underline transition-all duration-200 hover:-translate-y-[3px] hover:shadow-[0_8px_24px_rgba(201,169,110,0.25)]"
+      onClick={(e) => {
+        if (expanded && isLong) e.preventDefault();
+      }}
+      className="review-rise"
+      data-reveal
+      data-reveal-delay={`${(index % 6) * 60}`}
+      style={{
+        display: 'block',
+        border: '1px solid #eee',
+        padding: 20,
+        textDecoration: 'none',
+        color: 'inherit',
+      }}
     >
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -top-3 right-3 select-none text-[60px] sm:text-[80px] font-serif leading-none text-[#c9a96e]/15"
-      >
-        &rdquo;
-      </span>
-      <span className="mb-3 inline-flex w-fit items-center gap-1 rounded-full bg-[#c9a96e] px-2.5 py-[3px] text-[10px] font-bold text-white">
-        ✦ 우수 리뷰
-      </span>
-      <div className="mb-3 flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full bg-[#0D0D0D] text-[14px] sm:text-[15px] font-bold text-white">
-        {review.name.charAt(0).toUpperCase()}
+      <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+        <Badge label={review.location} tone="location" />
+        <Badge label={review.productType} tone="product" />
       </div>
-      <h3 className="mb-1.5 text-[15px] sm:text-[16px] font-bold text-[#111] transition-colors group-hover:text-[#2D5A45]">
-        {review.title}
-      </h3>
+      <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 8px' }}>{review.title}</h3>
       <p
-        className="mb-3 flex-1 text-[12px] sm:text-[13px] leading-[1.6] text-[#555]"
         style={{
-          display: '-webkit-box',
-          WebkitLineClamp: isMobile ? 1 : 4,
-          WebkitBoxOrient: 'vertical',
-          overflow: 'hidden',
+          fontSize: 13,
+          color: '#555',
+          lineHeight: 1.6,
+          margin: '0 0 6px',
+          ...(expanded
+            ? {}
+            : {
+                display: '-webkit-box',
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+              }),
         }}
       >
         {review.content}
       </p>
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#f0e4c4] pt-3">
-        <ReviewMeta review={review} />
-        <CommentCount count={review.commentCount} />
-      </div>
-    </Link>
-  );
-}
-
-/** 일반 리뷰 그리드용 카드 */
-function GridCard({ review }: { review: ReviewRow }) {
-  const isMobile = useIsMobile();
-  return (
-    <Link
-      href={`/review/${review.id}`}
-      className="group relative flex flex-1 min-w-0 items-start gap-3 sm:gap-4 overflow-hidden rounded-xl border border-[#eee] bg-white p-4 sm:p-5 text-inherit no-underline transition-all duration-200 hover:-translate-y-[2px] hover:border-[#ddd] hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)]"
-    >
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -top-4 right-4 select-none text-[52px] sm:text-[72px] font-serif leading-none text-black/[0.04]"
-      >
-        &rdquo;
-      </span>
-      <div className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-full bg-[#0D0D0D] text-[14px] sm:text-[16px] font-bold text-white ring-4 ring-[#f7f7f7]">
-        {review.name.charAt(0).toUpperCase()}
-      </div>
-      <div className="min-w-0 flex-1">
-        <div className="mb-2">
-          <ReviewMeta review={review} />
-        </div>
-        <h3 className="mb-1.5 text-[15px] sm:text-[16px] font-bold text-[#111] transition-colors group-hover:text-[#2D5A45]">
-          {review.title}
-        </h3>
-        <p
-          className="text-[13px] sm:text-[14px] leading-[1.6] text-[#555]"
+      {isLong && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setExpanded((v) => !v);
+          }}
           style={{
-            display: '-webkit-box',
-            WebkitLineClamp: isMobile ? 1 : 3,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            fontSize: 12,
+            fontWeight: 600,
+            color: '#2d5a45',
+            cursor: 'pointer',
+            marginBottom: 10,
           }}
         >
-          {review.content}
-        </p>
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-[#f2f2f2] pt-2.5">
-          <CommentCount count={review.commentCount} />
-          <span className="inline-flex items-center gap-1 text-[12px] font-semibold text-[#2D5A45] opacity-100 transition-opacity duration-200 sm:opacity-0 sm:group-hover:opacity-100">
-            Read review <span className="arrow-nudge">→</span>
-          </span>
-        </div>
-      </div>
+          {expanded ? 'Show less' : 'Read more'}
+        </button>
+      )}
+      <p style={{ fontSize: 12, color: '#888', margin: '10px 0 6px' }}>
+        Shoot date: {review.shootingDate}
+      </p>
+      <p style={{ fontSize: 12, color: '#888', margin: 0 }}>
+        {review.name} {countryFlag(review.country)}
+      </p>
     </Link>
   );
 }
@@ -155,9 +147,8 @@ export default function ReviewListClient({ reviews }: { reviews: ReviewRow[] }) 
     .filter((r) => !deleted.has(r.id))
     .map((r) => ({ ...r, isFeatured: featured.get(r.id) ?? r.isFeatured }));
   const { selectedIds, toggleSelect, toggleAll, clearSelection } = useSelection(visibleReviews);
-
-  const featuredReviews = visibleReviews.filter((r) => r.isFeatured);
-  const regularReviews = visibleReviews.filter((r) => !r.isFeatured);
+  const listRef = useRef<HTMLDivElement>(null);
+  useReplayReveal(listRef, [visibleReviews.length]);
 
   async function handleBulkDelete() {
     await Promise.all(
@@ -196,6 +187,17 @@ export default function ReviewListClient({ reviews }: { reviews: ReviewRow[] }) 
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 32 }}>
+      <p
+        style={{
+          fontSize: 13,
+          fontWeight: 800,
+          letterSpacing: '0.06em',
+          margin: '4px 0 0',
+        }}
+      >
+        ALL REVIEWS
+      </p>
+
       {isModerator && (
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>
           <BulkActions
@@ -212,7 +214,7 @@ export default function ReviewListClient({ reviews }: { reviews: ReviewRow[] }) 
                 style={{
                   fontSize: 12,
                   padding: '4px 14px',
-                  background: '#c9a96e',
+                  background: '#2d5a45',
                   color: '#fff',
                   border: 'none',
                   borderRadius: 6,
@@ -220,7 +222,7 @@ export default function ReviewListClient({ reviews }: { reviews: ReviewRow[] }) 
                   fontWeight: 600,
                 }}
               >
-                우수 리뷰로 지정
+                Featured로 지정
               </button>
               <button
                 onClick={() => handleSetFeatured(false)}
@@ -235,39 +237,16 @@ export default function ReviewListClient({ reviews }: { reviews: ReviewRow[] }) 
                   fontWeight: 600,
                 }}
               >
-                우수 리뷰 해제
+                Featured 해제
               </button>
             </>
           )}
         </div>
       )}
 
-      {featuredReviews.length > 0 && (
-        <div className="flex flex-col gap-3">
-          <h2 className="text-[13px] font-bold uppercase tracking-[0.08em] text-[#8a6d1e]">
-            ✦ Featured Reviews
-          </h2>
-          <div className="hide-scroll -mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto px-1 pb-2">
-            {featuredReviews.map((review) => (
-              <div key={review.id} className="flex shrink-0 items-start gap-2">
-                {isModerator && (
-                  <input
-                    type="checkbox"
-                    checked={selectedIds.has(review.id)}
-                    onChange={() => toggleSelect(review.id)}
-                    className="mt-6 shrink-0"
-                  />
-                )}
-                <FeaturedCard review={review} />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="flex flex-col gap-5">
-        {regularReviews.map((review) => (
-          <div key={review.id} className="flex items-start gap-3">
+      <div ref={listRef} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {visibleReviews.map((review, index) => (
+          <div key={review.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
             {isModerator && (
               <input
                 type="checkbox"
@@ -276,7 +255,9 @@ export default function ReviewListClient({ reviews }: { reviews: ReviewRow[] }) 
                 style={{ marginTop: 24, flexShrink: 0 }}
               />
             )}
-            <GridCard review={review} />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <ReviewCard review={review} index={index} />
+            </div>
           </div>
         ))}
       </div>

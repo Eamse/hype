@@ -16,7 +16,7 @@ export default function ReviewWritePage() {
         <div
           style={{ maxWidth: 640, margin: '0 auto', padding: '40px 20px 80px' }}
         >
-          <h1 style={{ fontSize: 22, fontWeight: 700, margin: '0 0 24px' }}>
+          <h1 style={{ fontSize: 28, fontWeight: 800, fontStyle: 'italic', margin: '0 0 24px' }}>
             Write a Review
           </h1>
           <ReviewForm />

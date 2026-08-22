@@ -2250,3 +2250,80 @@ body {
     transition: none;
   }
 }
+
+/* ── Review 페이지 스크롤 재등장 애니메이션 ────────────────────── */
+.review-fade {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.review-fade.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.review-rise {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.review-rise.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .review-fade,
+  .review-rise {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+@media (max-width: 767px) {
+  .review-featured-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── 약관/개인정보처리방침 본문 (Privacy Policy / Terms of Service 공용) ── */
+.privacy-policy-body h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 40px;
+  margin-bottom: 12px;
+}
+.privacy-policy-body h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 24px;
+  margin-bottom: 8px;
+}
+.privacy-policy-body p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 12px;
+}
+.privacy-policy-body ul {
+  list-style: disc;
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+.privacy-policy-body li {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+/* 회원가입 동의 화면 — 약관 미리보기 스크롤 박스 */
+.consent-preview-box {
+  max-height: 160px;
+  overflow-y: auto;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: #fafafa;
+}
+.consent-preview-box .privacy-policy-body h2:first-child {
+  margin-top: 0;
+}
