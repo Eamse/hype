@@ -4,10 +4,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
 import SnsSidebar from '@/components/sns-sidebar';
-import Accordion from './_components/accordion';
-import { BackButton } from './_components/product-actions';
-import ImageGallery from './_components/image-gallery';
-import WeddingDetail from './_components/wedding-detail';
+import ProductGalleryLayout from './_components/product-gallery-layout';
 import type { Metadata } from 'next';
 import { cache } from 'react';
 
@@ -52,6 +49,7 @@ export default async function ProductDetailPage({ params }: Props) {
                   orderBy: { order: 'asc' },
                 },
                 partners: { include: { partner: true } },
+                images: { orderBy: { order: 'asc' } },
               },
               orderBy: { order: 'asc' },
             },
@@ -102,53 +100,12 @@ export default async function ProductDetailPage({ params }: Props) {
       <Header brand={headerBrand} />
 
       <main className="pt-14">
-        <div className="grid grid-cols-1 lg:grid-cols-2">
-          {/* 왼쪽: 이미지 */}
-          <div className="hide-scroll lg:sticky lg:top-14 lg:h-[calc(100vh-56px)] lg:overflow-y-auto p-5 mb-6 lg:mb-0 lg:p-16 lg:pb-24">
-            <BackButton />
-            <ImageGallery
-              mainImageUrl={product.imageUrl}
-              images={product.images}
-            />
-          </div>
-
-          {/* 오른쪽: 컨텐츠 */}
-          <div className="p-5 lg:px-14 lg:py-16 pb-24">
-            {isPackageProduct && weddingData ? (
-              <WeddingDetail
-                productId={product.id}
-                title={product.title}
-                section={product.section}
-                directors={weddingData.directors}
-                packages={weddingData.packages}
-              />
-            ) : (
-              <>
-                <h1 className="text-xl font-bold leading-snug mb-6">
-                  {product.title}
-                </h1>
-
-                <div className="h-px bg-[black] mb-6" />
-
-                <div className="mb-6">
-                  <Accordion title="Booking Guide">
-                    <p>
-                      Please book at least 2 weeks in advance. A 30% deposit is
-                      required at the time of booking.
-                    </p>
-                  </Accordion>
-                  <Accordion title="Cancellation Policy">
-                    <p>
-                      Within 7 days of booking: full refund · 7–14 days: 50%
-                      refund · After 14 days: no refund
-                    </p>
-                  </Accordion>
-                  <div className="border-t border-[black]" />
-                </div>
-              </>
-            )}
-          </div>
-        </div>
+        <ProductGalleryLayout
+          product={product}
+          section={product.section}
+          isPackageProduct={isPackageProduct}
+          weddingData={weddingData}
+        />
       </main>
 
       <SnsSidebar />

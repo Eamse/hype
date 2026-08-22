@@ -2251,6 +2251,26 @@ body {
   }
 }
 
+/* ── 상품 상세: 세로 썸네일 갤러리 끊김 없는 자동 스크롤 ──────────────── */
+@keyframes gallery-thumb-scroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-1 * var(--thumb-scroll-distance, 0px)));
+  }
+}
+.gallery-thumb-track {
+  animation-name: gallery-thumb-scroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gallery-thumb-track {
+    animation: none;
+  }
+}
+
 /* ── Review 페이지 스크롤 재등장 애니메이션 ────────────────────── */
 .review-fade {
   opacity: 0;

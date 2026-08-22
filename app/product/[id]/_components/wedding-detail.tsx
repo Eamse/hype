@@ -40,6 +40,7 @@ type Package = {
   addons: { addon: Addon }[];
   inclusions: { inclusion: Inclusion }[];
   partners: { partner: Partner }[];
+  images: { id: number; webUrl: string; originalUrl: string }[];
 };
 
 const INQUIRY_FORM_URL =
@@ -98,12 +99,14 @@ export default function WeddingDetail({
   section,
   directors,
   packages,
+  onActiveImagesChange,
 }: {
   productId: number;
   title: string;
   section?: string;
   directors: Director[];
   packages: Package[];
+  onActiveImagesChange?: (images: { id: number; webUrl: string; originalUrl: string }[]) => void;
 }) {
   const router = useRouter();
   const { data: session } = useSession();
@@ -161,6 +164,12 @@ export default function WeddingDetail({
     .join(' ');
 
   const activePkgs = packages.filter((p) => p.directorId === activeDirectorId);
+
+  useEffect(() => {
+    onActiveImagesChange?.(activePkgs[0]?.images ?? []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeDirectorId]);
+
   const activePackage =
     activePkgs.find((p) => p.id === activePackageId) ?? activePkgs[0];
 

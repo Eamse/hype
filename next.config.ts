@@ -1,6 +1,6 @@
 import type { NextConfig } from 'next';
 
-const R2_HOST = 'pub-c271b5fcdcc34eca9be592092db31905.r2.dev';
+const R2_HOST = 'pub-ba784eb2bec14ac984de128566a0665e.r2.dev';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -37,7 +37,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        hostname: 'pub-c271b5fcdcc34eca9be592092db31905.r2.dev',
+        hostname: R2_HOST,
       },
       {
         hostname: 'lh3.googleusercontent.com',
