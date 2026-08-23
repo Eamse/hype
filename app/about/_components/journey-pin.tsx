@@ -73,17 +73,17 @@ const PHOTOS_2026_LOCAL: Photo[] = [
     milestoneIndex: 1,
   },
   {
-    src: '/about/history/(하이라이트 처리 X)History 고객사진-First client photoshoot 다음 순서로 넣어주세요(1).jpg',
+    src: '/about/history/history-2026-hype-snap-launch.jpg',
     alt: 'Hype Snap launch',
     milestoneIndex: 2,
   },
   {
-    src: '/about/history/(하이라이트 처리 X)History 고객사진-First client photoshoot 다음 순서로 넣어주세요(2).jpg',
+    src: '/about/history/history-2026-singapore-meetup.jpg',
     alt: 'Singapore Meet-up Event',
     milestoneIndex: 3,
   },
   {
-    src: '/about/history/(하이라이트 처리 X)History 고객사진-First client photoshoot 다음 순서로 넣어주세요(3).jpg',
+    src: '/about/history/history-2026-80th-booking.jpg',
     alt: '80th client booking milestone',
     milestoneIndex: 4,
   },
