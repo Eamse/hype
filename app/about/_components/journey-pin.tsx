@@ -11,7 +11,10 @@ if (typeof window !== 'undefined') {
 
 export type JourneyItem = {
   date: string;
+  // 스크롤로 활성화될 때 커지고 색이 바뀌는 "하이라이트" 대상 여부
   bold: boolean;
+  // 하이라이트 애니메이션 없이 항상 굵게만 표시하고 싶을 때
+  staticBold?: boolean;
   content: ReactNode;
 };
 
@@ -29,7 +32,10 @@ const LOGO_BADGES_2025: Record<number, { src: string; alt: string }> = {
   1: { src: '/about/history/history-02-hype-wedding.png', alt: 'Hype Wedding' },
 };
 const LOGO_BADGES_2026: Record<number, { src: string; alt: string }> = {
-  2: { src: '/about/history/history-06-hype-snap.png', alt: 'Hype Snap' },
+  2: {
+    src: '/about/history/logo/History-HYPE SNAP 로고 아이콘.png',
+    alt: 'Hype Snap',
+  },
 };
 
 // 사진 하이라이트 스펙 (2026-08-23 확정):
@@ -80,11 +86,21 @@ const PHOTOS_2026: Photo[] = [
     alt: 'Meryem Gündüz collaboration', // ★ 하이라이트
     milestoneIndex: 1,
   },
-  // {
-  //   src: '/about/history/history-05c-meryem.jpg',
-  //   alt: 'Hype Wedding history',
-  //   milestoneIndex: 4,
-  // },
+  {
+    src: '/about/history/(하이라이트 처리 X)History 고객사진-First client photoshoot 다음 순서로 넣어주세요(1).jpg',
+    alt: 'Hype Snap launch',
+    milestoneIndex: 2,
+  },
+  {
+    src: '/about/history/(하이라이트 처리 X)History 고객사진-First client photoshoot 다음 순서로 넣어주세요(2).jpg',
+    alt: 'Singapore Meet-up Event',
+    milestoneIndex: 3,
+  },
+  {
+    src: '/about/history/(하이라이트 처리 X)History 고객사진-First client photoshoot 다음 순서로 넣어주세요(3).jpg',
+    alt: '80th client booking milestone',
+    milestoneIndex: 4,
+  },
 ];
 
 // 사진 슬롯 하나에 여러 장이 들어오면(Photo.src가 배열) — 타이머가 아니라 이 milestone
@@ -136,33 +152,39 @@ function TimelineRow({
 }) {
   return (
     <div
-      className={
-        active
-          ? 'journey-timeline-item journey-timeline-item--active'
-          : 'journey-timeline-item'
-      }
+      className={[
+        'journey-timeline-item',
+        active && 'journey-timeline-item--active',
+        item.bold && 'journey-timeline-item--highlight',
+      ]
+        .filter(Boolean)
+        .join(' ')}
     >
-      <span className="journey-dot" />
-      <p className="journey-date">{item.date}</p>
-      <p
-        className={
-          item.bold
-            ? 'journey-milestone journey-milestone--bold'
-            : 'journey-milestone'
-        }
-      >
-        {item.content}
-        {logo && (
-          <span className="journey-logo-badge">
-            <Image
-              src={logo.src}
-              alt={logo.alt}
-              fill
-              className="object-cover"
-            />
-          </span>
-        )}
-      </p>
+      <div className="journey-timeline-row">
+        <span className="journey-dot" />
+        <p className="journey-date">{item.date}</p>
+        <p
+          className={[
+            'journey-milestone',
+            item.bold && 'journey-milestone--bold',
+            item.staticBold && 'journey-milestone--static-bold',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          {item.content}
+          {logo && (
+            <span className="journey-logo-badge">
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                fill
+                className="object-cover"
+              />
+            </span>
+          )}
+        </p>
+      </div>
     </div>
   );
 }

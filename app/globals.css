@@ -231,10 +231,10 @@ body {
 }
 
 /* About > History: 참고 시안처럼 텍스트와 사진을 화면 전체 폭에서 62:38로 배치 */
-.about-page-content {
-  /* 화면 가장자리와 콘텐츠 사이의 공통 여백 */
+/* 화면 가장자리와 콘텐츠 사이의 공통 여백 */
+/* .about-page-content {
   padding-inline: clamp(20px, 4vw, 64px);
-}
+} */
 
 /* About Introduction 우측 패널: 긴 이미지의 중앙이 아닌 상단 흐름에 텍스트를 둔다. */
 .about-intro-copy {
@@ -244,7 +244,8 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   text-align: left;
-  padding: 0 clamp(28px, 5vw, 80px) clamp(72px, 7.5vw, 124px);
+  padding: clamp(48px, 5vw, 80px) clamp(28px, 5vw, 80px)
+    clamp(72px, 7.5vw, 124px);
 }
 
 .about-intro-number {
@@ -310,7 +311,7 @@ body {
 }
 
 .how-started-copy {
-  padding: clamp(72px, 7vw, 116px) clamp(24px, 3vw, 48px) 64px;
+  padding: clamp(39px, 7vw, 92px) clamp(24px, 3vw, 48px) 64px;
 }
 
 .how-started-number {
@@ -327,6 +328,7 @@ body {
 }
 
 .how-started-title {
+  max-width: 900px;
   margin: 0 0 clamp(34px, 3vw, 48px);
   font-size: clamp(58px, 5vw, 96px);
   font-weight: 800;
@@ -336,7 +338,7 @@ body {
 }
 
 .how-started-description {
-  max-width: 590px;
+  max-width: 888px;
   margin: 0 0 clamp(28px, 2.6vw, 40px);
   font-size: clamp(21px, 1.55vw, 34px);
   line-height: 1.23;
@@ -427,7 +429,7 @@ body {
 
 .how-started-quote {
   position: relative;
-  max-width: 650px;
+  max-width: 900px;
   margin: 0 0 clamp(40px, 3.2vw, 52px);
   padding-left: 24px;
   font-size: clamp(23px, 2.05vw, 34px);
@@ -660,8 +662,8 @@ body {
 }
 
 .journey-year-title {
-  margin: 0 0 clamp(32px, 3.2vw, 52px) -40px;
-  font-size: clamp(56px, 5.5vw, 92px);
+  margin: 0 0 clamp(20px, 1.2vw, 23px);
+  font-size: clamp(55px, 7.5vw, 112px);
   font-weight: 800;
   font-style: italic;
   letter-spacing: -0.06em;
@@ -678,7 +680,6 @@ body {
 
 .journey-timeline {
   position: relative;
-  padding-left: 34px;
 }
 
 .journey-timeline--2026 {
@@ -687,33 +688,39 @@ body {
 
 .journey-timeline-item {
   position: relative;
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  padding-bottom: clamp(28px, 2.6vw, 40px);
+  padding-bottom: clamp(28px, 4.6vw, 62px);
 }
 
 .journey-timeline-item:last-child {
   padding-bottom: 0;
 }
 
+/* 닷+날짜+텍스트를 한 줄로 묶은 실제 콘텐츠 영역 — padding-bottom(다음 줄과의 간격)은
+   여기 포함되지 않으므로, 닷은 항상 이 줄의 실제 텍스트 높이에 맞춰 중앙정렬됨
+   (날짜 폰트가 크거나 로고 배지(40px)가 붙어도 자동으로 맞음, 픽셀 하드코딩 불필요) */
+.journey-timeline-row {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
 /* 이 점의 중심에서 다음 점의 중심까지만 선을 그림 — 첫/마지막 점 밖으로 삐져나오지 않게 */
 .journey-timeline-item:not(:last-child)::before {
   content: '';
   position: absolute;
-  top: 13px;
-  bottom: -13px;
-  left: -35px;
+  top: 25px;
+  bottom: -22px;
+  left: 10.4px;
   width: 2px;
   background: #000;
 }
 
 .journey-dot {
-  position: absolute;
-  top: 6px;
-  left: -41px;
-  width: 14px;
-  height: 14px;
+  position: relative;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
   border-radius: 50%;
   background: #000;
 }
@@ -738,15 +745,22 @@ body {
 .journey-milestone--bold {
   display: inline-block;
   transform-origin: left center;
-  transition: transform 0.3s ease, font-weight 0.2s ease;
+  transition:
+    transform 0.3s ease,
+    font-weight 0.2s ease;
+}
+
+/* 하이라이트 애니메이션(스크롤 시 커짐/색 변경) 없이 항상 굵게만 표시 */
+.journey-milestone--static-bold {
+  font-weight: 700;
 }
 
 .journey-logo-badge {
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: 40px;
-  margin-left: 6px;
+  width: 70px;
+  height: 70px;
+  margin-left: 27px;
   border-radius: 50%;
   overflow: hidden;
   vertical-align: middle;
@@ -775,8 +789,10 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 62.25fr) minmax(0, 37.75fr);
   align-items: stretch;
+  height: 90vh;
   margin-top: clamp(56px, 6vw, 96px);
   background: #fff;
+  overflow: hidden;
 }
 
 /* 2025 → 2026 pin 섹션 전환이 뚝뚝 끊기지 않도록, 둘 사이 여백을 넉넉히 둬서
@@ -786,7 +802,10 @@ body {
 }
 
 .journey-pin-left {
-  padding: clamp(48px, 5vw, 80px) clamp(24px, 3vw, 48px);
+  display: flex;
+  flex-direction: column;
+  /* justify-content: center; */
+  padding: clamp(48px, 6vw, 99px) clamp(50px, 6vw, 104px);
 }
 
 .journey-year-title--pin {
@@ -818,25 +837,29 @@ body {
   opacity: 1;
 }
 
-.journey-timeline-item--active .journey-dot {
+.journey-timeline-item--active.journey-timeline-item--highlight .journey-dot {
   transform: scale(1.5);
 }
 
 .journey-timeline-item--active .journey-milestone--bold {
   transform: scale(1.15);
   font-weight: 700;
+  color: rgb(45, 90, 69);
 }
 
 .journey-dot,
 .journey-milestone {
   transition:
     transform 0.3s ease,
-    font-weight 0.2s ease;
+    font-weight 0.2s ease,
+    color 0.2s ease;
 }
 
 @media (max-width: 767px) {
   .journey-pin-wrap {
     grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
   }
 
   .journey-photo-frame {

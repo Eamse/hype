@@ -17,6 +17,7 @@ const SECTIONS = [
 type JourneyItem = {
   date: string;
   bold: boolean;
+  staticBold?: boolean;
   content: ReactNode;
 };
 
@@ -98,14 +99,19 @@ const JOURNEY_2026: JourneyItem[] = [
     ),
   },
   {
-    date: 'Jun',
-    bold: false,
-    content: '70th client booking milestone',
-  },
-  {
     date: 'Jul',
     bold: false,
+    staticBold: true,
     content: 'Singapore Meet-up Event',
+  },
+  {
+    date: 'Aug',
+    bold: false,
+    content: (
+      <>
+        <strong>80th client booking</strong> milestone
+      </>
+    ),
   },
 ];
 
@@ -245,8 +251,6 @@ export default function AboutClient({
             style={{
               scrollMarginTop: 106,
               minHeight: '50vh',
-              // Story의 첫 사진은 섹션 시작 지점부터 전체 폭으로 보여준다.
-              paddingTop: section.id === 'story' ? 0 : 60,
             }}
           >
             {section.id === 'introduction' ? (
@@ -351,9 +355,7 @@ export default function AboutClient({
                       data-history-reveal="220"
                       className="how-started-title history-rise"
                     >
-                      It started
-                      <br />
-                      with a photo
+                      It started with a photo
                     </h2>
                     <p
                       data-history-reveal="420"
@@ -538,7 +540,10 @@ export default function AboutClient({
                   </p>
                 </div>
 
-                <JourneyPin journey2025={JOURNEY_2025} journey2026={JOURNEY_2026} />
+                <JourneyPin
+                  journey2025={JOURNEY_2025}
+                  journey2026={JOURNEY_2026}
+                />
               </>
             ) : (
               <>
