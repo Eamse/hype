@@ -296,7 +296,10 @@ export default function AboutClient({
                       data-reveal-delay="400"
                       className="about-intro-body about-fade"
                     >
-                      Based in <strong>Seoul</strong> and <strong>Jeju</strong>,
+                      Based in{' '}
+                      <strong style={{ color: 'rgb(45, 90, 69)' }}>Seoul</strong>{' '}
+                      and{' '}
+                      <strong style={{ color: 'rgb(45, 90, 69)' }}>Jeju</strong>,
                       we bridge the gap between international couples and
                       Korea&apos;s most sought-after wedding creatives,
                       delivering a seamless, end-to-end experience with zero

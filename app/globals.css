@@ -290,7 +290,7 @@ body {
   display: grid;
   /* 사진 컬럼에 min-width를 줘서 화면이 좁아져도 텍스트에 비해 사진만 유독
      작아지는 불균형을 방지 — 대신 텍스트 컬럼이 먼저 줄어듦 */
-  grid-template-columns: minmax(260px, 37.75fr) minmax(0, 62.25fr);
+  grid-template-columns: minmax(260px, 45fr) minmax(0, 55fr);
   align-items: stretch;
 }
 
@@ -323,6 +323,7 @@ body {
   letter-spacing: -0.045em;
   line-height: 1.15;
   text-align: center;
+  text-indent: 1em;
 }
 
 .how-started-layout {
