@@ -43,6 +43,9 @@ const nextConfig: NextConfig = {
         hostname: 'lh3.googleusercontent.com',
       },
     ],
+    // R2 업로드 파일명은 요청마다 랜덤 UUID가 붙어 URL이 절대 재사용되지 않으므로
+    // 오래(1년) 캐싱해도 이미지가 바뀐 뒤 옛 버전이 보이는 문제가 생기지 않음
+    minimumCacheTTL: 60 * 60 * 24 * 365,
   },
   async headers() {
     return [
