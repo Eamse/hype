@@ -244,7 +244,7 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   text-align: left;
-  padding: clamp(48px, 5vw, 90px) clamp(28px, 5vw, 80px) 0;
+  padding: clamp(23px, 5vw, 55px) clamp(28px, 5vw, 80px) 0;
 }
 
 /* About 페이지 5개 섹션(Introduction/Achievement/Story/Philosophy/History) 헤더 공용 스타일 —
@@ -255,8 +255,8 @@ body {
 }
 
 .about-section-eyebrow {
-  margin: 0 0 clamp(34px, 3.1vw, 50px);
-  font-size: clamp(28px, 2.5vw, 41px);
+  margin: 0 0 clamp(15px, 3.1vw, 21px);
+  font-size: clamp(20px, 2.5vw, 33px);
   font-weight: 400;
   line-height: 1.1;
 }
@@ -264,7 +264,7 @@ body {
 .about-section-title {
   max-width: 900px;
   margin: 0;
-  font-size: clamp(58px, 4vw, 96px);
+  font-size: clamp(46px, 2.5vw, 80px);
   font-weight: 800;
   font-style: italic;
   letter-spacing: -0.06em;
@@ -292,32 +292,33 @@ body {
      작아지는 불균형을 방지 — 대신 텍스트 컬럼이 먼저 줄어듦 */
   grid-template-columns: minmax(260px, 45fr) minmax(0, 55fr);
   align-items: stretch;
+  /* 고정 헤더(56px) + 서브탭바(약 45px) 높이를 뺀 나머지가 뷰포트를 채우도록 —
+     풀스크린으로 열었을 때 사진이 화면에 딱 맞게 떨어짐 */
+  min-height: calc(100vh - 101px);
 }
 
 .about-intro-image {
   position: relative;
+  height: calc(100vh - 101px);
   overflow: hidden;
 }
 
 .about-intro-body {
-  max-width: 640px;
+  max-width: 660px;
   margin: 0 0 clamp(22px, 2vw, 34px);
-
   letter-spacing: -0.035em;
   line-height: 1.35;
 }
 
 .about-intro-body,
 .how-started-description {
-  font-size: clamp(21px, 1.5vw, 34px);
+  font-size: clamp(15px, 2vw, 25px);
 }
 
 .about-intro-quote {
   max-width: 660px;
-  margin: clamp(18px, 2vw, 32px) auto 0;
-  align-self: center;
   color: #666;
-  font-size: clamp(20px, 2.7vw, 40px);
+  font-size: clamp(17px, 2.5vw, 37px);
   font-weight: 700;
   font-style: italic;
   letter-spacing: -0.045em;
@@ -349,6 +350,7 @@ body {
 .how-started-photos {
   display: flex;
   flex-direction: column;
+  align-items: flex-end;
   height: 100%;
   gap: clamp(12px, 1.5vw, 20px);
 }
@@ -357,7 +359,7 @@ body {
    고정 aspect-ratio로는 화면이 좁아져 텍스트가 길어질 때 사진 아래 빈 공간이 생겼었음 */
 .how-started-photo {
   position: relative;
-  width: 100%;
+  width: 88%;
   flex: 1;
   overflow: hidden;
 }
@@ -488,7 +490,7 @@ body {
 .philosophy-summary {
   margin: 0;
   padding-bottom: 4px;
-  font-size: clamp(18px, 1.55vw, 26px);
+  font-size: clamp(15px, 1.5vw, 20px);
   line-height: 1.2;
 }
 
@@ -511,14 +513,14 @@ body {
 
 .philosophy-principle h3 {
   margin-bottom: 18px;
-  font-size: clamp(40px, 4.2vw, 70px);
+  font-size: clamp(20px, 4.2vw, 53px);
   font-weight: 800;
   letter-spacing: -0.06em;
   line-height: 0.98;
 }
 
 .philosophy-principle p {
-  font-size: clamp(20px, 1.8vw, 25px);
+  font-size: clamp(20px, 0.8vw, 41px);
   letter-spacing: -0.04em;
   line-height: 1.22;
 }
@@ -526,7 +528,7 @@ body {
 /* max-width는 항목마다 따로 관리 — 공용 규칙으로 묶으면 한 곳만 조정해도
    나머지 전부 같이 바뀌어버려서 개별 폭 조절이 불가능해짐 */
 .philosophy-principle-1 p {
-  max-width: 420px;
+  max-width: 340px;
 }
 
 .philosophy-principle-2 {
@@ -539,7 +541,7 @@ body {
   /* position:absolute + 고정 px 대신, 문서 흐름 안에서 margin-left를 clamp로 줘서
      화면이 좁아질수록 오프셋도 같이 줄어들게 함 (h3와 겹치거나 화면 밖으로 밀리지 않음) */
   margin-left: clamp(20px, 4vw, 50px);
-  max-width: 490px;
+  max-width: 370px;
 }
 
 .philosophy-principle-3 {
@@ -547,7 +549,7 @@ body {
 }
 
 .philosophy-principle-3 p {
-  max-width: 315px;
+  max-width: 255px;
 }
 
 .philosophy-principle-4 {
@@ -558,7 +560,7 @@ body {
 
 .philosophy-principle-4 p {
   margin-left: clamp(24px, 4.6vw, 60px);
-  max-width: 485px;
+  max-width: 350px;
 }
 
 /* 각 원칙은 확대되며 제자리로 들어와, 쌓이는 레이어 감각을 만든다. */
@@ -1239,9 +1241,11 @@ body {
 @media (max-width: 767px) {
   .about-intro-layout {
     grid-template-columns: 1fr;
+    min-height: 0;
   }
 
   .about-intro-image {
+    height: auto;
     aspect-ratio: 4 / 5;
   }
 
@@ -1277,6 +1281,7 @@ body {
   }
 
   .how-started-photo {
+    width: 100%;
     aspect-ratio: 4 / 5;
   }
 

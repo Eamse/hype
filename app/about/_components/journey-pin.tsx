@@ -33,7 +33,7 @@ const LOGO_BADGES_2025: Record<number, { src: string; alt: string }> = {
 };
 const LOGO_BADGES_2026: Record<number, { src: string; alt: string }> = {
   2: {
-    src: '/about/history/logo/History-HYPE SNAP 로고 아이콘.png',
+    src: '/about/history/logo/history-hype-snap-icon.png',
     alt: 'Hype Snap',
   },
 };
@@ -45,17 +45,17 @@ const LOGO_BADGES_2026: Record<number, { src: string; alt: string }> = {
 const PHOTOS_2025_LOCAL: Photo[] = [
   {
     src: [
-      '/about/history/History-2025-May-First influencer collab — Angel Dei, Philippines(1).jpg',
-      '/about/history/History-2025-May-First influencer collab — Angel Dei, Philippines(2).jpg',
-      '/about/history/History-2025-May-First influencer collab — Angel Dei, Philippines(3).jpg',
+      '/about/history/history-2025-angel-dei-1.jpg',
+      '/about/history/history-2025-angel-dei-2.jpg',
+      '/about/history/history-2025-angel-dei-3.jpg',
     ],
     alt: 'Angel Dei collaboration', // ★ 하이라이트
     milestoneIndex: 2,
   },
   {
     src: [
-      '/about/history/History-2025-Jul-First client photoshoot(1).jpg',
-      '/about/history/History-2025-Jul-First client photoshoot(2).jpg',
+      '/about/history/history-2025-first-client-photoshoot-1.jpg',
+      '/about/history/history-2025-first-client-photoshoot-2.jpg',
     ],
     alt: 'First client photoshoot', // ★ 하이라이트
     milestoneIndex: 4,
@@ -65,9 +65,9 @@ const PHOTOS_2025_LOCAL: Photo[] = [
 const PHOTOS_2026_LOCAL: Photo[] = [
   {
     src: [
-      '/about/history/History-2026-Apr-Influencer collab — Meryem Gündüz, Turkey(1).jpg',
-      '/about/history/History-2026-Apr-Influencer collab — Meryem Gündüz, Turkey(2).jpg',
-      '/about/history/History-2026-Apr-Influencer collab — Meryem Gündüz, Turkey(3).jpg',
+      '/about/history/history-2026-meryem-gunduz-1.jpg',
+      '/about/history/history-2026-meryem-gunduz-2.jpg',
+      '/about/history/history-2026-meryem-gunduz-3.jpg',
     ],
     alt: 'Meryem Gündüz collaboration', // ★ 하이라이트
     milestoneIndex: 1,
