@@ -122,7 +122,6 @@ export default function AboutClient({
 }) {
   const introRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef<HTMLDivElement>(null);
-  const followupRef = useRef<HTMLDivElement>(null);
   const philosophyRef = useRef<HTMLDivElement>(null);
 
   // 헤드라인 → 본문1 → 본문2 → 인용구 순서로 스크롤 진입 시 순차 페이드인
@@ -190,46 +189,37 @@ export default function AboutClient({
     };
   }, []);
 
-  // History: 각 문단은 순서대로, Part 2 전체는 옆에서 밀려 들어온다. (재진입 시 재생)
+  // History: 문단들이 순서대로 아래에서 떠오르며 등장 (재진입 시 재생)
   useEffect(() => {
-    const sections = [startedRef.current, followupRef.current].filter(
-      (section): section is HTMLDivElement => section !== null,
+    const section = startedRef.current;
+    if (!section) return;
+    const targets = section.querySelectorAll<HTMLElement>(
+      '[data-history-reveal]',
     );
-    const timerMap = new Map<Element, number[]>();
+    const timers: number[] = [];
 
-    const observers = sections.map((section) => {
-      const targets = section.querySelectorAll<HTMLElement>(
-        '[data-history-reveal]',
-      );
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          const timers = timerMap.get(section) ?? [];
-          timers.forEach(clearTimeout);
-          timers.length = 0;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        timers.forEach(clearTimeout);
+        timers.length = 0;
 
-          if (entry.isIntersecting) {
-            section.classList.add('visible');
-            targets.forEach((target) => {
-              const delay = Number(target.dataset.historyReveal ?? 0);
-              timers.push(
-                window.setTimeout(() => target.classList.add('visible'), delay),
-              );
-            });
-          } else {
-            section.classList.remove('visible');
-            targets.forEach((target) => target.classList.remove('visible'));
-          }
-          timerMap.set(section, timers);
-        },
-        { threshold: 0.18 },
-      );
-      observer.observe(section);
-      return observer;
-    });
-
+        if (entry.isIntersecting) {
+          targets.forEach((target) => {
+            const delay = Number(target.dataset.historyReveal ?? 0);
+            timers.push(
+              window.setTimeout(() => target.classList.add('visible'), delay),
+            );
+          });
+        } else {
+          targets.forEach((target) => target.classList.remove('visible'));
+        }
+      },
+      { threshold: 0.18 },
+    );
+    observer.observe(section);
     return () => {
-      observers.forEach((observer) => observer.disconnect());
-      timerMap.forEach((timers) => timers.forEach(clearTimeout));
+      observer.disconnect();
+      timers.forEach(clearTimeout);
     };
   }, []);
 
@@ -241,7 +231,6 @@ export default function AboutClient({
         className="about-page-content"
         style={{
           margin: '0 auto',
-          paddingBottom: 120,
         }}
       >
         {SECTIONS.map((section) => (
@@ -250,7 +239,7 @@ export default function AboutClient({
             id={section.id}
             style={{
               scrollMarginTop: 106,
-              minHeight: '50vh',
+              minHeight: section.id === 'achievement' ? undefined : '50vh',
             }}
           >
             {section.id === 'introduction' ? (
@@ -274,21 +263,21 @@ export default function AboutClient({
                     <p
                       data-reveal
                       data-reveal-delay="0"
-                      className="about-intro-number about-rise"
+                      className="about-section-number about-rise"
                     >
                       01
                     </p>
                     <p
                       data-reveal
                       data-reveal-delay="0"
-                      className="about-intro-eyebrow about-rise"
+                      className="about-section-eyebrow about-rise"
                     >
                       ABOUT US
                     </p>
                     <h2
                       data-reveal
                       data-reveal-delay="0"
-                      className="about-intro-title about-rise"
+                      className="about-section-title about-section-title-1 about-rise"
                     >
                       Your story deserves Korea&apos;s finest
                     </h2>
@@ -329,122 +318,120 @@ export default function AboutClient({
             ) : section.id === 'achievement' ? (
               <>
                 <div className="journey-header">
-                  <p className="journey-number">02</p>
-                  <p className="journey-eyebrow">ACHIEVEMENT</p>
+                  <p className="about-section-number">02</p>
+                  <p className="about-section-eyebrow">ACHIEVEMENT</p>
                 </div>
                 <StatsBar />
               </>
             ) : section.id === 'story' ? (
               <>
-                {/* part 1: 텍스트 좌 / 이미지 우 — Minju */}
-                <div ref={startedRef} className="how-started-layout">
-                  <div className="how-started-copy">
-                    <p
-                      data-history-reveal="0"
-                      className="how-started-number history-rise"
-                    >
-                      03
-                    </p>
-                    <p
-                      data-history-reveal="100"
-                      className="how-started-eyebrow history-rise"
-                    >
-                      HOW WE STARTED
-                    </p>
-                    <h2
-                      data-history-reveal="220"
-                      className="how-started-title history-rise"
-                    >
-                      It started with a photo
-                    </h2>
-                    <p
-                      data-history-reveal="420"
-                      className="how-started-description history-rise"
-                    >
-                      <strong>Minju</strong> was living abroad when she flew
-                      back to Korea to shoot her own pre-wedding photos. When
-                      she shared the final gallery with friends overseas, the
-                      reaction was instant: &quot;Wait, this is a thing? How do
-                      I get this done?&quot;
-                    </p>
-                    <blockquote
-                      data-history-reveal="600"
-                      className="how-started-quote history-quote-lift"
-                    >
-                      <p>
-                        &quot;What if I could connect global couples to the same
-                        artists, the same quality, the same experience?&quot;
+                <div ref={startedRef}>
+                  {/* part 1: 텍스트 좌 / 사진 우 — Minju */}
+                  <div className="how-started-layout">
+                    <div className="how-started-copy">
+                      <p
+                        data-history-reveal="0"
+                        className="about-section-number history-rise"
+                      >
+                        03
                       </p>
-                    </blockquote>
-                  </div>
-                  <div className="how-started-image">
-                    <Image
-                      src="/about/minju.jpg"
-                      alt="Minju, Co-founder"
-                      fill
-                      className="object-cover"
-                    />
-                    <div className="how-started-caption">
-                      <p className="font-bold">Minju</p>
-                      <p>Co-founder</p>
+                      <p
+                        data-history-reveal="100"
+                        className="about-section-eyebrow history-rise"
+                      >
+                        HOW WE STARTED
+                      </p>
+                      <h2
+                        data-history-reveal="220"
+                        className="about-section-title about-section-title-3 history-rise"
+                      >
+                        It started with a photo
+                      </h2>
+                      <p
+                        data-history-reveal="420"
+                        className="how-started-description history-rise"
+                      >
+                        <strong>Minju</strong> was living abroad when she flew
+                        back to Korea to shoot her own pre-wedding photos. When
+                        she shared the final gallery with friends overseas, the
+                        reaction was instant: &quot;Wait, this is a thing? How
+                        do I get this done?&quot;
+                      </p>
+                      <blockquote
+                        data-history-reveal="600"
+                        className="how-started-quote history-quote-lift"
+                      >
+                        <p>
+                          &quot;What if I could connect global couples to the
+                          same artists, the same quality, the same
+                          experience?&quot;
+                        </p>
+                      </blockquote>
+                    </div>
+                    <div className="how-started-photos">
+                      <div className="how-started-photo">
+                        <Image
+                          src="/about/minju.jpg"
+                          alt="Minju, Co-founder"
+                          fill
+                          className="object-cover"
+                        />
+                        <div className="how-started-photo-caption">
+                          <p className="font-bold">Minju</p>
+                          <p>Co-founder</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* part 2: 텍스트 좌 / 이미지 우 — Morgan */}
-                <div
-                  ref={followupRef}
-                  className="how-started-followup-layout history-panel-slide"
-                >
-                  <div className="how-started-followup-copy">
-                    <p
-                      data-history-reveal="120"
-                      className="how-started-followup-description history-rise"
-                    >
-                      She brought that idea to <strong>Morgan</strong>, who had
-                      worked with Minju abroad. Both knew firsthand what
-                      international couples need, and what they worry about:
-                      unfamiliar vendors, language barriers, hidden costs, and
-                      the fear of getting a different result from what was
-                      promised.
-                    </p>
-                    <p
-                      data-history-reveal="500"
-                      className="how-started-followup-description history-rise"
-                    >
-                      Together they returned to Korea in 2025, flew to Jeju, and
-                      met top-tier photographers face to face, building real
-                      partnerships from the ground up.{' '}
-                      <strong>And that&apos;s how Hype Wedding began.</strong>
-                    </p>
-                    <div
-                      data-history-reveal="700"
-                      className="how-started-goal history-rise"
-                    >
-                      <p>THE GOAL</p>
-                      <strong>
-                        Top Korean artists. Full transparency.
-                        <br />
-                        Zero stress.
-                      </strong>
+                  {/* part 2: 텍스트 좌 / 사진 우 — Morgan */}
+                  <div className="how-started-layout how-started-part2">
+                    <div className="how-started-copy">
+                      <p
+                        data-history-reveal="750"
+                        className="how-started-description history-rise"
+                      >
+                        She brought that idea to <strong>Morgan</strong>, who
+                        had worked with Minju abroad. Both knew firsthand what
+                        international couples need, and what they worry about:
+                        unfamiliar vendors, language barriers, hidden costs, and
+                        the fear of getting a different result from what was
+                        promised.
+                      </p>
+                      <p
+                        data-history-reveal="900"
+                        className="how-started-description history-rise"
+                      >
+                        Together they returned to Korea in 2025, flew to Jeju,
+                        and met top-tier photographers face to face, building
+                        real partnerships from the ground up.{' '}
+                        <strong>And that&apos;s how Hype Wedding began.</strong>
+                      </p>
+                      <div
+                        data-history-reveal="1050"
+                        className="how-started-goal history-rise"
+                      >
+                        <p>THE GOAL</p>
+                        <strong>
+                          Top Korean artists. Full transparency.
+                          <br />
+                          Zero stress.
+                        </strong>
+                      </div>
                     </div>
-                  </div>
-                  <div className="how-started-followup-media">
-                    <div className="how-started-followup-image">
-                      <Image
-                        src="/about/morgan.jpg"
-                        alt="Saeyoung (Morgan), Co-founder"
-                        fill
-                        className="object-cover"
-                        style={{
-                          objectPosition: 'top',
-                          transform: 'scale(1.25)',
-                          transformOrigin: 'top',
-                        }}
-                      />
-                      <div className="how-started-followup-caption">
-                        <p className="font-bold">Saeyoung (Morgan)</p>
-                        <p>Co-founder</p>
+                    <div className="how-started-photos">
+                      <div className="how-started-photo">
+                        <Image
+                          src="/about/morgan.jpg"
+                          alt="Saeyoung (Morgan), Co-founder"
+                          fill
+                          className="object-cover"
+                          style={{ objectPosition: 'top' }}
+                        />
+                        <div className="how-started-photo-caption">
+                          <p className="font-bold">Saeyoung (Morgan)</p>
+                          <p>Co-founder</p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -457,13 +444,13 @@ export default function AboutClient({
                     <div>
                       <p
                         data-philosophy-reveal="0"
-                        className="philosophy-number philosophy-pop"
+                        className="about-section-number philosophy-pop"
                       >
                         04
                       </p>
                       <p
                         data-philosophy-reveal="80"
-                        className="philosophy-eyebrow philosophy-pop"
+                        className="about-section-eyebrow philosophy-pop"
                       >
                         PHILOSOPHY
                       </p>
@@ -472,7 +459,7 @@ export default function AboutClient({
                   <div className="philosophy-title-row">
                     <h2
                       data-philosophy-reveal="180"
-                      className="philosophy-heading philosophy-pop"
+                      className="about-section-title about-section-title-4 philosophy-title-tight philosophy-pop"
                     >
                       What we believe in
                     </h2>
@@ -531,9 +518,11 @@ export default function AboutClient({
             ) : section.id === 'history' ? (
               <>
                 <div className="journey-header">
-                  <p className="journey-number">05</p>
-                  <p className="journey-eyebrow">HISTORY</p>
-                  <h2 className="journey-heading">Our journey so far.</h2>
+                  <p className="about-section-number">05</p>
+                  <p className="about-section-eyebrow">HISTORY</p>
+                  <h2 className="about-section-title about-section-title-5">
+                    Our journey so far.
+                  </h2>
                   <p className="journey-subtext">
                     From a single photo shoot in Korea to an international
                     pre-wedding brand trusted by couples from 16 countries.
