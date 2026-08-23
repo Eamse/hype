@@ -231,10 +231,10 @@ body {
 }
 
 /* About > History: 참고 시안처럼 텍스트와 사진을 화면 전체 폭에서 62:38로 배치 */
-.about-page-content {
-  /* 화면 가장자리와 콘텐츠 사이의 공통 여백 */
+/* 화면 가장자리와 콘텐츠 사이의 공통 여백 */
+/* .about-page-content {
   padding-inline: clamp(20px, 4vw, 64px);
-}
+} */
 
 /* About Introduction 우측 패널: 긴 이미지의 중앙이 아닌 상단 흐름에 텍스트를 둔다. */
 .about-intro-copy {
@@ -244,50 +244,72 @@ body {
   align-items: flex-start;
   justify-content: flex-start;
   text-align: left;
-  padding: 0 clamp(28px, 5vw, 80px) clamp(72px, 7.5vw, 124px);
+  padding: clamp(48px, 5vw, 90px) clamp(28px, 5vw, 80px) 0;
 }
 
-.about-intro-number {
+/* About 페이지 5개 섹션(Introduction/Achievement/Story/Philosophy/History) 헤더 공용 스타일 —
+   번호/눈썹/타이틀을 여기 한 곳에서만 관리. 타이틀은 03(How We Started) 값을 기준으로 통일함 */
+.about-section-number {
   margin: 0 0 4px;
   font-size: clamp(20px, 1.7vw, 28px);
 }
 
-.about-intro-eyebrow {
+.about-section-eyebrow {
   margin: 0 0 clamp(34px, 3.1vw, 50px);
   font-size: clamp(28px, 2.5vw, 41px);
   font-weight: 400;
   line-height: 1.1;
 }
 
-/* History와 동일하게 두 패널의 비율 합을 100%로 고정한다. */
+.about-section-title {
+  max-width: 900px;
+  margin: 0;
+  font-size: clamp(58px, 4vw, 96px);
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.06em;
+  line-height: 1.05;
+}
+
+/* margin-bottom만 섹션마다 따로 관리 (나머지 스타일은 .about-section-title에서 공유) */
+.about-section-title-1,
+.about-section-title-3 {
+  margin-bottom: clamp(34px, 3vw, 48px);
+}
+
+/* .about-section-title-4 {
+  margin-bottom: clamp(34px, 3vw, 48px);
+} */
+
+/* .about-section-title-5 {
+  margin-bottom: clamp(34px, 3vw, 48px);
+} */
+
+/* History 섹션과 동일한 비율(텍스트 62.25 : 사진 37.75)로 맞춤 — 사진(좌측)이 더 작아짐 */
 .about-intro-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  /* 사진 컬럼에 min-width를 줘서 화면이 좁아져도 텍스트에 비해 사진만 유독
+     작아지는 불균형을 방지 — 대신 텍스트 컬럼이 먼저 줄어듦 */
+  grid-template-columns: minmax(260px, 37.75fr) minmax(0, 62.25fr);
   align-items: stretch;
 }
 
 .about-intro-image {
   position: relative;
   overflow: hidden;
-  /* aspect-ratio: 1 / 2; */
-}
-
-.about-intro-title {
-  max-width: 720px;
-  margin: 0 0 clamp(32px, 3.2vw, 52px);
-  font-size: clamp(46px, 2vw, 68px);
-  font-weight: 800;
-  font-style: italic;
-  letter-spacing: -0.06em;
-  line-height: 0.98;
 }
 
 .about-intro-body {
   max-width: 640px;
   margin: 0 0 clamp(22px, 2vw, 34px);
-  font-size: clamp(16px, 1.7vw, 27px);
+
   letter-spacing: -0.035em;
   line-height: 1.35;
+}
+
+.about-intro-body,
+.how-started-description {
+  font-size: clamp(21px, 1.5vw, 34px);
 }
 
 .about-intro-quote {
@@ -305,62 +327,51 @@ body {
 
 .how-started-layout {
   display: grid;
-  grid-template-columns: minmax(0, 62.25fr) minmax(0, 37.75fr);
+  /* 사진 컬럼에 min-width를 줘서 화면이 좁아져도 텍스트에 비해 사진만 유독
+     작아지는 불균형을 방지 — 대신 텍스트 컬럼이 먼저 줄어듦 */
+  grid-template-columns: minmax(0, 62.25fr) minmax(260px, 37.75fr);
   background: #fff;
 }
 
 .how-started-copy {
-  padding: clamp(72px, 7vw, 116px) clamp(24px, 3vw, 48px) 64px;
-}
-
-.how-started-number {
-  margin: 0 0 2px;
-  font-size: clamp(20px, 1.7vw, 28px);
-  line-height: 1.2;
-}
-
-.how-started-eyebrow {
-  margin: 0 0 clamp(34px, 3.1vw, 50px);
-  font-size: clamp(28px, 2.5vw, 41px);
-  font-weight: 400;
-  line-height: 1.1;
-}
-
-.how-started-title {
-  margin: 0 0 clamp(34px, 3vw, 48px);
-  font-size: clamp(58px, 5vw, 96px);
-  font-weight: 800;
-  font-style: italic;
-  letter-spacing: -0.06em;
-  line-height: 1.05;
+  padding: clamp(39px, 7vw, 80px) clamp(24px, 3vw, 48px) 64px;
 }
 
 .how-started-description {
-  max-width: 590px;
+  max-width: 888px;
   margin: 0 0 clamp(28px, 2.6vw, 40px);
-  font-size: clamp(21px, 1.55vw, 34px);
   line-height: 1.23;
   letter-spacing: -0.035em;
 }
 
-.how-started-image {
+/* Minju + Morgan 사진 2장을 우측 컬럼에 작게 나란히 배치 */
+.how-started-photos {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: clamp(12px, 1.5vw, 20px);
+}
+
+/* 텍스트 컬럼 높이에 맞춰 자동으로 늘어남(About Us 01번과 동일한 방식) —
+   고정 aspect-ratio로는 화면이 좁아져 텍스트가 길어질 때 사진 아래 빈 공간이 생겼었음 */
+.how-started-photo {
   position: relative;
   width: 100%;
-  aspect-ratio: 2 / 3;
-  min-height: 100%;
+  flex: 1;
   overflow: hidden;
 }
 
-.how-started-caption {
+.how-started-photo-caption {
   position: absolute;
-  right: clamp(28px, 4.6vw, 76px);
-  bottom: clamp(24px, 2.4vw, 40px);
+  left: clamp(10px, 1.2vw, 16px);
+  bottom: clamp(10px, 1.2vw, 16px);
   color: #000;
-  font-size: clamp(22px, 1.8vw, 30px);
-  line-height: 1.1;
+  font-size: clamp(13px, 1vw, 16px);
+  line-height: 1.2;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
 
-.how-started-caption p {
+.how-started-photo-caption p {
   margin: 0;
 }
 
@@ -395,39 +406,9 @@ body {
   transform: translateY(0) scale(1);
 }
 
-/* Part 1에서 Part 2로 이어질 때 페이드 전환 (translateX는 레이아웃 폭 계산에 영향을 줘서 제거) */
-.history-panel-slide {
-  opacity: 0;
-  transition: opacity 0.8s ease-out;
-}
-
-.history-panel-slide.visible {
-  opacity: 1;
-}
-
-.how-started-followup-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 62.25fr) minmax(0, 37.75fr);
-  min-height: 56.25vw;
-  margin-bottom: 64px;
-  background: #fff;
-}
-
-.how-started-followup-copy {
-  padding: clamp(72px, 6.5vw, 94px) clamp(24px, 3vw, 48px) 64px;
-}
-
-.how-started-followup-description {
-  max-width: 620px;
-  margin: 0 0 clamp(54px, 4.4vw, 72px);
-  font-size: clamp(25px, 1.85vw, 40px);
-  line-height: 1.25;
-  letter-spacing: -0.035em;
-}
-
 .how-started-quote {
   position: relative;
-  max-width: 650px;
+  max-width: 900px;
   margin: 0 0 clamp(40px, 3.2vw, 52px);
   padding-left: 24px;
   font-size: clamp(23px, 2.05vw, 34px);
@@ -444,6 +425,11 @@ body {
   left: 0;
   width: 2px;
   background: #000;
+}
+
+/* Morgan 문단 + goal 박스를 아래로 밀어내리는 용도 */
+.how-started-part2 {
+  margin-top: clamp(20px, 20vw, 30px);
 }
 
 .how-started-goal {
@@ -473,34 +459,6 @@ body {
   letter-spacing: -0.04em;
 }
 
-.how-started-followup-media {
-  position: relative;
-  width: 100%;
-  min-height: 0;
-}
-
-.how-started-followup-caption {
-  position: absolute;
-  z-index: 1;
-  top: clamp(40px, 3.3vw, 54px);
-  left: clamp(32px, 2.4vw, 40px);
-  padding: 0;
-  font-size: clamp(22px, 1.8vw, 30px);
-  line-height: 1.15;
-}
-
-.how-started-followup-caption p {
-  margin: 0;
-}
-
-.how-started-followup-image {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  overflow: hidden;
-}
-
 /* About > Philosophy: 아이콘은 추후 추가하며, 원칙 텍스트는 대각선 흐름으로 배치 */
 .philosophy-content {
   padding: clamp(56px, 5.5vw, 90px) clamp(24px, 2vw, 32px)
@@ -516,38 +474,18 @@ body {
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  gap: clamp(8px, 1vw, 16px);
   margin-top: clamp(38px, 4vw, 64px);
 }
 
-.philosophy-number,
-.philosophy-eyebrow,
-.philosophy-summary {
-  margin: 0;
-}
-
-.philosophy-number {
-  margin-bottom: 4px;
-  font-size: clamp(20px, 1.7vw, 28px);
-}
-
-.philosophy-eyebrow {
-  font-size: clamp(28px, 2.5vw, 41px);
-  line-height: 1.1;
-}
-
-.philosophy-heading {
-  margin: 0;
+/* philosophy-heading의 이탤릭 폰트 광학 정렬 보정 + 좁은 flex 컬럼에서 줄바꿈 방지 —
+   .about-section-title(공용 타이틀)에 얹어서 쓰는 보조 클래스 */
+.philosophy-title-tight {
   margin-left: -0.17em;
-  font-size: clamp(54px, 5.8vw, 96px);
-  font-style: italic;
-  font-weight: 800;
-  letter-spacing: -0.06em;
-  line-height: 0.98;
   white-space: nowrap;
 }
 
 .philosophy-summary {
+  margin: 0;
   padding-bottom: 4px;
   font-size: clamp(18px, 1.55vw, 26px);
   line-height: 1.2;
@@ -579,10 +517,15 @@ body {
 }
 
 .philosophy-principle p {
-  max-width: 580px;
-  font-size: clamp(20px, 1.8vw, 30px);
+  font-size: clamp(20px, 1.8vw, 25px);
   letter-spacing: -0.04em;
   line-height: 1.22;
+}
+
+/* max-width는 항목마다 따로 관리 — 공용 규칙으로 묶으면 한 곳만 조정해도
+   나머지 전부 같이 바뀌어버려서 개별 폭 조절이 불가능해짐 */
+.philosophy-principle-1 p {
+  max-width: 420px;
 }
 
 .philosophy-principle-2 {
@@ -591,14 +534,30 @@ body {
   margin-left: auto;
 }
 
+.philosophy-principle-2 p {
+  /* position:absolute + 고정 px 대신, 문서 흐름 안에서 margin-left를 clamp로 줘서
+     화면이 좁아질수록 오프셋도 같이 줄어들게 함 (h3와 겹치거나 화면 밖으로 밀리지 않음) */
+  margin-left: clamp(20px, 4vw, 50px);
+  max-width: 490px;
+}
+
 .philosophy-principle-3 {
   margin-top: clamp(20px, 4vw, 64px);
+}
+
+.philosophy-principle-3 p {
+  max-width: 315px;
 }
 
 .philosophy-principle-4 {
   margin-top: clamp(100px, 14vw, 230px);
   text-align: right;
   margin-left: auto;
+}
+
+.philosophy-principle-4 p {
+  margin-left: clamp(24px, 4.6vw, 60px);
+  max-width: 485px;
 }
 
 /* 각 원칙은 확대되며 제자리로 들어와, 쌓이는 레이어 감각을 만든다. */
@@ -618,33 +577,14 @@ body {
 
 /* About > 04 History("Our journey so far"): 연도별 타임라인 + 사진 */
 .journey-header {
-  padding: clamp(56px, 5.5vw, 90px) clamp(24px, 2vw, 32px) 0;
-}
-
-.journey-number {
-  margin: 0 0 4px;
-  font-size: clamp(20px, 1.7vw, 28px);
-}
-
-.journey-eyebrow {
-  margin: 0;
-  font-size: clamp(28px, 2.5vw, 41px);
-  line-height: 1.1;
-}
-
-.journey-heading {
-  margin: clamp(28px, 3vw, 44px) 0 clamp(20px, 2vw, 28px);
-  font-size: clamp(46px, 4.5vw, 76px);
-  font-weight: 800;
-  font-style: italic;
-  letter-spacing: -0.06em;
-  line-height: 0.98;
+  /* 아래 StatsBar의 py-20(80px)과 위쪽 여백을 맞춰서 섹션 상/하단 간격을 동일하게 함 */
+  padding: 80px clamp(24px, 2vw, 32px) 0;
 }
 
 .journey-subtext {
-  max-width: 620px;
+  max-width: 435px;
   margin: 0;
-  font-size: clamp(17px, 1.4vw, 22px);
+  font-size: clamp(17px, 1.4vw, 17px);
   line-height: 1.4;
 }
 
@@ -660,8 +600,8 @@ body {
 }
 
 .journey-year-title {
-  margin: 0 0 clamp(32px, 3.2vw, 52px) -40px;
-  font-size: clamp(56px, 5.5vw, 92px);
+  margin: 0 0 clamp(20px, 1.2vw, 23px);
+  font-size: clamp(55px, 7.5vw, 112px);
   font-weight: 800;
   font-style: italic;
   letter-spacing: -0.06em;
@@ -678,42 +618,43 @@ body {
 
 .journey-timeline {
   position: relative;
-  padding-left: 34px;
-}
-
-.journey-timeline--2026 {
-  margin-top: -43px;
 }
 
 .journey-timeline-item {
   position: relative;
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  padding-bottom: clamp(28px, 2.6vw, 40px);
+  padding-bottom: clamp(28px, 4.6vw, 50px);
 }
 
 .journey-timeline-item:last-child {
   padding-bottom: 0;
 }
 
+/* 닷+날짜+텍스트를 한 줄로 묶은 실제 콘텐츠 영역 — padding-bottom(다음 줄과의 간격)은
+   여기 포함되지 않으므로, 닷은 항상 이 줄의 실제 텍스트 높이에 맞춰 중앙정렬됨
+   (날짜 폰트가 크거나 로고 배지(40px)가 붙어도 자동으로 맞음, 픽셀 하드코딩 불필요) */
+.journey-timeline-row {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+
 /* 이 점의 중심에서 다음 점의 중심까지만 선을 그림 — 첫/마지막 점 밖으로 삐져나오지 않게 */
 .journey-timeline-item:not(:last-child)::before {
   content: '';
   position: absolute;
-  top: 13px;
-  bottom: -13px;
-  left: -35px;
+  top: 25px;
+  bottom: -22px;
+  left: 10.4px;
   width: 2px;
   background: #000;
 }
 
 .journey-dot {
-  position: absolute;
-  top: 6px;
-  left: -41px;
-  width: 14px;
-  height: 14px;
+  position: relative;
+  flex-shrink: 0;
+  width: 23px;
+  height: 23px;
   border-radius: 50%;
   background: #000;
 }
@@ -738,19 +679,35 @@ body {
 .journey-milestone--bold {
   display: inline-block;
   transform-origin: left center;
-  transition: transform 0.3s ease, font-weight 0.2s ease;
+  transition:
+    transform 0.3s ease,
+    font-weight 0.2s ease;
 }
 
+/* 하이라이트 애니메이션(스크롤 시 커짐/색 변경) 없이 항상 굵게만 표시 */
+.journey-milestone--static-bold {
+  font-weight: 700;
+}
+
+/* 텍스트 바로 옆에 붙이되, 이 span 자체는 높이를 거의 안 차지하게 해서(1px) 그 줄의
+   텍스트 라인박스를 부풀리지 않음 — 실제 70px 원형 이미지는 absolute로 그 위에 겹쳐서
+   위아래로 삐져나오게 표시하므로, 배지 유무와 상관없이 모든 줄 높이가 균일하게 유지됨 */
 .journey-logo-badge {
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: 40px;
-  margin-left: 6px;
-  border-radius: 50%;
-  overflow: hidden;
+  width: 70px;
+  height: 1px;
   vertical-align: middle;
-  transform: translateY(-2px);
+}
+
+.journey-logo-badge img {
+  position: absolute;
+  top: 50%;
+  left: 35px;
+  transform: translateY(-50%);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
 }
 
 .journey-photo {
@@ -775,18 +732,33 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 62.25fr) minmax(0, 37.75fr);
   align-items: stretch;
+  height: 90vh;
   margin-top: clamp(56px, 6vw, 96px);
   background: #fff;
-}
-
-/* 2025 → 2026 pin 섹션 전환이 뚝뚝 끊기지 않도록, 둘 사이 여백을 넉넉히 둬서
-   완전히 풀렸다가 다시 걸리는 구간에 스크롤 여유를 준다 */
-.journey-pin-wrap + .journey-pin-wrap {
-  margin-top: clamp(160px, 18vw, 280px);
+  overflow: hidden;
 }
 
 .journey-pin-left {
-  padding: clamp(48px, 5vw, 80px) clamp(24px, 3vw, 48px);
+  position: relative;
+}
+
+/* 2025/2026 타임라인 목록을 같은 자리에 겹쳐두고 opacity로만 전환 — pin이 풀렸다가
+   다시 걸리는 과정 자체가 없어서(스크롤 트리거가 둘을 하나로 관통) 끊김 없이 자연스럽게 넘어감.
+   absolute 배치라 부모(.journey-pin-left)의 padding을 무시하므로 여기서 직접 줌 */
+.journey-year-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(48px, 6vw, 99px) clamp(50px, 6vw, 104px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.journey-year-layer.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .journey-year-title--pin {
@@ -818,25 +790,29 @@ body {
   opacity: 1;
 }
 
-.journey-timeline-item--active .journey-dot {
+.journey-timeline-item--active.journey-timeline-item--highlight .journey-dot {
   transform: scale(1.5);
 }
 
 .journey-timeline-item--active .journey-milestone--bold {
   transform: scale(1.15);
   font-weight: 700;
+  color: rgb(45, 90, 69);
 }
 
 .journey-dot,
 .journey-milestone {
   transition:
     transform 0.3s ease,
-    font-weight 0.2s ease;
+    font-weight 0.2s ease,
+    color 0.2s ease;
 }
 
 @media (max-width: 767px) {
   .journey-pin-wrap {
     grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
   }
 
   .journey-photo-frame {
@@ -848,6 +824,22 @@ body {
 
   .journey-milestone {
     white-space: normal;
+  }
+
+  /* 모바일에선 부모(.journey-pin-left)가 고정 높이가 아니라 콘텐츠만큼 늘어나야 하므로,
+     absolute+opacity 크로스페이드 대신 display로 완전히 전환(비활성 레이어는 높이 0) */
+  .journey-pin-left {
+    position: static;
+  }
+
+  .journey-year-layer {
+    position: static;
+    display: none;
+    opacity: 1;
+  }
+
+  .journey-year-layer.active {
+    display: flex;
   }
 }
 
@@ -1253,10 +1245,10 @@ body {
   }
 
   .about-intro-copy {
-    padding: 48px 24px 56px;
+    padding: 48px 24px 0;
   }
 
-  .about-intro-title {
+  .about-section-title {
     font-size: 40px;
   }
 
@@ -1278,8 +1270,12 @@ body {
     padding: 48px 24px 56px;
   }
 
-  .how-started-image {
+  .how-started-photos {
     order: 1;
+    padding: 24px;
+  }
+
+  .how-started-photo {
     aspect-ratio: 4 / 5;
   }
 
@@ -1287,29 +1283,6 @@ body {
     font-size: 20px;
   }
 
-  .how-started-followup-layout {
-    grid-template-columns: 1fr;
-    min-height: 0;
-    margin-bottom: 40px;
-  }
-
-  .how-started-followup-copy {
-    order: 2;
-    padding: 48px 24px 56px;
-  }
-
-  .how-started-followup-media {
-    order: 1;
-    min-height: max(420px, 125vw);
-  }
-
-  .how-started-followup-caption {
-    top: 32px;
-    left: 24px;
-    padding: 0;
-  }
-
-  .how-started-followup-description,
   .how-started-quote,
   .how-started-goal strong {
     font-size: 23px;
@@ -1328,8 +1301,8 @@ body {
     margin-top: 42px;
   }
 
-  .philosophy-heading {
-    margin: 0 0 20px -0.17em;
+  .philosophy-title-tight {
+    margin-left: -0.17em;
     white-space: normal;
   }
 
@@ -1348,8 +1321,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .history-rise,
-  .history-quote-lift,
-  .history-panel-slide {
+  .history-quote-lift {
     opacity: 1;
     clip-path: none;
     transform: none;

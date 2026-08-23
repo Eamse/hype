@@ -63,11 +63,19 @@ function useCountUp(target: number, start: boolean, delay: number) {
   return value;
 }
 
-function StatColumn({ stat, start, delay }: { stat: Stat; start: boolean; delay: number }) {
+function StatColumn({
+  stat,
+  start,
+  delay,
+}: {
+  stat: Stat;
+  start: boolean;
+  delay: number;
+}) {
   const value = useCountUp(stat.target, start, delay);
 
   return (
-    <div className="flex-1 px-6 last:pr-0">
+    <div className="flex-none">
       {/* 모든 컬럼에 동일한 높이를 예약해서 숫자 줄 baseline을 맞춤 */}
       <p className="text-base font-bold italic mb-0.5 h-6 leading-6">
         {stat.topLabel ?? ' '}
@@ -83,7 +91,9 @@ function StatColumn({ stat, start, delay }: { stat: Stat; start: boolean; delay:
           </span>
         )}
       </div>
-      <p className="text-base text-gray-500 mt-2 leading-snug">{stat.sublabel}</p>
+      <p className="text-base text-gray-500 mt-2 leading-snug">
+        {stat.sublabel}
+      </p>
     </div>
   );
 }
@@ -108,16 +118,24 @@ export default function StatsBar() {
   return (
     <div
       ref={ref}
-      className="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-black/15 py-20"
+      className="flex flex-col md:flex-row md:items-center md:justify-around md:gap-x-15 md:px-25 py-20"
     >
-      {STATS.map((stat, idx) => (
+      {STATS.flatMap((stat, idx) => [
+        // 모든 항목이 같은 flex 컨테이너의 직속 형제라서 gap이 구분선 양옆에
+        // 똑같이 적용됨 — 그래서 두 텍스트 사이 정중앙에 옴
+        idx > 0 && (
+          <span
+            key={`divider-${stat.sublabel}`}
+            className="hidden md:block w-px self-stretch bg-black"
+          />
+        ),
         <StatColumn
           key={stat.sublabel}
           stat={stat}
           start={visible}
           delay={idx * STAGGER}
-        />
-      ))}
+        />,
+      ])}
     </div>
   );
 }
