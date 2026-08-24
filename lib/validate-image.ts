@@ -57,10 +57,16 @@ export function validateMagicBytes(buffer: Buffer, mimeType: string): boolean {
  */
 export const SHARP_OPTIONS = { limitInputPixels: 40_000_000 } as const;
 
-/** 리사이즈/화질 기본값 — 여기 숫자만 바꾸면 프로젝트 전체 업로드 압축 정도가 바뀜
- * 웨딩 사진 특성상 고화질 유지가 중요해서 해상도/화질을 높게 잡음 (결과물이 10MB 안팎까지 나올 수 있음) */
-export const DEFAULT_RESIZE_WIDTH = 3840;
-export const DEFAULT_WEBP_QUALITY = 92;
+/** 리사이즈/화질 기본값 — 여기 숫자만 바꾸면 프로젝트 전체 업로드 압축 정도가 바뀜.
+ * 예전엔 웨딩 사진 화질 유지를 위해 3840/92(파일당 최대 10MB 안팎)로 잡았는데,
+ * 약한 VPS에서 페이지당 사진이 많을 때 너무 무거워져서 낮춤 — 히어로 이미지처럼
+ * 화면을 꽉 채우는 대표 사진만 /api/images에서 HERO_RESIZE_WIDTH/QUALITY로 별도 지정 */
+export const DEFAULT_RESIZE_WIDTH = 1920;
+export const DEFAULT_WEBP_QUALITY = 78;
+
+/** 히어로 등 풀스크린으로 크게 보여지는 대표 사진 전용 고화질 옵션 */
+export const HERO_RESIZE_WIDTH = 3840;
+export const HERO_WEBP_QUALITY = 90;
 
 export class ImageProcessingError extends Error {
   status: number;

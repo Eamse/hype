@@ -121,6 +121,8 @@ export default function HeroCarousel({
             alt={`hero-${idx}`}
             fill
             priority={idx === 0}
+            fetchPriority={idx === 0 ? 'high' : undefined}
+            loading={idx === 0 ? 'eager' : undefined}
             sizes="100vw"
             draggable={false}
             style={{ objectFit: 'cover', pointerEvents: 'none' }}

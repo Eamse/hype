@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { uploadToR2, deleteFileFromR2 } from '@/lib/r2';
 import { getAdminId } from '@/lib/admin-auth';
 import { prisma } from '@/lib/prisma';
-import { validateAndCompressImage, ImageProcessingError } from '@/lib/validate-image';
+import {
+  validateAndCompressImage,
+  ImageProcessingError,
+  HERO_RESIZE_WIDTH,
+  HERO_WEBP_QUALITY,
+} from '@/lib/validate-image';
 
 const R2_PUBLIC_BASE_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
 
@@ -102,9 +107,15 @@ export async function POST(request: NextRequest) {
 
   const filename = `${key}_${crypto.randomUUID()}.webp`;
 
+  // 화면을 꽉 채우는 히어로 대표 사진만 고화질 유지, 나머지(썸네일/갤러리 등)는 기본(낮은) 압축
+  const isHero = key.startsWith('hero');
+
   let compress: Buffer;
   try {
-    compress = await validateAndCompressImage(file);
+    compress = await validateAndCompressImage(
+      file,
+      isHero ? { resize: HERO_RESIZE_WIDTH, quality: HERO_WEBP_QUALITY } : {},
+    );
   } catch (e) {
     const status = e instanceof ImageProcessingError ? e.status : 500;
     const message = e instanceof Error ? e.message : 'Image processing failed';
