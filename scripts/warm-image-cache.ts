@@ -14,9 +14,11 @@ import 'dotenv/config';
 import { prisma } from '@/lib/prisma';
 
 const BASE_URL = (process.env.WARM_BASE_URL ?? 'https://hypewedding.kr').replace(/\/$/, '');
-// 카드 썸네일(모바일/데스크탑)과 상세 페이지 정도만 커버 — next/image의 모든 breakpoint를
-// 다 데우면 과도하므로, 실제 트래픽이 몰리는 대표 폭 몇 개만 선정
-const WIDTHS = [640, 1920];
+// next/image의 기본 deviceSizes와 동일 — 실제 브라우저가 화면 크기/해상도에 따라
+// srcset에서 이 목록 중 하나를 골라 요청하므로, 일부만 데우면 나머지 크기는 여전히
+// 콜드 상태로 남음 (640/1920 두 개만 데웠다가 실제로는 750/828/1080/... 등 다른
+// 크기가 요청되면서 여전히 느렸던 문제 발생)
+const WIDTHS = [640, 750, 828, 1080, 1200, 1920, 2048, 3840];
 const QUALITY = 75; // next/image 기본 quality와 동일하게 맞춤 (다른 quality면 별도 캐시 엔트리가 됨)
 const CONCURRENCY = 3; // 약한 VPS에 과부하 주지 않도록 동시 요청 수 제한
 
@@ -36,6 +38,7 @@ async function warmOne(url: string) {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       await res.arrayBuffer(); // 응답을 끝까지 받아야 서버/엣지 캐시에 실제로 저장됨
       warmed++;
+      if (warmed % 50 === 0) console.log(`  ...${warmed}건 처리됨`);
     } catch (e) {
       failed++;
       console.error(`  ❌ ${url} (w=${w}):`, e instanceof Error ? e.message : e);
