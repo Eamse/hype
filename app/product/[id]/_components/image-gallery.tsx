@@ -72,6 +72,10 @@ export default function ImageGallery({
                   key={`${img.id}-${i}`}
                   onClick={() => setSelected(img.url)}
                   className="shrink-0 rounded-lg overflow-hidden relative cursor-pointer bg-none p-0"
+                  style={{
+                    width: 64,
+                    height: 64,
+                  }}
                 >
                   <Image
                     src={img.url}
