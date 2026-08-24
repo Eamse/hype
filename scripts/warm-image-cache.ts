@@ -25,8 +25,10 @@ const CONCURRENCY = 3; // 약한 VPS에 과부하 주지 않도록 동시 요청
 let warmed = 0;
 let failed = 0;
 
+// r2.dev(예전 기본 도메인)와 photo.hypewedding.kr(커스텀 도메인) 둘 다 대상으로 —
+// 마이그레이션 전후 URL이 섞여있어도 놓치지 않도록 함
 function isR2Url(url: string): boolean {
-  return url.includes('.r2.dev/');
+  return url.includes('.r2.dev/') || url.includes('photo.hypewedding.kr/');
 }
 
 async function warmOne(url: string) {
