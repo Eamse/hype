@@ -6,7 +6,7 @@ import ImageGallery from './image-gallery';
 import WeddingDetail from './wedding-detail';
 import Accordion from './accordion';
 
-type ProductImage = { id: number; url: string; order: number };
+type ProductImage = { id: number; url: string; thumbUrl: string | null; order: number };
 
 export default function ProductGalleryLayout({
   product,
@@ -24,13 +24,19 @@ export default function ProductGalleryLayout({
 }) {
   // 패키지 소속 작가의 사진(activeDirectorId 기준) — 있으면 이 갤러리가 메인 이미지 자리를 대체함
   const [packageImages, setPackageImages] = useState<
-    { id: number; webUrl: string; originalUrl: string }[]
+    { id: number; webUrl: string; originalUrl: string; thumbUrl: string | null }[]
   >([]);
 
   const hasPackageImages = packageImages.length > 0;
-  // 메인 갤러리는 확대해서 보는 영역이라 압축본(webUrl) 대신 고화질 원본(originalUrl)을 씀
+  // 메인 갤러리는 확대해서 보는 영역이라 압축본(webUrl) 대신 고화질 원본(originalUrl)을 씀.
+  // 다만 썸네일 스트립은 thumbUrl(작은 실제 파일)을 따로 써서 원본을 매번 축소하지 않게 함
   const galleryImages: ProductImage[] = hasPackageImages
-    ? packageImages.map((img, order) => ({ id: img.id, url: img.originalUrl, order }))
+    ? packageImages.map((img, order) => ({
+        id: img.id,
+        url: img.originalUrl,
+        thumbUrl: img.thumbUrl,
+        order,
+      }))
     : product.images;
   const galleryMainUrl = hasPackageImages ? null : product.imageUrl;
 

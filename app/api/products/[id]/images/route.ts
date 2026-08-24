@@ -2,7 +2,12 @@ import { NextResponse, NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { uploadToR2, deleteFileFromR2 } from '@/lib/r2';
 import { getAdminId } from '@/lib/admin-auth';
-import { validateAndCompressImage, ImageProcessingError } from '@/lib/validate-image';
+import {
+  validateAndCompressImage,
+  ImageProcessingError,
+  THUMBNAIL_RESIZE_WIDTH,
+  THUMBNAIL_WEBP_QUALITY,
+} from '@/lib/validate-image';
 
 const R2_PUBLIC_BASE_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
 
@@ -43,10 +48,16 @@ export async function POST(
       { status: 500 },
     );
   const filename = `product_detail_${productId}_${crypto.randomUUID()}.webp`;
+  const thumbFilename = `product_detail_thumb_${productId}_${crypto.randomUUID()}.webp`;
 
   let compressed: Buffer;
+  let thumbCompressed: Buffer;
   try {
     compressed = await validateAndCompressImage(file);
+    thumbCompressed = await validateAndCompressImage(file, {
+      resize: THUMBNAIL_RESIZE_WIDTH,
+      quality: THUMBNAIL_WEBP_QUALITY,
+    });
   } catch (e) {
     const status = e instanceof ImageProcessingError ? e.status : 500;
     const message = e instanceof Error ? e.message : 'Image processing failed';
@@ -54,14 +65,16 @@ export async function POST(
   }
   try {
     await uploadToR2(filename, compressed);
+    await uploadToR2(thumbFilename, thumbCompressed);
   } catch {
     return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
   }
 
   const url = `${R2_PUBLIC_BASE_URL}/${filename}`;
+  const thumbUrl = `${R2_PUBLIC_BASE_URL}/${thumbFilename}`;
   const count = await prisma.productImage.count({ where: { productId } });
   const image = await prisma.productImage.create({
-    data: { productId, url, order: count },
+    data: { productId, url, thumbUrl, order: count },
   });
   return NextResponse.json(image, { status: 201 });
 }

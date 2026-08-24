@@ -101,7 +101,7 @@ async function main() {
 
       console.log(`\n📁 ${studioFolder.name} → 패키지 ${packages.length}개, 사진 ${imageFiles.length}장`);
 
-      const uploaded: { webUrl: string; originalUrl: string }[] = [];
+      const uploaded: { webUrl: string; originalUrl: string; thumbUrl: string }[] = [];
       let index = 0;
       for (const file of imageFiles) {
         index += 1;
@@ -116,16 +116,25 @@ async function main() {
           .resize(3840)
           .webp({ quality: 92 })
           .toBuffer();
+        // 갤러리 썸네일 스트립(64px)이 1600px 원본을 매번 실시간으로 축소하지 않도록
+        // 진짜 작은 파일을 별도로 만들어둠
+        const thumbBuffer = await sharp(original, { limitInputPixels: 300_000_000 })
+          .resize(640)
+          .webp({ quality: 75 })
+          .toBuffer();
 
         const key = `package_${parsed.location.toLowerCase()}_${parsed.number}_${crypto.randomUUID()}`;
         const webKey = `${key}_web.webp`;
         const originalKey = `${key}_original.webp`;
+        const thumbKey = `${key}_thumb.webp`;
         await uploadToR2(webKey, webBuffer);
         await uploadToR2(originalKey, originalBuffer);
+        await uploadToR2(thumbKey, thumbBuffer);
 
         uploaded.push({
           webUrl: `${R2_PUBLIC_BASE_URL}/${webKey}`,
           originalUrl: `${R2_PUBLIC_BASE_URL}/${originalKey}`,
+          thumbUrl: `${R2_PUBLIC_BASE_URL}/${thumbKey}`,
         });
       }
 
@@ -136,6 +145,7 @@ async function main() {
             packageId: pkg.id,
             webUrl: img.webUrl,
             originalUrl: img.originalUrl,
+            thumbUrl: img.thumbUrl,
             order,
           })),
         });
