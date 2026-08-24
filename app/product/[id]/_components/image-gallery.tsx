@@ -102,7 +102,7 @@ export default function ImageGallery({
             src={selected}
             alt="product"
             fill
-            sizes="(max-width: 1024px) 100vw, 50vw"
+            unoptimized
             priority
             style={{ objectFit: 'cover' }}
           />
