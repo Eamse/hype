@@ -40,7 +40,7 @@ type Package = {
   addons: { addon: Addon }[];
   inclusions: { inclusion: Inclusion }[];
   partners: { partner: Partner }[];
-  images: { id: number; webUrl: string; originalUrl: string }[];
+  images: { id: number; webUrl: string; originalUrl: string; thumbUrl: string | null }[];
 };
 
 const INQUIRY_FORM_URL =
@@ -106,7 +106,9 @@ export default function WeddingDetail({
   section?: string;
   directors: Director[];
   packages: Package[];
-  onActiveImagesChange?: (images: { id: number; webUrl: string; originalUrl: string }[]) => void;
+  onActiveImagesChange?: (
+    images: { id: number; webUrl: string; originalUrl: string; thumbUrl: string | null }[],
+  ) => void;
 }) {
   const router = useRouter();
   const { data: session } = useSession();

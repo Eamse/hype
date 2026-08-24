@@ -7,6 +7,7 @@ import { useIsMobile } from '@/hooks/useIsMobile';
 type ProductImage = {
   id: number;
   url: string;
+  thumbUrl?: string | null;
   order: number;
 };
 
@@ -21,7 +22,7 @@ export default function ImageGallery({
 
   const allImages = [
     ...(mainImageUrl
-      ? [{ id: 0, url: mainImageUrl, description: '', order: -1 }]
+      ? [{ id: 0, url: mainImageUrl, thumbUrl: null, description: '', order: -1 }]
       : []),
     ...images,
   ];
@@ -78,7 +79,7 @@ export default function ImageGallery({
                   }}
                 >
                   <Image
-                    src={img.url}
+                    src={img.thumbUrl ?? img.url}
                     alt="thumbnail"
                     fill
                     sizes="64px"
