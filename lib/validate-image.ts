@@ -68,6 +68,13 @@ export const DEFAULT_WEBP_QUALITY = 78;
 export const HERO_RESIZE_WIDTH = 3840;
 export const HERO_WEBP_QUALITY = 90;
 
+/** 카드 그리드 등에서 작게만 표시되는 목록용 썸네일 전용 옵션.
+ * 지금까지는 1920px 원본을 next/image 옵티마이저가 매 요청마다 64px 안팎으로
+ * 다시 줄이고 있었는데, 그 다운샘플링 연산 자체가 서버 부하의 원인이었음.
+ * 애초에 작은 실제 파일을 별도로 만들어두면 옵티마이저가 할 일이 거의 없어짐 */
+export const THUMBNAIL_RESIZE_WIDTH = 640;
+export const THUMBNAIL_WEBP_QUALITY = 75;
+
 export class ImageProcessingError extends Error {
   status: number;
   constructor(message: string, status = 400) {
