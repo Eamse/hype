@@ -3,6 +3,12 @@ name: Deploy to Server
 on:
   push:
     branches: [main]
+    # scripts/README 등 앱 실행에 영향 없는 변경은 풀빌드+재시작을 안 돌게 제외
+    # (일회성 유틸 스크립트라 서버에서 git pull만 하면 바로 실행 가능)
+    paths-ignore:
+      - 'scripts/**'
+      - '*.md'
+      - '.github/*.md'
 
 jobs:
   deploy:
