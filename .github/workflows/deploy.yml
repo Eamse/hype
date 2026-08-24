@@ -30,9 +30,18 @@ jobs:
             git pull origin main
             npm install
             npx prisma db push
+            if [ -d .next/standalone/.next/cache/images ]; then
+              rm -rf /tmp/next-image-cache-backup
+              cp -r .next/standalone/.next/cache/images /tmp/next-image-cache-backup
+            fi
             NODE_OPTIONS="--max-old-space-size=3072" npm run build
             cp -r .next/static .next/standalone/.next/static
             cp -r public .next/standalone/public
             cp .env .next/standalone/.env
+            if [ -d /tmp/next-image-cache-backup ]; then
+              mkdir -p .next/standalone/.next/cache
+              cp -r /tmp/next-image-cache-backup .next/standalone/.next/cache/images
+              rm -rf /tmp/next-image-cache-backup
+            fi
             pm2 restart hypepig
             pm2 save
