@@ -7,6 +7,8 @@ import {
   ImageProcessingError,
   HERO_RESIZE_WIDTH,
   HERO_WEBP_QUALITY,
+  THUMBNAIL_RESIZE_WIDTH,
+  THUMBNAIL_WEBP_QUALITY,
 } from '@/lib/validate-image';
 
 const R2_PUBLIC_BASE_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
@@ -107,14 +109,21 @@ export async function POST(request: NextRequest) {
 
   const filename = `${key}_${crypto.randomUUID()}.webp`;
 
-  // 화면을 꽉 채우는 히어로 대표 사진만 고화질 유지, 나머지(썸네일/갤러리 등)는 기본(낮은) 압축
+  // 화면을 꽉 채우는 히어로 대표 사진는 고화질, 카드 그리드용 썸네일(키에 "thumb"
+  // 포함)은 실제로 작은 파일로 별도 저장 — next/image 옵티마이저가 매 요청마다
+  // 큰 원본을 축소하는 연산 자체를 없애서 서버 부하를 줄임
   const isHero = key.startsWith('hero');
+  const isThumbnail = key.includes('thumb');
 
   let compress: Buffer;
   try {
     compress = await validateAndCompressImage(
       file,
-      isHero ? { resize: HERO_RESIZE_WIDTH, quality: HERO_WEBP_QUALITY } : {},
+      isHero
+        ? { resize: HERO_RESIZE_WIDTH, quality: HERO_WEBP_QUALITY }
+        : isThumbnail
+          ? { resize: THUMBNAIL_RESIZE_WIDTH, quality: THUMBNAIL_WEBP_QUALITY }
+          : {},
     );
   } catch (e) {
     const status = e instanceof ImageProcessingError ? e.status : 500;
