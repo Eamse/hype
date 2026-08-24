@@ -55,10 +55,16 @@ export const uploadToR2 = async (urlOrKey: string, buffer: Buffer) => {
 export const deleteFileFromR2 = async (urlOrKey: string) => {
   if (!urlOrKey) return;
 
+  // R2_PUBLIC_BASE_URL이 커스텀 도메인으로 바뀐 뒤에도, 예전 r2.dev 호스트로
+  // 저장된 기존 파일들의 URL을 그대로 지울 수 있도록 호스트 종류에 상관없이
+  // pathname만 key로 사용
   let key = urlOrKey;
-  const R2_PUBLIC_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
-  if (R2_PUBLIC_URL && key.startsWith(R2_PUBLIC_URL)) {
-    key = key.slice(R2_PUBLIC_URL.length).replace(/^\//, '');
+  if (key.startsWith('http')) {
+    try {
+      key = new URL(key).pathname.replace(/^\//, '');
+    } catch {
+      // URL 파싱 실패 시 원본 그대로 시도
+    }
   }
 
   const command = new DeleteObjectCommand({
