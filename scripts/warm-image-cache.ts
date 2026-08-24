@@ -44,6 +44,8 @@ async function warmOne(url: string) {
         headers: {
           Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
         },
+        // 응답이 없는 요청 하나 때문에 워커 전체가 무한정 멈추는 걸 방지
+        signal: AbortSignal.timeout(30_000),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       await res.arrayBuffer(); // 응답을 끝까지 받아야 서버/엣지 캐시에 실제로 저장됨
