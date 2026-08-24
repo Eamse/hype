@@ -5,7 +5,7 @@ import SubTabBar from '@/components/sub-tab-bar';
 import { regionSubTabs } from '@/lib/service-sub-tabs';
 import { prisma } from '@/lib/prisma';
 import { withProductNumbers } from '@/lib/product-number';
-import ProductsGrid from './_components/products-grid';
+import ProductSections from '../_components/product-sections';
 import HomeFooter from '../_components/home-footer';
 
 export default async function ProductPage({
@@ -41,14 +41,13 @@ export default async function ProductPage({
       <div style={{ paddingTop: 56 }}>
         <SubTabBar tabs={regionSubTabs(brand)} />
       </div>
-      <main className="products-main" style={{ flex: 1 }}>
-        <h1 style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>
-          {products.length} {section ?? 'All Products'}
-        </h1>
-
-        <p style={{ fontSize: 13, color: '#000', marginBottom: 32 }}></p>
-
-        <ProductsGrid products={products} />
+      <main style={{ flex: 1 }}>
+        {/* /packages 페이지와 동일한 컴포넌트로 UI 통일 */}
+        <ProductSections
+          sections={[
+            { title: section ?? 'All Products', products, showAll: true },
+          ]}
+        />
       </main>
       <HomeFooter />
     </div>

@@ -110,6 +110,7 @@ export default function ProductSection({
         <div
           style={{
             display: 'grid',
+            // /products 페이지의 .products-grid(4열)와 열 개수를 통일
             gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(5, 1fr)',
             gap: isMobile ? 8 : 12,
           }}
