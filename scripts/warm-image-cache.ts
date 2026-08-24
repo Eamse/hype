@@ -34,7 +34,15 @@ async function warmOne(url: string) {
   for (const w of WIDTHS) {
     const target = `${BASE_URL}/_next/image?url=${encodeURIComponent(url)}&w=${w}&q=${QUALITY}`;
     try {
-      const res = await fetch(target);
+      // /_next/image 응답은 `Vary: Accept`가 붙어있어서, 요청의 Accept 헤더 값에 따라
+      // 캐시가 별도로 나뉨. Node의 기본 fetch가 보내는 Accept는 실제 브라우저(Chrome/
+      // Safari 등)와 달라서, 그걸 명시하지 않으면 "워밍했는데도 여전히 콜드"인 상황이 됨.
+      // 최신 브라우저 대부분(Chrome/Edge/Firefox/Safari 16.4+)이 보내는 값과 동일하게 맞춤
+      const res = await fetch(target, {
+        headers: {
+          Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        },
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       await res.arrayBuffer(); // 응답을 끝까지 받아야 서버/엣지 캐시에 실제로 저장됨
       warmed++;
