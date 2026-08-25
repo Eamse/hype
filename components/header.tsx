@@ -130,7 +130,7 @@ function DropdownLink({
         fontWeight: 700,
         color: '#2D5A45',
         textDecoration: 'none',
-        textTransform: 'uppercase',
+        textTransform: 'capitalize',
         letterSpacing: '0.5px',
         whiteSpace: 'nowrap',
         backgroundColor: hovered ? '#f7f7f7' : 'transparent',
