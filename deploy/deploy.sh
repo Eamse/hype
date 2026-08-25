@@ -4,6 +4,9 @@ set -e
 
 cd /root/hypepig
 
+echo "0) 점검 모드 켜기"
+bash deploy/maintenance-on.sh
+
 echo "1) 최신 코드 받기"
 git pull
 
@@ -37,5 +40,8 @@ fi
 
 echo "6) 앱 재시작"
 pm2 restart hypepig
+
+echo "7) 점검 모드 끄기"
+bash deploy/maintenance-off.sh
 
 echo "배포 완료"

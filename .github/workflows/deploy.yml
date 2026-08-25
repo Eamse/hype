@@ -27,6 +27,7 @@ jobs:
           script: |
             set -e
             cd /root/hypepig
+            bash deploy/maintenance-on.sh
             git pull origin main
             npm install
             npx prisma db push
@@ -45,3 +46,4 @@ jobs:
             fi
             pm2 restart hypepig
             pm2 save
+            bash deploy/maintenance-off.sh
