@@ -38,6 +38,7 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --deep-green: #2d5a45;
 }
 
 .dark {
@@ -1011,7 +1012,7 @@ body {
 }
 
 .service-col-note {
-  margin-top: 6px;
+  /* margin-top: 6px; */
   font-size: 12px;
   font-style: italic;
   color: #888;
@@ -1039,7 +1040,7 @@ body {
 }
 
 .schedule-card--emphasis {
-  border: 2px solid #000;
+  color: var(--deep-green);
 }
 
 .schedule-card-step {
@@ -1068,8 +1069,9 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
+  font-style: italic;
   padding-bottom: clamp(60px, 7vw, 96px);
-  font-size: clamp(22px, 2.4vw, 34px);
+  font-size: clamp(22px, 3.5vw, 49px);
   font-weight: 800;
   color: #3f6b52;
 }
@@ -1156,11 +1158,15 @@ body {
   grid-column: 2 / -1;
   align-self: center;
   height: 2px;
-  background: #999;
+  background: #000;
+  /* 점 6개가 각자 셀 중앙(50%)에 있으므로, 라인도 첫/마지막 점 중앙에서
+     시작·끝나도록 셀 하나 폭(1/6)만큼 좌우에서 줄여서 중앙 정렬 */
+  width: calc(100% - (100% / 6));
+  margin: 0 auto;
 }
 
 .timeline-connector-line--winter {
-  background: #7fa38c;
+  background: #000;
 }
 
 .timeline-dot-cell {
@@ -1176,12 +1182,12 @@ body {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #555;
+  background: #000;
   transform: translate(-50%, -50%);
 }
 
 .timeline-dot--winter {
-  background: #3f6b52;
+  background: #000;
 }
 
 .timeline-boxes {
@@ -1210,8 +1216,17 @@ body {
   color: #444;
 }
 
+.timeline-box-desc-list {
+  margin: 0;
+  padding-left: 16px;
+}
+
+.timeline-box-desc-list .timeline-box-desc {
+  list-style: disc;
+}
+
 .timeline-box--finish {
-  background: #000;
+  background: rgb(45, 90, 69);
   color: #fff;
 }
 
@@ -1219,8 +1234,15 @@ body {
   color: #ddd;
 }
 
+.timeline-footnotes-title {
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #000;
+}
+
 .timeline-footnotes {
-  margin: clamp(28px, 3vw, 44px) 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
   font-size: 13px;
@@ -1752,10 +1774,10 @@ body {
   position: absolute;
   top: 63px;
   left: 100%;
-  width: 12px;
+  width: 18px;
   height: 2px;
   background: #000;
-  transform: translateX(-6px) rotate(28deg);
+  transform: translateX(-9px) rotate(40deg);
   z-index: 0;
 }
 
@@ -1806,7 +1828,7 @@ body {
   transform: translateX(-50%);
   padding: 5px 14px;
   border-radius: 999px;
-  background: #2d5a45;
+  background: var(--deep-green);
   color: #fff;
   font-size: 12px;
   font-weight: 700;
@@ -1969,7 +1991,7 @@ body {
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1;
-  color: #2d5a45;
+  color: var(--deep-green);
 }
 
 .partnership-hero-title-kr {
@@ -2194,8 +2216,8 @@ body {
 }
 
 .partnership-doc-btn--filled {
-  background: #2d5a45;
-  border-color: #2d5a45;
+  background: var(--deep-green);
+  border-color: var(--deep-green);
   color: #fff;
 }
 

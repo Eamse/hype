@@ -20,29 +20,42 @@ const WINTER_TIMES = [
   '6:30PM',
 ];
 
-const BOXES = [
+type Box = {
+  title: string;
+  // 문자열이면 그냥 한 줄, 배열이면 불릿 목록으로 렌더링됨
+  desc?: string | string[];
+  finish?: boolean;
+};
+
+const BOXES: Box[] = [
   {
     title: 'Preparation Session',
-    desc: 'Hair, make-up, dress & suit fitting. Bouquet delivered to shop.',
+    desc: ['Hair, make-up, dress', 'suit fitting. Bouquet delivered to shop.'],
   },
-  { title: 'Travel to 1st shoot spot', desc: '' },
+  {
+    title: 'Travel to 1st shoot spot',
+    desc: ['Light lunch provided before heading to the 1st shoot spot'],
+  },
   {
     title: '1st Shoot',
-    desc: '4–5 hrs total, incl. travel and outfit changes.',
+    desc: ['4–5 hrs total, incl. travel and outfit changes.'],
   },
-  { title: '2nd Shoot', desc: '' },
-  { title: '3rd Shoot / Sunset', desc: '' },
+  { title: '2nd Shoot' },
+  { title: '3rd Shoot Sunset' },
   {
     title: 'Finish!',
-    desc: 'Interpreter returns the rental suit.',
     finish: true,
   },
 ];
 
 const FOOTNOTES = [
   'Interpreter and stylist accompany throughout the shoot.',
-  'Pickup & drop-off included within our service area. (Only Jeju applicable)',
+  'Pick-up & drop-off at client&apos;s accommodation within our service area. (Jeju only.)',
+];
+
+const FOOTNOTES_JEJU_ONLY = [
   'Shoots reschedule in case of inclement weather, with advance notice.',
+  'Interpreter returns the rental suit.',
 ];
 
 // 위쪽(봄여름) 점 → 박스 → 아래쪽(가을겨울) 점 순서로 좌→우 시차 등장
@@ -110,7 +123,18 @@ export default function ShootDayTimelineSection() {
               className={`timeline-box${box.finish ? ' timeline-box--finish card-pop' : ' offer-rise'}`}
             >
               <p className="timeline-box-title">{box.title}</p>
-              {box.desc && <p className="timeline-box-desc">{box.desc}</p>}
+              {box.desc &&
+                (Array.isArray(box.desc) ? (
+                  <ul className="timeline-box-desc-list">
+                    {box.desc.map((d) => (
+                      <li key={d} className="timeline-box-desc">
+                        {d}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="timeline-box-desc">{box.desc}</p>
+                ))}
             </div>
           ))}
         </div>
@@ -154,8 +178,16 @@ export default function ShootDayTimelineSection() {
           ))}
         </div>
 
+        <p className="timeline-footnotes-title">Note</p>
         <ul className="timeline-footnotes">
           {FOOTNOTES.map((f) => (
+            <li key={f}>* {f}</li>
+          ))}
+        </ul>
+
+        <p className="timeline-footnotes-title">Note(Jeju Only)</p>
+        <ul className="timeline-footnotes">
+          {FOOTNOTES_JEJU_ONLY.map((f) => (
             <li key={f}>* {f}</li>
           ))}
         </ul>

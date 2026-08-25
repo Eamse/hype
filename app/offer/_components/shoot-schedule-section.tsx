@@ -7,7 +7,10 @@ const STEPS = [
   {
     step: 'STEP 01',
     title: 'Before the Shoot',
-    items: ['Style survey', 'Photographer & location confirmed'],
+    items: [
+      'Styling preparation',
+      'Shoot-location confirmed with photographer',
+    ],
     emphasis: false,
   },
   {
@@ -19,7 +22,7 @@ const STEPS = [
   {
     step: 'STEP 03',
     title: 'Shoot Day',
-    items: ['Suit pick-up', 'Hair & makeup', 'Shoot'],
+    items: ['Hair & makeup for bride & groom', 'Dress fitting', 'Shoot'],
     emphasis: true,
   },
 ];
@@ -66,7 +69,7 @@ export default function ShootScheduleSection() {
         data-offer-reveal-delay={STEPS.length * 150 + 200}
         className="schedule-cta offer-fade"
       >
-        See full shoot day timeline
+        Shoot day timeline
         <span className="schedule-cta-arrow">↓</span>
       </p>
     </div>

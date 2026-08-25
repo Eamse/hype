@@ -39,17 +39,18 @@ const SERVICES: ServiceColumn[] = [
   {
     title: 'Support',
     tagline: 'Full English support, every step of the way',
-    bulleted: false,
+    bulleted: true,
     items: [
       { text: 'Interpreter & stylist on shoot day' },
-      { text: 'Private van' },
+      { text: 'Private van on shoot day' },
+      { text: 'Lunch & snacks will be prepared on shoot day' },
       { text: 'Planning from inquiry to final edits delivery' },
     ],
   },
   {
     title: 'Add-ons',
     tagline: 'Make it even more yours',
-    bulleted: false,
+    bulleted: true,
     items: [
       { text: 'Videography' },
       { text: 'Indoor studio session' },
@@ -123,7 +124,14 @@ export default function OurServiceSection({
               >
                 {service.items.map((item) => (
                   <li key={item.text}>
-                    {item.text}
+                    {item.text.startsWith('H&MU') ? (
+                      <>
+                        <u>H&MU</u>
+                        {item.text.slice('H&MU'.length)}
+                      </>
+                    ) : (
+                      item.text
+                    )}
                     {item.note && (
                       <div className="service-col-note">{item.note}</div>
                     )}
@@ -131,7 +139,12 @@ export default function OurServiceSection({
                 ))}
               </ul>
               {service.footnote && (
-                <p className="service-col-note" style={{ marginTop: 14 }}>
+                <p
+                  data-offer-reveal
+                  data-offer-reveal-delay={base + LIST_OFFSET + 100}
+                  className="service-col-note offer-fade"
+                  style={{ marginTop: 5 }}
+                >
                   {service.footnote}
                 </p>
               )}

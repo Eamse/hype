@@ -1,64 +1,56 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import {
-  Send,
-  PackageSearch,
-  FileSignature,
-  Wallet,
-  CalendarCheck,
-  Receipt,
-  Camera,
-} from 'lucide-react';
 
 type Step = {
-  icon: React.ReactNode;
+  icon: string;
   title: string;
   description: string;
   badge?: string;
 };
 
-const ICON_PROPS = { size: 36, strokeWidth: 1.5 };
-
 const STEPS: Step[] = [
   {
-    icon: <Send {...ICON_PROPS} />,
+    icon: '/booking-process/01-send-your-plan.svg',
     title: 'Send Your Plan',
     description: 'DM WhatsApp · Inquiry form · 1:1 consultation',
   },
   {
-    icon: <PackageSearch {...ICON_PROPS} />,
+    icon: '/booking-process/02-choose-package.svg',
     title: 'Choose Package',
     description: 'We match you with the right photographer',
   },
   {
-    icon: <FileSignature {...ICON_PROPS} />,
+    icon: '/booking-process/03-sign-contract.svg',
     title: 'Sign Contract',
-    description: 'Full terms outlined — sign when comfortable',
+    description: 'Full terms outlined',
     badge: 'Secure Date',
   },
   {
-    icon: <Wallet {...ICON_PROPS} />,
+    icon: '/booking-process/04-pay-deposit.svg',
     title: 'Pay Deposit',
     description:
       '70% deposit to lock in your date within 7 days of the contract signing date',
   },
   {
-    icon: <CalendarCheck {...ICON_PROPS} />,
+    icon: '/booking-process/05-planning-and-coordination.svg',
     title: 'Planning & Coordination',
     description: 'We coordinate every detail for you',
   },
   {
-    icon: <Receipt {...ICON_PROPS} />,
+    icon: '/booking-process/06-settle-balance.svg',
     title: 'Settle Balance',
-    description: '30% remaining balance due 7 days prior to the scheduled photoshoot date',
+    description:
+      '30% remaining balance due 7 days prior to the scheduled photoshoot date',
   },
   {
-    icon: <Camera {...ICON_PROPS} />,
+    icon: '/booking-process/07-shoot-and-final-edits.svg',
     title: 'Shoot & Final Edits',
-    description: 'All raw images in 2 weeks. Final edits in 8–9 weeks from selection date.',
+    description:
+      'All raw images in 2 weeks. Final edits in 8–9 weeks from selection date.',
   },
 ];
 
@@ -80,7 +72,7 @@ function StepColumn({ step, num }: { step: Step; num: number }) {
         data-reveal
         data-reveal-delay={`${(num - 1) * 120}`}
       >
-        {step.icon}
+        <Image src={step.icon} alt="" width={36} height={36} />
       </div>
       <div
         className="inquiry-step-dot inquiry-rise"
@@ -136,7 +128,10 @@ function useReplayReveal(ref: React.RefObject<HTMLElement | null>) {
 
           if (entry.isIntersecting) {
             const delay = Number(target.dataset.revealDelay ?? 0);
-            const timer = window.setTimeout(() => target.classList.add('visible'), delay);
+            const timer = window.setTimeout(
+              () => target.classList.add('visible'),
+              delay,
+            );
             timers.set(target, timer);
           } else {
             target.classList.remove('visible');
@@ -165,10 +160,18 @@ export default function BookingProcessClient() {
 
   return (
     <section ref={processRef} className="inquiry-process">
-      <p className="inquiry-eyebrow inquiry-fade" data-reveal data-reveal-delay="0">
+      <p
+        className="inquiry-eyebrow inquiry-fade"
+        data-reveal
+        data-reveal-delay="0"
+      >
         LET&apos;S GET STARTED!
       </p>
-      <h2 className="inquiry-heading inquiry-fade" data-reveal data-reveal-delay="80">
+      <h2
+        className="inquiry-heading inquiry-fade"
+        data-reveal
+        data-reveal-delay="80"
+      >
         How to book your slot
       </h2>
 

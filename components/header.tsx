@@ -130,7 +130,7 @@ function DropdownLink({
         fontWeight: 700,
         color: '#2D5A45',
         textDecoration: 'none',
-        textTransform: 'uppercase',
+        textTransform: 'capitalize',
         letterSpacing: '0.5px',
         whiteSpace: 'nowrap',
         backgroundColor: hovered ? '#f7f7f7' : 'transparent',
@@ -596,6 +596,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
             <HeaderActionButtons
               session={session}
               showBell
+              showSns={false}
               onSearchClick={() => {
                 setMenuOpen(false);
                 setSearchOpen(true);
@@ -744,13 +745,13 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
               {
                 href: 'https://www.instagram.com/hypewedd_ing/',
                 label: 'Instagram',
-                src: '/instagram.png',
+                src: '/icons/sns/instagram.svg',
                 size: 28,
               },
               {
                 href: 'https://www.tiktok.com/@hypewedd_ing',
                 label: 'TikTok',
-                src: '/tik-tok-.png',
+                src: '/icons/sns/tiktok.svg',
                 size: 36,
               },
               {

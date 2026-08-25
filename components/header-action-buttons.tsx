@@ -56,46 +56,53 @@ const iconBtnStyle: React.CSSProperties = {
 export default function HeaderActionButtons({
   session,
   showBell,
+  showSns = true,
   onSearchClick,
   onSignClick,
 }: {
   session: Session | null;
   showBell: boolean;
+  // 모바일 드로어는 하단에 SNS 아이콘 목록이 따로 있어서 중복되므로 숨김
+  showSns?: boolean;
   onSearchClick: () => void;
   onSignClick: () => void;
 }) {
   return (
     <>
-      <a
-        href="https://www.instagram.com/hypewedd_ing/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Instagram"
-        style={iconBtnStyle}
-      >
-        <Image
-          src="/instagram.png"
-          alt="Instagram"
-          width={23}
-          height={23}
-          style={{ objectFit: 'contain', maxWidth: 'none' }}
-        />
-      </a>
-      <a
-        href="https://www.tiktok.com/@hypewedd_ing?is_from_webapp=1&sender_device=pc"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="TikTok"
-        style={iconBtnStyle}
-      >
-        <Image
-          src="/tik-tok-.png"
-          alt="TikTok"
-          width={35}
-          height={35}
-          style={{ objectFit: 'contain', maxWidth: 'none' }}
-        />
-      </a>
+      {showSns && (
+        <>
+          <a
+            href="https://www.instagram.com/hypewedd_ing/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            style={iconBtnStyle}
+          >
+            <Image
+              src="/icons/sns/instagram.svg"
+              alt="Instagram"
+              width={23}
+              height={23}
+              style={{ objectFit: 'contain', maxWidth: 'none' }}
+            />
+          </a>
+          <a
+            href="https://www.tiktok.com/@hypewedd_ing?is_from_webapp=1&sender_device=pc"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="TikTok"
+            style={iconBtnStyle}
+          >
+            <Image
+              src="/icons/sns/tiktok.svg"
+              alt="TikTok"
+              width={30}
+              height={30}
+              style={{ objectFit: 'contain', maxWidth: 'none' }}
+            />
+          </a>
+        </>
+      )}
       <button onClick={onSearchClick} aria-label="Search" style={iconBtnStyle}>
         <SearchIcon />
       </button>
