@@ -57,6 +57,9 @@ export default function HeaderActionButtons({
   session,
   showBell,
   showSns = true,
+  notifOpen,
+  onNotifToggle,
+  onNotifClose,
   onSearchClick,
   onSignClick,
 }: {
@@ -64,6 +67,9 @@ export default function HeaderActionButtons({
   showBell: boolean;
   // 모바일 드로어는 하단에 SNS 아이콘 목록이 따로 있어서 중복되므로 숨김
   showSns?: boolean;
+  notifOpen: boolean;
+  onNotifToggle: () => void;
+  onNotifClose: () => void;
   onSearchClick: () => void;
   onSignClick: () => void;
 }) {
@@ -106,7 +112,13 @@ export default function HeaderActionButtons({
       <button onClick={onSearchClick} aria-label="Search" style={iconBtnStyle}>
         <SearchIcon />
       </button>
-      {showBell && <NotificationBell />}
+      {showBell && (
+        <NotificationBell
+          open={notifOpen}
+          onToggle={onNotifToggle}
+          onClose={onNotifClose}
+        />
+      )}
       <button
         onClick={onSignClick}
         aria-label={session ? 'Signed in' : 'Sign in'}

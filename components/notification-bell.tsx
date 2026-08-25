@@ -31,10 +31,18 @@ function BellIcon() {
   );
 }
 
-export default function NotificationBell() {
+export default function NotificationBell({
+  open,
+  onToggle,
+  onClose,
+}: {
+  // 헤더의 계정 드롭다운과 동시에 열리지 않도록, 열림 상태를 header.tsx가 관리함
+  open: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+}) {
   const { data: session } = useSession();
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [open, setOpen] = useState(false);
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -45,19 +53,6 @@ export default function NotificationBell() {
       .then((data) => setNotifications(Array.isArray(data) ? data : []));
   }, [session]);
 
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(e.target as Node)
-      ) {
-        setOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
   if (!session) return null;
 
   const count = notifications.length;
@@ -65,7 +60,7 @@ export default function NotificationBell() {
 
   async function handleClickItem(n: Notification) {
     setNotifications((prev) => prev.filter((x) => x.id !== n.id));
-    setOpen(false);
+    onClose();
     router.push(`/review/${n.reviewId}`);
     await fetch(`/api/notifications/${n.id}`, { method: 'PATCH' });
   }
@@ -78,7 +73,7 @@ export default function NotificationBell() {
   return (
     <div ref={containerRef} style={{ position: 'relative' }}>
       <button
-        onClick={() => setOpen((v) => !v)}
+        onClick={onToggle}
         aria-label={
           count > 0 ? `Notifications (${count} unread)` : 'Notifications'
         }
