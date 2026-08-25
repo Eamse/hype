@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 const WHATSAPP_URL = '#';
@@ -17,7 +18,14 @@ export default function ReviewInquirySidebar() {
         color: '#fff',
       }}
     >
-      <h2 style={{ fontSize: 20, fontWeight: 800, fontStyle: 'italic', margin: '0 0 8px' }}>
+      <h2
+        style={{
+          fontSize: 20,
+          fontWeight: 800,
+          fontStyle: 'italic',
+          margin: '0 0 8px',
+        }}
+      >
         Start your inquiry
       </h2>
       <p style={{ fontSize: 13, color: '#cfe3d8', margin: '0 0 16px' }}>
@@ -40,27 +48,56 @@ export default function ReviewInquirySidebar() {
         Submit
       </Link>
 
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.25)', margin: '20px 0 14px' }} />
-      <p style={{ fontSize: 12, color: '#cfe3d8', margin: '0 0 10px' }}>Or contact us directly</p>
+      <div
+        style={{
+          borderTop: '1px solid rgba(255,255,255,0.25)',
+          margin: '20px 0 14px',
+        }}
+      />
+      <p style={{ fontSize: 12, color: '#cfe3d8', margin: '0 0 10px' }}>
+        Or contact us directly
+      </p>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <ContactButton href={WHATSAPP_URL} label="Whatsapp" />
-        <ContactButton href={WECHAT_URL} label="Wechat" />
-        <ContactButton href={LINE_URL} label="Line" />
+        <ContactButton
+          href={WHATSAPP_URL}
+          label="Whatsapp"
+          icon="/icons/sns/whatsapp.svg"
+        />
+        <ContactButton
+          href={WECHAT_URL}
+          label="Wechat"
+          icon="/icons/sns/wechat.svg"
+        />
+        <ContactButton
+          href={LINE_URL}
+          label="Line"
+          icon="/icons/sns/line.png"
+        />
       </div>
     </div>
   );
 }
 
-function ContactButton({ href, label }: { href: string; label: string }) {
+function ContactButton({
+  href,
+  label,
+  icon,
+}: {
+  href: string;
+  label: string;
+  icon: string;
+}) {
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       style={{
-        display: 'block',
-        textAlign: 'center',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
         background: 'rgba(255,255,255,0.1)',
         border: '1px solid rgba(255,255,255,0.4)',
         borderRadius: 8,
@@ -71,6 +108,7 @@ function ContactButton({ href, label }: { href: string; label: string }) {
         textDecoration: 'none',
       }}
     >
+      <Image src={icon} alt="" width={16} height={16} />
       {label}
     </a>
   );

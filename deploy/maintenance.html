@@ -45,6 +45,13 @@
     line-height: 1.6;
     margin: 0;
   }
+  .countdown {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-top: 24px;
+    font-variant-numeric: tabular-nums;
+  }
 </style>
 </head>
 <body>
@@ -56,6 +63,35 @@
       We're currently making some improvements behind the scenes.<br />
       Please check back again shortly.
     </p>
+    <div class="countdown" id="countdown"></div>
   </div>
+  <script>
+    // /maintenance-end.txt에 남은 점검 종료 시각(초 단위 유닉스 타임)이 있으면
+    // 그걸 기준으로 카운트다운을 보여주고, 0이 되면 자동으로 새로고침해서
+    // 점검이 끝났으면 바로 정상 페이지로 넘어가게 함. 파일이 없으면(점검 시간을
+    // 안 정했으면) 카운트다운 없이 안내 문구만 보여줌.
+    fetch('/maintenance-end.txt', { cache: 'no-store' })
+      .then((res) => (res.ok ? res.text() : null))
+      .then((text) => {
+        const endEpoch = Number((text || '').trim());
+        if (!endEpoch) return;
+
+        const el = document.getElementById('countdown');
+        function tick() {
+          const remaining = endEpoch - Math.floor(Date.now() / 1000);
+          if (remaining <= 0) {
+            el.textContent = 'Almost there…';
+            location.reload();
+            return;
+          }
+          const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+          const s = String(remaining % 60).padStart(2, '0');
+          el.textContent = m + ':' + s;
+        }
+        tick();
+        setInterval(tick, 1000);
+      })
+      .catch(() => {});
+  </script>
 </body>
 </html>
