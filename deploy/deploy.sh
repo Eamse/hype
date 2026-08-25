@@ -4,11 +4,11 @@ set -e
 
 cd /root/hypepig
 
-echo "0) 점검 모드 켜기"
-bash deploy/maintenance-on.sh
-
 echo "1) 최신 코드 받기"
 git pull
+
+echo "1.5) 점검 모드 켜기"
+bash deploy/maintenance-on.sh
 
 echo "2) 의존성 설치"
 npm install

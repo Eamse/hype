@@ -27,8 +27,8 @@ jobs:
           script: |
             set -e
             cd /root/hypepig
-            bash deploy/maintenance-on.sh
             git pull origin main
+            bash deploy/maintenance-on.sh
             npm install
             npx prisma db push
             if [ -d .next/standalone/.next/cache/images ]; then
