@@ -596,6 +596,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
             <HeaderActionButtons
               session={session}
               showBell
+              showSns={false}
               onSearchClick={() => {
                 setMenuOpen(false);
                 setSearchOpen(true);
