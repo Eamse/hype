@@ -744,13 +744,13 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
               {
                 href: 'https://www.instagram.com/hypewedd_ing/',
                 label: 'Instagram',
-                src: '/instagram.png',
+                src: '/icons/sns/instagram.svg',
                 size: 28,
               },
               {
                 href: 'https://www.tiktok.com/@hypewedd_ing',
                 label: 'TikTok',
-                src: '/tik-tok-.png',
+                src: '/icons/sns/tiktok.svg',
                 size: 36,
               },
               {
