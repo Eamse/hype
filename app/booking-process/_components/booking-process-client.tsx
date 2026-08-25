@@ -26,7 +26,7 @@ const STEPS: Step[] = [
   {
     icon: '/booking-process/03-sign-contract.svg',
     title: 'Sign Contract',
-    description: 'Full terms outlined — sign when comfortable',
+    description: 'Full terms outlined',
     badge: 'Secure Date',
   },
   {
@@ -43,12 +43,14 @@ const STEPS: Step[] = [
   {
     icon: '/booking-process/06-settle-balance.svg',
     title: 'Settle Balance',
-    description: '30% remaining balance due 7 days prior to the scheduled photoshoot date',
+    description:
+      '30% remaining balance due 7 days prior to the scheduled photoshoot date',
   },
   {
     icon: '/booking-process/07-shoot-and-final-edits.svg',
     title: 'Shoot & Final Edits',
-    description: 'All raw images in 2 weeks. Final edits in 8–9 weeks from selection date.',
+    description:
+      'All raw images in 2 weeks. Final edits in 8–9 weeks from selection date.',
   },
 ];
 
@@ -126,7 +128,10 @@ function useReplayReveal(ref: React.RefObject<HTMLElement | null>) {
 
           if (entry.isIntersecting) {
             const delay = Number(target.dataset.revealDelay ?? 0);
-            const timer = window.setTimeout(() => target.classList.add('visible'), delay);
+            const timer = window.setTimeout(
+              () => target.classList.add('visible'),
+              delay,
+            );
             timers.set(target, timer);
           } else {
             target.classList.remove('visible');
@@ -155,10 +160,18 @@ export default function BookingProcessClient() {
 
   return (
     <section ref={processRef} className="inquiry-process">
-      <p className="inquiry-eyebrow inquiry-fade" data-reveal data-reveal-delay="0">
+      <p
+        className="inquiry-eyebrow inquiry-fade"
+        data-reveal
+        data-reveal-delay="0"
+      >
         LET&apos;S GET STARTED!
       </p>
-      <h2 className="inquiry-heading inquiry-fade" data-reveal data-reveal-delay="80">
+      <h2
+        className="inquiry-heading inquiry-fade"
+        data-reveal
+        data-reveal-delay="80"
+      >
         How to book your slot
       </h2>
 

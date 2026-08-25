@@ -96,8 +96,8 @@ export default function HeaderActionButtons({
             <Image
               src="/icons/sns/tiktok.svg"
               alt="TikTok"
-              width={35}
-              height={35}
+              width={30}
+              height={30}
               style={{ objectFit: 'contain', maxWidth: 'none' }}
             />
           </a>

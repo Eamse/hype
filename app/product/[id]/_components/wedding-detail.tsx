@@ -40,7 +40,12 @@ type Package = {
   addons: { addon: Addon }[];
   inclusions: { inclusion: Inclusion }[];
   partners: { partner: Partner }[];
-  images: { id: number; webUrl: string; originalUrl: string; thumbUrl: string | null }[];
+  images: {
+    id: number;
+    webUrl: string;
+    originalUrl: string;
+    thumbUrl: string | null;
+  }[];
 };
 
 const INQUIRY_FORM_URL =
@@ -107,7 +112,12 @@ export default function WeddingDetail({
   directors: Director[];
   packages: Package[];
   onActiveImagesChange?: (
-    images: { id: number; webUrl: string; originalUrl: string; thumbUrl: string | null }[],
+    images: {
+      id: number;
+      webUrl: string;
+      originalUrl: string;
+      thumbUrl: string | null;
+    }[],
   ) => void;
 }) {
   const router = useRouter();
@@ -442,7 +452,9 @@ export default function WeddingDetail({
                     setExpandedAddon(expandedAddon === i ? null : i)
                   }
                 >
-                  <span className={`text-[12px] sm:text-[13px] font-normal ${BLACK}`}>
+                  <span
+                    className={`text-[12px] sm:text-[13px] font-normal ${BLACK}`}
+                  >
                     {addon.name}
                   </span>
                   <div
@@ -556,7 +568,9 @@ export default function WeddingDetail({
                 </>
               )}
             </div>
-            <div className={`py-3 px-4 sm:px-6 bg-[#FAFAFA] border-t ${BORDER}`}>
+            <div
+              className={`py-3 px-4 sm:px-6 bg-[#FAFAFA] border-t ${BORDER}`}
+            >
               <p
                 className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
               >
@@ -578,33 +592,34 @@ export default function WeddingDetail({
           className={`py-5 px-4 sm:py-6 sm:px-8 border-t ${BORDER} text-center bg-white`}
         >
           {!session ? (
-            <div
-              className={`grid grid-cols-2 gap-2 sm:gap-4 mb-4 divide-x ${BORDER}`}
-            >
-              <div className="flex flex-col items-center gap-3 px-1">
-                <p className={`text-[11px] sm:text-[13px] font-normal ${GRAY2}`}>
-                  Log in to check the price
-                </p>
-                <button
-                  onClick={() => router.push('?auth=1')}
-                  className="py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none bg-[#0D0D0D] text-white"
-                >
-                  Check Price
-                </button>
-              </div>
-              <div className="flex flex-col items-center gap-3 px-1">
-                <p className={`text-[11px] sm:text-[13px] font-normal ${GRAY2}`}>
-                  Ready to book or have questions?
-                </p>
-                <a
-                  href={INQUIRY_FORM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none no-underline bg-[#0D0D0D] text-white"
-                >
-                  Submit your Inquiry
-                </a>
-              </div>
+            <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-x-2 sm:gap-x-4 mb-4">
+              <p
+                className={`row-start-1 col-start-1 text-[11px] sm:text-[13px] font-normal ${GRAY2} text-center px-1`}
+              >
+                Log in to check the price
+              </p>
+              <span className="row-start-1 row-span-2 col-start-2 self-center text-[15px] font-normal text-black uppercase">
+                or
+              </span>
+              <p
+                className={`row-start-1 col-start-3 text-[11px] sm:text-[13px] font-normal ${GRAY2} text-center px-1`}
+              >
+                Ready to book or have questions?
+              </p>
+              <button
+                onClick={() => router.push('?auth=1')}
+                className="row-start-2 col-start-1 justify-self-center mt-3 mx-1 py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none bg-[#0D0D0D] text-white"
+              >
+                Check Price
+              </button>
+              <a
+                href={INQUIRY_FORM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="row-start-2 col-start-3 justify-self-center mt-3 mx-1 py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none no-underline bg-[#0D0D0D] text-white text-center"
+              >
+                Submit your Inquiry
+              </a>
             </div>
           ) : (
             <>
