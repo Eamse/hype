@@ -234,6 +234,8 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navItemRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  // 계정 드롭다운과 동시에 열리지 않도록 알림 드롭다운 상태도 여기서 같이 관리
+  const [notifOpen, setNotifOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const openNav = (label: string) => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -258,6 +260,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
   useEffect(() => {
     setMenuOpen(false);
     setProfileMenuOpen(false);
+    setNotifOpen(false);
   }, [pathname]);
 
   function handleSignout() {
@@ -268,9 +271,14 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
   function handleSignClick() {
     if (session) {
       setProfileMenuOpen((v) => !v);
+      setNotifOpen(false);
     } else {
       setLoginOpen(true);
     }
+  }
+  function handleNotifToggle() {
+    setNotifOpen((v) => !v);
+    setProfileMenuOpen(false);
   }
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -279,6 +287,7 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
         !containerRef.current.contains(e.target as Node)
       ) {
         setProfileMenuOpen(false);
+        setNotifOpen(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -508,6 +517,9 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
               <HeaderActionButtons
                 session={session}
                 showBell
+                notifOpen={notifOpen}
+                onNotifToggle={handleNotifToggle}
+                onNotifClose={() => setNotifOpen(false)}
                 onSearchClick={() => setSearchOpen(true)}
                 onSignClick={handleSignClick}
               />
@@ -597,6 +609,9 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
               session={session}
               showBell
               showSns={false}
+              notifOpen={notifOpen}
+              onNotifToggle={handleNotifToggle}
+              onNotifClose={() => setNotifOpen(false)}
               onSearchClick={() => {
                 setMenuOpen(false);
                 setSearchOpen(true);
