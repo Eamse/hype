@@ -15,7 +15,7 @@ export function getProductNumber(product: ProductWithDirectors): string | null {
       : null;
   const padded = number.split('-')[0].replace('#', '').padStart(2, '0');
 
-  return region ? `${region} ${padded}.` : `${padded}.`;
+  return region ? `${region} ${padded}` : padded;
 }
 
 /** 상품 목록에 getProductNumber() 결과를 number 필드로 붙여서 반환 */

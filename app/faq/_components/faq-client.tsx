@@ -405,18 +405,6 @@ export default function FaqClient() {
   const listRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
-  // B) 타이핑
-  const [typed, setTyped] = useState('');
-  useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      i++;
-      setTyped('FAQ'.slice(0, i));
-      if (i >= 3) clearInterval(timer);
-    }, 180);
-    return () => clearInterval(timer);
-  }, []);
-
   function checkTabFade() {
     const el = tabsRef.current;
     if (!el) return;
@@ -494,18 +482,7 @@ export default function FaqClient() {
             minWidth: isMobile ? 120 : 180,
           }}
         >
-          {typed}
-          <span
-            className="cursor-blink"
-            style={{
-              display: 'inline-block',
-              width: 3,
-              height: isMobile ? 44 : 60,
-              backgroundColor: '#000',
-              marginLeft: 3,
-              verticalAlign: 'middle',
-            }}
-          />
+          FAQ
         </h1>
         <div
           className="inquiry-fade-up"
