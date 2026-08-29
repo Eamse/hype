@@ -330,14 +330,12 @@ body {
 
 .how-started-layout {
   display: grid;
-  /* 사진 컬럼에 min-width를 줘서 화면이 좁아져도 텍스트에 비해 사진만 유독
-     작아지는 불균형을 방지 — 대신 텍스트 컬럼이 먼저 줄어듦 */
   grid-template-columns: minmax(0, 62.25fr) minmax(260px, 37.75fr);
   background: #fff;
 }
 
 .how-started-copy {
-  padding: clamp(39px, 7vw, 80px) clamp(24px, 3vw, 48px) 64px;
+  padding: 0 64px;
 }
 
 .how-started-description {
@@ -347,7 +345,6 @@ body {
   letter-spacing: -0.035em;
 }
 
-/* Minju + Morgan 사진 2장을 우측 컬럼에 작게 나란히 배치 */
 .how-started-photos {
   display: flex;
   flex-direction: column;
@@ -356,11 +353,10 @@ body {
   gap: clamp(12px, 1.5vw, 20px);
 }
 
-/* 텍스트 컬럼 높이에 맞춰 자동으로 늘어남(About Us 01번과 동일한 방식) —
-   고정 aspect-ratio로는 화면이 좁아져 텍스트가 길어질 때 사진 아래 빈 공간이 생겼었음 */
 .how-started-photo {
   position: relative;
   width: 88%;
+  min-height: 550px;
   flex: 1;
   overflow: hidden;
 }
@@ -413,7 +409,7 @@ body {
 .how-started-quote {
   position: relative;
   max-width: 900px;
-  margin: 0 0 clamp(40px, 3.2vw, 52px);
+  margin: 0 0 clamp(28px, 2.6vw, 40px);
   padding-left: 24px;
   font-size: clamp(23px, 2.05vw, 34px);
   font-weight: 700;
@@ -431,13 +427,9 @@ body {
   background: #000;
 }
 
-/* Morgan 문단 + goal 박스를 아래로 밀어내리는 용도 */
-.how-started-part2 {
-  margin-top: clamp(20px, 20vw, 30px);
-}
-
+/* 텍스트 간격은 각 요소의 margin-bottom(clamp(28px, 2.6vw, 40px))으로 통일 관리 */
 .how-started-goal {
-  margin-top: clamp(40px, 4vw, 64px);
+  margin-top: 0;
 }
 
 .how-started-quote p,
@@ -528,6 +520,11 @@ body {
 
 /* max-width는 항목마다 따로 관리 — 공용 규칙으로 묶으면 한 곳만 조정해도
    나머지 전부 같이 바뀌어버려서 개별 폭 조절이 불가능해짐 */
+.philosophy-principle-1,
+.philosophy-principle-3 {
+  margin-left: clamp(20px, 20vw, 350px);
+}
+
 .philosophy-principle-1 p {
   max-width: 340px;
 }
@@ -560,7 +557,7 @@ body {
 }
 
 .philosophy-principle-4 p {
-  margin-left: clamp(24px, 4.6vw, 60px);
+  margin-left: clamp(20px, 9vw, 124px);
   max-width: 350px;
 }
 
@@ -1117,8 +1114,19 @@ body {
 }
 
 .timeline-label {
-  font-size: clamp(15px, 1.3vw, 19px);
+  font-size: clamp(15px, 1vw, 19px);
   font-weight: 800;
+  text-align: center;
+}
+
+.timeline-label--summer {
+  position: relative;
+  top: 25px;
+}
+
+.timeline-label--winter {
+  position: relative;
+  top: -25px;
 }
 
 .timeline-label-sub {
@@ -1128,23 +1136,17 @@ body {
   margin-left: 4px;
 }
 
-.timeline-label--summer {
-  color: #333;
-}
-
-.timeline-label--winter {
-  color: #3f6b52;
+.timeline-label-sub,
+.timeline-label-sub {
+  display: block;
+  margin-left: 0;
+  text-align: center;
 }
 
 .timeline-time {
   text-align: center;
   font-size: clamp(13px, 1.1vw, 16px);
   font-weight: 700;
-  color: #333;
-}
-
-.timeline-time--winter {
-  color: #3f6b52;
 }
 
 .timeline-line-row {
@@ -1234,6 +1236,12 @@ body {
   color: #ddd;
 }
 
+/* 타임라인 표의 첫 카드("Preparation Session")와 왼쪽 정렬을 맞춤
+   — 라벨 칸(140px) + 칸 간격(4px)만큼 밀어서 카드 시작 지점과 일치시킴 */
+.timeline-footnotes-block {
+  margin-left: 144px;
+}
+
 .timeline-footnotes-title {
   margin-top: 12px;
   font-size: 15px;
@@ -1257,6 +1265,9 @@ body {
   }
   .timeline-wrap {
     overflow-x: auto;
+  }
+  .timeline-footnotes-block {
+    margin-left: 94px;
   }
 }
 
@@ -1723,7 +1734,7 @@ body {
 .booking-process-cta {
   display: block;
   width: fit-content;
-  margin: clamp(56px, 7vw, 92px) auto 0;
+  margin: clamp(27px, 4vw, 62px) auto 0;
   padding: 14px 40px;
   border: 1.5px solid #000;
   border-radius: 4px;

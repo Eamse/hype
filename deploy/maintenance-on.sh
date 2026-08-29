@@ -17,10 +17,10 @@ MINUTES="${1:-}"
 if [ -n "$MINUTES" ]; then
   END_EPOCH=$(($(date +%s) + MINUTES * 60))
   echo "$END_EPOCH" > /var/www/hypepig/maintenance-end.txt
-  echo "점검 모드 ON — ${MINUTES}분 카운트다운으로 점검 페이지가 보여요."
+  echo "점검 모드 ON — ${MINUTES}분 카운트다운으로 점검 페이지가 보임."
 else
   rm -f /var/www/hypepig/maintenance-end.txt
-  echo "점검 모드 ON — 카운트다운 없이 점검 페이지가 보여요."
+  echo "점검 모드 ON"
 fi
 
-touch /var/www/hypepig/maintenance.flag || echo "⚠️  점검 플래그 생성 실패 — 무시하고 배포 계속 진행"
+touch /var/www/hypepig/maintenance.flag || echo "점검 플래그 생성 실패 — 무시하고 배포 계속 진행"

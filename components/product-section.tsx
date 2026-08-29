@@ -30,7 +30,7 @@ export default function ProductSection({
     if (showAll || totalPages <= 1) return;
     const timer = setInterval(() => {
       setIndex((prev) => prev + 1);
-    }, 3000);
+    }, 5000);
     return () => clearInterval(timer);
   }, [totalPages, showAll]);
 

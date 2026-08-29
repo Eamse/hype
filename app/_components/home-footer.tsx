@@ -26,7 +26,6 @@ function ChevronDownIcon({ open }: { open: boolean }) {
 }
 
 export default function HomeFooter() {
-  const [open, setOpen] = useState(false);
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
   const router = useRouter();
 
@@ -79,8 +78,7 @@ export default function HomeFooter() {
           </button>
         </div>
 
-        <button
-          onClick={() => setOpen((o) => !o)}
+        <div
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -93,29 +91,28 @@ export default function HomeFooter() {
           }}
         >
           Name A Corp. Business Info
-          <ChevronDownIcon open={open} />
-        </button>
+        </div>
 
-        {open && (
-          <div
-            style={{
-              fontSize: 11,
-              color: '#000',
-              lineHeight: 1.9,
-              marginTop: 10,
-              paddingTop: 10,
-              borderTop: '1px solid #000',
-            }}
-          >
-            <p>CEO: Kim Do-hee &nbsp;|&nbsp; Business Reg: 807-81-03218</p>
-            <p>Address: 1037 Cheonho-daero, Gangdong-gu, Seoul, 9F</p>
-            <p>
-              Support: 02-6104-2387 / 010-3597-4222 &nbsp;|&nbsp;
-              cs@hypewedding.com
-            </p>
-            <p>Hours: Weekdays 10:00 – 18:00 (Closed weekends & holidays)</p>
-          </div>
-        )}
+        <div
+          style={{
+            fontSize: 11,
+            color: '#000',
+            lineHeight: 1.9,
+            marginTop: 10,
+            paddingTop: 10,
+            borderTop: '1px solid #000',
+          }}
+        >
+          <p>
+            CEO: Minju Lee, Saeyoung Lee &nbsp;|&nbsp; Business Reg:
+            722-46-01107
+          </p>
+          <p>Email: hypepig227@gmail.com</p>
+          <p>
+            Address: 36 Dongtanjungsimsangga 1-gil, Dongtan-gu, Hwaseong-si,
+            Gyeonggi-do, Republic of Korea
+          </p>
+        </div>
 
         <p style={{ fontSize: 11, color: '#000', marginTop: 16 }}>
           © 2024 Name A Corp. All rights reserved.

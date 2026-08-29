@@ -297,10 +297,12 @@ export default function AboutClient({
                       className="about-intro-body about-fade"
                     >
                       Based in{' '}
-                      <strong style={{ color: 'rgb(45, 90, 69)' }}>Seoul</strong>{' '}
+                      <strong style={{ color: 'rgb(45, 90, 69)' }}>
+                        Seoul
+                      </strong>{' '}
                       and{' '}
-                      <strong style={{ color: 'rgb(45, 90, 69)' }}>Jeju</strong>,
-                      we bridge the gap between international couples and
+                      <strong style={{ color: 'rgb(45, 90, 69)' }}>Jeju</strong>
+                      , we bridge the gap between international couples and
                       Korea&apos;s most sought-after wedding creatives,
                       delivering a seamless, end-to-end experience with zero
                       guesswork.
@@ -329,7 +331,7 @@ export default function AboutClient({
             ) : section.id === 'story' ? (
               <>
                 <div ref={startedRef}>
-                  {/* part 1: 텍스트 좌 / 사진 우 — Minju */}
+                  {/* 텍스트/사진 각각 한 컬럼으로 통합 — 마진값을 한 섹션에서 공유 관리 */}
                   <div className="how-started-layout">
                     <div className="how-started-copy">
                       <p
@@ -370,26 +372,6 @@ export default function AboutClient({
                           experience?&quot;
                         </p>
                       </blockquote>
-                    </div>
-                    <div className="how-started-photos">
-                      <div className="how-started-photo">
-                        <Image
-                          src="/about/minju.jpg"
-                          alt="Minju, Co-founder"
-                          fill
-                          className="object-cover"
-                        />
-                        <div className="how-started-photo-caption">
-                          <p className="font-bold">Minju</p>
-                          <p>Co-founder</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* part 2: 텍스트 좌 / 사진 우 — Morgan */}
-                  <div className="how-started-layout how-started-part2">
-                    <div className="how-started-copy">
                       <p
                         data-history-reveal="750"
                         className="how-started-description history-rise"
@@ -423,6 +405,18 @@ export default function AboutClient({
                       </div>
                     </div>
                     <div className="how-started-photos">
+                      <div className="how-started-photo">
+                        <Image
+                          src="/about/minju.jpg"
+                          alt="Minju, Co-founder"
+                          fill
+                          className="object-cover"
+                        />
+                        <div className="how-started-photo-caption">
+                          <p className="font-bold">Minju</p>
+                          <p>Co-founder</p>
+                        </div>
+                      </div>
                       <div className="how-started-photo">
                         <Image
                           src="/about/morgan.jpg"
@@ -509,7 +503,7 @@ export default function AboutClient({
                       data-philosophy-reveal="840"
                       className="philosophy-principle philosophy-principle-4 philosophy-pop"
                     >
-                      <h3>Effortless. End to End.</h3>
+                      <h3>Effortless, End to End</h3>
                       <p>
                         From first inquiry to final gallery — we handle
                         everything so you don&apos;t have to.

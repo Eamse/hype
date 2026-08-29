@@ -87,8 +87,8 @@ export default function HeaderActionButtons({
             <Image
               src="/icons/sns/instagram.svg"
               alt="Instagram"
-              width={23}
-              height={23}
+              width={22}
+              height={22}
               style={{ objectFit: 'contain', maxWidth: 'none' }}
             />
           </a>
@@ -102,8 +102,8 @@ export default function HeaderActionButtons({
             <Image
               src="/icons/sns/tiktok.svg"
               alt="TikTok"
-              width={30}
-              height={30}
+              width={28}
+              height={28}
               style={{ objectFit: 'contain', maxWidth: 'none' }}
             />
           </a>

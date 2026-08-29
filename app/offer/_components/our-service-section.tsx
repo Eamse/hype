@@ -1,11 +1,11 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { useScrollReveal } from './use-scroll-reveal';
 
 type ServiceColumn = {
   title: string;
-  tagline: string;
+  tagline: ReactNode;
   bulleted: boolean;
   items: { text: string; note?: string }[];
   footnote?: string;
@@ -14,8 +14,13 @@ type ServiceColumn = {
 const SERVICES: ServiceColumn[] = [
   {
     title: 'Photography',
-    tagline:
-      "Korea's most sought-after photographers, in Jeju and Seoul's most iconic spots",
+    tagline: (
+      <>
+        Korea&apos;s most sought-after photographers,
+        <br />
+        in Jeju and Seoul&apos;s most iconic spots
+      </>
+    ),
     bulleted: true,
     items: [
       { text: '4–5 hrs · 3–4 locations' },
@@ -29,7 +34,7 @@ const SERVICES: ServiceColumn[] = [
     tagline: 'Complete styling — nothing to prepare',
     bulleted: true,
     items: [
-      { text: 'H&MU for bride & groom', note: '*Hair & Make-up' },
+      { text: 'Hair & Make-up for bride and groom' },
       { text: 'Designer Dresses' },
       { text: 'Tailored Suits' },
       { text: 'Fresh bouquet' },

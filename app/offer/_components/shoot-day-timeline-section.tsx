@@ -30,7 +30,11 @@ type Box = {
 const BOXES: Box[] = [
   {
     title: 'Preparation Session',
-    desc: ['Hair, make-up, dress', 'suit fitting. Bouquet delivered to shop.'],
+    desc: [
+      'Hair & Make-up',
+      'Dress & Suit fitting',
+      'Customized bouquet will be delivered to your shop',
+    ],
   },
   {
     title: 'Travel to 1st shoot spot',
@@ -38,7 +42,7 @@ const BOXES: Box[] = [
   },
   {
     title: '1st Shoot',
-    desc: ['4–5 hrs total, incl. travel and outfit changes.'],
+    desc: ['4-5 hours shoot including travel and outfit changes.'],
   },
   { title: '2nd Shoot' },
   { title: '3rd Shoot Sunset' },
@@ -50,7 +54,7 @@ const BOXES: Box[] = [
 
 const FOOTNOTES = [
   'Interpreter and stylist accompany throughout the shoot.',
-  'Pick-up & drop-off at client&apos;s accommodation within our service area. (Jeju only.)',
+  'Pick-up & drop-off at client&apos;s accommodation within our service area.',
 ];
 
 const FOOTNOTES_JEJU_ONLY = [
@@ -81,7 +85,7 @@ export default function ShootDayTimelineSection() {
             className="timeline-label timeline-label--summer offer-fade"
           >
             Spring–Summer
-            <span className="timeline-label-sub"> (Mar–Aug)</span>
+            <span className="timeline-label-sub">(Mar–Aug)</span>
           </p>
           {SUMMER_TIMES.map((t, idx) => (
             <p
@@ -164,7 +168,8 @@ export default function ShootDayTimelineSection() {
             className="timeline-label timeline-label--winter offer-fade"
           >
             Fall–Winter
-            <span className="timeline-label-sub"> (Sep–Feb)</span>
+            <br />
+            <span className="timeline-label-sub">(Sep–Feb)</span>
           </p>
           {WINTER_TIMES.map((t, idx) => (
             <p
@@ -178,19 +183,23 @@ export default function ShootDayTimelineSection() {
           ))}
         </div>
 
-        <p className="timeline-footnotes-title">Note</p>
-        <ul className="timeline-footnotes">
-          {FOOTNOTES.map((f) => (
-            <li key={f}>* {f}</li>
-          ))}
-        </ul>
+        <div className="timeline-footnotes-block">
+          <p className="timeline-footnotes-title">Note</p>
+          <ul className="timeline-footnotes">
+            {FOOTNOTES.map((f) => (
+              <li key={f}>* {f}</li>
+            ))}
+          </ul>
+        </div>
 
-        <p className="timeline-footnotes-title">Note(Jeju Only)</p>
-        <ul className="timeline-footnotes">
-          {FOOTNOTES_JEJU_ONLY.map((f) => (
-            <li key={f}>* {f}</li>
-          ))}
-        </ul>
+        <div className="timeline-footnotes-block">
+          <p className="timeline-footnotes-title">Note(Jeju Only)</p>
+          <ul className="timeline-footnotes">
+            {FOOTNOTES_JEJU_ONLY.map((f) => (
+              <li key={f}>* {f}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

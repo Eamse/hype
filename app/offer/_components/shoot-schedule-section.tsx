@@ -22,7 +22,7 @@ const STEPS = [
   {
     step: 'STEP 03',
     title: 'Shoot Day',
-    items: ['Hair & makeup for bride & groom', 'Dress fitting', 'Shoot'],
+    items: ['Hair & Make-up for bride and groom', 'Dress fitting', 'Shoot'],
     emphasis: true,
   },
 ];
