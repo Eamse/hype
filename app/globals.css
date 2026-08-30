@@ -335,7 +335,7 @@ body {
 }
 
 .how-started-copy {
-  padding: 0 64px;
+  padding: clamp(23px, 5vw, 55px) 64px 0;
 }
 
 .how-started-description {
@@ -2318,44 +2318,6 @@ body {
     opacity: 1;
     transform: none;
     transition: none;
-  }
-}
-
-/* ── 상품 상세: 썸네일 갤러리 끊김 없는 자동 스크롤 (데스크탑: 세로 / 모바일: 가로) ──── */
-@keyframes gallery-thumb-scroll-y {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(calc(-1 * var(--thumb-scroll-distance, 0px)));
-  }
-}
-@keyframes gallery-thumb-scroll-x {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(calc(-1 * var(--thumb-scroll-distance, 0px)));
-  }
-}
-.gallery-thumb-track {
-  animation-name: gallery-thumb-scroll-x;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-@media (min-width: 1024px) {
-  .gallery-thumb-track {
-    animation-name: gallery-thumb-scroll-y;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .gallery-thumb-track {
-    animation: none;
-  }
-  /* 애니메이션이 꺼지는 대신, 손으로 스크롤해서 전체 썸네일에 접근할 수 있게 함
-     (안 그러면 처음에 보이는 몇 장 뒤로는 아예 도달 불가능해짐) */
-  .gallery-thumb-scroll-area {
-    overflow: auto;
   }
 }
 

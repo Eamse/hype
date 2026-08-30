@@ -31,7 +31,10 @@ function useReplayReveal(ref: React.RefObject<HTMLElement | null>) {
 
           if (entry.isIntersecting) {
             const delay = Number(target.dataset.revealDelay ?? 0);
-            const timer = window.setTimeout(() => target.classList.add('visible'), delay);
+            const timer = window.setTimeout(
+              () => target.classList.add('visible'),
+              delay,
+            );
             timers.set(target, timer);
           } else {
             target.classList.remove('visible');
@@ -48,7 +51,11 @@ function useReplayReveal(ref: React.RefObject<HTMLElement | null>) {
   }, [ref]);
 }
 
-export default function ReviewFeatured({ reviews }: { reviews: FeaturedReview[] }) {
+export default function ReviewFeatured({
+  reviews,
+}: {
+  reviews: FeaturedReview[];
+}) {
   const ref = useRef<HTMLDivElement>(null);
   useReplayReveal(ref);
 
@@ -60,7 +67,12 @@ export default function ReviewFeatured({ reviews }: { reviews: FeaturedReview[] 
         className="review-fade"
         data-reveal
         data-reveal-delay="0"
-        style={{ fontSize: 15, fontWeight: 700, letterSpacing: '0.12em', marginBottom: 10 }}
+        style={{
+          fontSize: 15,
+          fontWeight: 700,
+          letterSpacing: '0.12em',
+          marginBottom: 10,
+        }}
       >
         WHAT THEY&apos;RE SAYING
       </p>
@@ -105,7 +117,7 @@ export default function ReviewFeatured({ reviews }: { reviews: FeaturedReview[] 
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(${Math.min(reviews.length, 3)}, 1fr)`,
+          gridTemplateColumns: 'repeat(4, 1fr)',
           gap: 16,
         }}
         className="review-featured-grid"
@@ -129,7 +141,9 @@ export default function ReviewFeatured({ reviews }: { reviews: FeaturedReview[] 
               <Badge label={review.location} tone="location" />
               <Badge label={review.productType} tone="product" />
             </div>
-            <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 8px' }}>{review.title}</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 8px' }}>
+              {review.title}
+            </h3>
             <p
               style={{
                 fontSize: 13,
@@ -157,7 +171,13 @@ export default function ReviewFeatured({ reviews }: { reviews: FeaturedReview[] 
   );
 }
 
-export function Badge({ label, tone }: { label: string; tone: 'location' | 'product' }) {
+export function Badge({
+  label,
+  tone,
+}: {
+  label: string;
+  tone: 'location' | 'product';
+}) {
   const style =
     tone === 'location'
       ? { background: '#eaf5ee', color: '#2d5a45' }
