@@ -24,11 +24,19 @@ export default function ReviewInquirySidebar() {
           fontWeight: 800,
           fontStyle: 'italic',
           margin: '0 0 8px',
+          textAlign: 'center',
         }}
       >
         Start your inquiry
       </h2>
-      <p style={{ fontSize: 13, color: '#cfe3d8', margin: '0 0 16px' }}>
+      <p
+        style={{
+          fontSize: 13,
+          color: '#cfe3d8',
+          margin: '0 0 16px',
+          textAlign: 'center',
+        }}
+      >
         We&apos;ll be in touch within 1–2 business days.
       </p>
       <Link
@@ -38,7 +46,7 @@ export default function ReviewInquirySidebar() {
           textAlign: 'center',
           background: '#fff',
           color: '#2d5a45',
-          borderRadius: 999,
+          borderRadius: 8,
           padding: '10px 0',
           fontSize: 14,
           fontWeight: 700,
@@ -54,7 +62,14 @@ export default function ReviewInquirySidebar() {
           margin: '20px 0 14px',
         }}
       />
-      <p style={{ fontSize: 12, color: '#cfe3d8', margin: '0 0 10px' }}>
+      <p
+        style={{
+          fontSize: 12,
+          color: '#cfe3d8',
+          margin: '0 0 10px',
+          textAlign: 'center',
+        }}
+      >
         Or contact us directly
       </p>
 

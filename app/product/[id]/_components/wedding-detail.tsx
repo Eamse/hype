@@ -598,7 +598,7 @@ export default function WeddingDetail({
               >
                 Log in to check the price
               </p>
-              <span className="row-start-1 row-span-2 col-start-2 self-center text-[15px] font-normal text-black uppercase">
+              <span className="row-start-1 row-span-2 col-start-2 self-center text-[15px] font-normal text-black">
                 or
               </span>
               <p

@@ -1,8 +1,11 @@
 'use client';
 
-import { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { ChevronUp, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useIsMobile } from '@/hooks/useIsMobile';
+
+const THUMB_STEP = 72; // 썸네일(64px) + gap(8px) — 화살표 클릭 시 한 칸씩 이동
 
 type ProductImage = {
   id: number;
@@ -31,7 +34,6 @@ export default function ImageGallery({
     allImages[0]?.url ?? null,
   );
   const trackRef = useRef<HTMLDivElement>(null);
-  const [trackSize, setTrackSize] = useState(0);
 
   // 갤러리 소스가 바뀌면(예: 패키지/작가 전환) 선택된 큰 이미지도 새 목록 기준으로 리셋
   useEffect(() => {
@@ -39,56 +41,65 @@ export default function ImageGallery({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainImageUrl, images]);
 
-  // 썸네일 목록을 두 번 이어붙여 무한 루프처럼 보이게 하고, 실제 크기(gap 포함)를 측정해
-  // 정확히 그 거리만큼 계속 흐르도록 함 — 매 N초마다 점프하는 대신 끊김 없이 스크롤됨.
-  // 데스크탑은 세로(높이), 모바일은 가로(너비) 기준으로 측정. 스와이프로 직접 넘기는 것도 그대로 가능.
-  useLayoutEffect(() => {
+  // 위/아래(모바일은 좌/우) 화살표로 한 칸씩 수동 스크롤. 터치/휠 스크롤도 그대로 가능.
+  function scrollByStep(dir: -1 | 1) {
     const el = trackRef.current;
     if (!el) return;
-    setTrackSize(isMobile ? el.scrollWidth / 2 : el.scrollHeight / 2);
-  }, [allImages.length, isMobile]);
-
-  const canLoop = allImages.length > 1;
+    if (isMobile) {
+      el.scrollBy({ left: dir * THUMB_STEP, behavior: 'smooth' });
+    } else {
+      el.scrollBy({ top: dir * THUMB_STEP, behavior: 'smooth' });
+    }
+  }
 
   return (
     <div className="flex flex-col-reverse gap-3 lg:h-full lg:flex-row-reverse">
-      {/* 썸네일 목록 — 모바일: 메인 이미지 아래 가로 스크롤 / 데스크탑: 오른쪽 세로 자동 스크롤 */}
+      {/* 썸네일 목록 — 모바일: 메인 이미지 아래 가로 스크롤 / 데스크탑: 오른쪽 세로 스크롤.
+          화살표로 한 칸씩 수동 이동, 터치/휠 스크롤도 그대로 가능 */}
       {allImages.length > 0 && (
-        <div className="hide-scroll gallery-thumb-scroll-area flex-shrink-0 overflow-hidden lg:w-16">
+        <div className="flex flex-row items-center gap-1 flex-shrink-0 lg:flex-col lg:w-16">
+          <button
+            type="button"
+            onClick={() => scrollByStep(-1)}
+            aria-label="이전 썸네일"
+            className="shrink-0 flex items-center justify-center bg-none p-1 cursor-pointer text-black"
+          >
+            {isMobile ? <ChevronLeft size={18} /> : <ChevronUp size={18} />}
+          </button>
+
           <div
             ref={trackRef}
-            className={`flex flex-row gap-2 lg:flex-col ${canLoop ? 'gallery-thumb-track' : ''}`}
-            style={
-              {
-                ...(canLoop && {
-                  '--thumb-scroll-distance': `${trackSize}px`,
-                  animationDuration: `${Math.max(trackSize / 20, 4)}s`,
-                }),
-              } as React.CSSProperties
-            }
+            className="hide-scroll flex flex-row gap-2 overflow-auto lg:flex-col"
           >
-            {(canLoop ? [...allImages, ...allImages] : allImages).map(
-              (img, i) => (
-                <button
-                  key={`${img.id}-${i}`}
-                  onClick={() => setSelected(img.url)}
-                  className="shrink-0 rounded-lg overflow-hidden relative cursor-pointer bg-none p-0"
-                  style={{
-                    width: 64,
-                    height: 64,
-                  }}
-                >
-                  <Image
-                    src={img.thumbUrl ?? img.url}
-                    alt="thumbnail"
-                    fill
-                    sizes="64px"
-                    style={{ objectFit: 'cover' }}
-                  />
-                </button>
-              ),
-            )}
+            {allImages.map((img) => (
+              <button
+                key={img.id}
+                onClick={() => setSelected(img.url)}
+                className="shrink-0 rounded-lg overflow-hidden relative cursor-pointer bg-none p-0"
+                style={{
+                  width: 64,
+                  height: 64,
+                }}
+              >
+                <Image
+                  src={img.thumbUrl ?? img.url}
+                  alt="thumbnail"
+                  fill
+                  sizes="64px"
+                  style={{ objectFit: 'cover' }}
+                />
+              </button>
+            ))}
           </div>
+
+          <button
+            type="button"
+            onClick={() => scrollByStep(1)}
+            aria-label="다음 썸네일"
+            className="shrink-0 flex items-center justify-center bg-none p-1 cursor-pointer text-black"
+          >
+            {isMobile ? <ChevronRight size={18} /> : <ChevronDown size={18} />}
+          </button>
         </div>
       )}
 
