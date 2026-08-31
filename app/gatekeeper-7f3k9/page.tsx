@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ADMIN_PANEL_PATH } from '@/lib/admin-paths';
 
 export default function AdminSignIn() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function AdminSignIn() {
         setErrors('Please check your ID and password.');
       }
     } else {
-      router.push('/admin');
+      router.push(ADMIN_PANEL_PATH);
     }
   }
 
