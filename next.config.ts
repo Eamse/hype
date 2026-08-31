@@ -11,11 +11,12 @@ const isDev = process.env.NODE_ENV === 'development';
 
 const CSP = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://www.googletagmanager.com`,
   "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
   `img-src 'self' data: blob: https://${R2_HOST} https://${R2_CUSTOM_HOST} https://lh3.googleusercontent.com`,
   "font-src 'self' data: https://cdn.jsdelivr.net",
-  "connect-src 'self' ws: wss:",
+  // Google Analytics(gtag.js)가 방문 데이터를 보내는 수집 엔드포인트
+  "connect-src 'self' ws: wss: https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com",
   "frame-ancestors 'none'",
   "form-action 'self'",
   "base-uri 'self'",
