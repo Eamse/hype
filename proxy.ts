@@ -5,30 +5,16 @@ import { NextResponse } from 'next/server';
 import { jwtVerify } from 'jose';
 import { decode } from 'next-auth/jwt';
 import { isSameOriginRequest } from '@/lib/csrf';
+import { ADMIN_LOGIN_PATH, ADMIN_PANEL_PATH } from '@/lib/admin-paths';
 
 const { auth } = NextAuth(authConfig);
 
-// 어드민 로그인 페이지 경로 — URL 추측을 어렵게 하기 위해 /admin 하위가 아닌 난독화된 경로 사용
-const ADMIN_LOGIN_PATH = '/gatekeeper-7f3k9';
-
-async function verifyAdminToken(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  // 로그인 API는 통과 (로그인 페이지 자체는 matcher에 안 걸려있어 여기 안 들어옴)
-  if (pathname.startsWith('/api/admin/login')) {
-    return NextResponse.next();
-  }
-
-  // /admin(페이지)은 로그인 안 됐을 때 존재 자체를 드러내지 않도록 404로 응답.
-  // 실제 로그인은 오직 ADMIN_LOGIN_PATH를 알아야만 접근 가능.
-  const isPage = !pathname.startsWith('/api');
-  const denied = isPage
-    ? NextResponse.rewrite(new URL('/404', request.url), { status: 404 })
-    : NextResponse.json({ message: 'Admin not found' }, { status: 401 });
-
+// 어드민 대시보드 실제 라우트는 app/gatekeeper-7f3k9/panel에 있음 (app/admin은 존재하지
+// 않으므로 /admin은 Next.js가 네이티브 404를 반환함 — 별도 차단 로직 불필요)
+async function verifyAdminPanel(request: NextRequest) {
   const token = request.cookies.get('admin_token')?.value;
   if (!token) {
-    return denied;
+    return NextResponse.redirect(new URL(ADMIN_LOGIN_PATH, request.url));
   }
 
   try {
@@ -36,7 +22,29 @@ async function verifyAdminToken(request: NextRequest) {
     await jwtVerify(token, secret);
     return NextResponse.next();
   } catch {
-    return denied;
+    return NextResponse.redirect(new URL(ADMIN_LOGIN_PATH, request.url));
+  }
+}
+
+async function verifyAdminApi(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // 로그인 API는 통과
+  if (pathname.startsWith('/api/admin/login')) {
+    return NextResponse.next();
+  }
+
+  const token = request.cookies.get('admin_token')?.value;
+  if (!token) {
+    return NextResponse.json({ message: 'Admin not found' }, { status: 401 });
+  }
+
+  try {
+    const secret = new TextEncoder().encode(process.env.ADMIN_JWT_SECRET!);
+    await jwtVerify(token, secret);
+    return NextResponse.next();
+  } catch {
+    return NextResponse.json({ message: 'Admin not found' }, { status: 401 });
   }
 }
 
@@ -75,9 +83,12 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  // 어드민 경로는 JWT 쿠키 검증
-  if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
-    return verifyAdminToken(request);
+  if (pathname.startsWith(ADMIN_PANEL_PATH)) {
+    return verifyAdminPanel(request);
+  }
+
+  if (pathname.startsWith('/api/admin')) {
+    return verifyAdminApi(request);
   }
 
   // 온보딩 페이지 접근 제어
@@ -88,7 +99,3 @@ export async function proxy(request: NextRequest) {
   // 나머지는 NextAuth로 처리 (일반 유저)
   return (auth as unknown as (req: NextRequest) => Promise<NextResponse>)(request);
 }
-
-export const config = {
-  matcher: ['/onboarding', '/admin/:path*', '/api/:path*'],
-};

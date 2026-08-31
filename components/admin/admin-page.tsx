@@ -15,6 +15,7 @@ import WeddingPhotographerPanel from './wedding-photographer-panel';
 import AddonPanel from './addon-panel';
 import InclusionPanel from './inclusion-panel';
 import PartnerPanel from './partner-panel';
+import { ADMIN_PANEL_PATH } from '@/lib/admin-paths';
 
 const IconDashboard = () => (
   <svg
@@ -166,7 +167,7 @@ export default function AdminPage() {
   const router = useRouter();
   const active = (searchParams.get('tab') as Section) ?? 'dashboard';
   const setActive = (section: Section) => {
-    router.push(`/admin?tab=${encodeURIComponent(section)}`);
+    router.push(`${ADMIN_PANEL_PATH}?tab=${encodeURIComponent(section)}`);
   };
   const [admin, setAdmin] = useState<{ loginId: string; role: string } | null>(
     null,
@@ -194,7 +195,7 @@ export default function AdminPage() {
       .then((data) => {
         setAdmin(data);
         if (data?.role !== 'master' && active === 'accounts') {
-          router.replace('/admin?tab=dashboard');
+          router.replace(`${ADMIN_PANEL_PATH}?tab=dashboard`);
         }
       });
   }, [active, router]);
