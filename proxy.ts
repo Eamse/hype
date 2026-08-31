@@ -19,9 +19,16 @@ async function verifyAdminToken(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // /admin(페이지)은 로그인 안 됐을 때 존재 자체를 드러내지 않도록 404로 응답.
+  // 실제 로그인은 오직 ADMIN_LOGIN_PATH를 알아야만 접근 가능.
+  const isPage = !pathname.startsWith('/api');
+  const denied = isPage
+    ? NextResponse.rewrite(new URL('/404', request.url), { status: 404 })
+    : NextResponse.json({ message: 'Admin not found' }, { status: 401 });
+
   const token = request.cookies.get('admin_token')?.value;
   if (!token) {
-    return NextResponse.redirect(new URL(ADMIN_LOGIN_PATH, request.url));
+    return denied;
   }
 
   try {
@@ -29,7 +36,7 @@ async function verifyAdminToken(request: NextRequest) {
     await jwtVerify(token, secret);
     return NextResponse.next();
   } catch {
-    return NextResponse.redirect(new URL(ADMIN_LOGIN_PATH, request.url));
+    return denied;
   }
 }
 
