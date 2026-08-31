@@ -79,13 +79,29 @@ export async function getGaDaily(days: number): Promise<GaDailyPoint[]> {
     orderBys: [{ dimension: { dimensionName: 'date' } }],
   });
 
-  return (result.rows ?? []).map((row) => {
+  const byDate = new Map<string, { activeUsers: number; pageViews: number }>();
+  for (const row of result.rows ?? []) {
     const raw = row.dimensionValues?.[0]?.value ?? ''; // YYYYMMDD
     const date = `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`;
-    return {
-      date,
+    byDate.set(date, {
       activeUsers: Number(row.metricValues?.[0]?.value ?? 0),
       pageViews: Number(row.metricValues?.[1]?.value ?? 0),
-    };
-  });
+    });
+  }
+
+  // GA는 트래픽이 있었던 날짜만 row로 돌려주므로(신규 속성이면 대부분 날짜가 통째로 빠짐),
+  // 그래프가 항상 요청한 일수만큼 고르게 그려지도록 빈 날짜는 0으로 채워서 반환
+  const points: GaDailyPoint[] = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const date = d.toISOString().slice(0, 10);
+    const found = byDate.get(date);
+    points.push({
+      date,
+      activeUsers: found?.activeUsers ?? 0,
+      pageViews: found?.pageViews ?? 0,
+    });
+  }
+  return points;
 }
