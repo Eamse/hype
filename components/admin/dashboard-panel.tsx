@@ -6,7 +6,34 @@ import { Section } from './types';
 type Stats = {
   useCount: number;
   product: { section: string; _count: { id: number } }[];
+  recentProducts: {
+    id: number;
+    title: string;
+    imageUrl: string | null;
+    section: string;
+    createdAt: string;
+  }[];
 };
+
+type GaRangeStat = { activeUsers: number; pageViews: number };
+
+type GaSummary = {
+  today: GaRangeStat;
+  last7Days: GaRangeStat;
+  last30Days: GaRangeStat;
+  allTime: GaRangeStat;
+};
+
+type GaDailyPoint = { date: string; activeUsers: number; pageViews: number };
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+function daysAgoStr(days: number) {
+  const d = new Date();
+  d.setDate(d.getDate() - days);
+  return d.toISOString().slice(0, 10);
+}
 
 export default function DashboardPanel({
   onNavigation,
@@ -16,11 +43,44 @@ export default function DashboardPanel({
   isMobile: boolean;
 }) {
   const [state, setState] = useState<Stats | null>(null);
+  const [ga, setGa] = useState<GaSummary | null>(null);
+  const [gaError, setGaError] = useState(false);
+  const [daily, setDaily] = useState<GaDailyPoint[] | null>(null);
+  const [dailyError, setDailyError] = useState(false);
+
+  // 날짜 범위 직접 검색
+  const [searchStart, setSearchStart] = useState(daysAgoStr(30));
+  const [searchEnd, setSearchEnd] = useState(todayStr());
+  const [searchResult, setSearchResult] = useState<GaRangeStat | null>(null);
+  const [searching, setSearching] = useState(false);
+  const [searchError, setSearchError] = useState(false);
+
+  function runSearch() {
+    setSearching(true);
+    setSearchError(false);
+    fetch(
+      `/api/admin/analytics?startDate=${searchStart}&endDate=${searchEnd}`,
+    )
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => setSearchResult(data.range))
+      .catch(() => setSearchError(true))
+      .finally(() => setSearching(false));
+  }
 
   useEffect(() => {
     fetch('/api/admin/stats')
       .then((res) => res.json())
       .then((data) => setState(data));
+
+    fetch('/api/admin/analytics')
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => setGa(data))
+      .catch(() => setGaError(true));
+
+    fetch('/api/admin/analytics?daily=14')
+      .then((res) => (res.ok ? res.json() : Promise.reject()))
+      .then((data) => setDaily(data.daily))
+      .catch(() => setDailyError(true));
   }, []);
 
   const totalProducts =
@@ -280,30 +340,219 @@ export default function DashboardPanel({
               >
                 방문자 통계
               </p>
+              {gaError ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: 180,
+                    color: '#000',
+                    flexDirection: 'column',
+                    gap: 8,
+                  }}
+                >
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                  >
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                  </svg>
+                  <p style={{ fontSize: 12, color: '#000' }}>
+                    Google Analytics 데이터를 불러오지 못했습니다
+                  </p>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 14,
+                    height: 180,
+                    justifyContent: 'center',
+                  }}
+                >
+                  {(
+                    [
+                      ['오늘', ga?.today],
+                      ['최근 7일', ga?.last7Days],
+                      ['최근 30일', ga?.last30Days],
+                      ['전체 누적', ga?.allTime],
+                    ] as const
+                  ).map(([label, data]) => (
+                    <div
+                      key={label}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'baseline',
+                        justifyContent: 'space-between',
+                        borderBottom: '1px solid #f0ebe0',
+                        paddingBottom: 10,
+                      }}
+                    >
+                      <span style={{ fontSize: 12, color: '#000' }}>
+                        {label}
+                      </span>
+                      <span
+                        style={{
+                          display: 'flex',
+                          alignItems: 'baseline',
+                          gap: 12,
+                        }}
+                      >
+                        <span>
+                          <strong
+                            style={{
+                              fontSize: 20,
+                              fontWeight: 800,
+                              color: '#7a5520',
+                            }}
+                          >
+                            {ga ? data?.activeUsers : '···'}
+                          </strong>
+                          <span style={{ fontSize: 11, color: '#000' }}>
+                            {' '}
+                            방문자
+                          </span>
+                        </span>
+                        <span>
+                          <strong
+                            style={{
+                              fontSize: 20,
+                              fontWeight: 800,
+                              color: '#000',
+                            }}
+                          >
+                            {ga ? data?.pageViews : '···'}
+                          </strong>
+                          <span style={{ fontSize: 11, color: '#000' }}>
+                            {' '}
+                            조회
+                          </span>
+                        </span>
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* 날짜 범위 직접 검색 */}
               <div
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 180,
-                  color: '#000',
-                  flexDirection: 'column',
-                  gap: 8,
+                  marginTop: 20,
+                  paddingTop: 16,
+                  borderTop: '1px solid #f0ebe0',
                 }}
               >
-                <svg
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
+                <p
+                  style={{
+                    fontSize: 11,
+                    color: '#7a5520',
+                    fontWeight: 700,
+                    letterSpacing: '1px',
+                    marginBottom: 10,
+                  }}
                 >
-                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-                </svg>
-                <p style={{ fontSize: 12, color: '#000' }}>
-                  Google Search Console 연동 예정
+                  기간 직접 조회
                 </p>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: 8,
+                    alignItems: 'center',
+                  }}
+                >
+                  <input
+                    type="date"
+                    value={searchStart}
+                    onChange={(e) => setSearchStart(e.target.value)}
+                    style={{
+                      fontSize: 12,
+                      padding: '6px 8px',
+                      border: '1px solid #000',
+                      borderRadius: 6,
+                      color: '#000',
+                    }}
+                  />
+                  <span style={{ fontSize: 12, color: '#000' }}>~</span>
+                  <input
+                    type="date"
+                    value={searchEnd}
+                    onChange={(e) => setSearchEnd(e.target.value)}
+                    style={{
+                      fontSize: 12,
+                      padding: '6px 8px',
+                      border: '1px solid #000',
+                      borderRadius: 6,
+                      color: '#000',
+                    }}
+                  />
+                  <button
+                    onClick={runSearch}
+                    disabled={searching}
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 700,
+                      padding: '7px 14px',
+                      borderRadius: 6,
+                      border: 'none',
+                      background: '#7a5520',
+                      color: '#fff',
+                      cursor: searching ? 'default' : 'pointer',
+                      opacity: searching ? 0.6 : 1,
+                    }}
+                  >
+                    {searching ? '조회 중...' : '조회'}
+                  </button>
+                </div>
+
+                {searchError && (
+                  <p style={{ fontSize: 12, color: '#b5502e', marginTop: 10 }}>
+                    조회 실패 — 기간을 확인해주세요
+                  </p>
+                )}
+
+                {searchResult && !searchError && (
+                  <div
+                    style={{
+                      marginTop: 12,
+                      display: 'flex',
+                      gap: 20,
+                    }}
+                  >
+                    <span>
+                      <strong
+                        style={{
+                          fontSize: 20,
+                          fontWeight: 800,
+                          color: '#7a5520',
+                        }}
+                      >
+                        {searchResult.activeUsers}
+                      </strong>
+                      <span style={{ fontSize: 11, color: '#000' }}>
+                        {' '}
+                        방문자
+                      </span>
+                    </span>
+                    <span>
+                      <strong
+                        style={{ fontSize: 20, fontWeight: 800, color: '#000' }}
+                      >
+                        {searchResult.pageViews}
+                      </strong>
+                      <span style={{ fontSize: 11, color: '#000' }}>
+                        {' '}
+                        조회
+                      </span>
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -339,32 +588,155 @@ export default function DashboardPanel({
               >
                 최근 등록 상품
               </p>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 180,
-                  color: '#000',
-                  flexDirection: 'column',
-                  gap: 8,
-                }}
-              >
-                <svg
-                  width="32"
-                  height="32"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.2"
+              {!state?.recentProducts?.length ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: 180,
+                    color: '#000',
+                    flexDirection: 'column',
+                    gap: 8,
+                  }}
                 >
-                  <rect x="3" y="3" width="18" height="18" rx="2" />
-                  <circle cx="8.5" cy="8.5" r="1.5" />
-                  <polyline points="21 15 16 10 5 21" />
-                </svg>
-                <p style={{ fontSize: 12, color: '#000' }}>데이터 연동 예정</p>
-              </div>
+                  <svg
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.2"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <polyline points="21 15 16 10 5 21" />
+                  </svg>
+                  <p style={{ fontSize: 12, color: '#000' }}>
+                    등록된 상품이 없습니다
+                  </p>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 12,
+                    height: 180,
+                    overflowY: 'auto',
+                  }}
+                >
+                  {state.recentProducts.map((p) => (
+                    <div
+                      key={p.id}
+                      onClick={() =>
+                        onNavigation(
+                          p.section.includes('Casual')
+                            ? 'Casual Photoshoot'
+                            : 'Photographers',
+                        )
+                      }
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 40,
+                          height: 40,
+                          flexShrink: 0,
+                          borderRadius: 8,
+                          overflow: 'hidden',
+                          background: '#f0ebe0',
+                          position: 'relative',
+                        }}
+                      >
+                        {p.imageUrl && (
+                          <img
+                            src={p.imageUrl}
+                            alt=""
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                            }}
+                          />
+                        )}
+                      </div>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <p
+                          style={{
+                            fontSize: 13,
+                            fontWeight: 600,
+                            color: '#000',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {p.title}
+                        </p>
+                        <p style={{ fontSize: 11, color: '#000' }}>
+                          {p.section} ·{' '}
+                          {new Date(p.createdAt).toLocaleDateString('ko-KR', {
+                            month: 'short',
+                            day: 'numeric',
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
+          </div>
+
+          {/* 방문자 통계 그래프 */}
+          <div
+            style={{
+              background: '#fff',
+              border: '1px solid #000',
+              borderRadius: 16,
+              padding: '24px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            }}
+          >
+            <p
+              style={{
+                fontSize: 11,
+                color: '#7a5520',
+                fontWeight: 700,
+                letterSpacing: '2px',
+                marginBottom: 4,
+              }}
+            >
+              VISITOR TREND
+            </p>
+            <p
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: '#000',
+                marginBottom: 24,
+              }}
+            >
+              최근 14일 방문자 추이
+            </p>
+
+            {dailyError ? (
+              <p style={{ fontSize: 12, color: '#000', padding: '40px 0', textAlign: 'center' }}>
+                그래프 데이터를 불러오지 못했습니다
+              </p>
+            ) : !daily ? (
+              <p style={{ fontSize: 12, color: '#000', padding: '40px 0', textAlign: 'center' }}>
+                불러오는 중...
+              </p>
+            ) : (
+              <VisitorChart data={daily} />
+            )}
           </div>
 
           {/* 하단 테이블 */}
@@ -526,5 +898,66 @@ export default function DashboardPanel({
         </>
       )}
     </div>
+  );
+}
+
+/** 일별 방문자 수를 간단한 막대그래프로 그림 (외부 차트 라이브러리 없이 순수 SVG) */
+function VisitorChart({ data }: { data: GaDailyPoint[] }) {
+  if (data.length === 0) {
+    return (
+      <p style={{ fontSize: 12, color: '#000', padding: '40px 0', textAlign: 'center' }}>
+        표시할 데이터가 없습니다
+      </p>
+    );
+  }
+
+  const width = 800;
+  const height = 180;
+  const paddingBottom = 24;
+  const chartHeight = height - paddingBottom;
+  const barGap = 6;
+  const barWidth = width / data.length - barGap;
+  const maxValue = Math.max(...data.map((d) => d.activeUsers), 1);
+
+  return (
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      width="100%"
+      height={height}
+      preserveAspectRatio="none"
+      style={{ display: 'block', overflow: 'visible' }}
+    >
+      {data.map((d, i) => {
+        const barHeight = (d.activeUsers / maxValue) * (chartHeight - 20);
+        const x = i * (barWidth + barGap);
+        const y = chartHeight - barHeight;
+        const [, month, day] = d.date.split('-');
+        return (
+          <g key={d.date}>
+            <rect
+              x={x}
+              y={y}
+              width={barWidth}
+              height={Math.max(barHeight, 2)}
+              rx={3}
+              fill="#c9a96e"
+            >
+              <title>
+                {`${month}/${day} — 방문자 ${d.activeUsers} · 조회 ${d.pageViews}`}
+              </title>
+            </rect>
+            <text
+              x={x + barWidth / 2}
+              y={height - 6}
+              fontSize={9}
+              textAnchor="middle"
+              fill="#000"
+            >
+              {`${month}/${day}`}
+            </text>
+          </g>
+        );
+      })}
+    </svg>
   );
 }

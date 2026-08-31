@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Geist } from 'next/font/google';
 import localFont from 'next/font/local';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import { cn } from '@/lib/utils';
 import NextSessionProvider from '@/components/session-provider';
 
@@ -35,6 +36,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <NextSessionProvider>{children}</NextSessionProvider>
       </body>
+      <GoogleAnalytics gaId="G-42MJ74SYP4" />
     </html>
   );
 }

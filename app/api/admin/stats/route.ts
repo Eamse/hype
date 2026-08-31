@@ -14,5 +14,12 @@ export async function GET(request: NextRequest) {
     by: ['section'],
     _count: { id: true },
   });
-  return NextResponse.json({ useCount: user, product: data });
+
+  const recentProducts = await prisma.product.findMany({
+    orderBy: { createdAt: 'desc' },
+    take: 5,
+    select: { id: true, title: true, imageUrl: true, section: true, createdAt: true },
+  });
+
+  return NextResponse.json({ useCount: user, product: data, recentProducts });
 }
