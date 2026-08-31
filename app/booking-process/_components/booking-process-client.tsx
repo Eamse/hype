@@ -182,9 +182,10 @@ export default function BookingProcessClient() {
 
       <Link
         href={inquiryHref}
-        className="booking-process-cta inquiry-rise"
-        data-reveal
-        data-reveal-delay="500"
+        className="booking-process-cta"
+        // className="booking-process-cta inquiry-rise"
+        // data-reveal
+        // data-reveal-delay="500"
       >
         Inquiry Now
       </Link>
