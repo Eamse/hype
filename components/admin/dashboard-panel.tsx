@@ -35,6 +35,58 @@ function daysAgoStr(days: number) {
   return d.toISOString().slice(0, 10);
 }
 
+/** 라벨 옆에 붙이는 "!" 아이콘 — 호버하면 설명 툴팁 표시 */
+function InfoMark({ text }: { text: string }) {
+  const [show, setShow] = useState(false);
+  return (
+    <span
+      style={{ position: 'relative', display: 'inline-flex', marginLeft: 6 }}
+      onMouseEnter={() => setShow(true)}
+      onMouseLeave={() => setShow(false)}
+    >
+      <span
+        style={{
+          width: 16,
+          height: 16,
+          borderRadius: '50%',
+          background: '#7a5520',
+          color: '#fff',
+          fontSize: 10,
+          fontWeight: 700,
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'help',
+        }}
+      >
+        !
+      </span>
+      {show && (
+        <span
+          style={{
+            position: 'absolute',
+            top: '50%',
+            left: '140%',
+            transform: 'translateY(-50%)',
+            background: '#222',
+            color: '#fff',
+            fontSize: 11,
+            fontWeight: 400,
+            lineHeight: 1.4,
+            padding: '8px 10px',
+            borderRadius: 6,
+            whiteSpace: 'nowrap',
+            zIndex: 10,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+          }}
+        >
+          {text}
+        </span>
+      )}
+    </span>
+  );
+}
+
 export default function DashboardPanel({
   onNavigation,
   isMobile,
@@ -58,9 +110,7 @@ export default function DashboardPanel({
   function runSearch() {
     setSearching(true);
     setSearchError(false);
-    fetch(
-      `/api/admin/analytics?startDate=${searchStart}&endDate=${searchEnd}`,
-    )
+    fetch(`/api/admin/analytics?startDate=${searchStart}&endDate=${searchEnd}`)
       .then((res) => (res.ok ? res.json() : Promise.reject()))
       .then((data) => setSearchResult(data.range))
       .catch(() => setSearchError(true))
@@ -336,9 +386,12 @@ export default function DashboardPanel({
                   fontWeight: 600,
                   color: '#000',
                   marginBottom: 24,
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
               >
                 방문자 통계
+                <InfoMark text="조회는 페이지뷰 수. 한 사람이 여러 페이지를 보면 그만큼 늘어나요 (방문자 수와 다름)" />
               </p>
               {gaError ? (
                 <div
@@ -546,10 +599,7 @@ export default function DashboardPanel({
                       >
                         {searchResult.pageViews}
                       </strong>
-                      <span style={{ fontSize: 11, color: '#000' }}>
-                        {' '}
-                        조회
-                      </span>
+                      <span style={{ fontSize: 11, color: '#000' }}> 조회</span>
                     </span>
                   </div>
                 )}
@@ -727,11 +777,25 @@ export default function DashboardPanel({
             </p>
 
             {dailyError ? (
-              <p style={{ fontSize: 12, color: '#000', padding: '40px 0', textAlign: 'center' }}>
+              <p
+                style={{
+                  fontSize: 12,
+                  color: '#000',
+                  padding: '40px 0',
+                  textAlign: 'center',
+                }}
+              >
                 그래프 데이터를 불러오지 못했습니다
               </p>
             ) : !daily ? (
-              <p style={{ fontSize: 12, color: '#000', padding: '40px 0', textAlign: 'center' }}>
+              <p
+                style={{
+                  fontSize: 12,
+                  color: '#000',
+                  padding: '40px 0',
+                  textAlign: 'center',
+                }}
+              >
                 불러오는 중...
               </p>
             ) : (
@@ -901,63 +965,176 @@ export default function DashboardPanel({
   );
 }
 
-/** 일별 방문자 수를 간단한 막대그래프로 그림 (외부 차트 라이브러리 없이 순수 SVG) */
+/** 일별 방문자 수 추이를 라인+영역 그래프로 그림 (외부 차트 라이브러리 없이 순수 SVG) */
 function VisitorChart({ data }: { data: GaDailyPoint[] }) {
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+
   if (data.length === 0) {
     return (
-      <p style={{ fontSize: 12, color: '#000', padding: '40px 0', textAlign: 'center' }}>
+      <p
+        style={{
+          fontSize: 12,
+          color: '#000',
+          padding: '40px 0',
+          textAlign: 'center',
+        }}
+      >
         표시할 데이터가 없습니다
       </p>
     );
   }
 
   const width = 800;
-  const height = 180;
+  const height = 220;
+  const paddingLeft = 36;
   const paddingBottom = 24;
-  const chartHeight = height - paddingBottom;
-  const barGap = 6;
-  const barWidth = width / data.length - barGap;
-  const maxValue = Math.max(...data.map((d) => d.activeUsers), 1);
+  const paddingTop = 12;
+  const chartWidth = width - paddingLeft;
+  const chartHeight = height - paddingBottom - paddingTop;
+
+  const rawMax = Math.max(...data.map((d) => d.activeUsers), 1);
+  // 눈금이 딱 떨어지는 값이 되도록 최댓값을 살짝 올림 (예: 3 -> 4, 27 -> 30)
+  const maxValue = Math.ceil(rawMax / 4) * 4 || 4;
+
+  const stepX = data.length > 1 ? chartWidth / (data.length - 1) : 0;
+  const points = data.map((d, i) => ({
+    x: paddingLeft + i * stepX,
+    y: paddingTop + chartHeight - (d.activeUsers / maxValue) * chartHeight,
+    d,
+  }));
+
+  const linePath = points
+    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`)
+    .join(' ');
+  const areaPath = `${linePath} L ${points[points.length - 1].x} ${paddingTop + chartHeight} L ${points[0].x} ${paddingTop + chartHeight} Z`;
+
+  const gridLevels = [0, 0.25, 0.5, 0.75, 1];
+  const hovered = hoverIndex !== null ? points[hoverIndex] : null;
 
   return (
-    <svg
-      viewBox={`0 0 ${width} ${height}`}
-      width="100%"
-      height={height}
-      preserveAspectRatio="none"
-      style={{ display: 'block', overflow: 'visible' }}
-    >
-      {data.map((d, i) => {
-        const barHeight = (d.activeUsers / maxValue) * (chartHeight - 20);
-        const x = i * (barWidth + barGap);
-        const y = chartHeight - barHeight;
-        const [, month, day] = d.date.split('-');
-        return (
-          <g key={d.date}>
-            <rect
-              x={x}
-              y={y}
-              width={barWidth}
-              height={Math.max(barHeight, 2)}
-              rx={3}
-              fill="#c9a96e"
-            >
-              <title>
-                {`${month}/${day} — 방문자 ${d.activeUsers} · 조회 ${d.pageViews}`}
-              </title>
-            </rect>
-            <text
-              x={x + barWidth / 2}
-              y={height - 6}
-              fontSize={9}
-              textAnchor="middle"
-              fill="#000"
-            >
-              {`${month}/${day}`}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
+    <div style={{ position: 'relative' }}>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        width="100%"
+        height={height}
+        style={{ display: 'block', overflow: 'visible' }}
+      >
+        <defs>
+          <linearGradient id="visitorAreaFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#a8763f" stopOpacity={0.25} />
+            <stop offset="100%" stopColor="#a8763f" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+
+        {/* 가로 그리드 라인 + y축 눈금 라벨 */}
+        {gridLevels.map((level) => {
+          const y = paddingTop + chartHeight - level * chartHeight;
+          const value = Math.round(maxValue * level);
+          return (
+            <g key={level}>
+              <line
+                x1={paddingLeft}
+                y1={y}
+                x2={width}
+                y2={y}
+                stroke="#eee"
+                strokeDasharray={level === 0 ? undefined : '3 3'}
+              />
+              <text
+                x={paddingLeft - 8}
+                y={y + 3}
+                fontSize={9}
+                textAnchor="end"
+                fill="#999"
+              >
+                {value}
+              </text>
+            </g>
+          );
+        })}
+
+        {/* 영역 채우기 + 라인 */}
+        <path d={areaPath} fill="url(#visitorAreaFill)" stroke="none" />
+        <path
+          d={linePath}
+          fill="none"
+          stroke="#a8763f"
+          strokeWidth={2}
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+
+        {hovered && (
+          <line
+            x1={hovered.x}
+            y1={paddingTop}
+            x2={hovered.x}
+            y2={paddingTop + chartHeight}
+            stroke="#ccc"
+            strokeDasharray="3 3"
+          />
+        )}
+
+        {points.map(({ x, y, d }, i) => {
+          const isHovered = hoverIndex === i;
+          return (
+            <g key={d.date}>
+              <circle
+                cx={x}
+                cy={y}
+                r={isHovered ? 4.5 : 3}
+                fill="#a8763f"
+                stroke="#fff"
+                strokeWidth={isHovered ? 1.5 : 0}
+              />
+              {/* 실제 점보다 크게 잡은 투명 원 — 호버 히트 영역 확보 */}
+              <circle
+                cx={x}
+                cy={y}
+                r={10}
+                fill="transparent"
+                pointerEvents="all"
+                style={{ cursor: 'pointer' }}
+                onMouseEnter={() => setHoverIndex(i)}
+                onMouseLeave={() =>
+                  setHoverIndex((cur) => (cur === i ? null : cur))
+                }
+              />
+              <text
+                x={x}
+                y={height - 6}
+                fontSize={9}
+                textAnchor="middle"
+                fill="#666"
+              >
+                {`${d.date.split('-')[1]}/${d.date.split('-')[2]}`}
+              </text>
+            </g>
+          );
+        })}
+      </svg>
+
+      {hovered && (
+        <div
+          style={{
+            position: 'absolute',
+            left: `${(hovered.x / width) * 100}%`,
+            top: `${(hovered.y / height) * 100}%`,
+            transform: 'translate(-50%, -130%)',
+            background: '#222',
+            color: '#fff',
+            fontSize: 11,
+            padding: '6px 10px',
+            borderRadius: 6,
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+            zIndex: 10,
+            boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+          }}
+        >
+          {`${hovered.d.date.split('-')[1]}/${hovered.d.date.split('-')[2]} · 방문자 ${hovered.d.activeUsers}명 · 조회 ${hovered.d.pageViews}회`}
+        </div>
+      )}
+    </div>
   );
 }
