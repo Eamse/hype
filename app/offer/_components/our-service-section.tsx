@@ -87,7 +87,7 @@ export default function OurServiceSection({
               02
             </p>
             <p data-offer-reveal className="offer-eyebrow offer-fade">
-              WHY HYPE WEDDING?
+              SERVICE DETAILS
             </p>
           </>
         )}

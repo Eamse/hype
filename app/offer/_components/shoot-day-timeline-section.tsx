@@ -42,7 +42,7 @@ const BOXES: Box[] = [
   },
   {
     title: '1st Shoot',
-    desc: ['4-5 hours shoot including travel and outfit changes.'],
+    desc: ['4-5 hours shoot including travel and outfit changes'],
   },
   { title: '2nd Shoot' },
   { title: '3rd Shoot Sunset' },
@@ -54,10 +54,10 @@ const BOXES: Box[] = [
 
 const FOOTNOTES = [
   'Interpreter and stylist accompany throughout the shoot.',
-  'Pick-up & drop-off at client&apos;s accommodation within our service area.',
 ];
 
 const FOOTNOTES_JEJU_ONLY = [
+  "Pick-up & drop-off at client's accommodation within our service area.",
   'Shoots reschedule in case of inclement weather, with advance notice.',
   'Interpreter returns the rental suit.',
 ];
