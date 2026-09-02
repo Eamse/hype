@@ -43,13 +43,13 @@ export default function ProductGalleryLayout({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2">
       {/* 왼쪽: 이미지 */}
-      <div className="hide-scroll lg:sticky lg:top-14 lg:h-[calc(100vh-56px)] lg:overflow-y-auto p-5 mb-6 lg:mb-0 lg:p-16 lg:pb-24">
+      <div className="hide-scroll lg:sticky lg:top-14 lg:h-[calc(100vh-56px)] lg:overflow-y-auto p-5 mb-6 lg:mb-0 lg:pl-16 lg:pt-0 lg:pb-8">
         <BackButton />
         <ImageGallery mainImageUrl={galleryMainUrl} images={galleryImages} />
       </div>
 
       {/* 오른쪽: 컨텐츠 */}
-      <div className="p-5 lg:px-14 lg:py-16 pb-24">
+      <div className="p-5 lg:px-14 lg:pt-6 lg:pb-16 pb-24">
         {isPackageProduct && weddingData ? (
           <WeddingDetail
             productId={product.id}
