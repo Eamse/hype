@@ -1,17 +1,10 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import Image from 'next/image';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export type JourneyItem = {
   date: string;
-  // 스크롤로 활성화될 때 커지고 색이 바뀌는 "하이라이트" 대상 여부
   bold: boolean;
   // 하이라이트 애니메이션 없이 항상 굵게만 표시하고 싶을 때
   staticBold?: boolean;
@@ -19,8 +12,7 @@ export type JourneyItem = {
 };
 
 type Photo = {
-  // 사진 1장이면 문자열, 같은 자리에서 여러 장을 순환시키고 싶으면 배열로
-  src: string | string[];
+  src: string;
   alt: string;
   // 전체(2025+2026 합친) 타임라인 안에서의 인덱스 — 2026 항목은 2025 개수만큼 offset됨
   milestoneIndex: number;
@@ -38,13 +30,6 @@ const LOGO_BADGES_2026: Record<number, { src: string; alt: string }> = {
   },
 };
 
-// 사진 하이라이트 스펙 (2026-08-23 확정):
-// history-02(Angel Dei), history-03(First client photoshoot), history-06(Meryem)만 하이라이트(★) —
-// 정확히 해당 마일스톤에 매칭. 나머지(비하이라이트) 사진은 그 해 타임라인 순서에 맞게 앞/뒤로 배치.
-// milestoneIndex는 2025 배열 기준 로컬 인덱스로 적어두고, 실제 사용 시 YEAR_BOUNDARY만큼 offset해서 합침.
-// 사진이 여러 장(3장 등) 몰려있으면 그 마일스톤 구간만 스크롤이 오래 걸려서 부자연스러워
-// 기존 파일(신규 촬영/추가 없음)만 재분배해서 마일스톤마다 1장씩 배치.
-// 2025는 파일 5장 vs 마일스톤 6개라 'Feb 27 founded'는 대응할 사진이 없어 그대로 비워둠.
 const PHOTOS_2025_LOCAL: Photo[] = [
   {
     src: '/about/history/history-2025-angel-dei-1.jpg',
@@ -53,7 +38,7 @@ const PHOTOS_2025_LOCAL: Photo[] = [
   },
   {
     src: '/about/history/history-2025-angel-dei-2.jpg',
-    alt: 'Angel Dei collaboration', // ★ 하이라이트
+    alt: 'Angel Dei collaboration',
     milestoneIndex: 2,
   },
   {
@@ -63,7 +48,7 @@ const PHOTOS_2025_LOCAL: Photo[] = [
   },
   {
     src: '/about/history/history-2025-first-client-photoshoot-1.jpg',
-    alt: 'First client photoshoot', // ★ 하이라이트
+    alt: 'First client photoshoot',
     milestoneIndex: 4,
   },
   {
@@ -81,8 +66,7 @@ const PHOTOS_2026_LOCAL: Photo[] = [
   },
   {
     src: '/about/history/history-2026-meryem-gunduz-2.jpg',
-
-    alt: 'Meryem Gündüz collaboration', // ★ 하이라이트
+    alt: 'Meryem Gündüz collaboration',
     milestoneIndex: 1,
   },
   {
@@ -116,30 +100,19 @@ function buildPhotos(yearBoundary: number): Photo[] {
 function TimelineRow({
   item,
   logo,
-  itemRef,
 }: {
   item: JourneyItem;
   logo?: { src: string; alt: string };
-  itemRef: (el: HTMLDivElement | null) => void;
 }) {
   return (
-    <div
-      ref={itemRef}
-      className={[
-        'journey-timeline-item',
-        item.bold && 'journey-timeline-item--highlight',
-      ]
-        .filter(Boolean)
-        .join(' ')}
-    >
+    <div className="journey-timeline-item">
       <div className="journey-timeline-row">
         <span className="journey-dot" />
         <p className="journey-date">{item.date}</p>
         <p
           className={[
             'journey-milestone',
-            item.bold && 'journey-milestone--bold',
-            item.staticBold && 'journey-milestone--static-bold',
+            (item.bold || item.staticBold) && 'journey-milestone--static-bold',
           ]
             .filter(Boolean)
             .join(' ')}
@@ -162,42 +135,27 @@ function TimelineRow({
   );
 }
 
-// 연도 하나 분량의 타임라인 목록 — 두 연도가 이 컴포넌트로 각각 렌더링되고,
-// 현재 보여줄 연도만 opacity로 크로스페이드되어 표시됨 (unmount/pin 재걸림 없음 → 끊김 없는 전환).
-// 활성 상태(activeIndex/isCurrentYear)는 React state가 아니라 스크롤 콜백에서 ref를 통해
-// DOM에 직접 반영되므로, 스크롤할 때마다 이 트리 전체가 리렌더되지 않음.
 function YearBlock({
   year,
   items,
   logoBadges,
+  titleRef,
   titleClassName,
-  layerRef,
-  itemRefs,
 }: {
   year: string;
   items: JourneyItem[];
   logoBadges: Record<number, { src: string; alt: string }>;
+  titleRef: (el: HTMLParagraphElement | null) => void;
   titleClassName: string;
-  layerRef: (el: HTMLDivElement | null) => void;
-  itemRefs: (el: HTMLDivElement | null, idx: number) => void;
 }) {
   return (
-    <div ref={layerRef} className="journey-year-layer">
-      <div
-        className={
-          year === '2026'
-            ? 'journey-timeline journey-timeline--2026'
-            : 'journey-timeline'
-        }
-      >
-        <p className={titleClassName}>{year}</p>
+    <div className="journey-year-layer">
+      <div className="journey-timeline">
+        <p ref={titleRef} className={titleClassName}>
+          {year}
+        </p>
         {items.map((item, idx) => (
-          <TimelineRow
-            key={idx}
-            item={item}
-            logo={logoBadges[idx]}
-            itemRef={(el) => itemRefs(el, idx)}
-          />
+          <TimelineRow key={idx} item={item} logo={logoBadges[idx]} />
         ))}
       </div>
     </div>
@@ -205,193 +163,129 @@ function YearBlock({
 }
 
 export default function JourneyPin({
-  id,
   journey2025,
   journey2026,
 }: {
-  id?: string;
   journey2025: JourneyItem[];
   journey2026: JourneyItem[];
 }) {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  // 트리거 기준점을 헤더가 아니라 실제 사진 영역으로 잡기 위한 ref
-  const photoFrameRef = useRef<HTMLDivElement>(null);
   const yearBoundary = journey2025.length;
-  const totalItems = journey2025.length + journey2026.length;
-
   const photos = buildPhotos(yearBoundary);
 
-  // 스크롤할 때마다 바뀌는 값들은 전부 ref로만 들고, DOM을 직접 건드림(React state 재렌더 없음) —
-  // pin 걸린 상태에서 매 스크롤 프레임마다 컴포넌트 트리가 리렌더되면 GSAP의 스크롤 스크럽과
-  // 타이밍이 어긋나서 버벅이는 원인이 되기 때문.
-  const yearLayerRefs = useRef<(HTMLDivElement | null)[]>([null, null]);
-  const timelineItemRefs = useRef<(HTMLDivElement | null)[][]>([[], []]);
-  const photoSlideRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const photoImageRefs = useRef<(HTMLElement | null)[][]>([]);
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+  const [is2025InView, setIs2025InView] = useState(false);
+  const [is2026InView, setIs2026InView] = useState(false);
 
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const title2025Ref = useRef<HTMLParagraphElement | null>(null);
+
+  // 사진은 스크롤 위치와 무관하게 섹션이 보이는 동안 자동으로 순환 슬라이드됨
   useEffect(() => {
     const wrap = wrapRef.current;
-    if (!wrap || totalItems <= 1) return;
-
-    const applyState = (activeIndex: number, progress: number) => {
-      const isYear2026 = activeIndex >= yearBoundary;
-      const activeLocalIndex2025 = isYear2026 ? yearBoundary - 1 : activeIndex;
-      const activeLocalIndex2026 = isYear2026 ? activeIndex - yearBoundary : 0;
-
-      // 연도 레이어 전환
-      yearLayerRefs.current.forEach((el, i) => {
-        if (!el) return;
-        const isCurrent = i === (isYear2026 ? 1 : 0);
-        el.classList.toggle('active', isCurrent);
-      });
-
-      // 타임라인 행 하이라이트
-      [0, 1].forEach((yearIdx) => {
-        const activeLocal =
-          yearIdx === 0 ? activeLocalIndex2025 : activeLocalIndex2026;
-        const isCurrentYear = yearIdx === (isYear2026 ? 1 : 0);
-        timelineItemRefs.current[yearIdx]?.forEach((el, idx) => {
-          if (!el) return;
-          el.classList.toggle(
-            'journey-timeline-item--active',
-            isCurrentYear && idx === activeLocal,
-          );
-        });
-      });
-
-      // 사진 슬라이드 전환 + 슬라이드 안 서브 이미지(있으면) 진행도
-      let activePhotoIndex = 0;
-      for (let i = 0; i < photos.length; i++) {
-        if (photos[i].milestoneIndex <= activeIndex) activePhotoIndex = i;
-      }
-      photoSlideRefs.current.forEach((el, idx) => {
-        if (!el) return;
-        el.classList.toggle('active', idx === activePhotoIndex);
-      });
-
-      photos.forEach((photo, photoIdx) => {
-        const srcs = Array.isArray(photo.src) ? photo.src : [photo.src];
-        if (srcs.length <= 1) return;
-        const isActive = photoIdx === activePhotoIndex;
-        const localProgress =
-          photo.milestoneIndex === activeIndex
-            ? progress
-            : photo.milestoneIndex < activeIndex
-              ? 1
-              : 0;
-        const subIndex = isActive
-          ? Math.min(srcs.length - 1, Math.floor(localProgress * srcs.length))
-          : 0;
-        photoImageRefs.current[photoIdx]?.forEach((imgEl, i) => {
-          if (!imgEl) return;
-          imgEl.style.opacity = i === subIndex ? '1' : '0';
-        });
-      });
-    };
-
-    const trigger = ScrollTrigger.create({
-      // 트리거 기준을 헤더가 아니라 실제 사진 영역(2025 이미지 쪽)으로 잡음 —
-      // pin 자체는 여전히 wrap(텍스트+사진 두 컬럼) 전체에 걸림
-      trigger: photoFrameRef.current ?? wrap,
-      pin: wrap,
-      start: 'top top+=100',
-      end: () => `+=${window.innerHeight * (totalItems - 1) * 1.1}`,
-      scrub: 0.6,
-      anticipatePin: 1,
-      fastScrollEnd: true,
-      onUpdate: (self) => {
-        const scaled = self.progress * totalItems;
-        const idx = Math.min(totalItems - 1, Math.floor(scaled));
-        applyState(idx, scaled - idx);
+    if (!wrap || photos.length <= 1) return;
+    let intervalId: number | undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          intervalId = window.setInterval(() => {
+            setActivePhotoIndex((prev) => (prev + 1) % photos.length);
+          }, 2600);
+        } else if (intervalId !== undefined) {
+          clearInterval(intervalId);
+          intervalId = undefined;
+        }
       },
-    });
-
-    // 초기 상태 반영
-    applyState(0, 0);
-
-    // 이미지 로드 등으로 마운트 직후 레이아웃이 살짝 바뀌면 pin 시작 위치 계산이 어긋남.
-    // 그렇다고 refresh를 아무 때나 부르면, 사용자가 이미 pin에 들어와 스크롤 중인 순간에
-    // 위치가 재계산되면서 오히려 진행도가 튀어버림 — 그래서 pin이 "활성화되지 않은 동안"에만
-    // (=아직 이 섹션에 도달하기 전) 페이지 레이아웃 변화를 감지해 refresh하도록 가드를 둠.
-    const resizeObserver = new ResizeObserver(() => {
-      if (!trigger.isActive) ScrollTrigger.refresh();
-    });
-    resizeObserver.observe(document.body);
-
+      { threshold: 0.15 },
+    );
+    observer.observe(wrap);
     return () => {
-      trigger.kill();
-      resizeObserver.disconnect();
+      observer.disconnect();
+      if (intervalId !== undefined) clearInterval(intervalId);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalItems, yearBoundary]);
+  }, [photos.length]);
+
+  // "2025" 타이틀이 화면 위쪽 가까이(더 스크롤해서 올라온 뒤)까지 왔을 때만 키컬러로 전환 —
+  // 감지 밴드를 화면 상단 쪽으로 둬서 더 내려야(스크롤해야) 발동함.
+  useEffect(() => {
+    const el = title2025Ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setIs2025InView(entry.isIntersecting),
+      { rootMargin: '-15% 0px -65% 0px', threshold: 0 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // "2026"은 자기 위치와 무관하게 "2025가 화면(뷰포트) 밖으로 완전히 나갔는지"만 보고
+  // 즉시 전환됨 — 밴드가 아니라 실제 뷰포트(top=0 기준) 자체를 관찰해서, 화면을 벗어나는
+  // 정확한 순간(top<0로 넘어가는 시점)에만 콜백이 발생하도록 별도 관찰자로 분리함.
+  useEffect(() => {
+    const el = title2025Ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIs2026InView(
+          !entry.isIntersecting && entry.boundingClientRect.top < 0,
+        );
+      },
+      { threshold: 0 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div
-      ref={wrapRef}
-      id={id}
-      className="journey-pin-wrap"
-      style={{ scrollMarginTop: 106 }}
-    >
+    <div ref={wrapRef} className="journey-pin-wrap">
       <div className="journey-pin-left">
         <YearBlock
           year="2025"
           items={journey2025}
           logoBadges={LOGO_BADGES_2025}
-          titleClassName="journey-year-title journey-year-title--2025"
-          layerRef={(el) => {
-            yearLayerRefs.current[0] = el;
+          titleRef={(el) => {
+            title2025Ref.current = el;
           }}
-          itemRefs={(el, idx) => {
-            timelineItemRefs.current[0][idx] = el;
-          }}
+          titleClassName={[
+            'journey-year-title',
+            'journey-year-title--2025',
+            is2025InView && 'journey-year-title--keycolor',
+          ]
+            .filter(Boolean)
+            .join(' ')}
         />
         <YearBlock
           year="2026"
           items={journey2026}
           logoBadges={LOGO_BADGES_2026}
-          titleClassName="journey-year-title journey-year-title--2026 journey-year-title--pin"
-          layerRef={(el) => {
-            yearLayerRefs.current[1] = el;
-          }}
-          itemRefs={(el, idx) => {
-            timelineItemRefs.current[1][idx] = el;
-          }}
+          titleRef={() => {}}
+          titleClassName={[
+            'journey-year-title',
+            'journey-year-title--2026',
+            is2026InView && 'journey-year-title--keycolor',
+          ]
+            .filter(Boolean)
+            .join(' ')}
         />
       </div>
       <div className="journey-pin-right">
-        <div ref={photoFrameRef} className="journey-photo-frame">
-          {photos.map((photo, idx) => {
-            const srcs = Array.isArray(photo.src) ? photo.src : [photo.src];
-            return (
-              <div
-                key={srcs.join('|')}
-                ref={(el) => {
-                  photoSlideRefs.current[idx] = el;
-                }}
-                className="journey-photo-slide"
-              >
-                {srcs.map((s, i) => (
-                  <Image
-                    key={s}
-                    ref={(el) => {
-                      if (!photoImageRefs.current[idx]) {
-                        photoImageRefs.current[idx] = [];
-                      }
-                      photoImageRefs.current[idx][i] = el;
-                    }}
-                    src={s}
-                    alt={photo.alt}
-                    fill
-                    className="object-cover"
-                    style={{
-                      opacity: i === 0 ? 1 : 0,
-                      transition: 'opacity 0.6s ease',
-                    }}
-                  />
-                ))}
-              </div>
-            );
-          })}
+        <div className="journey-photo-frame">
+          {photos.map((photo, idx) => (
+            <div
+              key={photo.src}
+              className={
+                idx === activePhotoIndex
+                  ? 'journey-photo-slide active'
+                  : 'journey-photo-slide'
+              }
+            >
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                className="object-cover"
+              />
+            </div>
+          ))}
         </div>
       </div>
     </div>

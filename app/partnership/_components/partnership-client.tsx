@@ -73,12 +73,12 @@ const BOOKING_STEPS = [
   },
 ];
 
-// TODO: 실제 로고 파일 전달받으면 텍스트 placeholder를 이미지로 교체
-const PARTNER_LOGOS = [
-  'Wedding Essentials Magazine',
-  'Bridal and Breakfast',
-  'Hicheed SG',
-  'Bridley SG (예정)',
+// TODO: 나머지 실제 로고 파일 전달받으면 텍스트 placeholder를 이미지로 교체
+const PARTNER_LOGOS: { name: string; logo?: string }[] = [
+  { name: 'Wedding Essentials Magazine' },
+  { name: 'Bridal and Breakfast' },
+  { name: 'Hicheed SG' },
+  { name: 'Coming Soon', logo: '/partnership/Partnership-coming-soon-logo.svg' },
 ];
 
 // TODO: 실제 PDF 파일 링크 전달받으면 교체
@@ -282,14 +282,24 @@ export default function PartnershipClient() {
         </p>
 
         <div className="partnership-logo-grid">
-          {PARTNER_LOGOS.map((name, idx) => (
+          {PARTNER_LOGOS.map(({ name, logo }, idx) => (
             <div
               key={name}
               className="partnership-logo-box partnership-rise"
               data-reveal
               data-reveal-delay={`${240 + idx * 100}`}
             >
-              {name}
+              {logo ? (
+                <Image
+                  src={logo}
+                  alt={name}
+                  width={160}
+                  height={160}
+                  className="partnership-logo-img"
+                />
+              ) : (
+                name
+              )}
             </div>
           ))}
         </div>

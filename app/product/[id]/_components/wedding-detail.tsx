@@ -523,9 +523,14 @@ export default function WeddingDetail({
                         priceCount > 1 ? `border-r ${BORDER}` : ''
                       }`}
                     >
-                      <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#EAF0EC] text-[#2D5A45]">
-                        Agree to SNS Upload
-                      </span>
+                      <div className="flex flex-col items-center gap-[2px] text-center">
+                        <span className="text-[10px] sm:text-[14px] font-bold leading-tight text-[#666666]">
+                          DISCOUNTED PRICE
+                        </span>
+                        <span className="text-[9px] sm:text-[12px] font-medium leading-tight text-[#666666]">
+                          (WITH SNS UPLOAD CONSENT)
+                        </span>
+                      </div>
                       <div
                         className={`text-[18px] sm:text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
                       >
@@ -533,21 +538,26 @@ export default function WeddingDetail({
                           ? `USD${activePrice.priceSNS.toLocaleString()}`
                           : '···'}
                       </div>
-                      <a
+                      {/* <a
                         href={INQUIRY_FORM_URL}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#2D5A45] text-white"
                       >
                         Inquire Now →
-                      </a>
+                      </a> */}
                     </div>
                   )}
                   {activePackage.hasPriceNoSNS && (
                     <div className="py-4 px-3 sm:py-5 sm:px-6 flex flex-col gap-1">
-                      <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#F5F5F5] text-[#666666]">
-                        Decline SNS Upload
-                      </span>
+                      <div className="flex flex-col items-center gap-[2px] text-center">
+                        <span className="text-[10px] sm:text-[14px] font-bold leading-tight text-[#666666]">
+                          REGULAR PRICE
+                        </span>
+                        <span className="text-[9px] sm:text-[12px] font-medium leading-tight text-[#666666]">
+                          (NO SNS UPLOAD CONSENT)
+                        </span>
+                      </div>
                       <div
                         className={`text-[18px] sm:text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
                       >
@@ -555,14 +565,14 @@ export default function WeddingDetail({
                           ? `USD${activePrice.priceNoSNS.toLocaleString()}`
                           : '···'}
                       </div>
-                      <a
+                      {/* <a
                         href={INQUIRY_FORM_URL}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#0D0D0D] text-white"
                       >
                         Inquire Now →
-                      </a>
+                      </a> */}
                     </div>
                   )}
                 </>

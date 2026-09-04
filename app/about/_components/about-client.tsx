@@ -236,8 +236,7 @@ export default function AboutClient({
         {SECTIONS.map((section) => (
           <section
             key={section.id}
-            // history는 헤더 쪽에 앵커 id를 따로 달아둬서 스크롤 점프 지점을 분리함 (아래 참고)
-            id={section.id === 'history' ? undefined : section.id}
+            id={section.id}
             style={{
               scrollMarginTop: 106,
               minHeight: section.id === 'achievement' ? undefined : '50vh',
@@ -528,7 +527,6 @@ export default function AboutClient({
                 </div>
 
                 <JourneyPin
-                  id="history"
                   journey2025={JOURNEY_2025}
                   journey2026={JOURNEY_2026}
                 />

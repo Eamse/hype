@@ -474,7 +474,7 @@ export default function FaqClient() {
         <h1
           className="inquiry-fade-up"
           style={{
-            fontSize: isMobile ? 52 : 72,
+            fontSize: 'clamp(46px, 34.4px + 3.1vw, 84px)',
             fontWeight: 900,
             letterSpacing: '-2px',
             color: '#000',

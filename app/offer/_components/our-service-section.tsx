@@ -83,7 +83,7 @@ export default function OurServiceSection({
       <div className="offer-header">
         {showHeader && (
           <>
-            <p data-offer-reveal className="offer-number offer-fade">
+            <p id="service-details" data-offer-reveal className="offer-number offer-fade">
               02
             </p>
             <p data-offer-reveal className="offer-eyebrow offer-fade">

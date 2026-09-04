@@ -252,12 +252,12 @@ body {
    번호/눈썹/타이틀을 여기 한 곳에서만 관리. 타이틀은 03(How We Started) 값을 기준으로 통일함 */
 .about-section-number {
   margin: 0 0 4px;
-  font-size: clamp(20px, 1.7vw, 28px);
+  font-size: clamp(20px, 17.6px + 0.7vw, 28px);
 }
 
 .about-section-eyebrow {
   margin: 0 0 clamp(15px, 3.1vw, 21px);
-  font-size: clamp(20px, 2.5vw, 33px);
+  font-size: clamp(24px, 20px + 1.1vw, 37px);
   font-weight: 400;
   line-height: 1.1;
 }
@@ -265,7 +265,7 @@ body {
 .about-section-title {
   max-width: 900px;
   margin: 0;
-  font-size: clamp(46px, 2.5vw, 80px);
+  font-size: clamp(46px, 34.4px + 3.1vw, 84px);
   font-weight: 800;
   font-style: italic;
   letter-spacing: -0.06em;
@@ -313,13 +313,13 @@ body {
 
 .about-intro-body,
 .how-started-description {
-  font-size: clamp(15px, 2vw, 25px);
+  font-size: clamp(16px, 13.2px + 0.7vw, 25px);
 }
 
 .about-intro-quote {
   max-width: 660px;
   color: #666;
-  font-size: clamp(17px, 2.5vw, 37px);
+  font-size: clamp(20px, 15.7px + 1.1vw, 34px);
   font-weight: 700;
   font-style: italic;
   letter-spacing: -0.045em;
@@ -366,7 +366,7 @@ body {
   left: clamp(10px, 1.2vw, 16px);
   bottom: clamp(10px, 1.2vw, 16px);
   color: #000;
-  font-size: clamp(13px, 1vw, 16px);
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   line-height: 1.2;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
@@ -411,7 +411,7 @@ body {
   max-width: 900px;
   margin: 0 0 clamp(28px, 2.6vw, 40px);
   padding-left: 24px;
-  font-size: clamp(23px, 2.05vw, 34px);
+  font-size: clamp(20px, 15.7px + 1.1vw, 34px);
   font-weight: 700;
   line-height: 1.28;
   letter-spacing: -0.04em;
@@ -440,7 +440,7 @@ body {
 .how-started-goal p {
   margin-bottom: 10px;
   color: #666;
-  font-size: clamp(31px, 2.9vw, 48px);
+  font-size: clamp(32px, 25.9px + 1.6vw, 52px);
   font-weight: 700;
   font-style: italic;
   line-height: 1;
@@ -449,7 +449,7 @@ body {
 .how-started-goal strong {
   display: block;
   max-width: 720px;
-  font-size: clamp(25px, 2.35vw, 40px);
+  font-size: clamp(20px, 15.7px + 1.1vw, 34px);
   font-style: italic;
   line-height: 1.27;
   letter-spacing: -0.04em;
@@ -483,7 +483,7 @@ body {
 .philosophy-summary {
   margin: 0;
   padding-bottom: 4px;
-  font-size: clamp(15px, 1.5vw, 20px);
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   line-height: 1.2;
 }
 
@@ -506,14 +506,14 @@ body {
 
 .philosophy-principle h3 {
   margin-bottom: 18px;
-  font-size: clamp(20px, 4.2vw, 53px);
+  font-size: clamp(20px, 9.9px + 2.7vw, 53px);
   font-weight: 800;
   letter-spacing: -0.06em;
   line-height: 0.98;
 }
 
 .philosophy-principle p {
-  font-size: clamp(20px, 0.8vw, 41px);
+  font-size: clamp(16px, 13.2px + 0.7vw, 25px);
   letter-spacing: -0.04em;
   line-height: 1.22;
 }
@@ -607,6 +607,7 @@ body {
   font-style: italic;
   letter-spacing: -0.06em;
   line-height: 1;
+  transition: color 0.5s ease;
 }
 
 .journey-year-title--2025 {
@@ -614,7 +615,7 @@ body {
 }
 
 .journey-year-title--2026 {
-  color: #3f6b52;
+  color: #9ca3af;
 }
 
 .journey-timeline {
@@ -675,17 +676,6 @@ body {
   line-height: 1.4;
 }
 
-/* 하이라이트 마일스톤(Angel Dei / First client photoshoot / Meryem)만 —
-   스크롤로 해당 항목이 활성화됐을 때만 글씨가 커지며 강조됨 */
-.journey-milestone--bold {
-  display: inline-block;
-  transform-origin: left center;
-  transition:
-    transform 0.3s ease,
-    font-weight 0.2s ease;
-}
-
-/* 하이라이트 애니메이션(스크롤 시 커짐/색 변경) 없이 항상 굵게만 표시 */
 .journey-milestone--static-bold {
   font-weight: 700;
 }
@@ -728,55 +718,44 @@ body {
   }
 }
 
-/* History 스크롤 pin + 사진 크로스페이드 (JourneyPin 컴포넌트) */
+/* History — 좌측 타임라인은 일반 스크롤 흐름, 우측 사진 패널만 sticky로 고정되어
+   2025~2026 전체가 하나로 이어지는 통일된 슬라이드 효과를 냄 (GSAP ScrollTrigger 없이 구현) */
 .journey-pin-wrap {
   display: grid;
   grid-template-columns: minmax(0, 62.25fr) minmax(0, 37.75fr);
-  align-items: stretch;
-  height: 90vh;
+  align-items: start;
   margin-top: clamp(56px, 6vw, 96px);
   background: #fff;
-  overflow: hidden;
 }
 
 .journey-pin-left {
-  position: relative;
-}
-
-/* 2025/2026 타임라인 목록을 같은 자리에 겹쳐두고 opacity로만 전환 — pin이 풀렸다가
-   다시 걸리는 과정 자체가 없어서(스크롤 트리거가 둘을 하나로 관통) 끊김 없이 자연스럽게 넘어감.
-   absolute 배치라 부모(.journey-pin-left)의 padding을 무시하므로 여기서 직접 줌 */
-.journey-year-layer {
-  position: absolute;
-  inset: 0;
   display: flex;
   flex-direction: column;
-  padding: clamp(48px, 6vw, 99px) clamp(50px, 6vw, 104px);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.5s ease;
 }
 
-.journey-year-layer.active {
-  opacity: 1;
-  pointer-events: auto;
+.journey-year-layer {
+  display: flex;
+  flex-direction: column;
+  padding: 0 clamp(50px, 6vw, 104px) clamp(48px, 6vw, 99px);
 }
 
-.journey-year-title--pin {
-  margin-top: clamp(48px, 5vw, 80px);
+/* "2025"/"2026" 타이틀이 화면 상단 쪽 감지 밴드에 들어와 있는 동안만 키컬러로 전환 */
+.journey-year-title--keycolor {
+  color: rgb(45, 90, 69);
 }
 
 .journey-pin-right {
-  position: relative;
+  position: sticky;
+  top: 106px;
+  align-self: start;
   width: 100%;
-  min-height: 0;
+  height: calc(100vh - 106px);
 }
 
 .journey-photo-frame {
   position: relative;
   width: 100%;
   height: 100%;
-  min-height: 0;
   overflow: hidden;
 }
 
@@ -784,39 +763,24 @@ body {
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.5s ease;
 }
 
 .journey-photo-slide.active {
   opacity: 1;
 }
 
-.journey-timeline-item--active.journey-timeline-item--highlight .journey-dot {
-  transform: scale(1.5);
-}
-
-.journey-timeline-item--active .journey-milestone--bold {
-  transform: scale(1.15);
-  font-weight: 700;
-  color: rgb(45, 90, 69);
-}
-
 .journey-dot,
 .journey-milestone {
-  transition:
-    transform 0.3s ease,
-    font-weight 0.2s ease,
-    color 0.2s ease;
+  transition: color 0.2s ease;
 }
 
 @media (max-width: 767px) {
   .journey-pin-wrap {
     grid-template-columns: 1fr;
-    height: auto;
-    overflow: visible;
   }
 
-  .journey-photo-frame {
+  .journey-pin-right {
     position: relative;
     top: 0;
     height: auto;
@@ -825,22 +789,6 @@ body {
 
   .journey-milestone {
     white-space: normal;
-  }
-
-  /* 모바일에선 부모(.journey-pin-left)가 고정 높이가 아니라 콘텐츠만큼 늘어나야 하므로,
-     absolute+opacity 크로스페이드 대신 display로 완전히 전환(비활성 레이어는 높이 0) */
-  .journey-pin-left {
-    position: static;
-  }
-
-  .journey-year-layer {
-    position: static;
-    display: none;
-    opacity: 1;
-  }
-
-  .journey-year-layer.active {
-    display: flex;
   }
 }
 
@@ -855,23 +803,39 @@ body {
 
 .offer-number {
   margin: 0 0 4px;
-  font-size: clamp(20px, 1.7vw, 28px);
+  font-size: clamp(20px, 17.6px + 0.7vw, 28px);
+  /* 상단 고정 헤더(56px) + 서브탭바 높이만큼 스크롤 도착 지점을 내려서,
+     핀포인트로 스크롤했을 때 번호가 sticky 바에 가려지지 않게 함 */
+  scroll-margin-top: 105px;
 }
 
 .offer-eyebrow {
   margin: 0 0 clamp(24px, 2.4vw, 38px);
-  font-size: clamp(28px, 2.5vw, 41px);
+  font-size: clamp(24px, 20px + 1.1vw, 37px);
   line-height: 1.1;
 }
 
 .offer-headline {
   margin: 0;
   max-width: 900px;
-  font-size: clamp(46px, 5vw, 84px);
+  font-size: clamp(46px, 34.4px + 3.1vw, 84px);
   font-weight: 800;
   font-style: italic;
   letter-spacing: -0.06em;
   line-height: 1;
+}
+
+/* 데스크탑 2열, 모바일 1열 그리드 */
+.offer-items-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(24px, 3vw, 48px);
+}
+
+@media (max-width: 767px) {
+  .offer-items-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .offer-item {
@@ -879,14 +843,13 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 50vh;
   text-align: center;
   padding: clamp(24px, 3vw, 48px) 0;
 }
 
 .offer-item-title {
   margin: 0;
-  font-size: clamp(44px, 6vw, 96px);
+  font-size: clamp(20px, 9.9px + 2.7vw, 53px);
   font-weight: 800;
   letter-spacing: -0.05em;
   line-height: 1;
@@ -894,7 +857,7 @@ body {
 
 .offer-item-subtitle {
   margin: clamp(16px, 1.6vw, 24px) 0 0;
-  font-size: clamp(16px, 1.6vw, 24px);
+  font-size: clamp(16px, 13.2px + 0.7vw, 25px);
   color: #666;
 }
 
@@ -1018,7 +981,7 @@ body {
 /* /offer — 3-1 Shoot Schedule */
 .schedule-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: clamp(16px, 2vw, 24px);
   margin-bottom: clamp(40px, 5vw, 64px);
 }
@@ -1068,7 +1031,7 @@ body {
   gap: 10px;
   font-style: italic;
   padding-bottom: clamp(60px, 7vw, 96px);
-  font-size: clamp(22px, 3.5vw, 49px);
+  font-size: clamp(32px, 25.9px + 1.6vw, 52px);
   font-weight: 800;
   color: #3f6b52;
 }
@@ -1712,7 +1675,7 @@ body {
 
 .inquiry-heading {
   margin: 0 0 clamp(48px, 6vw, 84px);
-  font-size: clamp(32px, 4.2vw, 56px);
+  font-size: clamp(32px, 25.9px + 1.6vw, 52px);
   font-weight: 800;
   letter-spacing: -0.02em;
   text-align: center;
@@ -1738,7 +1701,7 @@ body {
   padding: 14px 40px;
   border: 1.5px solid #000;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 700;
   color: #000;
   text-decoration: none;
@@ -1820,7 +1783,7 @@ body {
 
 .inquiry-step-title {
   margin: 0 0 6px;
-  font-size: clamp(15px, 1.2vw, 18px);
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 800;
 }
 
@@ -1865,8 +1828,7 @@ body {
 
 .inquiry-cta-body {
   margin: 0 0 clamp(36px, 4vw, 52px);
-  max-width: 480px;
-  font-size: clamp(14px, 1.1vw, 16px);
+  font-size: clamp(16px, 13.2px + 0.7vw, 25px);
   line-height: 1.7;
   color: #555;
   text-align: center;
@@ -1883,6 +1845,7 @@ body {
   justify-content: center;
   gap: 10px;
   padding: 18px 40px;
+  min-width: 236px;
   border: 1.5px solid #000;
   border-radius: 4px;
   font-size: 14px;
@@ -1998,7 +1961,7 @@ body {
 
 .partnership-hero-title-en {
   margin: 0 0 8px;
-  font-size: clamp(44px, 5.2vw, 72px);
+  font-size: clamp(46px, 34.4px + 3.1vw, 84px);
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1;
@@ -2016,7 +1979,7 @@ body {
 .partnership-subcopy-en {
   margin: 0 0 8px;
   max-width: 640px;
-  font-size: clamp(17px, 1.4vw, 20px);
+  font-size: clamp(16px, 13.2px + 0.7vw, 25px);
   font-weight: 700;
   line-height: 1.55;
   color: #000;
@@ -2035,7 +1998,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 17px;
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 600;
 }
 
@@ -2050,7 +2013,7 @@ body {
 
 .partnership-eyebrow {
   margin: 0 0 12px;
-  font-size: 13px;
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -2058,7 +2021,7 @@ body {
 
 .partnership-heading {
   margin: 0 0 4px;
-  font-size: clamp(32px, 4vw, 52px);
+  font-size: clamp(32px, 25.9px + 1.6vw, 52px);
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.05;
@@ -2139,7 +2102,7 @@ body {
 
 .partnership-step-label {
   margin: 0 0 14px;
-  font-size: 13px;
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 700;
   letter-spacing: 2px;
   color: #888;
@@ -2147,7 +2110,7 @@ body {
 
 .partnership-step-title-en {
   margin: 0 0 2px;
-  font-size: clamp(18px, 1.5vw, 20px);
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 800;
 }
 
@@ -2195,6 +2158,13 @@ body {
   color: #444;
 }
 
+.partnership-logo-img {
+  width: auto;
+  height: 60%;
+  max-width: 70%;
+  object-fit: contain;
+}
+
 /* 5. Get the full story */
 .partnership-doc-buttons {
   margin-top: clamp(32px, 3.5vw, 44px);
@@ -2215,14 +2185,14 @@ body {
 
 .partnership-doc-btn-en {
   display: block;
-  font-size: 18px;
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 800;
 }
 
 .partnership-doc-btn-kr {
   display: block;
   margin-top: 2px;
-  font-size: 14px;
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 600;
 }
 
@@ -2243,7 +2213,7 @@ body {
 
 .partnership-contact-title {
   margin: 0 0 10px;
-  font-size: 17px;
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 700;
 }
 
@@ -2251,7 +2221,7 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 17px;
+  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 600;
 }
 
