@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
-import { MoveHorizontal } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // 스와이프로 슬라이드를 넘기는 데 필요한 최소 드래그 거리(px) — 이보다 짧으면 클릭/오탐으로 간주
 const SWIPE_THRESHOLD = 50;
@@ -48,7 +48,7 @@ export default function HeroCarousel({
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     // 손 커서 옆에 살짝 띄워서 텍스트가 커서 끝에 가리지 않게 함
-    hint.style.transform = `translate(${x + -50}px, ${y + -35}px)`;
+    hint.style.transform = `translate(${x + -33}px, ${y + -35}px)`;
   };
 
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -129,7 +129,6 @@ export default function HeroCarousel({
           />
         </div>
       ))}
-
       {/* 좌우 스와이프 가능 힌트 — 커서 위치를 그대로 따라다니는 커스텀 커서 */}
       {images.length > 1 && (
         <div
@@ -137,8 +136,8 @@ export default function HeroCarousel({
           className="hero-carousel-swipe-hint"
           aria-hidden="true"
         >
-          <MoveHorizontal size={14} strokeWidth={2} />
-          <span>Swipe</span>
+          <ChevronLeft size={14} strokeWidth={2.5} />
+          <ChevronRight size={14} strokeWidth={2.5} />
         </div>
       )}
 

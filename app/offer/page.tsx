@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Header from '@/components/header';
 import SubTabBar from '@/components/sub-tab-bar';
-import { contentSubTabs } from '@/lib/service-sub-tabs';
+import { offerSubTabs } from '@/lib/service-sub-tabs';
 import WhyHypeSection from './_components/why-hype-section';
 import OurServiceSection from './_components/our-service-section';
 import ShootScheduleSection from './_components/shoot-schedule-section';
@@ -25,7 +25,7 @@ export default async function OfferPage({
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header brand={activeBrand} />
       <main style={{ paddingTop: 56, flex: 1 }}>
-        <SubTabBar tabs={contentSubTabs(activeBrand)} />
+        <SubTabBar tabs={offerSubTabs(activeBrand)} />
         <WhyHypeSection />
         <OurServiceSection />
         <ShootScheduleSection />

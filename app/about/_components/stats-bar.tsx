@@ -77,21 +77,21 @@ function StatColumn({
   return (
     <div className="flex-none">
       {/* 모든 컬럼에 동일한 높이를 예약해서 숫자 줄 baseline을 맞춤 */}
-      <p className="text-base font-bold italic mb-0.5 h-6 leading-6">
+      <p className="text-[clamp(0.85rem,1.4vw,1rem)] font-bold italic mb-0.5 h-6 leading-6">
         {stat.topLabel ?? ' '}
       </p>
       <div className="flex items-baseline gap-2">
-        <span className="text-5xl md:text-6xl font-bold italic tracking-tight">
+        <span className="text-[clamp(2.25rem,5vw,3.75rem)] font-bold italic tracking-tight">
           {value}
           {stat.suffix}
         </span>
         {stat.label && (
-          <span className="text-xl md:text-2xl font-bold italic">
+          <span className="text-[clamp(1.15rem,2.3vw,1.5rem)] font-bold italic">
             {stat.label}
           </span>
         )}
       </div>
-      <p className="text-base text-gray-500 mt-2 leading-snug">
+      <p className="text-[clamp(0.85rem,1.4vw,1rem)] text-gray-500 mt-2 leading-snug">
         {stat.sublabel}
       </p>
     </div>

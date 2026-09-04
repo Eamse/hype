@@ -25,6 +25,15 @@ const STEPS = [
     items: ['Hair & Make-up for bride and groom', 'Dress fitting', 'Shoot'],
     emphasis: true,
   },
+  {
+    step: 'STEP 04',
+    title: 'Delivery',
+    items: [
+      'All raw images in 2 weeks',
+      'Final edits in 8-9 weeks from selection date',
+    ],
+    emphasis: false,
+  },
 ];
 
 export default function ShootScheduleSection() {
@@ -34,14 +43,18 @@ export default function ShootScheduleSection() {
   return (
     <div ref={rootRef} className="offer-page">
       <div className="offer-header">
-        <p data-offer-reveal className="offer-number offer-fade">
+        <p
+          id="shoot-timeline"
+          data-offer-reveal
+          className="offer-number offer-fade"
+        >
           03
         </p>
         <p data-offer-reveal className="offer-eyebrow offer-fade">
-          SERVICE DETAILS
+          SHOOT TIMELINE
         </p>
         <h2 data-offer-reveal className="offer-headline offer-fade">
-          Shoot Schedule
+          Pre-Wedding Photoshoot Timeline
         </h2>
       </div>
 
@@ -69,7 +82,7 @@ export default function ShootScheduleSection() {
         data-offer-reveal-delay={STEPS.length * 150 + 200}
         className="schedule-cta offer-fade"
       >
-        Shoot day timeline
+        Shoot day Schedule
         <span className="schedule-cta-arrow">↓</span>
       </p>
     </div>
