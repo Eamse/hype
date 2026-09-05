@@ -473,19 +473,80 @@ export default function AboutClient({
                       data-philosophy-reveal="420"
                       className="philosophy-principle philosophy-principle-1 philosophy-pop"
                     >
+                      <div
+                        className="philosophy-deco philosophy-deco-korean"
+                        aria-hidden="true"
+                      >
+                        <Image
+                          src="/about/philosophy/4-philosophy-the-korean-edit-1.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-korean-1"
+                        />
+                        <Image
+                          src="/about/philosophy/4-philosophy-the-korean-edit-2.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-korean-2"
+                        />
+                        <Image
+                          src="/about/philosophy/4-philosophy-the-korean-edit-3.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-korean-3"
+                        />
+                      </div>
                       <h3>The Korean Edit</h3>
                       <p>
-                        Korean beauty trends meet high-fashion editorial — never
-                        cookie-cutter.
+                        Korean beauty trends meet high-fashion
+                        <br />
+                        editorial — never cookie-cutter.
                       </p>
                     </article>
                     <article
                       data-philosophy-reveal="560"
                       className="philosophy-principle philosophy-principle-2 philosophy-pop"
                     >
+                      <div
+                        className="philosophy-deco philosophy-deco-coast"
+                        aria-hidden="true"
+                      >
+                        <Image
+                          src="/about/philosophy/4-philosophy-coast-to-concrete-1.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-hand philosophy-deco-hand-left"
+                        />
+                        <Image
+                          src="/about/philosophy/4-philosophy-coast-to-concrete-2.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-map"
+                        />
+                        <Image
+                          src="/about/philosophy/4-philosophy-coast-to-concrete-3.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-pin philosophy-deco-pin-1"
+                        />
+                        <Image
+                          src="/about/philosophy/4-philosophy-coast-to-concrete-3.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-pin philosophy-deco-pin-2"
+                        />
+                      </div>
                       <h3>Coast to Concrete</h3>
                       <p>
                         From Jeju&apos;s wild landscapes to Seoul&apos;s urban
+                        <br />
                         grit — one country, endless contrast.
                       </p>
                     </article>
@@ -493,20 +554,74 @@ export default function AboutClient({
                       data-philosophy-reveal="700"
                       className="philosophy-principle philosophy-principle-3 philosophy-pop"
                     >
+                      <div
+                        className="philosophy-deco philosophy-deco-authenticity"
+                        aria-hidden="true"
+                      >
+                        <Image
+                          src="/about/philosophy/4-philosophy-authenticity-1.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-strip"
+                        />
+                        <Image
+                          src="/about/philosophy/4-philosophy-authenticity-2.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-camera"
+                        />
+                        <Image
+                          src="/about/philosophy/4-philosophy-authenticity-3.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-photofan"
+                        />
+                      </div>
                       <h3>Authenticity</h3>
                       <p>
-                        We capture what&apos;s genuine — your chemistry,
-                        unscripted.
+                        We capture what&apos;s genuine —
+                        <br />
+                        your chemistry, unscripted.
                       </p>
                     </article>
                     <article
                       data-philosophy-reveal="840"
                       className="philosophy-principle philosophy-principle-4 philosophy-pop"
                     >
+                      <div
+                        className="philosophy-deco philosophy-deco-effortless"
+                        aria-hidden="true"
+                      >
+                        <Image
+                          src="/about/philosophy/4-philosophy-effortless-end-to-end-1.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-gramophone"
+                        />
+                        <Image
+                          src="/about/philosophy/4-philosophy-effortless-end-to-end-2.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-musicnote"
+                        />{' '}
+                        <Image
+                          src="/about/philosophy/4-philosophy-effortless-end-to-end-3.webp"
+                          alt=""
+                          width={200}
+                          height={200}
+                          className="philosophy-deco-heart"
+                        />
+                      </div>
                       <h3>Effortless, End to End</h3>
                       <p>
-                        From first inquiry to final gallery — we handle
-                        everything so you don&apos;t have to.
+                        From first inquiry to final gallery —
+                        <br />
+                        we handle everything so you don&apos;t have to.
                       </p>
                     </article>
                   </div>
