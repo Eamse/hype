@@ -21,9 +21,18 @@ function ChevronLeftIcon() {
 
 export function BackButton() {
   const router = useRouter();
+
+  function handleBack() {
+    if (window.history.length <= 1) {
+      router.push('/packages');
+    } else {
+      router.back();
+    }
+  }
+
   return (
     <button
-      onClick={() => router.back()}
+      onClick={handleBack}
       style={{
         display: 'flex',
         alignItems: 'center',

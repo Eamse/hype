@@ -491,7 +491,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: clamp(40px, 8vw, 132px);
-  row-gap: clamp(90px, 13vw, 210px);
+  row-gap: clamp(40px, 6vw, 100px);
   padding-top: clamp(90px, 9vw, 150px);
 }
 
@@ -506,7 +506,7 @@ body {
 
 .philosophy-principle h3 {
   margin-bottom: 18px;
-  font-size: clamp(20px, 9.9px + 2.7vw, 53px);
+  font-size: clamp(20px, 17.9px + 2.7vw, 68px);
   font-weight: 800;
   letter-spacing: -0.06em;
   line-height: 0.98;
@@ -516,17 +516,14 @@ body {
   font-size: clamp(16px, 13.2px + 0.7vw, 25px);
   letter-spacing: -0.04em;
   line-height: 1.22;
+  white-space: nowrap;
 }
 
 /* max-width는 항목마다 따로 관리 — 공용 규칙으로 묶으면 한 곳만 조정해도
    나머지 전부 같이 바뀌어버려서 개별 폭 조절이 불가능해짐 */
 .philosophy-principle-1,
 .philosophy-principle-3 {
-  margin-left: clamp(20px, 20vw, 350px);
-}
-
-.philosophy-principle-1 p {
-  max-width: 340px;
+  margin-left: clamp(20px, 20vw, 55px);
 }
 
 .philosophy-principle-2 {
@@ -539,26 +536,16 @@ body {
   /* position:absolute + 고정 px 대신, 문서 흐름 안에서 margin-left를 clamp로 줘서
      화면이 좁아질수록 오프셋도 같이 줄어들게 함 (h3와 겹치거나 화면 밖으로 밀리지 않음) */
   margin-left: clamp(20px, 4vw, 50px);
-  max-width: 370px;
-}
-
-.philosophy-principle-3 {
-  margin-top: clamp(20px, 4vw, 64px);
-}
-
-.philosophy-principle-3 p {
-  max-width: 255px;
 }
 
 .philosophy-principle-4 {
-  margin-top: clamp(100px, 14vw, 230px);
+  margin-top: clamp(100px, 14vw, 150px);
   text-align: right;
   margin-left: auto;
 }
 
 .philosophy-principle-4 p {
   margin-left: clamp(20px, 9vw, 124px);
-  max-width: 350px;
 }
 
 /* 각 원칙은 확대되며 제자리로 들어와, 쌓이는 레이어 감각을 만든다. */
@@ -574,6 +561,140 @@ body {
 .philosophy-pop.visible {
   opacity: 1;
   transform: translateY(0) scale(1);
+}
+
+/* Philosophy 카드 배경 장식 SVG — 텍스트 뒤에 겹쳐 배치, 1600px 기준 좌표를 vw로 환산 */
+.philosophy-principle-1,
+.philosophy-principle-2,
+.philosophy-principle-3,
+.philosophy-principle-4 {
+  position: relative;
+}
+
+.philosophy-principle h3,
+.philosophy-principle p {
+  position: relative;
+  z-index: 1;
+}
+
+.philosophy-deco {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.philosophy-deco img {
+  position: absolute;
+  object-fit: contain;
+}
+
+/* 화면이 좁아질수록 텍스트 쪽으로 안 밀리게, 오른쪽 정렬 카드는 오른쪽으로,
+   왼쪽 정렬 카드는 왼쪽으로 더 밀어냄 (vw라서 화면 크기에 비례해서 같이 커짐) */
+.philosophy-deco-coast,
+.philosophy-deco-effortless {
+  margin-right: clamp(-90.7px, -6vw, -54.4px);
+}
+
+.philosophy-deco-korean,
+.philosophy-deco-authenticity {
+  margin-left: clamp(-90.7px, -6vw, -54.4px);
+}
+
+/* vw 기준 좌표라 좁은 화면에서는 텍스트와 간격이 줄어들며 겹칠 수 있어서, 카드가 실제로
+   넉넉한 폭(맥북 기준으로 잡아둔 값)을 갖는 구간에서만 보이도록 컷오프를 넉넉히 잡음 */
+
+/* Coast to Concrete — 손 2장(같은 svg 좌우 대칭), 지도, 핀 2개 */
+.philosophy-deco-hand {
+  top: clamp(-119.4px, -7.9vw, -71.7px);
+  width: clamp(158.8px, 17.5vw, 264.6px);
+  height: clamp(167.8px, 18.5vw, 279.7px);
+  right: clamp(240.4px, 31.5vw, 538.7px);
+}
+
+.philosophy-deco-map {
+  top: clamp(-189px, -12.5vw, -113.4px);
+  right: clamp(-86.2px, 0.3vw, 27.3px);
+  width: clamp(212.3px, 23.4vw, 353.8px);
+  height: clamp(226.8px, 25vw, 378px);
+}
+.philosophy-deco-pin {
+  width: clamp(17.2px, 1.9vw, 28.7px);
+  height: clamp(20px, 2.2vw, 33.3px);
+}
+.philosophy-deco-pin-1 {
+  top: clamp(-98.3px, -6.5vw, -59px);
+  right: clamp(68.9px, 13.6vw, 204.9px);
+}
+.philosophy-deco-pin-2 {
+  top: clamp(84.4px, 9.3vw, 140.6px);
+  right: clamp(97.1px, 14.7vw, 250.8px);
+}
+
+/* The Korean Edit — 배경 장식 3장 */
+.philosophy-deco-korean-1 {
+  top: clamp(45.4px, 6vw, 95.6px);
+  left: clamp(199.6px, 29vw, 482.6px);
+  width: clamp(81.6px, 9vw, 136.1px);
+  height: clamp(163.3px, 18vw, 272.2px);
+  transform: rotate(-11deg);
+}
+.philosophy-deco-korean-2 {
+  top: clamp(-37.8px, -2.5vw, -22.7px);
+  left: clamp(199.6px, 29vw, 479.6px);
+  width: clamp(145.2px, 16vw, 280px);
+  height: clamp(145.2px, 16vw, 280px);
+  z-index: -1;
+}
+.philosophy-deco-korean-3 {
+  top: clamp(9.1px, 3vw, 44.1px);
+  left: clamp(272.2px, 36vw, 621.6px);
+  width: clamp(145.2px, 16vw, 241.9px);
+  height: clamp(145.2px, 16vw, 241.9px);
+  transform: rotate(13deg);
+}
+
+/* Authenticity — 텍스처 배너, 카메라, 폴라로이드 부채꼴 */
+.philosophy-deco-strip {
+  top: clamp(-110.4px, -7.3vw, -66.2px);
+  left: clamp(52px, -2.5vw, -22.7px);
+  width: clamp(172.4px, 19vw, 287.3px);
+  height: clamp(163.3px, 18vw, 272.2px);
+}
+.philosophy-deco-camera {
+  top: clamp(56.2px, 6.2vw, 93.7px);
+  left: clamp(20.9px, 13.3vw, 215.8px);
+  width: clamp(226.8px, 25vw, 378px);
+  height: clamp(153.3px, 16.9vw, 255.5px);
+  transform: rotate(-13deg);
+}
+.philosophy-deco-photofan {
+  top: clamp(10.9px, 1.2vw, 18.1px);
+  left: clamp(160.3px, 27vw, 453.2px);
+  width: clamp(90.7px, 10vw, 151.2px);
+  height: clamp(110.7px, 12.2vw, 184.5px);
+  transform: rotate(43deg);
+}
+
+/* Effortless, End to End — 축음기, 음표 */
+.philosophy-deco-gramophone {
+  top: clamp(-243.4px, -16.1vw, -146.1px);
+  right: clamp(352.3px, 41.3vw, 697.9px);
+  width: clamp(172.4px, 19vw, 287.3px);
+  height: clamp(465.4px, 51.3vw, 775.7px);
+}
+.philosophy-deco-musicnote {
+  top: clamp(-213.2px, -14.1vw, -127.9px);
+  right: clamp(362.9px, 42vw, 714.9px);
+  width: clamp(52.2px, 5.75vw, 86.9px);
+  height: clamp(298.5px, 32.9vw, 497.4px);
+}
+.philosophy-deco-heart {
+  top: clamp(-187.5px, -12.4vw, -112.5px);
+  right: clamp(327.6px, 38.8vw, 654.9px);
+  width: clamp(43.1px, 4.75vw, 71.8px);
+  height: clamp(298.5px, 32.9vw, 497.4px);
+  transform: scaleX(-1);
 }
 
 /* About > 04 History("Our journey so far"): 연도별 타임라인 + 사진 */

@@ -75,9 +75,15 @@ const BOOKING_STEPS = [
 
 // TODO: 나머지 실제 로고 파일 전달받으면 텍스트 placeholder를 이미지로 교체
 const PARTNER_LOGOS: { name: string; logo?: string }[] = [
-  { name: 'Wedding Essentials Magazine' },
-  { name: 'Bridal and Breakfast' },
-  { name: 'Hicheed SG' },
+  {
+    name: 'Wedding Essentials Magazine',
+    logo: '/partnership/partnership-logo-wedding-essentials.png',
+  },
+  {
+    name: 'Bridal and Breakfast',
+    logo: '/partnership/partnership-logo-bride-and-breakfast.png',
+  },
+  { name: 'Hicheed SG', logo: '/partnership/partnership-logo-hitcheed.png' },
   { name: 'Coming Soon', logo: '/partnership/Partnership-coming-soon-logo.svg' },
 ];
 
