@@ -204,8 +204,8 @@ export default function JourneyPin({
     };
   }, [photos.length]);
 
-  // "2025" 타이틀이 화면 위쪽 가까이(더 스크롤해서 올라온 뒤)까지 왔을 때만 키컬러로 전환 —
-  // 감지 밴드를 화면 상단 쪽으로 둬서 더 내려야(스크롤해야) 발동함.
+  // "2025" 타이틀이 화면 중앙 부근에 들어오면 바로 키컬러로 전환 —
+  // 밴드를 화면 상단 쪽(15~35%)이 아니라 중앙(40~60%)으로 내려서 더 일찍 발동하게 함
   useEffect(() => {
     const el = title2025Ref.current;
     if (!el) return;
@@ -217,19 +217,19 @@ export default function JourneyPin({
     return () => observer.disconnect();
   }, []);
 
-  // "2026"은 자기 위치와 무관하게 "2025가 화면(뷰포트) 밖으로 완전히 나갔는지"만 보고
-  // 즉시 전환됨 — 밴드가 아니라 실제 뷰포트(top=0 기준) 자체를 관찰해서, 화면을 벗어나는
-  // 정확한 순간(top<0로 넘어가는 시점)에만 콜백이 발생하도록 별도 관찰자로 분리함.
+  // "2026"은 자기 위치와 무관하게 "2025가 sticky 헤더(56px+서브탭바=106px) 뒤로
+  // 완전히 숨었는지"만 보고 즉시 전환됨 — rootMargin으로 관찰 영역 자체를 106px만큼
+  // 줄여서, 실제 눈에 안 보이게 되는 시점에 정확히 isIntersecting이 false로 바뀌게 함
   useEffect(() => {
     const el = title2025Ref.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIs2026InView(
-          !entry.isIntersecting && entry.boundingClientRect.top < 0,
+          !entry.isIntersecting && entry.boundingClientRect.top < 106,
         );
       },
-      { threshold: 0 },
+      { rootMargin: '-106px 0px 0px 0px', threshold: 0 },
     );
     observer.observe(el);
     return () => observer.disconnect();

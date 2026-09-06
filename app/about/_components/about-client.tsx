@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import Image from 'next/image';
 import SubTabBar from '@/components/sub-tab-bar';
 import StatsBar from './stats-bar';
@@ -123,6 +123,10 @@ export default function AboutClient({
   const introRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef<HTMLDivElement>(null);
   const philosophyRef = useRef<HTMLDivElement>(null);
+  const minjuPhotoRef = useRef<HTMLDivElement>(null);
+  const [minjuCaptionLeft, setMinjuCaptionLeft] = useState<number | null>(
+    null,
+  );
 
   // 헤드라인 → 본문1 → 본문2 → 인용구 순서로 스크롤 진입 시 순차 페이드인
   // 뷰포트를 벗어나면 리셋해서, 다시 스크롤해 들어올 때마다 재생된다.
@@ -221,6 +225,28 @@ export default function AboutClient({
       observer.disconnect();
       timers.forEach(clearTimeout);
     };
+  }, []);
+
+  // Minju 사진(object-contain + object-right)은 실제 사진이 박스보다 좁게 보이면서
+  // 왼쪽에 빈 여백이 생길 수 있음 — 캡션이 그 여백이 아니라 항상 "사진의 실제 왼쪽 끝"
+  // 위에 오도록, 렌더링된 이미지 크기를 직접 계산해서 캡션의 left 위치를 정확히 맞춤
+  useEffect(() => {
+    function recompute() {
+      const container = minjuPhotoRef.current;
+      const img = container?.querySelector('img');
+      if (!container || !img || !img.naturalWidth || !img.naturalHeight)
+        return;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
+      const renderedWidth = img.naturalWidth * scale;
+      // object-right라 빈 여백은 항상 왼쪽에만 생김. +16은 사진 끝에 너무 딱
+      // 붙지 않도록 살짝 오른쪽(사진 안쪽)으로 띄우는 여백
+      setMinjuCaptionLeft(cw - renderedWidth + 16);
+    }
+    recompute();
+    window.addEventListener('resize', recompute);
+    return () => window.removeEventListener('resize', recompute);
   }, []);
 
   return (
@@ -405,19 +431,43 @@ export default function AboutClient({
                       </div>
                     </div>
                     <div className="how-started-photos">
-                      <div className="how-started-photo">
+                      <div
+                        ref={minjuPhotoRef}
+                        className="how-started-photo how-started-photo-minju"
+                      >
                         <Image
                           src="/about/minju.jpg"
                           alt="Minju, Co-founder"
                           fill
-                          className="object-cover"
+                          className="object-contain object-right-bottom"
+                          onLoad={(e) => {
+                            const img = e.currentTarget;
+                            const container = minjuPhotoRef.current;
+                            if (!container) return;
+                            const cw = container.clientWidth;
+                            const ch = container.clientHeight;
+                            const scale = Math.min(
+                              cw / img.naturalWidth,
+                              ch / img.naturalHeight,
+                            );
+                            setMinjuCaptionLeft(
+                              cw - img.naturalWidth * scale + 16,
+                            );
+                          }}
                         />
-                        <div className="how-started-photo-caption">
-                          <p className="font-bold">Minju(Emily)</p>
+                        <div
+                          className="how-started-photo-caption"
+                          style={
+                            minjuCaptionLeft !== null
+                              ? { left: minjuCaptionLeft }
+                              : undefined
+                          }
+                        >
+                          <p className="font-bold">Minju (Emily)</p>
                           <p>Co-founder</p>
                         </div>
                       </div>
-                      <div className="how-started-photo">
+                      <div className="how-started-photo how-started-photo-morgan">
                         <Image
                           src="/about/morgan.jpg"
                           alt="Saeyoung (Morgan), Co-founder"

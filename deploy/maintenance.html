@@ -52,6 +52,12 @@
     margin-top: 24px;
     font-variant-numeric: tabular-nums;
   }
+  .countdown-note {
+    font-size: 12px;
+    color: #999;
+    margin-top: 8px;
+    display: none;
+  }
 </style>
 </head>
 <body>
@@ -64,6 +70,9 @@
       Please check back again shortly.
     </p>
     <div class="countdown" id="countdown"></div>
+    <p class="countdown-note" id="countdown-note">
+      Estimated time — actual downtime may vary.
+    </p>
   </div>
   <script>
     // /maintenance-end.txt에 남은 점검 종료 시각(초 단위 유닉스 타임)이 있으면
@@ -77,6 +86,7 @@
         if (!endEpoch) return;
 
         const el = document.getElementById('countdown');
+        document.getElementById('countdown-note').style.display = 'block';
         function tick() {
           const remaining = endEpoch - Math.floor(Date.now() / 1000);
           if (remaining <= 0) {

@@ -355,10 +355,13 @@ body {
 
 .how-started-photo {
   position: relative;
-  width: 88%;
-  min-height: 550px;
+  width: 100%;
   flex: 1;
   overflow: hidden;
+}
+
+.how-started-photo.how-started-photo-minju {
+  min-height: 600px;
 }
 
 .how-started-photo-caption {
@@ -1411,6 +1414,13 @@ body {
   .how-started-photo {
     width: 100%;
     aspect-ratio: 4 / 5;
+  }
+
+  /* 데스크탑 전용 min-height(600px)가 좁은 화면에서 박스를 실제 사진보다 훨씬
+     길게 만들어서, 세로로 위아래 여백이 생기며 사진이 박스 가운데로 뜨는 문제를
+     막기 위해 모바일에서는 aspect-ratio만으로 높이가 정해지게 리셋함 */
+  .how-started-photo.how-started-photo-minju {
+    min-height: 0;
   }
 
   .how-started-description {
