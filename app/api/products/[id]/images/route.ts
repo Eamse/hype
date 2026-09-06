@@ -106,3 +106,32 @@ export async function DELETE(
 
   return NextResponse.json({ ok: true });
 }
+
+export async function PATCH(
+  request: NextRequest,
+  props: { params: Promise<{ id: string }> },
+) {
+  const adminId = await getAdminId(request);
+  if (!adminId)
+    return NextResponse.json({ error: 'Unautorized' }, { status: 401 });
+  const { id } = await props.params;
+  const productId = parseId(id);
+  const body = await request.json();
+  const order = body.order;
+  if (productId === null)
+    return NextResponse.json({ error: 'Invaild ID' }, { status: 400 });
+  const imageIdParam = request.nextUrl.searchParams.get('imageId');
+  const imageId = imageIdParam !== null ? Number(imageIdParam) : NaN;
+  if (!Number.isInteger(imageId) || imageId <= 0) {
+    return NextResponse.json({ error: 'Invaild imageId' }, { status: 400 });
+  }
+  const image = await prisma.productImage.findUnique({
+    where: { id: imageId },
+  });
+  if (!image || image.productId !== productId) {
+    return NextResponse.json({ error: 'Image not found' }, { status: 404 });
+  }
+  await prisma.productImage.update({ where: { id: imageId }, data: { order } });
+
+  return NextResponse.json({ ok: true });
+}

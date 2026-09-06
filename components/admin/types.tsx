@@ -5,7 +5,7 @@ export type Product = {
   section: string;
   title: string;
   imageUrl: string | null;
-  images: { id: number; url: string; order: number }[];
+  images: { id: number; url: string; order: number; thumbUrl: string | null }[];
   order: number;
 };
 

@@ -80,7 +80,7 @@ export default function ProductRow({
           onMouseLeave={() => setImgHover(false)}
         >
           {product.imageUrl ? (
-            <Image src={product.imageUrl} alt={product.title} fill sizes="300px" style={{ objectFit: 'cover' }} />
+            <Image src={product.imageUrl} alt={product.title} fill sizes="300px" quality={30} style={{ objectFit: 'cover' }} />
           ) : (
             <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#000' }}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2">
@@ -162,7 +162,7 @@ export default function ProductRow({
           </button>
           {!localExpanded && product.imageUrl && (
             <div style={{ position: 'relative', width: 60, height: 60, borderRadius: 8, overflow: 'hidden' }}>
-              <Image src={product.imageUrl} alt={product.title} fill sizes="60px" style={{ objectFit: 'cover' }} />
+              <Image src={product.imageUrl} alt={product.title} fill sizes="60px" quality={30} style={{ objectFit: 'cover' }} />
             </div>
           )}
         </div>

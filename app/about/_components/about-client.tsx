@@ -413,7 +413,7 @@ export default function AboutClient({
                           className="object-cover"
                         />
                         <div className="how-started-photo-caption">
-                          <p className="font-bold">Minju</p>
+                          <p className="font-bold">Minju(Emily)</p>
                           <p>Co-founder</p>
                         </div>
                       </div>
@@ -653,7 +653,6 @@ export default function AboutClient({
                 >
                   {section.label}
                 </h2>
-                {/* TODO: {section.label} 콘텐츠 추가 */}
                 <p style={{ color: '#000', fontSize: 14 }}>
                   {brand === 'hype-snap' ? 'HYPE SNAP' : 'HYPE WEDDING'}{' '}
                   {section.label} 콘텐츠 들어갈 자리

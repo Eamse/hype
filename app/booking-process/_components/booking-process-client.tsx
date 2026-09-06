@@ -180,15 +180,21 @@ export default function BookingProcessClient() {
         <StepRow steps={row2} startNum={4} />
       </div>
 
-      <Link
-        href={inquiryHref}
-        className="booking-process-cta"
-        // className="booking-process-cta inquiry-rise"
-        // data-reveal
-        // data-reveal-delay="500"
-      >
-        Inquiry Now
-      </Link>
+      <div className="booking-process-actions">
+        <Link
+          href={inquiryHref}
+          className="booking-process-cta"
+          // className="booking-process-cta inquiry-rise"
+          // data-reveal
+          // data-reveal-delay="500"
+        >
+          Inquiry Now
+        </Link>
+        {/* TODO: 실제 미팅 예약 링크(캘린들리 등) 전달받으면 교체 */}
+        <Link href="#" className="booking-process-cta">
+          Book Online Meeting
+        </Link>
+      </div>
     </section>
   );
 }
