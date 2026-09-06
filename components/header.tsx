@@ -211,6 +211,41 @@ function ReviewNavIcon() {
     </svg>
   );
 }
+function PackageNavIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 8 12 3 3 8l9 5 9-5Z" />
+      <path d="M3 8v8l9 5 9-5V8" />
+      <path d="M12 13v8" />
+    </svg>
+  );
+}
+function InquiryNavIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m3 7 9 6 9-6" />
+    </svg>
+  );
+}
 export default function Header(props: { brand?: Brand }) {
   return (
     <Suspense fallback={<div style={{ height: 56 }} />}>
@@ -862,7 +897,17 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
           {(
             [
               { label: 'Home', href: '/', icon: <HomeNavIcon /> },
+              {
+                label: 'Package',
+                href: '/packages',
+                icon: <PackageNavIcon />,
+              },
               { label: 'Review', href: '/review', icon: <ReviewNavIcon /> },
+              {
+                label: 'Inquiry',
+                href: '/inquiry',
+                icon: <InquiryNavIcon />,
+              },
               {
                 label: 'Menu',
                 icon: <HamburgerIcon />,
