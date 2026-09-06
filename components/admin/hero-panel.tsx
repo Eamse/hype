@@ -186,6 +186,7 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
                       alt={`hero-${i}`}
                       fill
                       sizes="200px"
+                      quality={30}
                       style={{ objectFit: 'cover' }}
                     />
                   )}

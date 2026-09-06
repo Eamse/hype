@@ -100,7 +100,10 @@ export default function ShootDayTimelineSection() {
         </div>
 
         <div className="timeline-line-row">
-          <div className="timeline-connector-line" />
+          <div
+            data-offer-reveal
+            className="timeline-connector-line offer-fade"
+          />
           {SUMMER_TIMES.map((t, idx) => (
             <div
               key={t}
@@ -144,7 +147,11 @@ export default function ShootDayTimelineSection() {
         </div>
 
         <div className="timeline-line-row">
-          <div className="timeline-connector-line timeline-connector-line--winter" />
+          <div
+            data-offer-reveal
+            data-offer-reveal-delay={WINTER_BASE}
+            className="timeline-connector-line timeline-connector-line--winter offer-fade"
+          />
           {WINTER_TIMES.map((t, idx) => (
             <div
               key={t}

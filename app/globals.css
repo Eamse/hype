@@ -490,7 +490,7 @@ body {
 .philosophy-principles {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: clamp(40px, 8vw, 132px);
+  column-gap: clamp(3px, 8vw, 15px);
   row-gap: clamp(40px, 6vw, 100px);
   padding-top: clamp(90px, 9vw, 150px);
 }
@@ -1255,6 +1255,17 @@ body {
   background: #000;
 }
 
+/* 라인이 왼쪽에서 오른쪽으로 그려지듯 등장 — 점들과 같은 시점에 같이 재생됨 */
+.timeline-connector-line.offer-fade {
+  opacity: 1;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.7s ease;
+}
+.timeline-connector-line.offer-fade.visible {
+  transform: scaleX(1);
+}
+
 .timeline-dot-cell {
   grid-row: 1;
   position: relative;
@@ -1815,10 +1826,19 @@ body {
   gap: clamp(56px, 7vw, 92px);
 }
 
+.booking-process-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  width: fit-content;
+  margin: clamp(27px, 4vw, 62px) auto 0;
+}
+
 .booking-process-cta {
   display: block;
   width: fit-content;
-  margin: clamp(27px, 4vw, 62px) auto 0;
+  min-width: 260px;
   padding: 14px 40px;
   border: 1.5px solid #000;
   border-radius: 4px;

@@ -73,6 +73,7 @@ const GREEN = 'text-[#2D5A45]';
 const GRAY1 = 'text-[#444444]';
 const GRAY2 = 'text-[#666666]';
 const GRAY3 = 'text-[#AAAAAA]';
+const GRAY4 = 'text-[rgb(85, 85, 85)]';
 const BLACK = 'text-[#0D0D0D]';
 const BORDER = 'border-[#EEEEEE]';
 
@@ -297,7 +298,7 @@ export default function WeddingDetail({
               {activePkgs.map((pkg) => (
                 <span
                   key={pkg.id}
-                  className={`text-[12px] py-[5px] px-[14px] border rounded-[6px] cursor-pointer ${tabState(
+                  className={`text-[13px] py-[5px] px-[14px] font-normal tracking-normal border rounded-[2px] cursor-pointer ${tabState(
                     activePackageId === pkg.id,
                   )}`}
                   onClick={() => setActivePackageId(pkg.id)}
@@ -494,26 +495,28 @@ export default function WeddingDetail({
             >
               {activePackage.isSinglePrice ? (
                 <div className="py-4 px-3 sm:py-5 sm:px-6 flex flex-col gap-1">
-                  <span className="self-center inline-block text-[10px] font-medium py-[3px] px-2 rounded-[4px] mb-2 w-fit bg-[#EAF0EC] text-[#2D5A45]">
-                    Package Price
-                  </span>
+                  <div className="flex flex-col items-center gap-[2px] text-center">
+                    <span className="text-[10px] sm:text-[14px] font-bold leading-tight text-[#666666]">
+                      PACKAGE PRICE
+                    </span>
+                  </div>
                   <div
-                    className={`text-[18px] sm:text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
+                    className={`text-[16px] text-center font-normal ${BLACK} tracking-[-0.02em]`}
                   >
                     {activePrice
-                      ? `USD${(
+                      ? `USD ${(
                           activePrice.priceSNS || activePrice.priceNoSNS
                         ).toLocaleString()}`
                       : '···'}
                   </div>
-                  <a
+                  {/* <a
                     href={INQUIRY_FORM_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#2D5A45] text-white"
                   >
                     Inquire Now →
-                  </a>
+                  </a> */}
                 </div>
               ) : (
                 <>
@@ -532,10 +535,10 @@ export default function WeddingDetail({
                         </span>
                       </div>
                       <div
-                        className={`text-[18px] sm:text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
+                        className={`text-[16px] text-center font-normal ${BLACK} tracking-[-0.02em]`}
                       >
                         {activePrice
-                          ? `USD${activePrice.priceSNS.toLocaleString()}`
+                          ? `USD ${activePrice.priceSNS.toLocaleString()}`
                           : '···'}
                       </div>
                       {/* <a
@@ -559,10 +562,10 @@ export default function WeddingDetail({
                         </span>
                       </div>
                       <div
-                        className={`text-[18px] sm:text-[22px] text-center font-bold ${BLACK} tracking-[-0.02em]`}
+                        className={`text-[16px] text-center font-normal ${BLACK} tracking-[-0.02em]`}
                       >
                         {activePrice
-                          ? `USD${activePrice.priceNoSNS.toLocaleString()}`
+                          ? `USD ${activePrice.priceNoSNS.toLocaleString()}`
                           : '···'}
                       </div>
                       {/* <a
@@ -633,7 +636,7 @@ export default function WeddingDetail({
             </div>
           ) : (
             <>
-              <p className={`text-[14px] font-normal ${GRAY2} mb-4`}>
+              <p className={`text-[14px] font-normal ${GRAY4} mb-4`}>
                 Ready to book or have questions?
               </p>
               <a
@@ -646,13 +649,13 @@ export default function WeddingDetail({
               </a>
             </>
           )}
-          <p className={`text-[12px] font-normal ${GRAY3} mt-3`}>
+          <p className={`text-[12px] font-normal ${GRAY4} mt-3`}>
             Instagram:{' '}
             <a
               href="https://instagram.com/hypewedd_ing"
               target="_blank"
               rel="noopener noreferrer"
-              className={`${GRAY3} no-underline`}
+              className={`${GRAY4} no-underline`}
             >
               @hypewedd_ing
             </a>

@@ -32,7 +32,6 @@ const STATS: Stat[] = [
 ];
 
 const DURATION = 1400;
-const STAGGER = 150;
 
 function useCountUp(target: number, start: boolean, delay: number) {
   const [value, setValue] = useState(0);
@@ -129,12 +128,7 @@ export default function StatsBar() {
             className="hidden md:block w-px self-stretch bg-black"
           />
         ),
-        <StatColumn
-          key={stat.sublabel}
-          stat={stat}
-          start={visible}
-          delay={idx * STAGGER}
-        />,
+        <StatColumn key={stat.sublabel} stat={stat} start={visible} delay={0} />,
       ])}
     </div>
   );
