@@ -84,6 +84,7 @@ function SubTabBarInner({ tabs }: { tabs: SubTab[] }) {
       }}
     >
       <div
+        className="sub-tab-bar-scroll"
         style={{
           maxWidth: 1200,
           margin: '0 auto',

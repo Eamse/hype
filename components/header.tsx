@@ -629,6 +629,8 @@ function HeaderInner({ brand = 'hype-wedding' }: { brand?: Brand }) {
             display: 'flex',
             flexDirection: 'column',
             padding: '24px 24px 32px',
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
           }}
         >
           {/* 상단: 아이콘 */}

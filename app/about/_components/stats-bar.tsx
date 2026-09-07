@@ -74,7 +74,7 @@ function StatColumn({
   const value = useCountUp(stat.target, start, delay);
 
   return (
-    <div className="flex-none">
+    <div className="flex-none flex flex-col items-start text-left">
       {/* 모든 컬럼에 동일한 높이를 예약해서 숫자 줄 baseline을 맞춤 */}
       <p className="text-[clamp(0.85rem,1.4vw,1rem)] font-bold italic mb-0.5 h-6 leading-6">
         {stat.topLabel ?? ' '}
@@ -117,7 +117,7 @@ export default function StatsBar() {
   return (
     <div
       ref={ref}
-      className="flex flex-col md:flex-row md:items-center md:justify-around md:gap-x-15 md:px-25 py-20"
+      className="flex flex-col items-center md:flex-row md:items-center md:justify-around md:gap-x-15 md:px-25 py-20"
     >
       {STATS.flatMap((stat, idx) => [
         // 모든 항목이 같은 flex 컨테이너의 직속 형제라서 gap이 구분선 양옆에

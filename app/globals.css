@@ -237,7 +237,25 @@ body {
   padding-inline: clamp(20px, 4vw, 64px);
 } */
 
-/* About Introduction 우측 패널: 긴 이미지의 중앙이 아닌 상단 흐름에 텍스트를 둔다. */
+/* Philosophy 장식 이미지가 카드 밖으로 크게 삐져나가 375px 등 좁은 화면에서 페이지가
+   가로로 밀리는 것을 막음 — overflow-x:hidden을 건 요소는 자기 자신이 스크롤
+   컨테이너가 되면서 그 자손의 position:sticky를 뷰포트가 아니라 자기 기준으로
+   깨버림(서브탭에서 한 번 겪음). about-page-content 전체에 걸면 History 섹션의
+   sticky 사진 패널까지 같이 깨지므로, Philosophy 섹션 래퍼에만 좁게 적용 */
+.philosophy-content {
+  overflow-x: hidden;
+}
+
+/* 서브탭 바가 좁은 화면에서 가로 스크롤되는데, 스크롤바가 그대로 보여서
+   지저분해 보이므로 숨김(스크롤 기능 자체는 유지) */
+.sub-tab-bar-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.sub-tab-bar-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 .about-intro-copy {
   display: flex;
   width: 100%;
@@ -913,6 +931,55 @@ body {
 
   .journey-milestone {
     white-space: normal;
+    font-size: 15px;
+  }
+
+  /* 날짜 칸이 min-width:100px로 고정돼있어서, "Apr"/"May"처럼 짧은 날짜는
+     텍스트 뒤로 빈 공간이 많이 남고 거기에 gap 26px까지 더해져서 날짜와
+     본문 사이가 유독 크게 벌어져 보임 — 모바일에서는 폭을 줄이고 gap도 줄임 */
+  .journey-timeline-row {
+    gap: 10px;
+  }
+
+  .journey-date {
+    min-width: 64px;
+    font-size: 19px;
+  }
+
+  /* 데스크탑은 텍스트가 한 줄(nowrap)이라 row가 44px로 고정되고, 점이 그
+     44px 한가운데(약 22~25px)에 오는 걸 전제로 연결선 top/bottom이
+     하드코딩돼있음. 모바일은 텍스트가 여러 줄로 줄바꿈되면서 row 높이가
+     내용마다 들쭉날쭉해지고, align-items:center라 점도 같이 아래로 밀려서
+     연결선이 다음 점까지 못 닿고 끊겨 보임 — 점을 row 맨 위(flex-start)에
+     고정해서 위치를 내용 높이와 무관하게 예측 가능하게 만들고, 연결선도
+     그 고정된 위치(점 반지름 11.5px) 기준으로 다시 계산 */
+  .journey-timeline-row {
+    align-items: flex-start;
+  }
+
+  .journey-timeline-item:not(:last-child)::before {
+    top: 11.5px;
+    bottom: -11.5px;
+  }
+
+  /* 로고 배지는 원래 한 줄(nowrap) 텍스트 끝에 겹쳐 뜨는 걸 전제로 높이 1px
+     짜리 span + absolute 이미지로 만들어짐 — 모바일에서 텍스트가 여러 줄로
+     줄바꿈되면 배지가 줄 중간에 걸려서 다음 줄 글자 위로 겹쳐 보임.
+     그래서 모바일에서는 absolute를 풀고 실제 공간을 차지하는 블록으로 전환 */
+  .journey-logo-badge {
+    display: block;
+    width: 44px;
+    height: 44px;
+    margin-top: 8px;
+  }
+
+  .journey-logo-badge img {
+    position: static;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 44px;
+    height: 44px;
   }
 }
 
@@ -1358,7 +1425,8 @@ body {
 
 @media (max-width: 900px) {
   .timeline-row,
-  .timeline-boxes {
+  .timeline-boxes,
+  .timeline-line-row {
     grid-template-columns: 90px repeat(6, minmax(90px, 1fr));
   }
   .timeline-wrap {
@@ -1413,7 +1481,7 @@ body {
 
   .how-started-photo {
     width: 100%;
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 4 / 3.5;
   }
 
   /* 데스크탑 전용 min-height(600px)가 좁은 화면에서 박스를 실제 사진보다 훨씬
@@ -1460,6 +1528,138 @@ body {
   .philosophy-principle-3,
   .philosophy-principle-4 {
     margin-top: 0;
+  }
+
+  /* 모바일에서는 The Korean Edit/Authenticity를 왼쪽 끝에, Coast to
+     Concrete/Effortless, End to End를 오른쪽 끝에 완전히 붙임 — 데스크탑용
+     인덴트(margin-left clamp)를 없애서 카드 패딩 경계까지 바짝 붙게 함 */
+  .philosophy-principle-1,
+  .philosophy-principle-3 {
+    margin-left: 0;
+  }
+
+  /* 데스크탑 값(vw)은 그대로 두고, 모바일 1열 스택에서만 카드
+     (.philosophy-principle, max-width 650px) 폭 기준 %/cqw로 다시 계산 —
+     뷰포트 기준 vw는 2열→1열 전환 시 카드 폭과 비율이 어긋나서 장식이
+     아래 카드 텍스트까지 침범했음. .philosophy-deco에만 컨테이너를 걸어서
+     (텍스트 없는 순수 장식 레이어라 h3/p 줄바꿈 계산에는 영향 없음) top도
+     카드 폭 기준(cqw)으로 맞춤 */
+  .philosophy-deco {
+    container-type: inline-size;
+  }
+
+  .philosophy-deco-coast,
+  .philosophy-deco-effortless {
+    margin-right: clamp(-90.7px, -8.37%, -54.4px);
+  }
+
+  .philosophy-deco-korean,
+  .philosophy-deco-authenticity {
+    margin-left: clamp(-90.7px, -8.37%, -54.4px);
+  }
+
+  .philosophy-deco-hand {
+    top: -11.03cqw;
+    width: clamp(79.4px, 27.36%, 271.6px);
+    height: auto;
+    aspect-ratio: 264.6 / 279.7;
+    right: clamp(238.4px, 70.88%, 325.7px);
+  }
+
+  .philosophy-deco-map {
+    top: -25.45cqw;
+    right: clamp(-86.2px, -0.8%, 21.3px);
+    width: clamp(106.15px, 52.21%, 353.8px);
+    height: auto;
+    aspect-ratio: 353.8 / 378;
+  }
+
+  .philosophy-deco-pin {
+    width: clamp(8.6px, 3%, 28.7px);
+    height: auto;
+    aspect-ratio: 28.7 / 33.3;
+  }
+
+  .philosophy-deco-pin-1 {
+    top: --11.1cqw;
+    right: clamp(68.9px, 31.52%, 204.9px);
+  }
+
+  .philosophy-deco-pin-2 {
+    top: 24.63cqw;
+    right: clamp(97.1px, 36.58%, 150.8px);
+  }
+
+  .philosophy-deco-korean-1 {
+    top: -4.29cqw;
+    left: clamp(199.6px, 74.25%, 273.6px);
+    width: clamp(40.8px, 10.47%, 136.1px);
+    height: auto;
+    aspect-ratio: 136.1 / 272.2;
+  }
+
+  .philosophy-deco-korean-2 {
+    top: -14.49cqw;
+    left: clamp(199.6px, 73.78%, 269.6px);
+    width: clamp(72.6px, 21.54%, 280px);
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .philosophy-deco-korean-3 {
+    top: -7.22cqw;
+    left: clamp(272.2px, 95.63%, 316.6px);
+    width: clamp(72.6px, 18.61%, 241.9px);
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .philosophy-deco-strip {
+    top: -12.18cqw;
+    left: clamp(45px, -3.49%, -22.7px);
+    width: clamp(86.2px, 32.1%, 287.3px);
+    height: auto;
+    aspect-ratio: 287.3 / 272.2;
+  }
+
+  .philosophy-deco-camera {
+    top: 17.42cqw;
+    left: clamp(20.9px, 51.2%, 215.8px);
+    width: clamp(113.4px, 29.07%, 378px);
+    height: auto;
+    aspect-ratio: 378 / 255.5;
+  }
+
+  .philosophy-deco-photofan {
+    top: 11.78cqw;
+    left: clamp(160.3px, 69.72%, 453.2px);
+    width: clamp(45.35px, 11.63%, 151.2px);
+    height: auto;
+    aspect-ratio: 151.2 / 184.5;
+  }
+
+  .philosophy-deco-gramophone {
+    top: -15.48cqw;
+    right: clamp(152.3px, 89.37%, 492.9px);
+    width: clamp(86.2px, 22.1%, 287.3px);
+    height: auto;
+    aspect-ratio: 287.3 / 775.7;
+  }
+
+  .philosophy-deco-musicnote {
+    top: -13.68cqw;
+    right: clamp(262.9px, 89.98%, 689.9px);
+    width: clamp(26.1px, 6.68%, 86.9px);
+    height: auto;
+    aspect-ratio: 86.9 / 497.4;
+  }
+
+  .philosophy-deco-heart {
+    top: -11.31cqw;
+    right: clamp(300.6px, 83.75%, 639.9px);
+    width: clamp(21.55px, 5.53%, 74.8px);
+    height: auto;
+    aspect-ratio: 71.8 / 497.4;
   }
 }
 
@@ -2059,6 +2259,12 @@ body {
 }
 
 @media (max-width: 767px) {
+  /* row 안(1↔2↔3, 4↔5↔6↔7)과 row 사이(3↔4) 간격이 같아지도록 —
+     row 사이는 원래 데스크탑 2줄 레이아웃용 큰 gap(56~92px)이 그대로 남아있었음 */
+  .inquiry-steps {
+    gap: 40px;
+  }
+
   .inquiry-step-row {
     flex-direction: column;
     align-items: center;
@@ -2070,8 +2276,20 @@ body {
     display: none;
   }
 
+  /* 스타일이 없는 빈 div라 원래 눈에 안 보이지만, column 방향에서는 실제
+     flex item으로 gap 한 칸을 더 차지해서 3↔4번 사이만 간격이 2배로 벌어짐 */
+  .inquiry-step-line {
+    display: none;
+  }
+
   .inquiry-step-desc {
     max-width: 260px;
+  }
+
+  /* "Secure Date" 뱃지가 column 위쪽으로 절대위치라 gap 40px 안으로 파고들어서
+     이전 스텝과의 간격이 다른 스텝 사이보다 훨씬 좁아 보임 — 뱃지만큼 밀어서 보정 */
+  .inquiry-step-col:has(.inquiry-step-badge) {
+    margin-top: 30px;
   }
 
   .inquiry-cta-buttons {
