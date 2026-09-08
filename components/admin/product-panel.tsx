@@ -251,6 +251,7 @@ export default function ProductPanel({ category }: { category: Category }) {
       LOCATIONS.map(({ value }) =>
         fetch(
           `/api/products?section=${encodeURIComponent(sectionFor(category, value))}`,
+          { cache: 'no-store' },
         ).then((r) => r.json()),
       ),
     );

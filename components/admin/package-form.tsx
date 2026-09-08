@@ -4,7 +4,14 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { inputStyle, labelStyle, btnStyle } from './types';
 import PackagePreview from './package-preview';
-import { toggleId, type PkgForm, type Inclusion, type Addon, type Partner } from './wedding-photographer-types';
+import {
+  toggleId,
+  type PkgForm,
+  type Inclusion,
+  type Addon,
+  type Partner,
+  type PackageImage,
+} from './wedding-photographer-types';
 import { resizeImageFile } from '@/lib/client-image-resize';
 
 // ── Package Form ──────────────────────────────────────────────────────────────
@@ -19,6 +26,7 @@ export default function PackageForm({
   saving,
   hideButtons = false,
   packageId,
+  initialImages = [],
 }: {
   form: PkgForm;
   onChange: (f: PkgForm) => void;
@@ -31,10 +39,78 @@ export default function PackageForm({
   hideButtons?: boolean;
   // 기존 패키지 수정일 때만 전달됨 — 새 패키지 작성 중엔 id가 없어 썸네일 업로드 불가
   packageId?: number;
+  // 유저페이지 갤러리가 실제로 읽는 건 Package.images라서, 상세 이미지는
+  // Product가 아니라 여기(Package) 단위로 관리해야 화면에 반영됨
+  initialImages?: PackageImage[];
 }) {
   const thumbInputRef = useRef<HTMLInputElement>(null);
   const [thumbUploading, setThumbUploading] = useState(false);
   const [thumbError, setThumbError] = useState<string | null>(null);
+
+  const detailInputRef = useRef<HTMLInputElement>(null);
+  const [images, setImages] = useState<PackageImage[]>(initialImages);
+  const [imagesUploading, setImagesUploading] = useState(false);
+  const [imagesError, setImagesError] = useState<string | null>(null);
+
+  async function handleDetailUpload(files: File[]) {
+    if (!packageId || files.length === 0) return;
+    setImagesUploading(true);
+    setImagesError(null);
+    try {
+      for (const file of files) {
+        const fd = new FormData();
+        fd.append('image', file);
+        const res = await fetch(`/api/packages/${packageId}/images`, {
+          method: 'POST',
+          body: fd,
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error ?? '업로드 실패');
+        setImages((prev) => [...prev, data]);
+      }
+    } catch (e) {
+      setImagesError(e instanceof Error ? e.message : '업로드 실패');
+    } finally {
+      setImagesUploading(false);
+    }
+  }
+
+  async function handleDetailDelete(imageId: number) {
+    if (!packageId) return;
+    await fetch(`/api/packages/${packageId}/images?imageId=${imageId}`, {
+      method: 'DELETE',
+    });
+    setImages((prev) => prev.filter((i) => i.id !== imageId));
+  }
+
+  async function handleDetailMove(index: number, direction: 'up' | 'down') {
+    if (!packageId) return;
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= images.length) return;
+    const a = images[index];
+    const b = images[targetIndex];
+    await Promise.all([
+      fetch(`/api/packages/${packageId}/images?imageId=${a.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order: b.order }),
+      }),
+      fetch(`/api/packages/${packageId}/images?imageId=${b.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order: a.order }),
+      }),
+    ]);
+    setImages((prev) =>
+      prev
+        .map((img) => {
+          if (img.id === a.id) return { ...img, order: b.order };
+          if (img.id === b.id) return { ...img, order: a.order };
+          return img;
+        })
+        .sort((x, y) => x.order - y.order),
+    );
+  }
 
   async function handleThumbUpload(file: File) {
     if (!packageId) return;
@@ -170,6 +246,144 @@ export default function PackageForm({
       ) : (
         <p style={{ fontSize: 12, color: '#888', marginBottom: 16 }}>
           패키지를 먼저 저장하면 썸네일을 등록할 수 있어요.
+        </p>
+      )}
+
+      {/* 상세 이미지(갤러리) — 유저페이지 상세 갤러리에 실제로 노출됨 */}
+      {packageId ? (
+        <div style={{ marginBottom: 16 }}>
+          <label style={labelStyle}>상세 이미지 (갤러리, 여러 장 · 순서 변경 가능)</label>
+          <div
+            style={{
+              border: '1px dashed #000',
+              borderRadius: 8,
+              padding: '10px 14px',
+              fontSize: 12,
+              color: '#555',
+              cursor: 'pointer',
+              width: 'fit-content',
+            }}
+            onClick={() => detailInputRef.current?.click()}
+          >
+            {imagesUploading ? '업로드 중...' : '클릭해서 이미지 선택 (여러 장 가능)'}
+          </div>
+          <input
+            ref={detailInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            style={{ display: 'none' }}
+            onChange={(e) => {
+              const files = Array.from(e.target.files ?? []);
+              if (files.length > 0) handleDetailUpload(files);
+              e.target.value = '';
+            }}
+          />
+          {imagesError && (
+            <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>
+              {imagesError}
+            </p>
+          )}
+          {images.length > 0 && (
+            <div
+              style={{
+                display: 'flex',
+                gap: 12,
+                flexWrap: 'wrap',
+                marginTop: 10,
+              }}
+            >
+              {images.map((img, idx) => (
+                <div
+                  key={img.id}
+                  style={{
+                    position: 'relative',
+                    width: 90,
+                    height: 90,
+                    border: '1px solid #000',
+                    borderRadius: 6,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <Image
+                    src={img.thumbUrl ?? img.webUrl}
+                    alt=""
+                    fill
+                    sizes="90px"
+                    quality={30}
+                    style={{ objectFit: 'cover' }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: -6,
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      display: 'flex',
+                      gap: 2,
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => handleDetailMove(idx, 'up')}
+                      style={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: 4,
+                        border: 'none',
+                        background: '#000',
+                        color: '#fff',
+                        fontSize: 9,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      ↑
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDetailMove(idx, 'down')}
+                      style={{
+                        width: 16,
+                        height: 16,
+                        borderRadius: 4,
+                        border: 'none',
+                        background: '#000',
+                        color: '#fff',
+                        fontSize: 9,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      ↓
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleDetailDelete(img.id)}
+                    style={{
+                      position: 'absolute',
+                      top: -6,
+                      right: -6,
+                      width: 16,
+                      height: 16,
+                      borderRadius: '50%',
+                      border: 'none',
+                      background: '#000',
+                      color: '#fff',
+                      fontSize: 10,
+                      lineHeight: '16px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <p style={{ fontSize: 12, color: '#888', marginBottom: 16 }}>
+          패키지를 먼저 저장하면 상세 이미지를 등록할 수 있어요.
         </p>
       )}
 

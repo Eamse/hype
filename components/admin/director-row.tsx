@@ -330,6 +330,7 @@ export default function DirectorRow({
                       onCancel={onCancelEditPkg}
                       saving={saving}
                       packageId={pkg.id}
+                      initialImages={pkg.images}
                     />
                   </div>
                 ) : (
