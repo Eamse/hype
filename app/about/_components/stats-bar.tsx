@@ -63,45 +63,54 @@ function useCountUp(target: number, start: boolean, delay: number) {
 }
 
 const DIVIDER_CLASSES = [
-  'border-b border-black pb-8 lg:border-b-0 lg:pb-0 lg:border-r lg:pr-8',
-  'border-b border-black pb-8 lg:border-b-0 lg:pb-0 lg:border-r lg:pr-8',
-  'border-b border-black pb-8 sm:border-b-0 sm:pb-0 lg:border-r lg:pr-8',
-  '',
+  'border-b border-black pb-8 lg:border-b-0 lg:pb-0 lg:px-8',
+  'border-b border-black pb-8 lg:border-b-0 lg:pb-0 lg:px-8',
+  'border-b border-black pb-8 sm:border-b-0 sm:pb-0 lg:px-8',
+  'lg:px-8',
 ];
 
+// gap-x-15(60px)의 정중앙에 오도록 컬럼 오른쪽 바깥으로 절반(30px)만큼 밀어서 배치
+// — border-r을 쓰면 패딩 위치에 따라 선이 텍스트 쪽으로 치우쳐 보임
 function StatColumn({
   stat,
   start,
   delay,
   dividerClass,
+  showDivider,
 }: {
   stat: Stat;
   start: boolean;
   delay: number;
   dividerClass: string;
+  showDivider: boolean;
 }) {
   const value = useCountUp(stat.target, start, delay);
-  const classes = `flex-1 min-w-0 flex flex-col items-start text-left ${dividerClass}`;
+  const classes = `relative flex-1 min-w-0 flex flex-col items-center text-center ${dividerClass}`;
 
   return (
     <div className={classes}>
-      <p className="text-[clamp(0.85rem,1.4vw,1rem)] font-bold italic mb-0.5 h-6 leading-6">
-        {stat.topLabel ?? ' '}
-      </p>
-      <div className="flex items-baseline gap-2">
-        <span className="text-[clamp(60px,3vw,96px)] font-bold italic tracking-tight">
-          {value}
-          {stat.suffix}
-        </span>
-        {stat.label && (
-          <span className="text-[clamp(1.15rem,2.3vw,1.5rem)] font-bold italic">
-            {stat.label}
+      {showDivider && (
+        <span className="hidden lg:block absolute top-0 bottom-0 right-[-30px] w-px bg-black" />
+      )}
+      <div className="inline-flex flex-col items-start">
+        <p className="text-[clamp(1.5rem,2.7vw,2rem)] font-bold italic leading-none mb-[-15px]">
+          {stat.topLabel ?? ' '}
+        </p>
+        <div className="flex items-baseline gap-2">
+          <span className="text-[clamp(60px,3vw,96px)] font-bold italic tracking-tight">
+            {value}
+            {stat.suffix}
           </span>
-        )}
+          {stat.label && (
+            <span className="text-[clamp(1.15rem,2.3vw,1.5rem)] font-bold italic">
+              {stat.label}
+            </span>
+          )}
+        </div>
+        <p className="text-[clamp(0.85rem,1.4vw,1rem)] text-gray-500 mt-2 leading-snug">
+          {stat.sublabel}
+        </p>
       </div>
-      <p className="text-[clamp(0.85rem,1.4vw,1rem)] text-gray-500 mt-2 leading-snug">
-        {stat.sublabel}
-      </p>
     </div>
   );
 }
@@ -135,6 +144,7 @@ export default function StatsBar() {
           start={visible}
           delay={0}
           dividerClass={DIVIDER_CLASSES[idx]}
+          showDivider={idx < STATS.length - 1}
         />
       ))}
     </div>
