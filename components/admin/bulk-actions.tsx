@@ -56,7 +56,7 @@ export default function BulkActions({
             style={{
               fontSize: 12,
               padding: '4px 14px',
-              background: '#ef4444',
+              background: '#777777',
               color: '#fff',
               border: 'none',
               borderRadius: 6,

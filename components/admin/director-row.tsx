@@ -220,7 +220,7 @@ export default function DirectorRow({
                   textAlign: 'left',
                 }}
               >
-                <span style={{ fontSize: 12, color: '#c9a96e', fontWeight: 700 }}>
+                <span style={{ fontSize: 12, color: '#acacac', fontWeight: 700 }}>
                   {dir.number}
                 </span>
                 <span style={{ fontSize: 15, fontWeight: 600, color: '#000' }}>
@@ -235,10 +235,10 @@ export default function DirectorRow({
                 </span>
               </button>
               <div style={{ display: 'flex', gap: 6, marginLeft: 12 }}>
-                <button style={btnStyle('#fff', '#3a1a2a', '#000')} onClick={onStartEditDir}>
+                <button style={btnStyle('#fff', '#252525', '#000')} onClick={onStartEditDir}>
                   수정
                 </button>
-                <button style={btnStyle('#fff', '#e05555', '#fdd')} onClick={onDeleteDir}>
+                <button style={btnStyle('#fff', '#7f7f7f', '#e7e7e7')} onClick={onDeleteDir}>
                   삭제
                 </button>
               </div>
@@ -268,7 +268,7 @@ export default function DirectorRow({
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: '#3a1a2a',
+                color: '#252525',
                 letterSpacing: '1px',
                 textTransform: 'uppercase',
               }}
@@ -287,7 +287,7 @@ export default function DirectorRow({
           {/* 패키지 추가 폼 */}
           {isAddingPkg && (
             <div style={{ marginBottom: 16 }}>
-              <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a', marginBottom: 10 }}>
+              <p style={{ fontSize: 13, fontWeight: 600, color: '#252525', marginBottom: 10 }}>
                 새 패키지
               </p>
               <PackageForm
@@ -317,7 +317,7 @@ export default function DirectorRow({
               >
                 {editPkgId === pkg.id ? (
                   <div style={{ padding: 16 }}>
-                    <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a', marginBottom: 10 }}>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: '#252525', marginBottom: 10 }}>
                       {pkg.name} 수정
                     </p>
                     <PackageForm
@@ -363,8 +363,8 @@ export default function DirectorRow({
                             key={partner.id}
                             style={{
                               fontSize: 11,
-                              background: '#f0e8d8',
-                              color: '#7a5520',
+                              background: '#e9e9e9',
+                              color: '#5a5a5a',
                               borderRadius: 4,
                               padding: '2px 6px',
                             }}
@@ -383,8 +383,8 @@ export default function DirectorRow({
                           <span
                             style={{
                               fontSize: 11,
-                              background: '#e8f0e8',
-                              color: '#2a5a2a',
+                              background: '#ededed',
+                              color: '#464646',
                               borderRadius: 4,
                               padding: '2px 6px',
                             }}
@@ -396,8 +396,8 @@ export default function DirectorRow({
                           <span
                             style={{
                               fontSize: 11,
-                              background: '#e8e8f0',
-                              color: '#2a2a5a',
+                              background: '#e9e9e9',
+                              color: '#2f2f2f',
                               borderRadius: 4,
                               padding: '2px 6px',
                             }}
@@ -409,13 +409,13 @@ export default function DirectorRow({
                     </div>
                     <div style={{ display: 'flex', gap: 6, marginLeft: 12, flexShrink: 0 }}>
                       <button
-                        style={btnStyle('#fff', '#3a1a2a', '#000')}
+                        style={btnStyle('#fff', '#252525', '#000')}
                         onClick={() => onStartEditPkg(pkg)}
                       >
                         수정
                       </button>
                       <button
-                        style={btnStyle('#fff', '#e05555', '#fdd')}
+                        style={btnStyle('#fff', '#7f7f7f', '#e7e7e7')}
                         onClick={() => onDeletePkg(pkg.id)}
                       >
                         삭제

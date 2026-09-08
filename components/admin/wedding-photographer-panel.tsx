@@ -344,7 +344,7 @@ export default function WeddingPhotographerPanel() {
           style={{
             fontSize: 10,
             letterSpacing: '2px',
-            color: '#7a5520',
+            color: '#5a5a5a',
             fontWeight: 600,
             marginBottom: 6,
           }}
@@ -372,7 +372,7 @@ export default function WeddingPhotographerPanel() {
           style={{
             fontSize: 13,
             fontWeight: 600,
-            color: '#3a1a2a',
+            color: '#252525',
             marginBottom: 16,
           }}
         >
@@ -484,20 +484,20 @@ export default function WeddingPhotographerPanel() {
               style={{
                 fontSize: 12,
                 fontWeight: 700,
-                color: '#3a1a2a',
+                color: '#252525',
                 letterSpacing: '1px',
                 textTransform: 'uppercase',
               }}
             >
               Packages{' '}
               {newDirPkgForms.length > 0 && (
-                <span style={{ color: '#c9a96e' }}>
+                <span style={{ color: '#acacac' }}>
                   ({newDirPkgForms.length}개)
                 </span>
               )}
             </p>
             <button
-              style={btnStyle('transparent', '#3a1a2a', '#000')}
+              style={btnStyle('transparent', '#252525', '#000')}
               onClick={() =>
                 setNewDirPkgForms((prev) => [...prev, { ...emptyPkgForm }])
               }
@@ -524,7 +524,7 @@ export default function WeddingPhotographerPanel() {
                     background: 'none',
                     border: 'none',
                     fontSize: 12,
-                    color: '#e05555',
+                    color: '#7f7f7f',
                     cursor: 'pointer',
                   }}
                   onClick={() =>
@@ -594,7 +594,7 @@ export default function WeddingPhotographerPanel() {
                 style={{
                   fontSize: 12,
                   fontWeight: 700,
-                  color: '#7a5520',
+                  color: '#5a5a5a',
                   letterSpacing: '1px',
                   textTransform: 'uppercase',
                 }}

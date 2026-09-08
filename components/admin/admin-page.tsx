@@ -221,12 +221,12 @@ export default function AdminPage() {
       <style>{`
         @keyframes spin { to { transform: rotate(360deg) } }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        input:focus { border-color: #c9956a !important; box-shadow: 0 0 0 3px rgba(201,149,106,0.18) !important; }
+        input:focus { border-color: #a0a0a0 !important; box-shadow: 0 0 0 3px rgba(160,160,160,0.18) !important; }
         button:disabled { opacity: 0.4; cursor: not-allowed; }
-        .admin-menu-btn:hover { background: rgba(201,149,106,0.12) !important; }
+        .admin-menu-btn:hover { background: rgba(160,160,160,0.12) !important; }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(180,120,140,0.35); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(140,140,140,0.35); border-radius: 4px; }
       `}</style>
 
       {/* 탑바 */}
@@ -236,7 +236,7 @@ export default function AdminPage() {
           backgroundColor: 'rgba(255,255,255,0.7)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          borderBottom: '1px solid rgba(201,149,106,0.2)',
+          borderBottom: '1px solid rgba(160,160,160,0.2)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -255,7 +255,7 @@ export default function AdminPage() {
                 border: 'none',
                 cursor: 'pointer',
                 fontSize: 20,
-                color: '#3a1a2a',
+                color: '#252525',
                 padding: 4,
               }}
             >
@@ -268,7 +268,7 @@ export default function AdminPage() {
               fontWeight: 800,
               fontSize: 16,
               letterSpacing: '2.5px',
-              color: '#3a1a2a',
+              color: '#252525',
               cursor: 'pointer',
             }}
           >
@@ -278,14 +278,14 @@ export default function AdminPage() {
             style={{
               width: 1,
               height: 16,
-              background: 'rgba(180,120,140,0.3)',
+              background: 'rgba(140,140,140,0.3)',
             }}
           />
 
           <span
             style={{
               fontSize: 10,
-              color: '#c9956a',
+              color: '#a0a0a0',
               letterSpacing: '2px',
               fontWeight: 700,
             }}
@@ -297,14 +297,14 @@ export default function AdminPage() {
           onClick={logout}
           style={{
             fontSize: 13,
-            color: '#e05555',
+            color: '#eee',
             display: 'flex',
             alignItems: 'center',
             gap: 6,
             padding: '8px 18px',
-            border: '1px solid rgba(220,80,80,0.25)',
+            border: '1px solid rgba(122,122,122,0.25)',
             borderRadius: 8,
-            background: 'rgba(220,80,80,0.07)',
+            background: '#000',
             cursor: 'pointer',
             fontWeight: 600,
           }}
@@ -329,7 +329,7 @@ export default function AdminPage() {
             backgroundColor: 'rgba(255,255,255,0.95)',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
-            borderRight: '1px solid rgba(201,149,106,0.2)',
+            borderRight: '1px solid rgba(160,160,160,0.2)',
             padding: '24px 0',
             flexShrink: 0,
             display: isMobile && !isMobileOpen ? 'none' : 'flex',
@@ -351,7 +351,7 @@ export default function AdminPage() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '16px 20px',
-                borderBottom: '1px solid rgba(201,149,106,0.2)',
+                borderBottom: '1px solid rgba(160,160,160,0.2)',
                 marginBottom: 8,
               }}
             >
@@ -360,7 +360,7 @@ export default function AdminPage() {
                   fontWeight: 800,
                   fontSize: 14,
                   letterSpacing: '2px',
-                  color: '#3a1a2a',
+                  color: '#252525',
                 }}
               >
                 MENU
@@ -368,12 +368,12 @@ export default function AdminPage() {
               <button
                 onClick={() => setIsMobileOpen(false)}
                 style={{
-                  background: 'rgba(220,80,80,0.08)',
-                  border: '1px solid rgba(220,80,80,0.2)',
+                  background: 'rgba(122,122,122,0.08)',
+                  border: '1px solid rgba(122,122,122,0.2)',
                   borderRadius: 8,
                   cursor: 'pointer',
                   fontSize: 14,
-                  color: '#e05555',
+                  color: '#7f7f7f',
                   width: 32,
                   height: 32,
                   display: 'flex',
@@ -392,7 +392,7 @@ export default function AdminPage() {
                 padding: '14px 16px',
                 background: 'rgba(255,255,255,0.6)',
                 borderRadius: 10,
-                border: '1px solid rgba(201,149,106,0.25)',
+                border: '1px solid rgba(160,160,160,0.25)',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 10,
@@ -403,7 +403,7 @@ export default function AdminPage() {
                   width: 32,
                   height: 32,
                   borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #c9956a, #b8865a)',
+                  background: '#000',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -423,13 +423,13 @@ export default function AdminPage() {
                 </svg>
               </div>
               <div>
-                <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a' }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: '#252525' }}>
                   {admin.loginId}님 환영합니다.
                 </p>
                 <p
                   style={{
                     fontSize: 11,
-                    color: '#c9956a',
+                    color: '#a0a0a0',
                     marginTop: 2,
                     textTransform: 'uppercase',
                     letterSpacing: '1px',
@@ -444,7 +444,7 @@ export default function AdminPage() {
             style={{
               fontSize: 10,
               fontWeight: 700,
-              color: '#b08898',
+              color: '#969696',
               letterSpacing: '2px',
               padding: '0 16px',
               marginBottom: 8,
@@ -458,7 +458,7 @@ export default function AdminPage() {
             style={{
               margin: '0 16px',
               height: 1,
-              background: 'rgba(180,120,140,0.15)',
+              background: 'rgba(140,140,140,0.15)',
             }}
           />
           <button
@@ -469,10 +469,10 @@ export default function AdminPage() {
               textAlign: 'left',
               padding: '14px 16px',
               background: MANAGE_SECTIONS.includes(active as Section)
-                ? 'rgba(201,149,106,0.08)'
+                ? 'rgba(160,160,160,0.08)'
                 : 'transparent',
               border: 'none',
-              borderLeft: `2px solid ${MANAGE_SECTIONS.includes(active as Section) ? '#c9956a' : 'transparent'}`,
+              borderLeft: `2px solid ${MANAGE_SECTIONS.includes(active as Section) ? '#a0a0a0' : 'transparent'}`,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -483,8 +483,8 @@ export default function AdminPage() {
             <span
               style={{
                 color: MANAGE_SECTIONS.includes(active as Section)
-                  ? '#c9956a'
-                  : '#b08898',
+                  ? '#a0a0a0'
+                  : '#969696',
                 display: 'flex',
               }}
             >
@@ -497,22 +497,22 @@ export default function AdminPage() {
                   ? 600
                   : 400,
                 color: MANAGE_SECTIONS.includes(active as Section)
-                  ? '#3a1a2a'
-                  : '#7a5060',
+                  ? '#252525'
+                  : '#5e5e5e',
                 flex: 1,
               }}
             >
               Manage
             </span>
-            <span style={{ fontSize: 10, color: '#b08898', marginRight: 4 }}>
+            <span style={{ fontSize: 10, color: '#969696', marginRight: 4 }}>
               {manageOpen ? '▲' : '▼'}
             </span>
           </button>
           {manageOpen && (
             <div
               style={{
-                background: 'rgba(180,120,140,0.04)',
-                borderLeft: '1px solid rgba(180,120,140,0.15)',
+                background: 'rgba(140,140,140,0.04)',
+                borderLeft: '1px solid rgba(140,140,140,0.15)',
                 marginLeft: 16,
                 marginRight: 8,
               }}
@@ -529,10 +529,10 @@ export default function AdminPage() {
                       textAlign: 'left',
                       padding: '11px 16px',
                       background: isActive
-                        ? 'rgba(201,149,106,0.15)'
+                        ? 'rgba(160,160,160,0.15)'
                         : 'transparent',
                       border: 'none',
-                      borderLeft: `2px solid ${isActive ? '#c9956a' : 'transparent'}`,
+                      borderLeft: `2px solid ${isActive ? '#a0a0a0' : 'transparent'}`,
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
@@ -545,7 +545,7 @@ export default function AdminPage() {
                         width: 6,
                         height: 6,
                         borderRadius: '50%',
-                        background: isActive ? '#c9956a' : '#d4b0c0',
+                        background: isActive ? '#a0a0a0' : '#bdbdbd',
                         flexShrink: 0,
                       }}
                     />
@@ -553,7 +553,7 @@ export default function AdminPage() {
                       style={{
                         fontSize: 13,
                         fontWeight: isActive ? 600 : 400,
-                        color: isActive ? '#3a1a2a' : '#7a5060',
+                        color: isActive ? '#252525' : '#5e5e5e',
                       }}
                     >
                       {m.label}
@@ -576,7 +576,7 @@ export default function AdminPage() {
                     style={{
                       margin: '0 16px',
                       height: 1,
-                      background: 'rgba(180,120,140,0.15)',
+                      background: 'rgba(140,140,140,0.15)',
                     }}
                   />
                 )}
@@ -588,10 +588,10 @@ export default function AdminPage() {
                     textAlign: 'left',
                     padding: '14px 16px',
                     background: isActive
-                      ? 'rgba(201,149,106,0.15)'
+                      ? 'rgba(160,160,160,0.15)'
                       : 'transparent',
                     border: 'none',
-                    borderLeft: `2px solid ${isActive ? '#c9956a' : 'transparent'}`,
+                    borderLeft: `2px solid ${isActive ? '#a0a0a0' : 'transparent'}`,
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -601,7 +601,7 @@ export default function AdminPage() {
                 >
                   <span
                     style={{
-                      color: isActive ? '#c9956a' : '#b08898',
+                      color: isActive ? '#a0a0a0' : '#969696',
                       display: 'flex',
                     }}
                   >
@@ -611,7 +611,7 @@ export default function AdminPage() {
                     style={{
                       fontSize: 14,
                       fontWeight: isActive ? 600 : 400,
-                      color: isActive ? '#3a1a2a' : '#7a5060',
+                      color: isActive ? '#252525' : '#5e5e5e',
                       letterSpacing: '0.1px',
                     }}
                   >
@@ -625,7 +625,7 @@ export default function AdminPage() {
           <div
             style={{
               margin: '16px 16px',
-              borderTop: '1px solid rgba(180,120,140,0.2)',
+              borderTop: '1px solid rgba(140,140,140,0.2)',
             }}
           />
 
@@ -633,7 +633,7 @@ export default function AdminPage() {
             style={{
               fontSize: 10,
               fontWeight: 700,
-              color: '#b08898',
+              color: '#969696',
               letterSpacing: '2px',
               padding: '0 16px',
               marginBottom: 8,
@@ -649,11 +649,11 @@ export default function AdminPage() {
               gap: 10,
               padding: '10px 16px',
               fontSize: 14,
-              color: '#7a5060',
+              color: '#5e5e5e',
               textDecoration: 'none',
             }}
           >
-            <span style={{ fontSize: 13, color: '#b08898' }}>↗</span>
+            <span style={{ fontSize: 13, color: '#969696' }}>↗</span>
             View Site
           </Link>
         </aside>
@@ -681,7 +681,7 @@ export default function AdminPage() {
             style={{
               height: 1,
               background:
-                'linear-gradient(90deg, transparent, #c9956a, #e8b88a, #c9956a, transparent)',
+                'linear-gradient(90deg, transparent, #a0a0a0, #c1c1c1, #a0a0a0, transparent)',
               marginBottom: 36,
               opacity: 0.6,
             }}

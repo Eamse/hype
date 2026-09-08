@@ -81,7 +81,7 @@ export default function AccountsPanel() {
           style={{
             fontSize: 10,
             letterSpacing: '2px',
-            color: '#7a5520',
+            color: '#5a5a5a',
             fontWeight: 600,
             marginBottom: 6,
           }}
@@ -225,7 +225,7 @@ export default function AccountsPanel() {
           <p
             style={{
               fontSize: 11,
-              color: '#7a5520',
+              color: '#5a5a5a',
               fontWeight: 700,
               letterSpacing: '2px',
             }}
@@ -307,8 +307,8 @@ export default function AccountsPanel() {
                       <span
                         style={{
                           background:
-                            a.role === 'master' ? '#fff3e0' : '#e8f0fe',
-                          color: a.role === 'master' ? '#e65100' : '#1a73e8',
+                            a.role === 'master' ? '#f4f4f4' : '#efefef',
+                          color: a.role === 'master' ? '#747474' : '#666666',
                           padding: '2px 8px',
                           borderRadius: 4,
                           fontSize: 11,
@@ -321,8 +321,8 @@ export default function AccountsPanel() {
                     <td style={{ padding: '14px 16px' }}>
                       <span
                         style={{
-                          background: a.isActive ? '#e8f5e9' : '#fce4ec',
-                          color: a.isActive ? '#2e7d32' : '#c62828',
+                          background: a.isActive ? '#f0f0f0' : '#ececec',
+                          color: a.isActive ? '#5d5d5d' : '#575757',
                           padding: '2px 8px',
                           borderRadius: 4,
                           fontSize: 11,
@@ -344,8 +344,8 @@ export default function AccountsPanel() {
                               : '클릭하여 잠금 해제'
                           }
                           style={{
-                            background: '#fce4ec',
-                            color: '#c62828',
+                            background: '#ececec',
+                            color: '#575757',
                             padding: '2px 8px',
                             borderRadius: 4,
                             fontSize: 11,
@@ -373,7 +373,7 @@ export default function AccountsPanel() {
                     <td style={{ padding: '14px 16px' }}>
                       <button
                         onClick={() => handleDelete(a.id)}
-                        style={btnStyle('#fff', '#e05555', '#e05555')}
+                        style={btnStyle('#fff', '#7f7f7f', '#7f7f7f')}
                       >
                         Delete
                       </button>

@@ -141,7 +141,7 @@ export default function SimpleCrudPanel({
           style={{
             fontSize: 10,
             letterSpacing: '2px',
-            color: '#7a5520',
+            color: '#5a5a5a',
             fontWeight: 600,
             marginBottom: 6,
           }}
@@ -166,7 +166,7 @@ export default function SimpleCrudPanel({
           style={{
             fontSize: 13,
             fontWeight: 600,
-            color: '#3a1a2a',
+            color: '#252525',
             marginBottom: 16,
           }}
         >
@@ -260,7 +260,7 @@ export default function SimpleCrudPanel({
                 {summaryFields.map((f) => (
                   <span
                     key={f.key}
-                    style={{ fontSize: 13, fontWeight: 700, color: '#c9a96e' }}
+                    style={{ fontSize: 13, fontWeight: 700, color: '#acacac' }}
                   >
                     {f.summaryPrefix ?? ''}
                     {Number(item[f.key] ?? 0).toLocaleString()}
@@ -349,7 +349,7 @@ export default function SimpleCrudPanel({
                     )}
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button
-                        style={btnStyle('#fff', '#3a1a2a', '#000')}
+                        style={btnStyle('#fff', '#252525', '#000')}
                         onClick={() => {
                           setEditingId(item.id);
                           setEditForm(
@@ -365,7 +365,7 @@ export default function SimpleCrudPanel({
                         수정
                       </button>
                       <button
-                        style={btnStyle('#fff', '#e05555', '#fdd')}
+                        style={btnStyle('#fff', '#7f7f7f', '#e7e7e7')}
                         onClick={() => handleDelete(item.id)}
                       >
                         삭제

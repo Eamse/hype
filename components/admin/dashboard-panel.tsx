@@ -49,7 +49,7 @@ function InfoMark({ text }: { text: string }) {
           width: 16,
           height: 16,
           borderRadius: '50%',
-          background: '#7a5520',
+          background: '#5a5a5a',
           color: '#fff',
           fontSize: 10,
           fontWeight: 700,
@@ -162,7 +162,7 @@ export default function DashboardPanel({
           style={{
             fontSize: 10,
             letterSpacing: '2px',
-            color: '#7a5520',
+            color: '#5a5a5a',
             fontWeight: 600,
             marginBottom: 6,
           }}
@@ -203,10 +203,10 @@ export default function DashboardPanel({
             {/* 회원 수 */}
             <div
               style={{
-                background: 'linear-gradient(135deg, #c9a96e, #b8965a)',
+                background: '#000',
                 borderRadius: 16,
                 padding: '24px',
-                boxShadow: '0 4px 20px rgba(201,169,110,0.3)',
+                boxShadow: '0 4px 20px rgba(172,172,172,0.3)',
               }}
             >
               <p
@@ -254,7 +254,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#7a5520',
+                  color: '#5a5a5a',
                   fontWeight: 700,
                   letterSpacing: '1.5px',
                   marginBottom: 12,
@@ -290,7 +290,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#7a5520',
+                  color: '#5a5a5a',
                   fontWeight: 700,
                   letterSpacing: '1.5px',
                   marginBottom: 12,
@@ -326,7 +326,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#7a5520',
+                  color: '#5a5a5a',
                   fontWeight: 700,
                   letterSpacing: '1.5px',
                   marginBottom: 12,
@@ -372,7 +372,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#7a5520',
+                  color: '#5a5a5a',
                   fontWeight: 700,
                   letterSpacing: '2px',
                   marginBottom: 4,
@@ -443,7 +443,7 @@ export default function DashboardPanel({
                         display: 'flex',
                         alignItems: 'baseline',
                         justifyContent: 'space-between',
-                        borderBottom: '1px solid #f0ebe0',
+                        borderBottom: '1px solid #ebebeb',
                         paddingBottom: 10,
                       }}
                     >
@@ -462,7 +462,7 @@ export default function DashboardPanel({
                             style={{
                               fontSize: 20,
                               fontWeight: 800,
-                              color: '#7a5520',
+                              color: '#5a5a5a',
                             }}
                           >
                             {ga ? data?.activeUsers : '···'}
@@ -498,13 +498,13 @@ export default function DashboardPanel({
                 style={{
                   marginTop: 20,
                   paddingTop: 16,
-                  borderTop: '1px solid #f0ebe0',
+                  borderTop: '1px solid #ebebeb',
                 }}
               >
                 <p
                   style={{
                     fontSize: 11,
-                    color: '#7a5520',
+                    color: '#5a5a5a',
                     fontWeight: 700,
                     letterSpacing: '1px',
                     marginBottom: 10,
@@ -554,7 +554,7 @@ export default function DashboardPanel({
                       padding: '7px 14px',
                       borderRadius: 6,
                       border: 'none',
-                      background: '#7a5520',
+                      background: '#5a5a5a',
                       color: '#fff',
                       cursor: searching ? 'default' : 'pointer',
                       opacity: searching ? 0.6 : 1,
@@ -565,7 +565,7 @@ export default function DashboardPanel({
                 </div>
 
                 {searchError && (
-                  <p style={{ fontSize: 12, color: '#b5502e', marginTop: 10 }}>
+                  <p style={{ fontSize: 12, color: '#6a6a6a', marginTop: 10 }}>
                     조회 실패 — 기간을 확인해주세요
                   </p>
                 )}
@@ -583,7 +583,7 @@ export default function DashboardPanel({
                         style={{
                           fontSize: 20,
                           fontWeight: 800,
-                          color: '#7a5520',
+                          color: '#5a5a5a',
                         }}
                       >
                         {searchResult.activeUsers}
@@ -620,7 +620,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#7a5520',
+                  color: '#5a5a5a',
                   fontWeight: 700,
                   letterSpacing: '2px',
                   marginBottom: 4,
@@ -700,7 +700,7 @@ export default function DashboardPanel({
                           flexShrink: 0,
                           borderRadius: 8,
                           overflow: 'hidden',
-                          background: '#f0ebe0',
+                          background: '#ebebeb',
                           position: 'relative',
                         }}
                       >
@@ -757,7 +757,7 @@ export default function DashboardPanel({
             <p
               style={{
                 fontSize: 11,
-                color: '#7a5520',
+                color: '#5a5a5a',
                 fontWeight: 700,
                 letterSpacing: '2px',
                 marginBottom: 4,
@@ -822,7 +822,7 @@ export default function DashboardPanel({
               <p
                 style={{
                   fontSize: 11,
-                  color: '#7a5520',
+                  color: '#5a5a5a',
                   fontWeight: 700,
                   letterSpacing: '2px',
                 }}
@@ -905,7 +905,7 @@ export default function DashboardPanel({
                         textAlign: 'right',
                         fontSize: 16,
                         fontWeight: 700,
-                        color: '#7a5520',
+                        color: '#5a5a5a',
                       }}
                     >
                       {p._count.id}
@@ -924,7 +924,7 @@ export default function DashboardPanel({
                             style={{
                               width: 80,
                               height: 6,
-                              background: '#f0ebe0',
+                              background: '#ebebeb',
                               borderRadius: 3,
                               overflow: 'hidden',
                             }}
@@ -934,7 +934,7 @@ export default function DashboardPanel({
                                 height: '100%',
                                 width: `${totalProducts > 0 ? (p._count.id / totalProducts) * 100 : 0}%`,
                                 background:
-                                  'linear-gradient(90deg, #c9a96e, #b8965a)',
+                                  '#000',
                                 borderRadius: 3,
                               }}
                             />
@@ -1021,8 +1021,8 @@ function VisitorChart({ data }: { data: GaDailyPoint[] }) {
       >
         <defs>
           <linearGradient id="visitorAreaFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#a8763f" stopOpacity={0.25} />
-            <stop offset="100%" stopColor="#a8763f" stopOpacity={0} />
+            <stop offset="0%" stopColor="#7f7f7f" stopOpacity={0.25} />
+            <stop offset="100%" stopColor="#7f7f7f" stopOpacity={0} />
           </linearGradient>
         </defs>
 
@@ -1058,7 +1058,7 @@ function VisitorChart({ data }: { data: GaDailyPoint[] }) {
         <path
           d={linePath}
           fill="none"
-          stroke="#a8763f"
+          stroke="#7f7f7f"
           strokeWidth={2}
           strokeLinejoin="round"
           strokeLinecap="round"
@@ -1083,7 +1083,7 @@ function VisitorChart({ data }: { data: GaDailyPoint[] }) {
                 cx={x}
                 cy={y}
                 r={isHovered ? 4.5 : 3}
-                fill="#a8763f"
+                fill="#7f7f7f"
                 stroke="#fff"
                 strokeWidth={isHovered ? 1.5 : 0}
               />

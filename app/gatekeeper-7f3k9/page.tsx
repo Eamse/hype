@@ -34,14 +34,14 @@ export default function AdminSignIn() {
 
   const inputStyle = (focused: boolean): React.CSSProperties => ({
     padding: '13px 16px',
-    border: `1px solid ${focused ? '#c9956a' : '#4a2e20'}`,
+    border: `1px solid ${focused ? '#a0a0a0' : '#353535'}`,
     borderRadius: 10,
     fontSize: 14,
     outline: 'none',
     color: '#fff',
-    backgroundColor: '#3a2018',
+    backgroundColor: '#272727',
     transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
-    boxShadow: focused ? '0 0 0 3px rgba(184,134,90,0.18)' : 'none',
+    boxShadow: focused ? '0 0 0 3px rgba(144,144,144,0.18)' : 'none',
   });
 
   return (
@@ -57,7 +57,7 @@ export default function AdminSignIn() {
       }}
     >
       <style>{`
-        ::placeholder { color: #6a4a38; }
+        ::placeholder { color: #525252; }
       `}</style>
 
       {/* 카드 */}
@@ -67,10 +67,10 @@ export default function AdminSignIn() {
           width: 400,
           borderRadius: 20,
           padding: '48px 36px',
-          border: '1px solid rgba(184,134,90,0.3)',
+          border: '1px solid rgba(144,144,144,0.3)',
           boxShadow:
-            '0 24px 64px rgba(80,20,10,0.3), inset 0 1px 0 rgba(184,134,90,0.15)',
-          backgroundColor: '#2c1a14',
+            '0 24px 64px rgba(37,37,37,0.3), inset 0 1px 0 rgba(144,144,144,0.15)',
+          backgroundColor: '#1f1f1f',
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           overflow: 'hidden',
@@ -85,7 +85,7 @@ export default function AdminSignIn() {
             right: 0,
             height: 2,
             background:
-              'linear-gradient(90deg, transparent, #c9956a, #e8b88a, #c9956a, transparent)',
+              'linear-gradient(90deg, transparent, #a0a0a0, #c1c1c1, #a0a0a0, transparent)',
           }}
         />
 
@@ -102,14 +102,14 @@ export default function AdminSignIn() {
             style={{
               flex: 1,
               height: 1,
-              background: 'linear-gradient(to right, transparent, #b8865a)',
+              background: 'linear-gradient(to right, transparent, #909090)',
             }}
           />
           <p
             style={{
               fontSize: 9,
               letterSpacing: '4px',
-              color: '#b8865a',
+              color: '#909090',
               textTransform: 'uppercase',
               whiteSpace: 'nowrap',
             }}
@@ -120,7 +120,7 @@ export default function AdminSignIn() {
             style={{
               flex: 1,
               height: 1,
-              background: 'linear-gradient(to left, transparent, #b8865a)',
+              background: 'linear-gradient(to left, transparent, #909090)',
             }}
           />
         </div>
@@ -136,7 +136,7 @@ export default function AdminSignIn() {
         >
           Welcome Back
         </h1>
-        <p style={{ fontSize: 12, color: '#7a5a4a', marginBottom: 32 }}>
+        <p style={{ fontSize: 12, color: '#626262', marginBottom: 32 }}>
           Admin Portal
         </p>
 
@@ -163,7 +163,7 @@ export default function AdminSignIn() {
             style={inputStyle(focusedInput === 'pw')}
           />
           {errors && (
-            <p style={{ fontSize: 12, color: '#f87171', margin: '2px 0 0' }}>
+            <p style={{ fontSize: 12, color: '#999999', margin: '2px 0 0' }}>
               {errors}
             </p>
           )}
@@ -174,10 +174,8 @@ export default function AdminSignIn() {
             style={{
               marginTop: 10,
               padding: '14px',
-              background: btnHover
-                ? 'linear-gradient(135deg, #dba878, #c9956a)'
-                : 'linear-gradient(135deg, #c9956a, #b8865a)',
-              color: '#fff',
+              background: '#fff',
+              color: '#000',
               border: 'none',
               borderRadius: 10,
               fontSize: 12,
@@ -188,8 +186,8 @@ export default function AdminSignIn() {
               transition: 'all 0.2s ease',
               transform: btnHover ? 'translateY(-1px)' : 'translateY(0)',
               boxShadow: btnHover
-                ? '0 8px 20px rgba(184,134,90,0.4)'
-                : '0 4px 12px rgba(184,134,90,0.2)',
+                ? '0 8px 20px rgba(144,144,144,0.4)'
+                : '0 4px 12px rgba(144,144,144,0.2)',
             }}
           >
             Sign In

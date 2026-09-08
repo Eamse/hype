@@ -102,7 +102,7 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
             style={{
               fontSize: 10,
               letterSpacing: '2px',
-              color: '#7a5520',
+              color: '#5a5a5a',
               fontWeight: 600,
               marginBottom: 6,
             }}
@@ -126,9 +126,9 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
         <span
           style={{
             fontSize: 12,
-            color: '#7a5520',
+            color: '#5a5a5a',
             fontWeight: 600,
-            background: '#faf7f0',
+            background: '#f7f7f7',
             border: '1px solid #000',
             borderRadius: 20,
             padding: '4px 14px',
@@ -141,13 +141,13 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
       {error && (
         <div
           style={{
-            background: '#fef2f2',
-            border: '1px solid #fecaca',
+            background: '#f6f6f6',
+            border: '1px solid #dadada',
             borderRadius: 8,
             padding: '10px 14px',
             marginBottom: 20,
             fontSize: 13,
-            color: '#dc2626',
+            color: '#5c5c5c',
           }}
         >
           {error}
@@ -174,7 +174,7 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
                 borderRadius: 10,
                 overflow: 'hidden',
                 backgroundColor: '#fff',
-                border: url ? '1.5px solid #000' : '1.5px dashed #ddd5c5',
+                border: url ? '1.5px solid #000' : '1.5px dashed #d6d6d6',
                 boxShadow: url ? '0 2px 8px rgba(0,0,0,0.06)' : 'none',
               }}
             >
@@ -233,7 +233,7 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
                         height: 18,
                         borderRadius: '50%',
                         border: '2px solid #000',
-                        borderTopColor: '#c9a96e',
+                        borderTopColor: '#acacac',
                         animation: 'spin 0.7s linear infinite',
                       }}
                     />
@@ -270,7 +270,7 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
           disabled={uploading || images.length >= MAX_HERO}
           style={{
             padding: '10px 22px',
-            background: 'linear-gradient(135deg, #c9a96e, #b8965a)',
+            background: '#000',
             color: '#fff',
             border: 'none',
             borderRadius: 8,
@@ -278,7 +278,7 @@ export default function HeroPanel({ brand }: { brand: 'wedding' | 'snap' }) {
             fontWeight: 600,
             cursor: 'pointer',
             letterSpacing: '0.5px',
-            boxShadow: '0 2px 8px rgba(201,169,110,0.3)',
+            boxShadow: '0 2px 8px rgba(172,172,172,0.3)',
           }}
         >
           {uploading ? 'Uploading...' : '+ Add Images'}
