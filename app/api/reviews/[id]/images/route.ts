@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { canModifyReview } from '@/lib/review-auth';
 import { uploadToR2 } from '@/lib/r2';
 import { validateAndCompressImage, ImageProcessingError } from '@/lib/validate-image';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 const R2_PUBLIC_BASE_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
 
@@ -17,6 +18,10 @@ export async function POST(
   request: NextRequest,
   props: { params: Promise<{ id: string }> },
 ) {
+  if (!checkRateLimit(`review-image:${getClientIp(request)}`, 15, 10 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
+  }
+
   const { id } = await props.params;
   const reviewId = parseId(id);
   if (reviewId === null) {
