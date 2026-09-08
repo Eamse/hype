@@ -25,7 +25,9 @@ export async function GET(request: NextRequest) {
       },
       orderBy: { order: 'asc' },
     });
-    return NextResponse.json(packages);
+    return NextResponse.json(packages, {
+      headers: { 'Cache-Control': 'no-store' },
+    });
   } catch (e) {
     console.error('[GET /api/admin/packages]', e);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

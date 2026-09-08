@@ -17,6 +17,14 @@ type Director = {
 
 type Category = 'Photographers' | 'Casual Photoshoot';
 
+type GalleryImage = {
+  id: number;
+  webUrl: string;
+  originalUrl: string;
+  thumbUrl: string | null;
+  order: number;
+};
+
 const LOCATIONS: { label: string; value: 'Jeju' | 'Seoul' }[] = [
   { label: '제주', value: 'Jeju' },
   { label: '서울', value: 'Seoul' },
@@ -224,12 +232,17 @@ export default function ProductPanel({ category }: { category: Category }) {
   const addDetailRef = useRef<HTMLInputElement>(null);
   // 수정 모달
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  // 유저페이지 갤러리가 실제로 읽는 건 Package.images라서, 상세 이미지는
+  // 이 상품에 연결된 모든 작가의 모든 패키지에 동일하게 복제해서 관리함
+  const [editGalleryImages, setEditGalleryImages] = useState<GalleryImage[]>(
+    [],
+  );
   const {
     selectedIds: selectedImageIds,
     toggleSelect: toggleSelectImage,
     toggleAll: toggleAllImages,
     clearSelection: clearImageSelection,
-  } = useSelection(editingProduct?.images ?? []);
+  } = useSelection(editGalleryImages);
   const [editDirIds, setEditDirIds] = useState<number[]>([]);
   const [editDetailFiles, setEditDetailFiles] = useState<File[]>([]);
   const [editDetailPreviewUrls, setEditDetailPreviewUrls] = useState<string[]>(
@@ -240,6 +253,8 @@ export default function ProductPanel({ category }: { category: Category }) {
     null,
   );
   const [editSaving, setEditSaving] = useState(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const editDetailRef = useRef<HTMLInputElement>(null);
   const editThumbRef = useRef<HTMLInputElement>(null);
 
@@ -251,6 +266,7 @@ export default function ProductPanel({ category }: { category: Category }) {
       LOCATIONS.map(({ value }) =>
         fetch(
           `/api/products?section=${encodeURIComponent(sectionFor(category, value))}`,
+          { cache: 'no-store' },
         ).then((r) => r.json()),
       ),
     );
@@ -319,7 +335,7 @@ export default function ProductPanel({ category }: { category: Category }) {
   }
 
   async function detailImageHandleMove(
-    images: { id: number; url: string; order: number }[],
+    images: GalleryImage[],
     index: number,
     direction: 'up' | 'down',
   ) {
@@ -329,27 +345,60 @@ export default function ProductPanel({ category }: { category: Category }) {
     const a = images[index];
     const b = images[targetIndex];
     await Promise.all([
-      fetch(`/api/products/${editingProduct.id}/images?imageId=${a.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ order: b.order }),
-      }),
-      fetch(`/api/products/${editingProduct.id}/images?imageId=${b.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ order: a.order }),
-      }),
+      fetch(
+        `/api/admin/products/${editingProduct.id}/gallery-images?webUrl=${encodeURIComponent(a.webUrl)}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order: b.order }),
+        },
+      ),
+      fetch(
+        `/api/admin/products/${editingProduct.id}/gallery-images?webUrl=${encodeURIComponent(b.webUrl)}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ order: a.order }),
+        },
+      ),
     ]);
-    setEditingProduct({
-      ...editingProduct,
-      images: editingProduct.images
+    setEditGalleryImages(
+      editGalleryImages
         .map((img) => {
-          if (img.id === a.id) return { ...img, order: b.order };
-          if (img.id === b.id) return { ...img, order: a.order };
+          if (img.webUrl === a.webUrl) return { ...img, order: b.order };
+          if (img.webUrl === b.webUrl) return { ...img, order: a.order };
           return img;
         })
         .sort((x, y) => x.order - y.order),
-    });
+    );
+  }
+
+  // 드래그로 순서 변경 — 드롭된 위치까지 배열을 재배치한 뒤, 바뀐 순서를 그대로
+  // order 값으로 다시 매겨서 저장(바뀐 것만 PATCH)
+  async function detailImageHandleDrop(fromIndex: number, toIndex: number) {
+    if (!editingProduct || fromIndex === toIndex) return;
+    const reordered = [...editGalleryImages];
+    const [moved] = reordered.splice(fromIndex, 1);
+    reordered.splice(toIndex, 0, moved);
+
+    const changed = reordered
+      .map((img, i) => ({ img, order: i }))
+      .filter(({ img, order }) => img.order !== order);
+
+    setEditGalleryImages(reordered.map((img, i) => ({ ...img, order: i })));
+
+    await Promise.all(
+      changed.map(({ img, order }) =>
+        fetch(
+          `/api/admin/products/${editingProduct.id}/gallery-images?webUrl=${encodeURIComponent(img.webUrl)}`,
+          {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order }),
+          },
+        ),
+      ),
+    );
   }
 
   async function handleBulkDelete() {
@@ -439,10 +488,14 @@ export default function ProductPanel({ category }: { category: Category }) {
     setEditingProduct(product);
     setEditDetailFiles([]);
     setEditThumbFile(null);
-    const data = await fetch(`/api/admin/wedding-directors/${product.id}`).then(
-      (r) => r.json(),
-    );
+    const [data, galleryData] = await Promise.all([
+      fetch(`/api/admin/wedding-directors/${product.id}`).then((r) => r.json()),
+      fetch(`/api/admin/products/${product.id}/gallery-images`, {
+        cache: 'no-store',
+      }).then((r) => r.json()),
+    ]);
     setEditDirIds(Array.isArray(data) ? data.map((d: Director) => d.id) : []);
+    setEditGalleryImages(Array.isArray(galleryData) ? galleryData : []);
   }
 
   async function handleEditSave() {
@@ -465,13 +518,21 @@ export default function ProductPanel({ category }: { category: Category }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title: buildTitle(editDirIds) }),
       });
-      if (editDetailFiles.length > 0)
-        await uploadDetailImages(editDetailFiles, editingProduct.id);
+      // 작가 연결이 바뀔 수 있어서, 상세 이미지가 어느 작가/패키지에 복제될지
+      // 정확히 반영되도록 작가 연결부터 저장한 다음 이미지를 올림
       await fetch(`/api/admin/products/${editingProduct.id}/directors`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ directorIds: editDirIds }),
       });
+      for (const file of editDetailFiles) {
+        const fd = new FormData();
+        fd.append('image', file);
+        await fetch(`/api/admin/products/${editingProduct.id}/gallery-images`, {
+          method: 'POST',
+          body: fd,
+        });
+      }
       await loadProducts();
       setEditingProduct(null);
     } finally {
@@ -1057,7 +1118,7 @@ export default function ProductPanel({ category }: { category: Category }) {
                     ))}
                   </div>
                 )}
-                {editingProduct.images.length > 0 && (
+                {editGalleryImages.length > 0 && (
                   <p
                     style={{
                       marginTop: 20,
@@ -1068,36 +1129,38 @@ export default function ProductPanel({ category }: { category: Category }) {
                       letterSpacing: '0.5px',
                     }}
                   >
-                    등록된 사진 {editingProduct.images.length}장
+                    등록된 사진 {editGalleryImages.length}장
                   </p>
                 )}
                 <BulkActions
-                  total={editingProduct.images.length}
+                  total={editGalleryImages.length}
                   selectedCount={selectedImageIds.size}
                   allSelected={
-                    selectedImageIds.size === editingProduct.images.length &&
-                    editingProduct.images.length > 0
+                    selectedImageIds.size === editGalleryImages.length &&
+                    editGalleryImages.length > 0
                   }
                   onToggleAll={toggleAllImages}
                   onDeleteSelected={async () => {
+                    const targets = editGalleryImages.filter((i) =>
+                      selectedImageIds.has(i.id),
+                    );
                     await Promise.all(
-                      [...selectedImageIds].map((imageId) =>
+                      targets.map((img) =>
                         fetch(
-                          `/api/products/${editingProduct.id}/images?imageId=${imageId}`,
+                          `/api/admin/products/${editingProduct.id}/gallery-images?webUrl=${encodeURIComponent(img.webUrl)}`,
                           { method: 'DELETE' },
                         ),
                       ),
                     );
-                    setEditingProduct({
-                      ...editingProduct,
-                      images: editingProduct.images.filter(
+                    setEditGalleryImages(
+                      editGalleryImages.filter(
                         (i) => !selectedImageIds.has(i.id),
                       ),
-                    });
+                    );
                     clearImageSelection();
                   }}
                 />
-                {editingProduct.images.length > 0 && (
+                {editGalleryImages.length > 0 && (
                   <div
                     style={{
                       display: 'flex',
@@ -1106,25 +1169,84 @@ export default function ProductPanel({ category }: { category: Category }) {
                       marginTop: 8,
                     }}
                   >
-                    {editingProduct.images.map((img, idx) => (
+                    {editGalleryImages.map((img, idx) => (
                       <div
-                        onClick={() => setPreviewUrl(img.url)}
+                        onClick={() => setPreviewUrl(img.originalUrl)}
                         key={img.id}
+                        draggable
+                        onDragStart={() => setDragIndex(idx)}
+                        onDragOver={(e) => e.preventDefault()}
+                        onDrop={(e) => {
+                          e.preventDefault();
+                          if (dragIndex !== null)
+                            detailImageHandleDrop(dragIndex, idx);
+                          setDragIndex(null);
+                        }}
+                        onDragEnd={() => setDragIndex(null)}
+                        onMouseEnter={() => setHoverIndex(idx)}
+                        onMouseLeave={() => setHoverIndex(null)}
                         style={{
                           position: 'relative',
                           width: 120,
                           height: 120,
-                          cursor: 'pointer',
+                          cursor: 'grab',
                           border: '1px solid black',
+                          opacity: dragIndex === idx ? 0.4 : 1,
                         }}
                       >
                         <Image
-                          src={img.thumbUrl ?? img.url}
+                          src={img.thumbUrl ?? img.webUrl}
                           alt=""
                           fill
                           quality={30}
                           style={{ objectFit: 'cover', borderRadius: 4 }}
                         />
+                        {hoverIndex === idx && dragIndex === null && (
+                          <div
+                            style={{
+                              position: 'absolute',
+                              inset: 0,
+                              background: 'rgba(0,0,0,0.35)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              borderRadius: 4,
+                              pointerEvents: 'none',
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontSize: 12,
+                                color: '#fff',
+                                letterSpacing: 2,
+                                textShadow: '0 1px 3px rgba(0,0,0,0.6)',
+                              }}
+                            >
+                              Drag photos
+                            </span>
+                          </div>
+                        )}
+                        <span
+                          style={{
+                            position: 'absolute',
+                            top: 4,
+                            left: 4,
+                            minWidth: 18,
+                            height: 18,
+                            padding: '0 4px',
+                            borderRadius: 9,
+                            background: 'rgba(0,0,0,0.75)',
+                            color: '#fff',
+                            fontSize: 11,
+                            fontWeight: 700,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 1,
+                          }}
+                        >
+                          {idx + 1}
+                        </span>
                         <div
                           style={{
                             position: 'absolute',
@@ -1141,7 +1263,7 @@ export default function ProductPanel({ category }: { category: Category }) {
                             onClick={(e) => {
                               e.stopPropagation();
                               detailImageHandleMove(
-                                editingProduct.images,
+                                editGalleryImages,
                                 idx,
                                 'up',
                               );
@@ -1157,14 +1279,14 @@ export default function ProductPanel({ category }: { category: Category }) {
                               cursor: 'pointer',
                             }}
                           >
-                            ↑
+                            ←
                           </button>
                           <button
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
                               detailImageHandleMove(
-                                editingProduct.images,
+                                editGalleryImages,
                                 idx,
                                 'down',
                               );
@@ -1180,7 +1302,7 @@ export default function ProductPanel({ category }: { category: Category }) {
                               cursor: 'pointer',
                             }}
                           >
-                            ↓
+                            →
                           </button>
                         </div>
                         <button
@@ -1188,15 +1310,12 @@ export default function ProductPanel({ category }: { category: Category }) {
                           onClick={async (e) => {
                             e.stopPropagation();
                             await fetch(
-                              `/api/products/${editingProduct.id}/images?imageId=${img.id}`,
+                              `/api/admin/products/${editingProduct.id}/gallery-images?webUrl=${encodeURIComponent(img.webUrl)}`,
                               { method: 'DELETE' },
                             );
-                            setEditingProduct({
-                              ...editingProduct,
-                              images: editingProduct.images.filter(
-                                (i) => i.id !== img.id,
-                              ),
-                            });
+                            setEditGalleryImages(
+                              editGalleryImages.filter((i) => i.id !== img.id),
+                            );
                           }}
                           style={{
                             position: 'absolute',

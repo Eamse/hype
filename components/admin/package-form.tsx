@@ -4,7 +4,13 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 import { inputStyle, labelStyle, btnStyle } from './types';
 import PackagePreview from './package-preview';
-import { toggleId, type PkgForm, type Inclusion, type Addon, type Partner } from './wedding-photographer-types';
+import {
+  toggleId,
+  type PkgForm,
+  type Inclusion,
+  type Addon,
+  type Partner,
+} from './wedding-photographer-types';
 import { resizeImageFile } from '@/lib/client-image-resize';
 
 // ── Package Form ──────────────────────────────────────────────────────────────

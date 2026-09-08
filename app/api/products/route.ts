@@ -10,6 +10,11 @@ const ALLOWED_SECTIONS = new Set([
   'Casual Photoshoot in Seoul',
 ]);
 
+// searchParams를 읽어서 자동으로 dynamic 처리되긴 하지만, 어드민에서 상세 이미지를
+// 올린 직후에도 캐시된 옛 응답(이미지 업로드 전 상태)이 보이는 문제가 있어서
+// 명시적으로 캐시를 막음
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   const section = request.nextUrl.searchParams.get('section');
   try {
@@ -17,11 +22,13 @@ export async function GET(request: NextRequest) {
       where: section ? { section } : undefined,
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
       include: {
-        images: true,
+        images: { orderBy: { order: 'asc' } },
         directors: { select: { director: { select: { number: true } } } },
       },
     });
-    return NextResponse.json(withProductNumbers(products));
+    return NextResponse.json(withProductNumbers(products), {
+      headers: { 'Cache-Control': 'no-store' },
+    });
   } catch (e) {
     console.error('[GET /api/products]', e);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
