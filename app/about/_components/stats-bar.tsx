@@ -62,29 +62,37 @@ function useCountUp(target: number, start: boolean, delay: number) {
   return value;
 }
 
+// 그리드가 1열(모바일)→2열(sm)→4열(lg)로 바뀔 때, 각 항목이 실제로 그리드
+// 안 어디(몇 번째 행/열)에 있는지에 따라 필요한 구분선이 다름 — 인덱스별로
+// "base(1열)/sm(2열)/lg(4열)" 각 단계에서 오른쪽·아래쪽 선이 있어야 하는지
+// 직접 계산해서 넣음 (범용 prop 하나로는 2x2 레이아웃의 위치를 표현 못 함)
+const DIVIDER_CLASSES = [
+  // idx0 (70+): 1열·2열에서는 아래 이웃과 구분(border-b), 2열에서는 오른쪽
+  // 이웃과도 구분(border-r) — 4열에서는 오른쪽 선만 남기고 아래 선은 제거
+  'border-b border-black pb-8 sm:border-r sm:pr-8 lg:border-b-0 lg:pb-0',
+  // idx1 (16 Countries): 1열·2열에서는 아래 이웃과 구분 — 4열에서는 오른쪽
+  // 이웃과 구분으로 전환
+  'border-b border-black pb-8 lg:border-b-0 lg:pb-0 lg:border-r lg:pr-8',
+  // idx2 (116%): 1열에서는 아래 이웃과 구분 — 2열부터는 같은 행 마지막 줄이 아니라
+  // 오른쪽 이웃(2025)과 구분되므로 아래 선은 빼고 오른쪽 선을 넣음
+  'border-b border-black pb-8 sm:border-b-0 sm:pb-0 sm:border-r sm:pr-8',
+  // idx3 (2025): 항상 마지막이라 구분선 없음
+  '',
+];
+
 function StatColumn({
   stat,
   start,
   delay,
-  showDivider,
-  showBottomDivider,
+  dividerClass,
 }: {
   stat: Stat;
   start: boolean;
   delay: number;
-  showDivider?: boolean;
-  showBottomDivider?: boolean;
+  dividerClass: string;
 }) {
   const value = useCountUp(stat.target, start, delay);
-  const classes = [
-    'flex-1 min-w-0 flex flex-col items-start text-left',
-    showDivider && 'lg:border-r lg:border-black lg:pr-8',
-    // sm(2열)일 때만 첫 줄(70+, 16 Countries)에 아래쪽 구분선 — lg(4열)에서는 다시 없앰
-    showBottomDivider &&
-      'sm:border-b sm:border-black sm:pb-8 lg:border-b-0 lg:pb-0',
-  ]
-    .filter(Boolean)
-    .join(' ');
+  const classes = `flex-1 min-w-0 flex flex-col items-start text-left ${dividerClass}`;
 
   return (
     <div className={classes}>
@@ -138,8 +146,7 @@ export default function StatsBar() {
           stat={stat}
           start={visible}
           delay={0}
-          showDivider={idx < STATS.length - 1}
-          showBottomDivider={idx < 2}
+          dividerClass={DIVIDER_CLASSES[idx]}
         />
       ))}
     </div>

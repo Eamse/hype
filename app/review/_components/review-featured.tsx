@@ -81,7 +81,7 @@ export default function ReviewFeatured({
         data-reveal
         data-reveal-delay="80"
         style={{
-          fontSize: 'clamp(40px, 5.5vw, 64px)',
+          fontSize: 'clamp(46px, 34.4px + 3.1vw, 84px)',
           fontWeight: 800,
           letterSpacing: '-0.02em',
           margin: '0 0 10px',

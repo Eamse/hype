@@ -9,7 +9,7 @@ import MagazineGrid from './_components/magazine-grid';
 import HomeFooter from '@/app/_components/home-footer';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = { title: 'Magazine' };
+export const metadata: Metadata = { title: 'Editorial | HYPE WEDDING' };
 
 type Props = { searchParams: Promise<{ brand?: string }> };
 
@@ -51,7 +51,7 @@ export default async function MagazinePage({ searchParams }: Props) {
               Hype Wedding
             </p>
             <h1
-              className="magazine-page-title"
+              className="inquiry-heading"
               style={{
                 fontWeight: 800,
                 color: '#000',
@@ -63,7 +63,6 @@ export default async function MagazinePage({ searchParams }: Props) {
           </div>
           <MagazineMasterActions />
         </div>
-        <div style={{ borderTop: '1px solid #000', margin: '24px 0 48px' }} />
 
         {magazines.length === 0 ? (
           <p style={{ color: '#000', fontSize: 14 }}>
