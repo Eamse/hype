@@ -126,8 +126,6 @@ export default function AboutClient({
   const minjuPhotoRef = useRef<HTMLDivElement>(null);
   const [minjuCaptionLeft, setMinjuCaptionLeft] = useState<number | null>(null);
 
-  // 헤드라인 → 본문1 → 본문2 → 인용구 순서로 스크롤 진입 시 순차 페이드인
-  // 뷰포트를 벗어나면 리셋해서, 다시 스크롤해 들어올 때마다 재생된다.
   useEffect(() => {
     const el = introRef.current;
     if (!el) return;
@@ -158,7 +156,6 @@ export default function AboutClient({
     };
   }, []);
 
-  // Philosophy: 원칙 카드를 겹친 레이어처럼 순차 Pop 한다. (재진입 시 재생)
   useEffect(() => {
     const section = philosophyRef.current;
     if (!section) return;
@@ -225,9 +222,6 @@ export default function AboutClient({
     };
   }, []);
 
-  // Minju 사진(object-contain + object-right)은 실제 사진이 박스보다 좁게 보이면서
-  // 왼쪽에 빈 여백이 생길 수 있음 — 캡션이 그 여백이 아니라 항상 "사진의 실제 왼쪽 끝"
-  // 위에 오도록, 렌더링된 이미지 크기를 직접 계산해서 캡션의 left 위치를 정확히 맞춤
   useEffect(() => {
     function recompute() {
       const container = minjuPhotoRef.current;
@@ -237,8 +231,6 @@ export default function AboutClient({
       const ch = container.clientHeight;
       const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
       const renderedWidth = img.naturalWidth * scale;
-      // object-right라 빈 여백은 항상 왼쪽에만 생김. +16은 사진 끝에 너무 딱
-      // 붙지 않도록 살짝 오른쪽(사진 안쪽)으로 띄우는 여백
       setMinjuCaptionLeft(cw - renderedWidth + 16);
     }
     recompute();
@@ -335,10 +327,19 @@ export default function AboutClient({
                       data-reveal-delay="700"
                       className="about-intro-quote about-fade-slow"
                     >
-                      &quot;Bringing Korea&apos;s finest wedding
+                      &quot;K-Wedding, to the World&apos;
                       <br />
-                      artistry to the world
-                      <br />— with full transparency and zero stress.&quot;
+                    </p>
+                    <p
+                      data-reveal
+                      data-reveal-delay="900"
+                      className="about-intro-body about-fade"
+                    >
+                      In 2026, we launched <strong>Hype Snap</strong>, expanding
+                      beyond pre-wedding photography to offer casual snaps for
+                      couples, families, and friends. As we continue to expand
+                      our services, we’re growing our presence in global markets
+                      and reaching more clients around the world.
                     </p>
                   </div>
                 </div>
@@ -507,12 +508,6 @@ export default function AboutClient({
                     >
                       What we believe in
                     </h2>
-                    <p
-                      data-philosophy-reveal="280"
-                      className="philosophy-summary philosophy-pop"
-                    >
-                      Four principles that guide every decision
-                    </p>
                   </div>
 
                   <div className="philosophy-principles">
@@ -631,12 +626,8 @@ export default function AboutClient({
                   <p className="about-section-number">05</p>
                   <p className="about-section-eyebrow">HISTORY</p>
                   <h2 className="about-section-title about-section-title-5">
-                    Our journey so far.
+                    Our journey so far
                   </h2>
-                  <p className="journey-subtext">
-                    From a single photo shoot in Korea to an international
-                    pre-wedding brand trusted by couples from 16 countries.
-                  </p>
                 </div>
 
                 <JourneyPin

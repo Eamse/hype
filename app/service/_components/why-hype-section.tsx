@@ -33,11 +33,8 @@ export default function WhyHypeSection() {
           01
         </p>
         <p data-offer-reveal className="offer-eyebrow offer-fade">
-          WHY HYPE WEDDING?
+          WHY HYPE WEDDING
         </p>
-        <h2 data-offer-reveal className="offer-headline offer-fade">
-          What makes us different
-        </h2>
       </div>
 
       <div className="offer-items-grid">
