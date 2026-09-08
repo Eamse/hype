@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { getCountries, getCountryCallingCode } from 'react-phone-number-input';
 import { getData } from 'country-list';
+import { signOut } from 'next-auth/react';
 
 type UserData = {
   firstName: string;
@@ -70,6 +71,11 @@ export default function AccountClient() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deleteError, setDeleteError] = useState('');
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     fetch('/api/user/me')
@@ -146,6 +152,30 @@ export default function AccountClient() {
     setPassword('');
     setConfirmPassword('');
     setEditing(false);
+  }
+
+  async function handleDeleteAccount() {
+    setDeleteError('');
+    if (user.hasPassword && !deletePassword) {
+      setDeleteError('Please enter your password.');
+      return;
+    }
+
+    setDeleting(true);
+    const res = await fetch('/api/user/me', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user.hasPassword ? { password: deletePassword } : {}),
+    });
+    setDeleting(false);
+
+    if (!res.ok) {
+      const data = await res.json();
+      setDeleteError(data.error ?? 'Something went wrong.');
+      return;
+    }
+
+    signOut({ callbackUrl: '/' });
   }
 
   if (loading) return null;
@@ -346,6 +376,70 @@ export default function AccountClient() {
           </div>
         </>
       )}
+      </div>
+
+      <div style={{ marginTop: 48, paddingTop: 24, borderTop: '1px solid #eee' }}>
+        {!showDeleteConfirm ? (
+          <button
+            onClick={() => {
+              setShowDeleteConfirm(true);
+              setDeletePassword('');
+              setDeleteError('');
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#999',
+              fontSize: 13,
+              textDecoration: 'underline',
+              cursor: 'pointer',
+              padding: 0,
+            }}
+          >
+            Delete account
+          </button>
+        ) : (
+          <div style={{ border: '1px solid #d33', borderRadius: 8, padding: 20 }}>
+            <p style={{ fontWeight: 700, fontSize: 14, marginBottom: 6, color: '#d33' }}>
+              Delete your account
+            </p>
+            <p style={{ fontSize: 13, color: '#666', marginBottom: 16 }}>
+              This permanently deletes your account and login info. Reviews and
+              comments you&apos;ve written will stay, but will no longer be
+              linked to your account. This can&apos;t be undone.
+            </p>
+
+            {user.hasPassword && (
+              <input
+                type="password"
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                placeholder="Enter your password to confirm"
+                style={{ ...inputStyle, marginBottom: 12 }}
+              />
+            )}
+
+            {deleteError && (
+              <p style={{ color: '#d33', fontSize: 13, marginBottom: 12 }}>{deleteError}</p>
+            )}
+
+            <div style={{ display: 'flex', gap: 12 }}>
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                style={outlineBtn}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deleting}
+                style={{ ...filledBtn, background: '#d33' }}
+              >
+                {deleting ? 'Deleting...' : 'Delete my account'}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
