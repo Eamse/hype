@@ -26,7 +26,7 @@ const SECTION_COLOR: Record<SearchResult['type'], { bg: string; text: string }> 
 
 function detailHref(item: SearchResult): string {
   if (item.type === 'product') return `/product/${item.id}`;
-  if (item.type === 'magazine') return `/magazine/${item.id}`;
+  if (item.type === 'magazine') return `/editorial/${item.id}`;
   return `/review/${item.id}`;
 }
 

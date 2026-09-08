@@ -51,7 +51,7 @@ export default async function MagazineManagePage() {
             Manage Magazine
           </h1>
           <Link
-            href="/magazine/write"
+            href="/editorial/write"
             style={{
               padding: '10px 16px',
               borderRadius: 8,

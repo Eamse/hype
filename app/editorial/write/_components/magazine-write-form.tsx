@@ -74,7 +74,7 @@ export default function MagazineWriteForm({
     setDeletingImageId(imageId);
     try {
       const res = await fetch(
-        `/magazine/${magazineId}/images?imageId=${imageId}`,
+        `/editorial/${magazineId}/images?imageId=${imageId}`,
         {
           method: 'DELETE',
         },
@@ -127,7 +127,7 @@ export default function MagazineWriteForm({
         const fd = new FormData();
         if (coverFile) fd.append('cover', coverFile);
         galleryFiles.forEach((f) => fd.append('images', f));
-        const imgRes = await fetch(`/magazine/${id}/images`, {
+        const imgRes = await fetch(`/editorial/${id}/images`, {
           method: 'POST',
           body: fd,
         });
@@ -136,7 +136,7 @@ export default function MagazineWriteForm({
         }
       }
 
-      router.push(`/magazine/${id}`);
+      router.push(`/editorial/${id}`);
     } finally {
       setSubmitting(false);
     }

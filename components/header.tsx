@@ -41,9 +41,9 @@ const NAV_LINKS: Record<
     { label: 'About Us', href: '/about' },
     {
       label: 'Service',
-      href: '/offer',
+      href: '/service',
       dropdown: [
-        { label: 'What We Offer', href: '/offer' },
+        { label: 'What We Offer', href: '/service' },
         { label: 'Packages', href: '/packages' },
         {
           label: '• Jeju',
@@ -58,7 +58,7 @@ const NAV_LINKS: Record<
       ],
     },
 
-    { label: 'Editorial', href: '/magazine' },
+    { label: 'Editorial', href: '/editorial' },
     { label: 'Reviews', href: '/review' },
     {
       label: 'Inquiry',
@@ -76,9 +76,9 @@ const NAV_LINKS: Record<
     { label: 'About Us', href: '/about?brand=hype-snap' },
     {
       label: 'Service',
-      href: '/offer?brand=hype-snap',
+      href: '/service?brand=hype-snap',
       dropdown: [
-        { label: 'What We Offer', href: '/offer?brand=hype-snap' },
+        { label: 'What We Offer', href: '/service?brand=hype-snap' },
         { label: 'Packages', href: '/packages?brand=hype-snap' },
         {
           label: '• Jeju',
@@ -93,7 +93,7 @@ const NAV_LINKS: Record<
       ],
     },
 
-    { label: 'Editorial', href: '/magazine?brand=hype-snap' },
+    { label: 'Editorial', href: '/editorial?brand=hype-snap' },
     { label: 'Reviews', href: '/review?brand=hype-snap' },
     {
       label: 'Inquiry',

@@ -8,7 +8,7 @@ import HeroCarousel from '@/components/hero-carousel';
 import ProductSections from './_components/product-sections';
 import HomeFooter from './_components/home-footer';
 import EditorialSection from './_components/editorial-section';
-import OurServiceSection from '@/app/offer/_components/our-service-section';
+import OurServiceSection from '@/app/service/_components/our-service-section';
 
 export default async function Home() {
   const heroRow = await prisma.siteConfig.findUnique({

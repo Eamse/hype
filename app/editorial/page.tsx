@@ -72,7 +72,7 @@ export default async function MagazinePage({ searchParams }: Props) {
           <>
             {/* 히어로 */}
             <Link
-              href={`/magazine/${hero.id}`}
+              href={`/editorial/${hero.id}`}
               style={{
                 textDecoration: 'none',
                 display: 'block',

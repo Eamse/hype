@@ -41,7 +41,7 @@ export default function MagazineGrid({ items }: { items: MagazineItem[] }) {
       {items.map((m) => (
         <Link
           key={m.id}
-          href={`/magazine/${m.id}`}
+          href={`/editorial/${m.id}`}
           className="inquiry-step group"
           style={{ textDecoration: 'none', color: 'inherit' }}
         >
