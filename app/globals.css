@@ -728,27 +728,6 @@ body {
   font-weight: 700;
 }
 
-/* 텍스트 바로 옆에 붙이되, 이 span 자체는 높이를 거의 안 차지하게 해서(1px) 그 줄의
-   텍스트 라인박스를 부풀리지 않음 — 실제 70px 원형 이미지는 absolute로 그 위에 겹쳐서
-   위아래로 삐져나오게 표시하므로, 배지 유무와 상관없이 모든 줄 높이가 균일하게 유지됨 */
-.journey-logo-badge {
-  position: relative;
-  display: inline-block;
-  width: 70px;
-  height: 1px;
-  vertical-align: middle;
-}
-
-.journey-logo-badge img {
-  position: absolute;
-  top: 50%;
-  left: 35px;
-  transform: translateY(-50%);
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-}
-
 .journey-photo {
   position: relative;
   min-height: 320px;
@@ -866,22 +845,6 @@ body {
   .journey-timeline-item:not(:last-child)::before {
     top: 11.5px;
     bottom: -11.5px;
-  }
-
-  .journey-logo-badge {
-    display: flex;
-    width: 44px;
-    height: 44px;
-    margin-top: 8px;
-  }
-
-  .journey-logo-badge img {
-    position: static;
-    top: auto;
-    left: auto;
-    transform: none;
-    width: 44px;
-    height: 44px;
   }
 }
 

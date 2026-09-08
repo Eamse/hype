@@ -18,18 +18,6 @@ type Photo = {
   milestoneIndex: number;
 };
 
-// milestoneIndex → 타임라인 텍스트 옆에 붙는 작은 원형 로고 배지 (연도별 로컬 인덱스 기준)
-const LOGO_BADGES_2025: Record<number, { src: string; alt: string }> = {
-  0: { src: '/about/history/history-01-founded.png', alt: 'Hype Pig' },
-  1: { src: '/about/history/history-02-hype-wedding.png', alt: 'Hype Wedding' },
-};
-const LOGO_BADGES_2026: Record<number, { src: string; alt: string }> = {
-  2: {
-    src: '/about/history/logo/history-hype-snap-icon.png',
-    alt: 'Hype Snap',
-  },
-};
-
 const PHOTOS_2025_LOCAL: Photo[] = [
   {
     src: '/about/history/history-2025-angel-dei-1.jpg',
@@ -87,13 +75,7 @@ function buildPhotos(yearBoundary: number): Photo[] {
   ];
 }
 
-function TimelineRow({
-  item,
-  logo,
-}: {
-  item: JourneyItem;
-  logo?: { src: string; alt: string };
-}) {
+function TimelineRow({ item }: { item: JourneyItem }) {
   return (
     <div className="journey-timeline-item">
       <div className="journey-timeline-row">
@@ -108,17 +90,6 @@ function TimelineRow({
             .join(' ')}
         >
           {item.content}
-          {logo && (
-            <span className="journey-logo-badge">
-              <Image
-                src={logo.src}
-                alt={logo.alt}
-                width={70}
-                height={70}
-                className="object-cover"
-              />
-            </span>
-          )}
         </p>
       </div>
     </div>
@@ -128,13 +99,11 @@ function TimelineRow({
 function YearBlock({
   year,
   items,
-  logoBadges,
   titleRef,
   titleClassName,
 }: {
   year: string;
   items: JourneyItem[];
-  logoBadges: Record<number, { src: string; alt: string }>;
   titleRef: (el: HTMLParagraphElement | null) => void;
   titleClassName: string;
 }) {
@@ -145,7 +114,7 @@ function YearBlock({
           {year}
         </p>
         {items.map((item, idx) => (
-          <TimelineRow key={idx} item={item} logo={logoBadges[idx]} />
+          <TimelineRow key={idx} item={item} />
         ))}
       </div>
     </div>
@@ -231,7 +200,6 @@ export default function JourneyPin({
         <YearBlock
           year="2025"
           items={journey2025}
-          logoBadges={LOGO_BADGES_2025}
           titleRef={(el) => {
             title2025Ref.current = el;
           }}
@@ -246,7 +214,6 @@ export default function JourneyPin({
         <YearBlock
           year="2026"
           items={journey2026}
-          logoBadges={LOGO_BADGES_2026}
           titleRef={() => {}}
           titleClassName={[
             'journey-year-title',
