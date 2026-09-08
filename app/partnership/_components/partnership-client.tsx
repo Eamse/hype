@@ -83,7 +83,7 @@ const PARTNER_LOGOS: { name: string; logo?: string }[] = [
     name: 'Bridal and Breakfast',
     logo: '/partnership/partnership-logo-bride-and-breakfast.png',
   },
-  { name: 'Hicheed SG', logo: '/partnership/partnership-logo-hitcheed.png' },
+  { name: 'Hicheed SG', logo: '/partnership/Partnership-Logo-hitcheed-black.png' },
   { name: 'Coming Soon', logo: '/partnership/Partnership-coming-soon-logo.svg' },
 ];
 
