@@ -82,7 +82,7 @@ function SectionHeader({
           width: 26,
           height: 26,
           borderRadius: '50%',
-          background: 'linear-gradient(135deg, #c9a96e, #b8965a)',
+          background: '#000',
           color: '#fff',
           fontSize: 11,
           fontWeight: 700,
@@ -122,9 +122,9 @@ function UploadDropzone({
         width: '100%',
         padding: '14px 16px',
         borderRadius: 10,
-        border: '1.5px dashed #d8c39a',
-        background: '#fbf8f2',
-        color: '#7a5520',
+        border: '1.5px dashed #c5c5c5',
+        background: '#f8f8f8',
+        color: '#5a5a5a',
         cursor: 'pointer',
         textAlign: 'left',
       }}
@@ -153,7 +153,7 @@ function UploadDropzone({
         <span style={{ fontSize: 13, fontWeight: 700 }}>
           클릭해서 이미지 선택
         </span>
-        <span style={{ fontSize: 11, color: '#a08a5f' }}>{hint}</span>
+        <span style={{ fontSize: 11, color: '#8c8c8c' }}>{hint}</span>
       </span>
     </button>
   );
@@ -196,7 +196,7 @@ function DirectorPicker({
               )
             }
           />
-          <span style={{ color: '#c9a96e', fontWeight: 600, fontSize: 11 }}>
+          <span style={{ color: '#acacac', fontWeight: 600, fontSize: 11 }}>
             {d.number}
           </span>
           {d.name}
@@ -548,7 +548,7 @@ export default function ProductPanel({ category }: { category: Category }) {
           style={{
             fontSize: 10,
             letterSpacing: '2px',
-            color: '#7a5520',
+            color: '#5a5a5a',
             fontWeight: 600,
             marginBottom: 6,
           }}
@@ -589,7 +589,7 @@ export default function ProductPanel({ category }: { category: Category }) {
             gap: 16,
           }}
         >
-          <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a' }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: '#252525' }}>
             새 상품 등록
           </p>
 
@@ -762,7 +762,7 @@ export default function ProductPanel({ category }: { category: Category }) {
                   style={{
                     fontSize: 12,
                     fontWeight: 700,
-                    color: '#7a5520',
+                    color: '#5a5a5a',
                     letterSpacing: '1px',
                     textTransform: 'uppercase',
                   }}
@@ -848,7 +848,7 @@ export default function ProductPanel({ category }: { category: Category }) {
                 style={{
                   fontSize: 11,
                   fontWeight: 700,
-                  color: '#7a5520',
+                  color: '#5a5a5a',
                   letterSpacing: '2px',
                 }}
               >

@@ -43,7 +43,7 @@ export default function UserPanel() {
           marginBottom: 24,
         }}
       >
-        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#2d1f1f' }}>
+        <h2 style={{ fontSize: 18, fontWeight: 700, color: '#232323' }}>
           Members
           <span
             style={{
@@ -92,7 +92,7 @@ export default function UserPanel() {
                       padding: '10px 12px',
                       textAlign: 'left',
                       fontWeight: 600,
-                      color: '#6b4c4c',
+                      color: '#555555',
                       whiteSpace: 'nowrap',
                     }}
                   >
@@ -103,13 +103,13 @@ export default function UserPanel() {
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr key={user.id} style={{ borderBottom: '1px solid #f0e8e8' }}>
+                <tr key={user.id} style={{ borderBottom: '1px solid #eaeaea' }}>
                   <td style={{ padding: '10px 12px' }}>
                     {user.provider === 'google' ? (
                       <span
                         style={{
-                          background: '#e8f0fe',
-                          color: '#1a73e8',
+                          background: '#efefef',
+                          color: '#666666',
                           padding: '2px 8px',
                           borderRadius: 4,
                           fontSize: 11,
@@ -133,16 +133,16 @@ export default function UserPanel() {
                       </span>
                     )}
                   </td>
-                  <td style={{ padding: '10px 12px', color: '#2d1f1f' }}>
+                  <td style={{ padding: '10px 12px', color: '#232323' }}>
                     {user.email}
                   </td>
-                  <td style={{ padding: '10px 12px', color: '#2d1f1f' }}>
+                  <td style={{ padding: '10px 12px', color: '#232323' }}>
                     {user.name ?? '-'}
                   </td>
-                  <td style={{ padding: '10px 12px', color: '#2d1f1f' }}>
+                  <td style={{ padding: '10px 12px', color: '#232323' }}>
                     {user.gender ?? '-'}
                   </td>
-                  <td style={{ padding: '10px 12px', color: '#2d1f1f' }}>
+                  <td style={{ padding: '10px 12px', color: '#232323' }}>
                     {user.country ? (
                       <div
                         style={{
@@ -161,12 +161,12 @@ export default function UserPanel() {
                       '-'
                     )}
                   </td>
-                  <td style={{ padding: '10px 12px', color: '#2d1f1f' }}>
+                  <td style={{ padding: '10px 12px', color: '#232323' }}>
                     {user.phoneCountryCode && user.phone
                       ? `${user.phoneCountryCode} ${user.phone}`
                       : '-'}
                   </td>
-                  <td style={{ padding: '10px 12px', color: '#2d1f1f' }}>
+                  <td style={{ padding: '10px 12px', color: '#232323' }}>
                     {user.birthYear && user.birthMonth && user.birthDay
                       ? `${user.birthYear}.${user.birthMonth}.${user.birthDay}`
                       : '-'}

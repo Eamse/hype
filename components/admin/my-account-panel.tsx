@@ -44,7 +44,7 @@ export default function MyAccountPanel() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       <div style={{ paddingBottom: 20, borderBottom: '1px solid #000' }}>
-        <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>
+        <p style={{ fontSize: 10, letterSpacing: '2px', color: '#5a5a5a', fontWeight: 600, marginBottom: 6 }}>
           MY ACCOUNT
         </p>
         <h2 style={{ fontSize: 22, fontWeight: 700, color: '#000', letterSpacing: '-0.3px' }}>
@@ -84,7 +84,7 @@ export default function MyAccountPanel() {
               onChange={(e) => setForm((p) => ({ ...p, confirmPassword: e.target.value }))}
             />
           </div>
-          {error && <p style={{ fontSize: 12, color: '#e05555' }}>{error}</p>}
+          {error && <p style={{ fontSize: 12, color: '#7f7f7f' }}>{error}</p>}
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 4 }}>
             <button onClick={handleSubmit} disabled={loading} style={btnStyle('#000', '#fff')}>
               {loading ? 'Saving...' : 'Change Password'}

@@ -102,7 +102,7 @@ export default function PackageForm({
   const sectionTitle: React.CSSProperties = {
     fontSize: 10,
     fontWeight: 700,
-    color: '#c9a96e',
+    color: '#acacac',
     letterSpacing: '1.5px',
     textTransform: 'uppercase',
     marginBottom: 8,
@@ -123,7 +123,7 @@ export default function PackageForm({
       >
         <button
           type="button"
-          style={btnStyle('#fff', '#3a1a2a', '#000')}
+          style={btnStyle('#fff', '#252525', '#000')}
           onClick={() => setShowPreview(true)}
         >
           미리보기
@@ -156,7 +156,7 @@ export default function PackageForm({
             )}
             {thumbUploading && (
               <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ width: 18, height: 18, borderRadius: '50%', border: '2px solid #000', borderTopColor: '#c9a96e', animation: 'spin 0.7s linear infinite' }} />
+                <div style={{ width: 18, height: 18, borderRadius: '50%', border: '2px solid #000', borderTopColor: '#acacac', animation: 'spin 0.7s linear infinite' }} />
               </div>
             )}
             <input
@@ -171,7 +171,7 @@ export default function PackageForm({
               }}
             />
           </div>
-          {thumbError && <p style={{ fontSize: 11, color: '#dc2626', marginTop: 4 }}>{thumbError}</p>}
+          {thumbError && <p style={{ fontSize: 11, color: '#5c5c5c', marginTop: 4 }}>{thumbError}</p>}
         </div>
       ) : (
         <p style={{ fontSize: 12, color: '#888', marginBottom: 16 }}>
@@ -432,7 +432,7 @@ export default function PackageForm({
                   }
                 />
                 {addon.name}{' '}
-                <span style={{ color: '#c9a96e', fontSize: 12 }}>
+                <span style={{ color: '#acacac', fontSize: 12 }}>
                   ${addon.price}
                 </span>
               </label>

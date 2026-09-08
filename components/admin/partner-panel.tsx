@@ -90,7 +90,7 @@ export default function PartnerPanel({ role }: { role: 'hmu' | 'dress' | 'suit' 
     <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
       {/* 헤더 */}
       <div style={{ paddingBottom: 20, borderBottom: '1px solid #000' }}>
-        <p style={{ fontSize: 10, letterSpacing: '2px', color: '#7a5520', fontWeight: 600, marginBottom: 6 }}>
+        <p style={{ fontSize: 10, letterSpacing: '2px', color: '#5a5a5a', fontWeight: 600, marginBottom: 6 }}>
           WEDDING
         </p>
         <h2 style={{ fontSize: 22, fontWeight: 700, color: '#000' }}>{ROLE_LABELS[role]} 관리</h2>
@@ -98,7 +98,7 @@ export default function PartnerPanel({ role }: { role: 'hmu' | 'dress' | 'suit' 
 
       {/* 등록 폼 */}
       <div style={{ background: '#fff', border: '1px solid #000', borderRadius: 12, padding: 24 }}>
-        <p style={{ fontSize: 13, fontWeight: 600, color: '#3a1a2a', marginBottom: 16 }}>새 등록</p>
+        <p style={{ fontSize: 13, fontWeight: 600, color: '#252525', marginBottom: 16 }}>새 등록</p>
         <div style={{ display: 'grid', gridTemplateColumns: '2fr 2fr', gap: 12, marginBottom: 16 }}>
           <div>
             <label style={labelStyle}>이름 *</label>
@@ -156,8 +156,8 @@ export default function PartnerPanel({ role }: { role: 'hmu' | 'dress' | 'suit' 
                   {p.instagram && <span style={{ fontSize: 12, color: '#000', marginLeft: 10 }}>{p.instagram}</span>}
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <button style={btnStyle('#fff', '#3a1a2a', '#000')} onClick={() => { setEditingId(p.id); setEditForm({ name: p.name, instagram: p.instagram ?? '' }); }}>수정</button>
-                  <button style={btnStyle('#fff', '#e05555', '#fdd')} onClick={() => handleDelete(p.id)}>삭제</button>
+                  <button style={btnStyle('#fff', '#252525', '#000')} onClick={() => { setEditingId(p.id); setEditForm({ name: p.name, instagram: p.instagram ?? '' }); }}>수정</button>
+                  <button style={btnStyle('#fff', '#7f7f7f', '#e7e7e7')} onClick={() => handleDelete(p.id)}>삭제</button>
                 </div>
               </div>
             )}

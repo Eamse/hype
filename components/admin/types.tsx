@@ -53,13 +53,13 @@ export function btnStyle(
     borderRadius: 8,
     fontSize: 12,
     fontWeight: 600,
-    background: isPrimary ? 'linear-gradient(135deg, #c9a96e, #b8965a)' : bg,
+    background: isPrimary ? '#000' : bg,
     color: isPrimary ? '#fff' : color,
     cursor: 'pointer',
 
     border: border ? `1px solid ${border}` : 'none',
     whiteSpace: 'nowrap' as const,
-    boxShadow: isPrimary ? '0 2px 8px rgba(201,169,110,0.3)' : 'none',
+    boxShadow: isPrimary ? '0 2px 8px rgba(172,172,172,0.3)' : 'none',
     letterSpacing: '0.3px',
   };
 }
@@ -68,7 +68,7 @@ export const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: 10,
   fontWeight: 700,
-  color: '#c9a96e',
+  color: '#acacac',
   marginBottom: 6,
   textTransform: 'uppercase',
   letterSpacing: '1.5px',

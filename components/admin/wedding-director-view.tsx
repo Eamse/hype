@@ -104,7 +104,7 @@ export default function WeddingDirectorView({
         <button
           onClick={onBack}
           style={{
-            ...btnStyle('transparent', '#000', '#e0d8c8'),
+            ...btnStyle('transparent', '#000', '#d9d9d9'),
             marginBottom: 16,
           }}
         >
@@ -114,7 +114,7 @@ export default function WeddingDirectorView({
           style={{
             fontSize: 10,
             letterSpacing: '2px',
-            color: '#7a5520',
+            color: '#5a5a5a',
             fontWeight: 600,
             marginBottom: 6,
           }}
@@ -139,7 +139,7 @@ export default function WeddingDirectorView({
           style={{
             fontSize: 13,
             fontWeight: 600,
-            color: '#3a1a2a',
+            color: '#252525',
             marginBottom: 12,
           }}
         >
@@ -200,7 +200,7 @@ export default function WeddingDirectorView({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <span
-                    style={{ fontSize: 12, color: '#c9956a', fontWeight: 600 }}
+                    style={{ fontSize: 12, color: '#a0a0a0', fontWeight: 600 }}
                   >
                     {p.number}
                   </span>
@@ -217,7 +217,7 @@ export default function WeddingDirectorView({
                 </div>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button
-                    style={btnStyle('transparent', '#c9956a', '#000')}
+                    style={btnStyle('transparent', '#a0a0a0', '#000')}
                     onClick={() =>
                       setActivePackagePhotographerId(
                         activePackagePhotographerId === p.id ? null : p.id,
@@ -228,7 +228,7 @@ export default function WeddingDirectorView({
                     {activePackagePhotographerId === p.id ? '▲' : '▼'}
                   </button>
                   <button
-                    style={btnStyle('transparent', '#ef4444', '#ef4444')}
+                    style={btnStyle('transparent', '#777777', '#777777')}
                     onClick={() => handleUnlink(p.id)}
                   >
                     연결 해제

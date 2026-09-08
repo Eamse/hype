@@ -93,7 +93,7 @@ export default function ProductRow({
           )}
           {uploading && (
             <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #000', borderTopColor: '#c9a96e', animation: 'spin 0.7s linear infinite' }} />
+              <div style={{ width: 20, height: 20, borderRadius: '50%', border: '2px solid #000', borderTopColor: '#acacac', animation: 'spin 0.7s linear infinite' }} />
             </div>
           )}
           {imgHover && !uploading && (
@@ -106,7 +106,7 @@ export default function ProductRow({
             </div>
           )}
           {imgSaved && (
-            <div style={{ position: 'absolute', inset: 0, background: 'rgba(201,169,110,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 20 }}>
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 20 }}>
               ✓
             </div>
           )}
@@ -124,13 +124,13 @@ export default function ProductRow({
         {/* 텍스트 + 버튼 */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 6 }}>
           <p style={{ fontSize: 13, fontWeight: 600, color: '#000', lineHeight: 1.4 }}>
-            {position != null && <span style={{ color: '#c9a96e', marginRight: 6 }}>{position}번</span>}
+            {position != null && <span style={{ color: '#acacac', marginRight: 6 }}>{position}번</span>}
             {product.title}
           </p>
-          {imgError && <p style={{ fontSize: 11, color: '#dc2626' }}>{imgError}</p>}
+          {imgError && <p style={{ fontSize: 11, color: '#5c5c5c' }}>{imgError}</p>}
           <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
-            <button onClick={onEdit} style={btnStyle('transparent', '#000', '#e0d8c8')}>수정</button>
-            <button onClick={onDeleted} style={btnStyle('transparent', '#ef4444', '#fdd')}>삭제</button>
+            <button onClick={onEdit} style={btnStyle('transparent', '#000', '#d9d9d9')}>수정</button>
+            <button onClick={onDeleted} style={btnStyle('transparent', '#777777', '#e7e7e7')}>삭제</button>
           </div>
         </div>
 
@@ -141,14 +141,14 @@ export default function ProductRow({
               <button
                 onClick={onMoveUp}
                 disabled={!canMoveUp}
-                style={{ background: 'none', border: '1px solid #e0d8c8', borderRadius: 4, cursor: canMoveUp ? 'pointer' : 'default', fontSize: 11, color: canMoveUp ? '#000' : '#bbb', padding: '2px 6px' }}
+                style={{ background: 'none', border: '1px solid #d9d9d9', borderRadius: 4, cursor: canMoveUp ? 'pointer' : 'default', fontSize: 11, color: canMoveUp ? '#000' : '#bbb', padding: '2px 6px' }}
               >
                 ▲
               </button>
               <button
                 onClick={onMoveDown}
                 disabled={!canMoveDown}
-                style={{ background: 'none', border: '1px solid #e0d8c8', borderRadius: 4, cursor: canMoveDown ? 'pointer' : 'default', fontSize: 11, color: canMoveDown ? '#000' : '#bbb', padding: '2px 6px' }}
+                style={{ background: 'none', border: '1px solid #d9d9d9', borderRadius: 4, cursor: canMoveDown ? 'pointer' : 'default', fontSize: 11, color: canMoveDown ? '#000' : '#bbb', padding: '2px 6px' }}
               >
                 ▼
               </button>
