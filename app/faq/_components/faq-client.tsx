@@ -519,143 +519,141 @@ export default function FaqClient() {
 
       {/* ── 카테고리 탭 ── */}
       {!isSearching && (
-        <div style={{ borderBottom: '1px solid #000' }}>
-          <div
+        <div
+          style={{
+            maxWidth: 1200,
+            margin: '0 auto',
+            padding: isMobile ? '0 8px' : '0 12px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+          }}
+        >
+          {/* 왼쪽 화살표 */}
+          <button
+            onClick={() =>
+              tabsRef.current?.scrollBy({ left: -240, behavior: 'smooth' })
+            }
             style={{
-              maxWidth: 1200,
-              margin: '0 auto',
-              padding: isMobile ? '0 8px' : '0 12px',
+              flexShrink: 0,
+              width: 28,
+              height: 28,
+              borderRadius: '50%',
+              border: '1px solid #000',
+              background: '#fff',
+              cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: 4,
+              justifyContent: 'center',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.12)',
+              opacity: tabFade.left ? 1 : 0,
+              pointerEvents: tabFade.left ? 'auto' : 'none',
+              transition: 'opacity 0.2s',
             }}
           >
-            {/* 왼쪽 화살표 */}
-            <button
-              onClick={() =>
-                tabsRef.current?.scrollBy({ left: -240, behavior: 'smooth' })
-              }
-              style={{
-                flexShrink: 0,
-                width: 28,
-                height: 28,
-                borderRadius: '50%',
-                border: '1px solid #000',
-                background: '#fff',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.12)',
-                opacity: tabFade.left ? 1 : 0,
-                pointerEvents: tabFade.left ? 'auto' : 'none',
-                transition: 'opacity 0.2s',
-              }}
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#000"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#000"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="15 18 9 12 15 6" />
-              </svg>
-            </button>
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
 
-            {/* 탭 스크롤 영역 */}
-            <div
-              ref={tabsRef}
-              onScroll={checkTabFade}
-              className="hide-scroll"
-              style={{
-                flex: 1,
-                display: 'flex',
-                overflowX: 'auto',
-              }}
-            >
-              {CATEGORIES.map((cat) => {
-                const isActive = cat === activeCategory;
-                return (
-                  <button
-                    key={cat}
-                    onClick={() => {
-                      setActiveCategory(cat);
-                      setOpenIndex(null);
-                    }}
-                    onMouseEnter={() => setHoveredTab(cat)}
-                    onMouseLeave={() => setHoveredTab(null)}
-                    style={{
-                      flexShrink: 0,
-                      padding: isMobile ? '12px 16px' : '14px 24px',
-                      fontSize: 16,
-                      fontWeight: 700,
-                      letterSpacing: '0.5px',
-                      textTransform: 'uppercase',
-                      color: isActive
-                        ? '#2D5A45'
-                        : hoveredTab === cat
-                          ? '#000'
-                          : '#000',
-                      background: 'none',
-                      borderTop: 'none',
-                      borderLeft: 'none',
-                      borderRight: 'none',
-                      borderBottom: isActive
-                        ? '2px solid #2D5A45'
-                        : hoveredTab === cat
-                          ? '2px solid #000'
-                          : '2px solid transparent',
-                      cursor: 'pointer',
-                      transition: 'color 0.2s, border-color 0.2s',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
-                    {cat}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* 오른쪽 화살표 */}
-            <button
-              onClick={() =>
-                tabsRef.current?.scrollBy({ left: 240, behavior: 'smooth' })
-              }
-              style={{
-                flexShrink: 0,
-                width: 28,
-                height: 28,
-                borderRadius: '50%',
-                border: '1px solid #000',
-                background: '#fff',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.12)',
-                opacity: tabFade.right ? 1 : 0,
-                pointerEvents: tabFade.right ? 'auto' : 'none',
-                transition: 'opacity 0.2s',
-              }}
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#000"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </button>
+          {/* 탭 스크롤 영역 */}
+          <div
+            ref={tabsRef}
+            onScroll={checkTabFade}
+            className="hide-scroll"
+            style={{
+              flex: 1,
+              display: 'flex',
+              overflowX: 'auto',
+            }}
+          >
+            {CATEGORIES.map((cat) => {
+              const isActive = cat === activeCategory;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    setOpenIndex(null);
+                  }}
+                  onMouseEnter={() => setHoveredTab(cat)}
+                  onMouseLeave={() => setHoveredTab(null)}
+                  style={{
+                    flexShrink: 0,
+                    padding: isMobile ? '12px 16px' : '14px 24px',
+                    fontSize: 16,
+                    fontWeight: 700,
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase',
+                    color: isActive
+                      ? '#2D5A45'
+                      : hoveredTab === cat
+                        ? '#000'
+                        : '#000',
+                    background: 'none',
+                    borderTop: 'none',
+                    borderLeft: 'none',
+                    borderRight: 'none',
+                    borderBottom: isActive
+                      ? '2px solid #2D5A45'
+                      : hoveredTab === cat
+                        ? '2px solid #000'
+                        : '2px solid transparent',
+                    cursor: 'pointer',
+                    transition: 'color 0.2s, border-color 0.2s',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {cat}
+                </button>
+              );
+            })}
           </div>
+
+          {/* 오른쪽 화살표 */}
+          <button
+            onClick={() =>
+              tabsRef.current?.scrollBy({ left: 240, behavior: 'smooth' })
+            }
+            style={{
+              flexShrink: 0,
+              width: 28,
+              height: 28,
+              borderRadius: '50%',
+              border: '1px solid #000',
+              background: '#fff',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.12)',
+              opacity: tabFade.right ? 1 : 0,
+              pointerEvents: tabFade.right ? 'auto' : 'none',
+              transition: 'opacity 0.2s',
+            }}
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#000"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
         </div>
       )}
 
