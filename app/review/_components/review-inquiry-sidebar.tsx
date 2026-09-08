@@ -3,9 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-const WHATSAPP_URL = '#';
-const WECHAT_URL = '#';
-const LINE_URL = '#';
+const WHATSAPP_URL = 'http://Wa.me/+821062695990';
+const WECHAT_URL = 'https://u.wechat.com/kAo3Jp9jOyXemuB2BBeo6Vc?s=2';
+const LINE_URL = 'https://line.me/ti/p/MxawLJXY5t';
 
 export default function ReviewInquirySidebar() {
   return (
