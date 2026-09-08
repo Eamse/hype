@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import PrivacyPolicyModal from '@/components/privacy-policy-modal';
+import TermsOfServiceModal from '@/components/terms-of-service-modal';
 
 function ChevronDownIcon({ open }: { open: boolean }) {
   return (
@@ -27,6 +28,7 @@ function ChevronDownIcon({ open }: { open: boolean }) {
 
 export default function HomeFooter() {
   const [showPrivacyModal, setShowPrivacyModal] = useState(false);
+  const [showTermsModal, setShowTermsModal] = useState(false);
   const router = useRouter();
 
   return (
@@ -40,6 +42,7 @@ export default function HomeFooter() {
       <div>
         <div style={{ display: 'flex', gap: 16, marginBottom: 14 }}>
           <button
+            onClick={() => setShowTermsModal(true)}
             style={{
               fontSize: 12,
               fontWeight: 700,
@@ -87,7 +90,7 @@ export default function HomeFooter() {
             paddingTop: 10,
           }}
         >
-          <p>HYPE &nbsp;|&nbsp; CEO: Minju Lee, Saeyoung Lee</p>
+          <p>HYPE PIG&nbsp;|&nbsp; CEO: Minju Lee, Saeyoung Lee</p>
           <p>Business Reg: 722-46-01107</p>
           <p>Email: hypepig227@gmail.com</p>
           <p>
@@ -99,6 +102,9 @@ export default function HomeFooter() {
 
       {showPrivacyModal && (
         <PrivacyPolicyModal onClose={() => setShowPrivacyModal(false)} />
+      )}
+      {showTermsModal && (
+        <TermsOfServiceModal onClose={() => setShowTermsModal(false)} />
       )}
     </footer>
   );
