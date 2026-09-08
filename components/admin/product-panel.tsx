@@ -234,9 +234,9 @@ export default function ProductPanel({ category }: { category: Category }) {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   // 유저페이지 갤러리가 실제로 읽는 건 Package.images라서, 상세 이미지는
   // 이 상품에 연결된 모든 작가의 모든 패키지에 동일하게 복제해서 관리함
-  const [editGalleryImages, setEditGalleryImages] = useState<
-    GalleryImage[]
-  >([]);
+  const [editGalleryImages, setEditGalleryImages] = useState<GalleryImage[]>(
+    [],
+  );
   const {
     selectedIds: selectedImageIds,
     toggleSelect: toggleSelectImage,
@@ -254,6 +254,7 @@ export default function ProductPanel({ category }: { category: Category }) {
   );
   const [editSaving, setEditSaving] = useState(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
   const editDetailRef = useRef<HTMLInputElement>(null);
   const editThumbRef = useRef<HTMLInputElement>(null);
 
@@ -384,9 +385,7 @@ export default function ProductPanel({ category }: { category: Category }) {
       .map((img, i) => ({ img, order: i }))
       .filter(({ img, order }) => img.order !== order);
 
-    setEditGalleryImages(
-      reordered.map((img, i) => ({ ...img, order: i })),
-    );
+    setEditGalleryImages(reordered.map((img, i) => ({ ...img, order: i })));
 
     await Promise.all(
       changed.map(({ img, order }) =>
@@ -490,9 +489,7 @@ export default function ProductPanel({ category }: { category: Category }) {
     setEditDetailFiles([]);
     setEditThumbFile(null);
     const [data, galleryData] = await Promise.all([
-      fetch(`/api/admin/wedding-directors/${product.id}`).then((r) =>
-        r.json(),
-      ),
+      fetch(`/api/admin/wedding-directors/${product.id}`).then((r) => r.json()),
       fetch(`/api/admin/products/${product.id}/gallery-images`, {
         cache: 'no-store',
       }).then((r) => r.json()),
@@ -531,10 +528,10 @@ export default function ProductPanel({ category }: { category: Category }) {
       for (const file of editDetailFiles) {
         const fd = new FormData();
         fd.append('image', file);
-        await fetch(
-          `/api/admin/products/${editingProduct.id}/gallery-images`,
-          { method: 'POST', body: fd },
-        );
+        await fetch(`/api/admin/products/${editingProduct.id}/gallery-images`, {
+          method: 'POST',
+          body: fd,
+        });
       }
       await loadProducts();
       setEditingProduct(null);
@@ -1186,6 +1183,8 @@ export default function ProductPanel({ category }: { category: Category }) {
                           setDragIndex(null);
                         }}
                         onDragEnd={() => setDragIndex(null)}
+                        onMouseEnter={() => setHoverIndex(idx)}
+                        onMouseLeave={() => setHoverIndex(null)}
                         style={{
                           position: 'relative',
                           width: 120,
@@ -1202,6 +1201,31 @@ export default function ProductPanel({ category }: { category: Category }) {
                           quality={30}
                           style={{ objectFit: 'cover', borderRadius: 4 }}
                         />
+                        {hoverIndex === idx && dragIndex === null && (
+                          <div
+                            style={{
+                              position: 'absolute',
+                              inset: 0,
+                              background: 'rgba(0,0,0,0.35)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              borderRadius: 4,
+                              pointerEvents: 'none',
+                            }}
+                          >
+                            <span
+                              style={{
+                                fontSize: 12,
+                                color: '#fff',
+                                letterSpacing: 2,
+                                textShadow: '0 1px 3px rgba(0,0,0,0.6)',
+                              }}
+                            >
+                              Drag photos
+                            </span>
+                          </div>
+                        )}
                         <span
                           style={{
                             position: 'absolute',
@@ -1290,9 +1314,7 @@ export default function ProductPanel({ category }: { category: Category }) {
                               { method: 'DELETE' },
                             );
                             setEditGalleryImages(
-                              editGalleryImages.filter(
-                                (i) => i.id !== img.id,
-                              ),
+                              editGalleryImages.filter((i) => i.id !== img.id),
                             );
                           }}
                           style={{
