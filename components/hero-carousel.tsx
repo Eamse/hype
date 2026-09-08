@@ -92,12 +92,10 @@ export default function HeroCarousel({
         userSelect: 'none',
       }}
       onMouseEnter={(e) => {
-        setPaused(true);
         moveHintTo(e);
         if (hintRef.current) hintRef.current.style.opacity = '1';
       }}
       onMouseLeave={() => {
-        setPaused(false);
         endDrag();
         if (hintRef.current) hintRef.current.style.opacity = '0';
       }}
