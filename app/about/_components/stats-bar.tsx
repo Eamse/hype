@@ -66,21 +66,34 @@ function StatColumn({
   stat,
   start,
   delay,
+  showDivider,
+  showBottomDivider,
 }: {
   stat: Stat;
   start: boolean;
   delay: number;
+  showDivider?: boolean;
+  showBottomDivider?: boolean;
 }) {
   const value = useCountUp(stat.target, start, delay);
+  const classes = [
+    'flex-1 min-w-0 flex flex-col items-start text-left',
+    showDivider && 'lg:border-r lg:border-black lg:pr-8',
+    // sm(2열)일 때만 첫 줄(70+, 16 Countries)에 아래쪽 구분선 — lg(4열)에서는 다시 없앰
+    showBottomDivider &&
+      'sm:border-b sm:border-black sm:pb-8 lg:border-b-0 lg:pb-0',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <div className="flex-none flex flex-col items-start text-left">
+    <div className={classes}>
       {/* 모든 컬럼에 동일한 높이를 예약해서 숫자 줄 baseline을 맞춤 */}
       <p className="text-[clamp(0.85rem,1.4vw,1rem)] font-bold italic mb-0.5 h-6 leading-6">
         {stat.topLabel ?? ' '}
       </p>
       <div className="flex items-baseline gap-2">
-        <span className="text-[clamp(2.25rem,5vw,3.75rem)] font-bold italic tracking-tight">
+        <span className="text-[clamp(60px,3vw,96px)] font-bold italic tracking-tight">
           {value}
           {stat.suffix}
         </span>
@@ -117,19 +130,18 @@ export default function StatsBar() {
   return (
     <div
       ref={ref}
-      className="flex flex-col items-center md:flex-row md:items-center md:justify-around md:gap-x-15 md:px-25 py-20"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-15 items-center justify-items-center lg:px-25 py-20"
     >
-      {STATS.flatMap((stat, idx) => [
-        // 모든 항목이 같은 flex 컨테이너의 직속 형제라서 gap이 구분선 양옆에
-        // 똑같이 적용됨 — 그래서 두 텍스트 사이 정중앙에 옴
-        idx > 0 && (
-          <span
-            key={`divider-${stat.sublabel}`}
-            className="hidden md:block w-px self-stretch bg-black"
-          />
-        ),
-        <StatColumn key={stat.sublabel} stat={stat} start={visible} delay={0} />,
-      ])}
+      {STATS.map((stat, idx) => (
+        <StatColumn
+          key={stat.sublabel}
+          stat={stat}
+          start={visible}
+          delay={0}
+          showDivider={idx < STATS.length - 1}
+          showBottomDivider={idx < 2}
+        />
+      ))}
     </div>
   );
 }
