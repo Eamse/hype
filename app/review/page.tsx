@@ -7,6 +7,7 @@ import ReviewFilters from './_components/review-filters';
 import ReviewListClient from './_components/review-list-client';
 import ReviewInquirySidebar from './_components/review-inquiry-sidebar';
 import ReviewFeatured from './_components/review-featured';
+import Pagination from '@/components/pagination';
 import { prisma } from '@/lib/prisma';
 import { getName } from 'country-list';
 import { maskName } from '@/lib/mask-name';
@@ -123,40 +124,19 @@ export default async function ReviewPage({
               <ReviewListClient reviews={reviews.map(mapReview)} />
 
               {/* 페이지네이션 */}
-              {totalPages > 1 && (
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: 8,
-                  }}
-                >
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => {
-                    const params = new URLSearchParams();
-                    if (activeBrand === 'hype-snap') params.set('brand', 'hype-snap');
-                    if (productType) params.set('productType', productType);
-                    if (location) params.set('location', location);
-                    if (directorId) params.set('directorId', directorId);
-                    params.set('page', String(p));
-                    return (
-                      <a
-                        key={p}
-                        href={`/review?${params.toString()}`}
-                        style={{
-                          padding: '6px 12px',
-                          borderRadius: 4,
-                          border: '1px solid #000',
-                          fontWeight: p === currentPage ? 700 : 400,
-                          color: p === currentPage ? '#000' : '#bbb',
-                          textDecoration: 'none',
-                        }}
-                      >
-                        {p}
-                      </a>
-                    );
-                  })}
-                </div>
-              )}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                buildHref={(p) => {
+                  const params = new URLSearchParams();
+                  if (activeBrand === 'hype-snap') params.set('brand', 'hype-snap');
+                  if (productType) params.set('productType', productType);
+                  if (location) params.set('location', location);
+                  if (directorId) params.set('directorId', directorId);
+                  params.set('page', String(p));
+                  return `/review?${params.toString()}`;
+                }}
+              />
             </div>
 
             <ReviewInquirySidebar />

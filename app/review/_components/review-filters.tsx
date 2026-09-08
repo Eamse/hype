@@ -54,7 +54,7 @@ export default function ReviewFilters({
     <div
       style={{
         position: 'sticky',
-        top: isMobile ? 56 : 100,
+        top: 56,
         zIndex: 40,
         background: '#fff',
         display: 'flex',
