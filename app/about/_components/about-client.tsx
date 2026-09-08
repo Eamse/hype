@@ -124,9 +124,7 @@ export default function AboutClient({
   const startedRef = useRef<HTMLDivElement>(null);
   const philosophyRef = useRef<HTMLDivElement>(null);
   const minjuPhotoRef = useRef<HTMLDivElement>(null);
-  const [minjuCaptionLeft, setMinjuCaptionLeft] = useState<number | null>(
-    null,
-  );
+  const [minjuCaptionLeft, setMinjuCaptionLeft] = useState<number | null>(null);
 
   // 헤드라인 → 본문1 → 본문2 → 인용구 순서로 스크롤 진입 시 순차 페이드인
   // 뷰포트를 벗어나면 리셋해서, 다시 스크롤해 들어올 때마다 재생된다.
@@ -234,8 +232,7 @@ export default function AboutClient({
     function recompute() {
       const container = minjuPhotoRef.current;
       const img = container?.querySelector('img');
-      if (!container || !img || !img.naturalWidth || !img.naturalHeight)
-        return;
+      if (!container || !img || !img.naturalWidth || !img.naturalHeight) return;
       const cw = container.clientWidth;
       const ch = container.clientHeight;
       const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
@@ -528,25 +525,11 @@ export default function AboutClient({
                         aria-hidden="true"
                       >
                         <Image
-                          src="/about/philosophy/4-philosophy-the-korean-edit-1.webp"
+                          src="/about/philosophy/flowers-and-lip.webp"
                           alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-korean-1"
-                        />
-                        <Image
-                          src="/about/philosophy/4-philosophy-the-korean-edit-2.webp"
-                          alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-korean-2"
-                        />
-                        <Image
-                          src="/about/philosophy/4-philosophy-the-korean-edit-3.webp"
-                          alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-korean-3"
+                          width={1200}
+                          height={1002}
+                          className="philosophy-deco-korean-combined"
                         />
                       </div>
                       <h3>The Korean Edit</h3>
@@ -565,32 +548,18 @@ export default function AboutClient({
                         aria-hidden="true"
                       >
                         <Image
+                          src="/about/philosophy/map-with-pointers.webp"
+                          alt=""
+                          width={1200}
+                          height={2055}
+                          className="philosophy-deco-coast-combined"
+                        />
+                        <Image
                           src="/about/philosophy/4-philosophy-coast-to-concrete-1.webp"
                           alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-hand philosophy-deco-hand-left"
-                        />
-                        <Image
-                          src="/about/philosophy/4-philosophy-coast-to-concrete-2.webp"
-                          alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-map"
-                        />
-                        <Image
-                          src="/about/philosophy/4-philosophy-coast-to-concrete-3.webp"
-                          alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-pin philosophy-deco-pin-1"
-                        />
-                        <Image
-                          src="/about/philosophy/4-philosophy-coast-to-concrete-3.webp"
-                          alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-pin philosophy-deco-pin-2"
+                          width={800}
+                          height={800}
+                          className="philosophy-deco-plane"
                         />
                       </div>
                       <h3>Coast to Concrete</h3>
@@ -609,25 +578,18 @@ export default function AboutClient({
                         aria-hidden="true"
                       >
                         <Image
+                          src="/about/philosophy/camera.webp"
+                          alt=""
+                          width={1200}
+                          height={1133}
+                          className="philosophy-deco-authenticity-combined"
+                        />
+                        <Image
                           src="/about/philosophy/4-philosophy-authenticity-1.webp"
                           alt=""
-                          width={200}
-                          height={200}
+                          width={800}
+                          height={800}
                           className="philosophy-deco-strip"
-                        />
-                        <Image
-                          src="/about/philosophy/4-philosophy-authenticity-2.webp"
-                          alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-camera"
-                        />
-                        <Image
-                          src="/about/philosophy/4-philosophy-authenticity-3.webp"
-                          alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-photofan"
                         />
                       </div>
                       <h3>Authenticity</h3>
@@ -646,25 +608,11 @@ export default function AboutClient({
                         aria-hidden="true"
                       >
                         <Image
-                          src="/about/philosophy/4-philosophy-effortless-end-to-end-1.webp"
+                          src="/about/philosophy/gramophone-with-heart-and-musicnote.webp"
                           alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-gramophone"
-                        />
-                        <Image
-                          src="/about/philosophy/4-philosophy-effortless-end-to-end-2.webp"
-                          alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-musicnote"
-                        />{' '}
-                        <Image
-                          src="/about/philosophy/4-philosophy-effortless-end-to-end-3.webp"
-                          alt=""
-                          width={200}
-                          height={200}
-                          className="philosophy-deco-heart"
+                          width={1200}
+                          height={907}
+                          className="philosophy-deco-effortless-combined"
                         />
                       </div>
                       <h3>Effortless, End to End</h3>
