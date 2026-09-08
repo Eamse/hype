@@ -47,14 +47,9 @@ const PHOTOS_2025_LOCAL: Photo[] = [
     milestoneIndex: 3,
   },
   {
-    src: '/about/history/history-2025-first-client-photoshoot-1.jpg',
-    alt: 'First client photoshoot',
-    milestoneIndex: 4,
-  },
-  {
     src: '/about/history/history-2025-first-client-photoshoot-2.jpg',
     alt: 'Featured in Bridal and Breakfast',
-    milestoneIndex: 5,
+    milestoneIndex: 4,
   },
 ];
 
@@ -78,11 +73,6 @@ const PHOTOS_2026_LOCAL: Photo[] = [
     src: '/about/history/history-2026-singapore-meetup.jpg',
     alt: 'Singapore Meet-up Event',
     milestoneIndex: 3,
-  },
-  {
-    src: '/about/history/history-2026-80th-booking.jpg',
-    alt: '80th client booking milestone',
-    milestoneIndex: 4,
   },
 ];
 
