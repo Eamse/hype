@@ -69,7 +69,7 @@ function SectionHeader({
 }: {
   index: string;
   title: string;
-  description: string;
+  description: React.ReactNode;
 }) {
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
@@ -892,7 +892,14 @@ export default function ProductPanel({ category }: { category: Category }) {
                 <SectionHeader
                   index="01"
                   title="썸네일 이미지"
-                  description="목록/카드에 노출되는 대표 이미지 1장"
+                  description={
+                    <>
+                      목록·카드에 노출되는 대표 이미지 1장 ·{' '}
+                      <strong style={{ color: '#000', fontWeight: 700 }}>
+                        새로 업로드하면 기존 이미지가 교체됩니다
+                      </strong>
+                    </>
+                  }
                 />
                 <div style={{ display: 'flex', gap: 14, marginTop: 14 }}>
                   <div style={{ flex: 1 }}>
