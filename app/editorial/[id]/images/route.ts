@@ -90,7 +90,7 @@ export async function POST(
     if (e instanceof ImageValidationError) {
       return NextResponse.json({ error: e.message }, { status: e.status });
     }
-    console.error('[POST /magazine/:id/images]', e);
+    console.error('[POST /editorial/:id/images]', e);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -137,7 +137,7 @@ export async function DELETE(
     ) {
       return NextResponse.json({ error: 'Image not found' }, { status: 404 });
     }
-    console.error('[DELETE /magazine/:id/images]', e);
+    console.error('[DELETE /editorial/:id/images]', e);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 },

@@ -37,7 +37,7 @@ export default async function MagazineDetailPage({ params }: Props) {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header brand="hype-wedding" />
       <div style={{ flex: 1 }}>
-        <MagazineDetailView magazine={magazine} backHref="/magazine" />
+        <MagazineDetailView magazine={magazine} backHref="/editorial" />
       </div>
       <HomeFooter />
     </div>

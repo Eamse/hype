@@ -53,7 +53,7 @@ export default function EditorialSection({
           </h2>
         </div>
         <Link
-          href="/magazine"
+          href="/editorial"
           className="text-[11px] tracking-[2px] uppercase text-[black] border-b border-[black] pb-0.5 hover:text-[black] hover:border-[black] transition-colors"
         >
           View All
@@ -64,7 +64,7 @@ export default function EditorialSection({
         {magazines.map((magazine) => (
           <Link
             key={magazine.id}
-            href={`/magazine/${magazine.id}`}
+            href={`/editorial/${magazine.id}`}
             className="inquiry-step group block"
           >
             {/* 이미지 */}

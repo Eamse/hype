@@ -64,6 +64,24 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // /magazine → /editorial, /offer → /service 경로 개편 — 기존에 색인되거나
+  // 북마크된 옛 주소가 404 나지 않도록 새 주소로 영구 리다이렉트
+  async redirects() {
+    return [
+      { source: '/magazine', destination: '/editorial', permanent: true },
+      {
+        source: '/magazine/:path*',
+        destination: '/editorial/:path*',
+        permanent: true,
+      },
+      { source: '/offer', destination: '/service', permanent: true },
+      {
+        source: '/offer/:path*',
+        destination: '/service/:path*',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

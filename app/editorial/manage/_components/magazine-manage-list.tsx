@@ -148,7 +148,7 @@ export default function MagazineManageList({
               {m.isPinned ? 'Unpin' : 'Pin to Top'}
             </button>
             <Link
-              href={`/magazine/edit/${m.id}`}
+              href={`/editorial/edit/${m.id}`}
               style={{ padding: '6px 12px', borderRadius: 6, border: '1px solid #000', fontSize: 12, color: '#000', textDecoration: 'none' }}
             >
               Edit
