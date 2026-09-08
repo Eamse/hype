@@ -34,15 +34,6 @@ export type Partner = {
   instagram: string | null;
 };
 
-export type PackageImage = {
-  id: number;
-  packageId: number;
-  webUrl: string;
-  originalUrl: string;
-  thumbUrl: string | null;
-  order: number;
-};
-
 export type Package = {
   id: number;
   directorId: number;
@@ -59,7 +50,6 @@ export type Package = {
   addons: { addon: Addon }[];
   inclusions: { inclusion: Inclusion }[];
   partners: { partner: Partner }[];
-  images: PackageImage[];
 };
 
 export const emptyDirForm = {

@@ -22,7 +22,6 @@ export async function GET(request: NextRequest) {
         addons: { include: { addon: true }, orderBy: { order: 'asc' } },
         inclusions: { include: { inclusion: true }, orderBy: { order: 'asc' } },
         partners: { include: { partner: true } },
-        images: { orderBy: { order: 'asc' } },
       },
       orderBy: { order: 'asc' },
     });
