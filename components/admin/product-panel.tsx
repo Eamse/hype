@@ -635,7 +635,9 @@ export default function ProductPanel({ category }: { category: Category }) {
                     src={thumbPreview}
                     alt="thumb"
                     fill
-                    style={{ objectFit: 'cover' }}
+                    sizes="48px"
+                    quality={20}
+                    style={{ objectFit: 'contain' }}
                   />
                 </div>
               )}
@@ -827,7 +829,7 @@ export default function ProductPanel({ category }: { category: Category }) {
               background: '#fff',
               borderRadius: 16,
               width: '100%',
-              maxWidth: 720,
+              maxWidth: 940,
               maxHeight: '90vh',
               display: 'flex',
               flexDirection: 'column',
@@ -958,7 +960,8 @@ export default function ProductPanel({ category }: { category: Category }) {
                           src={editingProduct.imageUrl as string}
                           alt="thumb"
                           fill
-                          quality={30}
+                          sizes="64px"
+                          quality={20}
                           style={{ objectFit: 'cover' }}
                         />
                       )}
@@ -1163,9 +1166,9 @@ export default function ProductPanel({ category }: { category: Category }) {
                 {editGalleryImages.length > 0 && (
                   <div
                     style={{
-                      display: 'flex',
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(6, 1fr)',
                       gap: 20,
-                      flexWrap: 'wrap',
                       marginTop: 8,
                     }}
                   >
@@ -1187,10 +1190,11 @@ export default function ProductPanel({ category }: { category: Category }) {
                         onMouseLeave={() => setHoverIndex(null)}
                         style={{
                           position: 'relative',
-                          width: 120,
-                          height: 120,
+                          width: '100%',
+                          aspectRatio: '1 / 1',
                           cursor: 'grab',
-                          border: '1px solid black',
+                          // border: '1px solid black',
+                          background: '#f0f0f0',
                           opacity: dragIndex === idx ? 0.4 : 1,
                         }}
                       >
@@ -1198,8 +1202,9 @@ export default function ProductPanel({ category }: { category: Category }) {
                           src={img.thumbUrl ?? img.webUrl}
                           alt=""
                           fill
-                          quality={30}
-                          style={{ objectFit: 'cover', borderRadius: 4 }}
+                          sizes="120px"
+                          quality={20}
+                          style={{ objectFit: 'contain', borderRadius: 4 }}
                         />
                         {hoverIndex === idx && dragIndex === null && (
                           <div

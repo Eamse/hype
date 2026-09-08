@@ -148,7 +148,7 @@ export default function PackageForm({
             onClick={() => thumbInputRef.current?.click()}
           >
             {form.thumbnailUrl ? (
-              <Image src={form.thumbnailUrl} alt="썸네일" fill sizes="140px" quality={30} style={{ objectFit: 'cover' }} />
+              <Image src={form.thumbnailUrl} alt="썸네일" fill sizes="140px" quality={20} style={{ objectFit: 'cover' }} />
             ) : (
               <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#888' }}>
                 이미지 없음
