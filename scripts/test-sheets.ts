@@ -15,7 +15,10 @@ async function main() {
   const res = await sheets.spreadsheets.get({ spreadsheetId: SHEET_ID });
   console.log('✅ 연결 성공!');
   console.log('시트 제목:', res.data.properties?.title);
-  console.log('탭(시트) 목록:', res.data.sheets?.map((s) => s.properties?.title));
+  console.log(
+    '탭(시트) 목록:',
+    res.data.sheets?.map((s) => s.properties?.title),
+  );
 }
 
 main().catch((err) => {

@@ -231,23 +231,6 @@ body {
   animation: nudge 1.2s ease-in-out infinite;
 }
 
-/* About > History: 참고 시안처럼 텍스트와 사진을 화면 전체 폭에서 62:38로 배치 */
-/* 화면 가장자리와 콘텐츠 사이의 공통 여백 */
-/* .about-page-content {
-  padding-inline: clamp(20px, 4vw, 64px);
-} */
-
-/* Philosophy 장식 이미지가 카드 밖으로 크게 삐져나가 375px 등 좁은 화면에서 페이지가
-   가로로 밀리는 것을 막음 — overflow-x:hidden을 건 요소는 자기 자신이 스크롤
-   컨테이너가 되면서 그 자손의 position:sticky를 뷰포트가 아니라 자기 기준으로
-   깨버림(서브탭에서 한 번 겪음). about-page-content 전체에 걸면 History 섹션의
-   sticky 사진 패널까지 같이 깨지므로, Philosophy 섹션 래퍼에만 좁게 적용 */
-.philosophy-content {
-  overflow-x: hidden;
-}
-
-/* 서브탭 바가 좁은 화면에서 가로 스크롤되는데, 스크롤바가 그대로 보여서
-   지저분해 보이므로 숨김(스크롤 기능 자체는 유지) */
 .sub-tab-bar-scroll {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -266,8 +249,6 @@ body {
   padding: clamp(23px, 5vw, 55px) clamp(28px, 5vw, 80px) 0;
 }
 
-/* About 페이지 5개 섹션(Introduction/Achievement/Story/Philosophy/History) 헤더 공용 스타일 —
-   번호/눈썹/타이틀을 여기 한 곳에서만 관리. 타이틀은 03(How We Started) 값을 기준으로 통일함 */
 .about-section-number {
   margin: 0 0 4px;
   font-size: clamp(20px, 17.6px + 0.7vw, 28px);
@@ -290,29 +271,15 @@ body {
   line-height: 1.05;
 }
 
-/* margin-bottom만 섹션마다 따로 관리 (나머지 스타일은 .about-section-title에서 공유) */
 .about-section-title-1,
 .about-section-title-3 {
   margin-bottom: clamp(34px, 3vw, 48px);
 }
 
-/* .about-section-title-4 {
-  margin-bottom: clamp(34px, 3vw, 48px);
-} */
-
-/* .about-section-title-5 {
-  margin-bottom: clamp(34px, 3vw, 48px);
-} */
-
-/* History 섹션과 동일한 비율(텍스트 62.25 : 사진 37.75)로 맞춤 — 사진(좌측)이 더 작아짐 */
 .about-intro-layout {
   display: grid;
-  /* 사진 컬럼에 min-width를 줘서 화면이 좁아져도 텍스트에 비해 사진만 유독
-     작아지는 불균형을 방지 — 대신 텍스트 컬럼이 먼저 줄어듦 */
   grid-template-columns: minmax(260px, 45fr) minmax(0, 55fr);
   align-items: stretch;
-  /* 고정 헤더(56px) + 서브탭바(약 45px) 높이를 뺀 나머지가 뷰포트를 채우도록 —
-     풀스크린으로 열었을 때 사진이 화면에 딱 맞게 떨어짐 */
   min-height: calc(100vh - 101px);
 }
 
@@ -603,6 +570,11 @@ body {
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  /* 텍스트 없는 순수 장식 레이어라 컨테이너로 만들어도 h3/p 줄바꿈 계산에는
+     영향 없음 — top을 cqw(카드 폭 기준)로 써서 right(%)와 같은 비율로
+     움직이게 함. vw(뷰포트 기준)와 섞이면 화면이 조금만 커져도 서로 다른
+     비율로 움직여서 위치가 어긋나 보임 */
+  container-type: inline-size;
 }
 
 .philosophy-deco img {
@@ -610,114 +582,47 @@ body {
   object-fit: contain;
 }
 
-/* 화면이 좁아질수록 텍스트 쪽으로 안 밀리게, 오른쪽 정렬 카드는 오른쪽으로,
-   왼쪽 정렬 카드는 왼쪽으로 더 밀어냄 (vw라서 화면 크기에 비례해서 같이 커짐) */
-.philosophy-deco-coast,
-.philosophy-deco-effortless {
-  margin-right: clamp(-90.7px, -6vw, -54.4px);
-}
-
-.philosophy-deco-korean,
-.philosophy-deco-authenticity {
-  margin-left: clamp(-90.7px, -6vw, -54.4px);
-}
-
-/* vw 기준 좌표라 좁은 화면에서는 텍스트와 간격이 줄어들며 겹칠 수 있어서, 카드가 실제로
-   넉넉한 폭(맥북 기준으로 잡아둔 값)을 갖는 구간에서만 보이도록 컷오프를 넉넉히 잡음 */
-
-/* Coast to Concrete — 손 2장(같은 svg 좌우 대칭), 지도, 핀 2개 */
-.philosophy-deco-hand {
-  top: clamp(-119.4px, -7.9vw, -71.7px);
-  width: clamp(158.8px, 17.5vw, 264.6px);
-  height: clamp(167.8px, 18.5vw, 279.7px);
-  right: clamp(240.4px, 31.5vw, 538.7px);
-}
-
-.philosophy-deco-map {
-  top: clamp(-189px, -12.5vw, -113.4px);
-  right: clamp(-86.2px, 0.3vw, 27.3px);
-  width: clamp(212.3px, 23.4vw, 353.8px);
-  height: clamp(226.8px, 25vw, 378px);
-}
-.philosophy-deco-pin {
-  width: clamp(17.2px, 1.9vw, 28.7px);
-  height: clamp(20px, 2.2vw, 33.3px);
-}
-.philosophy-deco-pin-1 {
-  top: clamp(-98.3px, -6.5vw, -59px);
-  right: clamp(68.9px, 13.6vw, 204.9px);
-}
-.philosophy-deco-pin-2 {
-  top: clamp(84.4px, 9.3vw, 140.6px);
-  right: clamp(97.1px, 14.7vw, 250.8px);
-}
-
-/* The Korean Edit — 배경 장식 3장 */
-.philosophy-deco-korean-1 {
-  top: clamp(45.4px, 6vw, 95.6px);
-  left: clamp(199.6px, 29vw, 482.6px);
-  width: clamp(81.6px, 9vw, 136.1px);
-  height: clamp(163.3px, 18vw, 272.2px);
-  transform: rotate(-11deg);
-}
-.philosophy-deco-korean-2 {
-  top: clamp(-37.8px, -2.5vw, -22.7px);
-  left: clamp(199.6px, 29vw, 479.6px);
-  width: clamp(145.2px, 16vw, 280px);
-  height: clamp(145.2px, 16vw, 280px);
+/* 카드마다 장식 이미지 1장 — 텍스트가 왼쪽 정렬인 카드(1,3)는 이미지를
+   오른쪽 위 구석에, 텍스트가 오른쪽 정렬인 카드(2,4)는 왼쪽 위 구석에 둬서
+   텍스트와 겹치지 않게 함 */
+.philosophy-deco-korean-combined {
+  top: clamp(-34px, -17vw, -31px);
+  right: clamp(-76px, -17%, -86px);
+  width: clamp(120px, 65%, 369px);
   z-index: -1;
 }
-.philosophy-deco-korean-3 {
-  top: clamp(9.1px, 3vw, 44.1px);
-  left: clamp(272.2px, 36vw, 621.6px);
-  width: clamp(145.2px, 16vw, 241.9px);
-  height: clamp(145.2px, 16vw, 241.9px);
-  transform: rotate(13deg);
+
+.philosophy-deco-authenticity-combined {
+  top: clamp(0px, -3vw, -16px);
+  right: clamp(-85.2px, 4.1vw, 77.3px);
+  width: clamp(126px, 65%, 400px);
 }
 
-/* Authenticity — 텍스처 배너, 카메라, 폴라로이드 부채꼴 */
 .philosophy-deco-strip {
   top: clamp(-110.4px, -7.3vw, -66.2px);
-  left: clamp(52px, -2.5vw, -22.7px);
+  left: clamp(-19px, -2.5vw, -22.7px);
   width: clamp(172.4px, 19vw, 287.3px);
-  height: clamp(163.3px, 18vw, 272.2px);
-}
-.philosophy-deco-camera {
-  top: clamp(56.2px, 6.2vw, 93.7px);
-  left: clamp(20.9px, 13.3vw, 215.8px);
-  width: clamp(226.8px, 25vw, 378px);
-  height: clamp(153.3px, 16.9vw, 255.5px);
-  transform: rotate(-13deg);
-}
-.philosophy-deco-photofan {
-  top: clamp(10.9px, 1.2vw, 18.1px);
-  left: clamp(160.3px, 27vw, 453.2px);
-  width: clamp(90.7px, 10vw, 151.2px);
-  height: clamp(110.7px, 12.2vw, 184.5px);
-  transform: rotate(43deg);
+  z-index: -1;
 }
 
-/* Effortless, End to End — 축음기, 음표 */
-.philosophy-deco-gramophone {
-  top: clamp(-243.4px, -16.1vw, -146.1px);
-  right: clamp(352.3px, 41.3vw, 697.9px);
-  width: clamp(172.4px, 19vw, 287.3px);
-  height: clamp(465.4px, 51.3vw, 775.7px);
-}
-.philosophy-deco-musicnote {
-  top: clamp(-213.2px, -14.1vw, -127.9px);
-  right: clamp(362.9px, 42vw, 714.9px);
-  width: clamp(52.2px, 5.75vw, 86.9px);
-  height: clamp(298.5px, 32.9vw, 497.4px);
-}
-.philosophy-deco-heart {
-  top: clamp(-187.5px, -12.4vw, -112.5px);
-  right: clamp(327.6px, 38.8vw, 654.9px);
-  width: clamp(43.1px, 4.75vw, 71.8px);
-  height: clamp(298.5px, 32.9vw, 497.4px);
-  transform: scaleX(-1);
+.philosophy-deco-coast-combined {
+  top: clamp(-190px, -17vw, -8px);
+  right: clamp(-86.2px, 0.3vw, 27.3px);
+  width: clamp(120px, 45%, 347px);
 }
 
+.philosophy-deco-effortless-combined {
+  top: clamp(-37.4px, -15.9vw, -71.7px);
+  right: clamp(240.4px, 31.5vw, 538.7px);
+  width: clamp(158.8px, 73%, 391.6px);
+}
+
+/* Coast to Concrete 전용 — 지도 이미지 옆에 작게 */
+.philosophy-deco-plane {
+  top: clamp(-119.4px, -7.9vw, -71.7px);
+  right: clamp(46.4px, 26.5vw, 470.7px);
+  width: clamp(98px, 22vw, 262px);
+}
 /* About > 04 History("Our journey so far"): 연도별 타임라인 + 사진 */
 .journey-header {
   /* 아래 StatsBar의 py-20(80px)과 위쪽 여백을 맞춰서 섹션 상/하단 간격을 동일하게 함 */
@@ -1495,7 +1400,10 @@ body {
   .how-started-goal strong {
     font-size: 23px;
   }
+}
 
+/* Philosophy 섹션만 헤더 토글 기준(1055px)에 맞춰 별도 브레이크포인트 사용 */
+@media (max-width: 1055px) {
   .philosophy-content {
     padding: 48px 24px 96px;
   }
@@ -1516,8 +1424,8 @@ body {
 
   .philosophy-principles {
     grid-template-columns: 1fr;
-    gap: 72px;
     padding-top: 72px;
+    gap: 70px;
   }
 
   .philosophy-principle-2,
@@ -1526,136 +1434,51 @@ body {
     margin-top: 0;
   }
 
-  /* 모바일에서는 The Korean Edit/Authenticity를 왼쪽 끝에, Coast to
-     Concrete/Effortless, End to End를 오른쪽 끝에 완전히 붙임 — 데스크탑용
-     인덴트(margin-left clamp)를 없애서 카드 패딩 경계까지 바짝 붙게 함 */
-  .philosophy-principle-1,
-  .philosophy-principle-3 {
-    margin-left: 0;
+  .philosophy-deco-korean-combined {
+    top: clamp(-50px, -11vw, 21px);
+    left: clamp(216px, 6%, 0px);
+    width: clamp(120px, 34%, 369px);
+    z-index: 0;
   }
 
-  /* 데스크탑 값(vw)은 그대로 두고, 모바일 1열 스택에서만 카드
-     (.philosophy-principle, max-width 650px) 폭 기준 %/cqw로 다시 계산 —
-     뷰포트 기준 vw는 2열→1열 전환 시 카드 폭과 비율이 어긋나서 장식이
-     아래 카드 텍스트까지 침범했음. .philosophy-deco에만 컨테이너를 걸어서
-     (텍스트 없는 순수 장식 레이어라 h3/p 줄바꿈 계산에는 영향 없음) top도
-     카드 폭 기준(cqw)으로 맞춤 */
-  .philosophy-deco {
-    container-type: inline-size;
+  .philosophy-deco-authenticity-combined {
+    top: clamp(-6px, -17cqw, -25px);
+    left: clamp(188px, 6%, 0px);
+    width: clamp(103px, 48%, 369px);
+    z-index: 0;
   }
 
-  .philosophy-deco-coast,
-  .philosophy-deco-effortless {
-    margin-right: clamp(-90.7px, -8.37%, -54.4px);
-  }
-
-  .philosophy-deco-korean,
-  .philosophy-deco-authenticity {
-    margin-left: clamp(-90.7px, -8.37%, -54.4px);
-  }
-
-  .philosophy-deco-hand {
-    top: -11.03cqw;
-    width: clamp(79.4px, 27.36%, 271.6px);
-    height: auto;
-    aspect-ratio: 264.6 / 279.7;
-    right: clamp(238.4px, 70.88%, 325.7px);
-  }
-
-  .philosophy-deco-map {
-    top: -25.45cqw;
-    right: clamp(-86.2px, -0.8%, 21.3px);
+  .philosophy-deco-coast-combined {
+    top: -11.45cqw;
+    aspect-ratio: 353.8/378;
+    right: clamp(-46.6px, -1.12%, -49.3px);
     width: clamp(106.15px, 52.21%, 353.8px);
-    height: auto;
-    aspect-ratio: 353.8 / 378;
-  }
-
-  .philosophy-deco-pin {
-    width: clamp(8.6px, 3%, 28.7px);
-    height: auto;
-    aspect-ratio: 28.7 / 33.3;
-  }
-
-  .philosophy-deco-pin-1 {
-    top: --11.1cqw;
-    right: clamp(68.9px, 31.52%, 204.9px);
-  }
-
-  .philosophy-deco-pin-2 {
-    top: 24.63cqw;
-    right: clamp(97.1px, 36.58%, 150.8px);
-  }
-
-  .philosophy-deco-korean-1 {
-    top: -4.29cqw;
-    left: clamp(199.6px, 74.25%, 273.6px);
-    width: clamp(40.8px, 10.47%, 136.1px);
-    height: auto;
-    aspect-ratio: 136.1 / 272.2;
-  }
-
-  .philosophy-deco-korean-2 {
-    top: -14.49cqw;
-    left: clamp(199.6px, 73.78%, 269.6px);
-    width: clamp(72.6px, 21.54%, 280px);
-    height: auto;
-    aspect-ratio: 1 / 1;
-  }
-
-  .philosophy-deco-korean-3 {
-    top: -7.22cqw;
-    left: clamp(272.2px, 95.63%, 316.6px);
-    width: clamp(72.6px, 18.61%, 241.9px);
-    height: auto;
-    aspect-ratio: 1 / 1;
   }
 
   .philosophy-deco-strip {
-    top: -12.18cqw;
-    left: clamp(45px, -3.49%, -22.7px);
-    width: clamp(86.2px, 32.1%, 287.3px);
-    height: auto;
-    aspect-ratio: 287.3 / 272.2;
+    top: clamp(-76.4px, -5.3vw, -58.2px);
+    left: clamp(-19px, -2.5vw, -22.7px);
+    width: clamp(147.4px, 25vw, 287.3px);
   }
 
-  .philosophy-deco-camera {
-    top: 17.42cqw;
-    left: clamp(20.9px, 51.2%, 215.8px);
-    width: clamp(113.4px, 29.07%, 378px);
-    height: auto;
-    aspect-ratio: 378 / 255.5;
+  .philosophy-deco-plane {
+    margin: 0 50px 0 61px;
+    top: clamp(-47.4px, 10.1vw, -71.7px);
+    left: clamp(-92px, -15vw, 100px);
+    width: clamp(98px, 22vw, 262px);
   }
 
-  .philosophy-deco-photofan {
-    top: 11.78cqw;
-    left: clamp(160.3px, 69.72%, 453.2px);
-    width: clamp(45.35px, 11.63%, 151.2px);
-    height: auto;
-    aspect-ratio: 151.2 / 184.5;
-  }
-
-  .philosophy-deco-gramophone {
-    top: -15.48cqw;
-    right: clamp(152.3px, 89.37%, 492.9px);
-    width: clamp(86.2px, 22.1%, 287.3px);
-    height: auto;
+  .philosophy-deco-effortless-combined {
     aspect-ratio: 287.3 / 775.7;
+    width: clamp(87.2px, 55.1%, 287.3px);
+    top: clamp(-286.4px, -52.4cqw, 0px);
+    height: auto;
+    right: clamp(37.3px, 66.37%, 235.9px);
   }
 
-  .philosophy-deco-musicnote {
-    top: -13.68cqw;
-    right: clamp(262.9px, 89.98%, 689.9px);
-    width: clamp(26.1px, 6.68%, 86.9px);
-    height: auto;
-    aspect-ratio: 86.9 / 497.4;
-  }
-
-  .philosophy-deco-heart {
-    top: -11.31cqw;
-    right: clamp(300.6px, 83.75%, 639.9px);
-    width: clamp(21.55px, 5.53%, 74.8px);
-    height: auto;
-    aspect-ratio: 71.8 / 497.4;
+  .philosophy-principle-1,
+  .philosophy-principle-3 {
+    margin-left: 0;
   }
 }
 

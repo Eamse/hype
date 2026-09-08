@@ -80,43 +80,21 @@ export default function HomeFooter() {
 
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 4,
-            fontSize: 11,
-            color: '#000',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-          }}
-        >
-          Name A Corp. Business Info
-        </div>
-
-        <div
-          style={{
             fontSize: 11,
             color: '#000',
             lineHeight: 1.9,
             marginTop: 10,
             paddingTop: 10,
-            borderTop: '1px solid #000',
           }}
         >
-          <p>
-            CEO: Minju Lee, Saeyoung Lee &nbsp;|&nbsp; Business Reg:
-            722-46-01107
-          </p>
+          <p>HYPE &nbsp;|&nbsp; CEO: Minju Lee, Saeyoung Lee</p>
+          <p>Business Reg: 722-46-01107</p>
           <p>Email: hypepig227@gmail.com</p>
           <p>
             Address: 36 Dongtanjungsimsangga 1-gil, Dongtan-gu, Hwaseong-si,
             Gyeonggi-do, Republic of Korea
           </p>
         </div>
-
-        <p style={{ fontSize: 11, color: '#000', marginTop: 16 }}>
-          © 2024 Name A Corp. All rights reserved.
-        </p>
       </div>
 
       {showPrivacyModal && (

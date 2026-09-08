@@ -5,9 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 type Stat = {
   target: number;
   suffix: string;
-  topLabel?: string; // 숫자 위에 작게 표시 ("est")
-  label?: string; // 숫자 옆 굵은 라벨 ("Couples")
-  sublabel: string; // 아래 설명 텍스트
+  topLabel?: string;
+  label?: string;
+  sublabel: string;
 };
 
 const STATS: Stat[] = [
@@ -62,21 +62,10 @@ function useCountUp(target: number, start: boolean, delay: number) {
   return value;
 }
 
-// 그리드가 1열(모바일)→2열(sm)→4열(lg)로 바뀔 때, 각 항목이 실제로 그리드
-// 안 어디(몇 번째 행/열)에 있는지에 따라 필요한 구분선이 다름 — 인덱스별로
-// "base(1열)/sm(2열)/lg(4열)" 각 단계에서 오른쪽·아래쪽 선이 있어야 하는지
-// 직접 계산해서 넣음 (범용 prop 하나로는 2x2 레이아웃의 위치를 표현 못 함)
 const DIVIDER_CLASSES = [
-  // idx0 (70+): 1열·2열에서는 아래 이웃과 구분(border-b), 2열에서는 오른쪽
-  // 이웃과도 구분(border-r) — 4열에서는 오른쪽 선만 남기고 아래 선은 제거
-  'border-b border-black pb-8 sm:border-r sm:pr-8 lg:border-b-0 lg:pb-0',
-  // idx1 (16 Countries): 1열·2열에서는 아래 이웃과 구분 — 4열에서는 오른쪽
-  // 이웃과 구분으로 전환
   'border-b border-black pb-8 lg:border-b-0 lg:pb-0 lg:border-r lg:pr-8',
-  // idx2 (116%): 1열에서는 아래 이웃과 구분 — 2열부터는 같은 행 마지막 줄이 아니라
-  // 오른쪽 이웃(2025)과 구분되므로 아래 선은 빼고 오른쪽 선을 넣음
-  'border-b border-black pb-8 sm:border-b-0 sm:pb-0 sm:border-r sm:pr-8',
-  // idx3 (2025): 항상 마지막이라 구분선 없음
+  'border-b border-black pb-8 lg:border-b-0 lg:pb-0 lg:border-r lg:pr-8',
+  'border-b border-black pb-8 sm:border-b-0 sm:pb-0 lg:border-r lg:pr-8',
   '',
 ];
 
@@ -96,7 +85,6 @@ function StatColumn({
 
   return (
     <div className={classes}>
-      {/* 모든 컬럼에 동일한 높이를 예약해서 숫자 줄 baseline을 맞춤 */}
       <p className="text-[clamp(0.85rem,1.4vw,1rem)] font-bold italic mb-0.5 h-6 leading-6">
         {stat.topLabel ?? ' '}
       </p>
@@ -138,7 +126,7 @@ export default function StatsBar() {
   return (
     <div
       ref={ref}
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-15 items-center justify-items-center lg:px-25 py-20"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-15 items-center justify-items-center lg:justify-items-stretch lg:px-2 py-20"
     >
       {STATS.map((stat, idx) => (
         <StatColumn

@@ -66,7 +66,7 @@ export default async function MagazinePage({ searchParams }: Props) {
 
         {magazines.length === 0 ? (
           <p style={{ color: '#000', fontSize: 14 }}>
-            아직 게시된 글이 없습니다.
+            No stories published yet.
           </p>
         ) : (
           <>
