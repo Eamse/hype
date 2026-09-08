@@ -76,12 +76,17 @@ export async function POST(
       });
     }
 
+    let nextOrder = await prisma.magazineImage.count({
+      where: { magazineId: idNum },
+    });
+
     const saved: { id: number; url: string; order: number }[] = [];
     for (const file of files) {
       const url = await processFile(file, idNum, 'detail');
       const image = await prisma.magazineImage.create({
-        data: { magazineId: idNum, url, order: 0 },
+        data: { magazineId: idNum, url, order: nextOrder },
       });
+      nextOrder += 1;
       saved.push(image);
     }
 

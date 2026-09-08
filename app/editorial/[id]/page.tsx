@@ -2,6 +2,8 @@ export const revalidate = 60; // 이미지 많은 매거진 상세 — 60초 캐
 
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
+import { auth } from '@/auth';
+import { isMagazineMaster } from '@/lib/magazine-auth';
 import Header from '@/components/header';
 import HomeFooter from '@/app/_components/home-footer';
 import MagazineDetailView from '@/components/magazine-detail-view';
@@ -27,11 +29,16 @@ export default async function MagazineDetailPage({ params }: Props) {
   if (!Number.isInteger(idNum) || idNum <= 0) notFound();
 
   const magazine = await prisma.magazine.findUnique({
-    where: { id: idNum, published: true },
+    where: { id: idNum },
     include: { images: { orderBy: { order: 'asc' } } },
   });
 
   if (!magazine) notFound();
+
+  if (!magazine.published) {
+    const session = await auth();
+    if (!isMagazineMaster(session)) notFound();
+  }
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
