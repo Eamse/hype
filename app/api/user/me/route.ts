@@ -161,3 +161,41 @@ export async function PATCH(request: NextRequest) {
     ok: true,
   });
 }
+
+// 회원탈퇴 — 계정(Account/Session)은 cascade로 함께 삭제되지만, 이미 작성한
+// 리뷰/댓글은 남기고 작성자 연결만 끊음(스키마의 onDelete: SetNull)
+export async function DELETE(request: NextRequest) {
+  const session = await auth();
+  if (!session?.user.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: { password: true },
+  });
+  if (!user) {
+    return NextResponse.json({ error: 'Not Found' }, { status: 404 });
+  }
+
+  if (user.password) {
+    const body = await request.json().catch(() => ({}));
+    const password = body.password;
+    if (typeof password !== 'string' || !password) {
+      return NextResponse.json(
+        { error: 'Password is required' },
+        { status: 400 },
+      );
+    }
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) {
+      return NextResponse.json(
+        { error: 'Password is incorrect' },
+        { status: 400 },
+      );
+    }
+  }
+
+  await prisma.user.delete({ where: { id: session.user.id } });
+  return NextResponse.json({ ok: true });
+}
