@@ -190,8 +190,10 @@ export default function BookingProcessClient() {
         >
           Inquiry Now
         </Link>
-        {/* TODO: 실제 미팅 예약 링크(캘린들리 등) 전달받으면 교체 */}
-        <Link href="#" className="booking-process-cta">
+        <Link
+          href="https://calendar.app.google/xekeS5Pgykh9qidHA"
+          className="booking-process-cta"
+        >
           Book Online Meeting
         </Link>
       </div>
