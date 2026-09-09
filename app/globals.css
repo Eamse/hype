@@ -242,6 +242,7 @@ body {
 .about-intro-copy {
   display: flex;
   width: 100%;
+  min-width: 0;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
@@ -269,6 +270,7 @@ body {
   font-style: italic;
   letter-spacing: -0.06em;
   line-height: 1.05;
+  overflow-wrap: break-word;
 }
 
 .about-section-title-1,
@@ -302,6 +304,7 @@ body {
 }
 
 .about-intro-quote {
+  width: 100%;
   max-width: 660px;
   color: #666;
   font-size: clamp(20px, 15.7px + 1.1vw, 34px);
@@ -310,8 +313,7 @@ body {
   letter-spacing: -0.045em;
   line-height: 1.15;
   text-align: center;
-  text-indent: 1em;
-  margin: 0 auto clamp(22px, 2vw, 34px);
+  margin: 0 0 clamp(22px, 2vw, 34px);
 }
 
 .how-started-layout {
@@ -943,6 +945,9 @@ body {
   display: flex;
   flex-direction: column;
   padding-bottom: clamp(60px, 8vw, 110px);
+  max-width: 1600px;
+  margin: auto;
+  justify-content: center;
 }
 
 @media (min-width: 768px) {
