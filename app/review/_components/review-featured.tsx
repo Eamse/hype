@@ -59,8 +59,6 @@ export default function ReviewFeatured({
   const ref = useRef<HTMLDivElement>(null);
   useReplayReveal(ref);
 
-  if (reviews.length === 0) return null;
-
   return (
     <div ref={ref} style={{ marginBottom: 48 }}>
       <p
@@ -98,75 +96,79 @@ export default function ReviewFeatured({
         Real stories from real couples
       </p>
 
-      <p
-        className="review-fade"
-        data-reveal
-        data-reveal-delay="200"
-        style={{
-          fontSize: 20,
-          fontWeight: 800,
-          color: '#2d5a45',
-          letterSpacing: '0.06em',
-          marginBottom: 16,
-          textAlign: 'center',
-        }}
-      >
-        FEATURED REVIEW
-      </p>
-
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: 16,
-        }}
-        className="review-featured-grid"
-      >
-        {reviews.map((review, i) => (
-          <Link
-            key={review.id}
-            href={`/review/${review.id}`}
-            className="review-rise"
+      {reviews.length > 0 && (
+        <>
+          <p
+            className="review-fade"
             data-reveal
-            data-reveal-delay={`${260 + i * 100}`}
+            data-reveal-delay="200"
             style={{
-              display: 'block',
-              border: '1px solid #ddd',
-              padding: 20,
-              textDecoration: 'none',
-              color: 'inherit',
+              fontSize: 20,
+              fontWeight: 800,
+              color: '#2d5a45',
+              letterSpacing: '0.06em',
+              marginBottom: 16,
+              textAlign: 'center',
             }}
           >
-            <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-              <Badge label={review.location} tone="location" />
-              <Badge label={review.productType} tone="product" />
-            </div>
-            <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 8px' }}>
-              {review.title}
-            </h3>
-            <p
-              style={{
-                fontSize: 13,
-                color: '#555',
-                lineHeight: 1.6,
-                margin: '0 0 14px',
-                display: '-webkit-box',
-                WebkitLineClamp: 3,
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden',
-              }}
-            >
-              {review.content}
-            </p>
-            <p style={{ fontSize: 12, color: '#888', margin: '0 0 6px' }}>
-              Shoot date: {review.shootingDate}
-            </p>
-            <p style={{ fontSize: 12, color: '#888', margin: 0 }}>
-              {review.name} {countryFlag(review.country)}
-            </p>
-          </Link>
-        ))}
-      </div>
+            FEATURED REVIEW
+          </p>
+
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: 16,
+            }}
+            className="review-featured-grid"
+          >
+            {reviews.map((review, i) => (
+              <Link
+                key={review.id}
+                href={`/review/${review.id}`}
+                className="review-rise"
+                data-reveal
+                data-reveal-delay={`${260 + i * 100}`}
+                style={{
+                  display: 'block',
+                  border: '1px solid #ddd',
+                  padding: 20,
+                  textDecoration: 'none',
+                  color: 'inherit',
+                }}
+              >
+                <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+                  <Badge label={review.location} tone="location" />
+                  <Badge label={review.productType} tone="product" />
+                </div>
+                <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 8px' }}>
+                  {review.title}
+                </h3>
+                <p
+                  style={{
+                    fontSize: 13,
+                    color: '#555',
+                    lineHeight: 1.6,
+                    margin: '0 0 14px',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden',
+                  }}
+                >
+                  {review.content}
+                </p>
+                <p style={{ fontSize: 12, color: '#888', margin: '0 0 6px' }}>
+                  Shoot date: {review.shootingDate}
+                </p>
+                <p style={{ fontSize: 12, color: '#888', margin: 0 }}>
+                  {review.name} {countryFlag(review.country)}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
