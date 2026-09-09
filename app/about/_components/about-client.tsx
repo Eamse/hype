@@ -422,9 +422,7 @@ export default function AboutClient({
                       >
                         <p>THE GOAL</p>
                         <strong>
-                          Top Korean artists. Full transparency.
-                          <br />
-                          Zero stress.
+                          Top Korean artists. Full transparency, Zero stress
                         </strong>
                       </div>
                     </div>
