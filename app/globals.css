@@ -832,8 +832,10 @@ body {
   .journey-pin-right {
     position: relative;
     top: 0;
-    height: auto;
-    aspect-ratio: 4 / 5;
+    /* Safari(WebKit)가 height:auto + aspect-ratio 위에서 fill 이미지의 height:100%를
+       0으로 계산하는 버그 회피 — about-intro-image와 동일한 padding-top 트릭 */
+    height: 0;
+    padding-top: 125%; /* 4:5 비율 */
   }
 
   .journey-milestone {
