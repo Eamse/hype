@@ -80,10 +80,8 @@
   box-sizing: border-box;
 }
 
-html,
-body {
-  /* Philosophy 장식 이미지처럼 의도적으로 카드 밖으로 살짝 삐져나오는 요소들 때문에
-     페이지 전체가 가로로 스크롤되는 것을 막음 — 디자인 자체(요소 위치)는 그대로 둠 */
+html {
+  /* body에 걸면 position:sticky의 기준이 깨지므로 html에만 적용 */
   overflow-x: hidden;
 }
 
