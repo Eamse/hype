@@ -607,10 +607,6 @@ body {
 .philosophy-deco img {
   position: absolute;
   object-fit: contain;
-  /* 이미지 로딩 중 브라우저가 해당 영역을 검은색으로 그리는 순간(플래시)이
-     간헐적으로 있어서, 로딩 전/투명 부분 뒤에 항상 흰 배경이 깔리게 함 —
-     이미지 자체 픽셀에는 영향 없음(뒤에 깔리는 배경일 뿐) */
-  background: #fff;
 }
 
 /* 카드마다 장식 이미지 1장 — 텍스트가 왼쪽 정렬인 카드(1,3)는 이미지를
@@ -621,12 +617,14 @@ body {
   right: clamp(-76px, -17%, -86px);
   width: clamp(120px, 65%, 369px);
   z-index: -1;
+  background: #fff;
 }
 
 .philosophy-deco-authenticity-combined {
   top: clamp(0px, -3vw, -16px);
   right: clamp(-85.2px, 4.1vw, 77.3px);
   width: clamp(126px, 65%, 400px);
+  background: #fff;
 }
 
 .philosophy-deco-strip {
@@ -640,6 +638,7 @@ body {
   top: clamp(-190px, -17vw, -8px);
   right: clamp(-86.2px, 0.3vw, 27.3px);
   width: clamp(120px, 45%, 347px);
+  background: #fff;
 }
 
 .philosophy-deco-effortless-combined {

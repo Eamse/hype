@@ -70,13 +70,15 @@ function AddonDesc({ text }: { text: string }) {
   );
 }
 
+const WHITE = 'text-[#fff]';
 const GREEN = 'text-[#2D5A45]';
 const GRAY1 = 'text-[#444444]';
 const GRAY2 = 'text-[#666666]';
 const GRAY3 = 'text-[#AAAAAA]';
-const GRAY4 = 'text-[rgb(85, 85, 85)]';
+const GRAY4 = 'text-[rgb(85,85,85)]';
 const BLACK = 'text-[#0D0D0D]';
 const BORDER = 'border-[#EEEEEE]';
+const GRAYL = 'text-[rgba(255,255,255,0.75)]';
 
 function InstagramLink({ handle }: { handle: string | null }) {
   if (!handle) return null;
@@ -508,46 +510,34 @@ export default function WeddingDetail({
                         ).toLocaleString()}`
                       : '···'}
                   </div>
-                  {/* <a
-                    href={INQUIRY_FORM_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#2D5A45] text-white"
-                  >
-                    Inquire Now →
-                  </a> */}
                 </div>
               ) : (
                 <>
                   {activePackage.hasPriceSNS && (
                     <div
-                      className={`py-4 px-3 sm:py-5 sm:px-6 flex flex-col gap-1 ${
+                      className={`py-4 px-3 sm:py-5 sm:px-6 flex flex-col gap-1 bg-[#2d5a45] ${
                         priceCount > 1 ? `border-r ${BORDER}` : ''
                       }`}
                     >
                       <div className="flex flex-col items-center gap-[2px] text-center">
-                        <span className="text-[10px] sm:text-[14px] font-bold leading-tight text-[#666666]">
+                        <span
+                          className={`text-[10px] sm:text-[14px] font-bold leading-tight ${GRAYL}`}
+                        >
                           DISCOUNTED PRICE
                         </span>
-                        <span className="text-[9px] sm:text-[12px] font-medium leading-tight text-[#666666]">
+                        <span
+                          className={`text-[9px] sm:text-[12px] font-medium leading-tight ${GRAYL}`}
+                        >
                           (WITH SNS UPLOAD CONSENT)
                         </span>
                       </div>
                       <div
-                        className={`text-[16px] text-center font-normal ${BLACK} tracking-[-0.02em]`}
+                        className={`text-[16px] text-center font-medium ${WHITE} tracking-[-0.02em]`}
                       >
                         {activePrice
                           ? `USD ${activePrice.priceSNS.toLocaleString()}`
                           : '···'}
                       </div>
-                      {/* <a
-                        href={INQUIRY_FORM_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#2D5A45] text-white"
-                      >
-                        Inquire Now →
-                      </a> */}
                     </div>
                   )}
                   {activePackage.hasPriceNoSNS && (
@@ -561,20 +551,12 @@ export default function WeddingDetail({
                         </span>
                       </div>
                       <div
-                        className={`text-[16px] text-center font-normal ${BLACK} tracking-[-0.02em]`}
+                        className={`text-[16px] text-center font-medium ${BLACK} tracking-[-0.02em]`}
                       >
                         {activePrice
                           ? `USD ${activePrice.priceNoSNS.toLocaleString()}`
                           : '···'}
                       </div>
-                      {/* <a
-                        href={INQUIRY_FORM_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="self-center block mt-[10px] py-[9px] px-[14px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none text-center no-underline bg-[#0D0D0D] text-white"
-                      >
-                        Inquire Now →
-                      </a> */}
                     </div>
                   )}
                 </>
