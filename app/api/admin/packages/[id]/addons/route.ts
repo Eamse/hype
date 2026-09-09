@@ -17,10 +17,10 @@ export async function GET(
   try {
     const links = await prisma.packageAddon.findMany({
       where: { packageId: pkgId },
-      select: { addonId: true },
+      select: { addonId: true, price: true, desc: true },
       orderBy: { order: 'asc' },
     });
-    return NextResponse.json(links.map((l) => l.addonId));
+    return NextResponse.json(links);
   } catch (e) {
     console.error('[GET /api/admin/packages/:id/addons]', e);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
@@ -28,7 +28,8 @@ export async function GET(
 }
 
 // PUT /api/admin/packages/[id]/addons
-// body: { addonIds: number[] }  → 전체 교체
+// body: { addons: { addonId: number; price: number; desc?: string }[] }  → 전체 교체
+// 같은 이름의 addon이라도 패키지마다 가격/설명이 다를 수 있어서, 값은 여기(PackageAddon)에 저장함
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
@@ -41,14 +42,24 @@ export async function PUT(
   if (!Number.isFinite(pkgId)) return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
 
   const body = await request.json().catch(() => null);
-  const addonIds: number[] = Array.isArray(body?.addonIds) ? body.addonIds : [];
+  const addons: { addonId: number; price: number; desc?: string | null }[] = Array.isArray(
+    body?.addons,
+  )
+    ? body.addons
+    : [];
 
   try {
     await prisma.$transaction([
       prisma.packageAddon.deleteMany({ where: { packageId: pkgId } }),
-      ...(addonIds.length > 0
+      ...(addons.length > 0
         ? [prisma.packageAddon.createMany({
-            data: addonIds.map((addonId, order) => ({ packageId: pkgId, addonId, order })),
+            data: addons.map((a, order) => ({
+              packageId: pkgId,
+              addonId: a.addonId,
+              price: Number(a.price) || 0,
+              desc: a.desc || null,
+              order,
+            })),
             skipDuplicates: true,
           })]
         : []),

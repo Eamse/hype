@@ -247,8 +247,8 @@ export default function DirectorRow({
         </div>
       </div>
 
-      {/* 패키지 섹션 */}
-      {isExpanded && (
+      {/* 패키지 섹션 — 수정 모드일 때도 등록 화면처럼 같이 보이게 */}
+      {(isExpanded || isEditingDir) && (
         <div
           style={{
             borderTop: '1px solid #000',
@@ -329,7 +329,6 @@ export default function DirectorRow({
                       onSave={() => onSaveEditPkg(pkg.id)}
                       onCancel={onCancelEditPkg}
                       saving={saving}
-                      packageId={pkg.id}
                     />
                   </div>
                 ) : (

@@ -47,7 +47,7 @@ export type Package = {
   retouched: number;
   retouchedDetail: string | null;
   thumbnailUrl: string | null;
-  addons: { addon: Addon }[];
+  addons: { addon: Addon; price: number; desc: string | null }[];
   inclusions: { inclusion: Inclusion }[];
   partners: { partner: Partner }[];
 };
@@ -72,7 +72,7 @@ export const emptyPkgForm = {
   retouchedDetail: '',
   thumbnailUrl: '' as string | null,
   inclusionIds: [] as number[],
-  addonIds: [] as number[],
+  addonEntries: [] as { addonId: number; price: string; desc: string }[],
   hmuId: null as number | null,
   dressId: null as number | null,
   suitId: null as number | null,
@@ -93,7 +93,11 @@ export function pkgFormFromPackage(pkg: Package): PkgForm {
     retouchedDetail: pkg.retouchedDetail ?? '',
     thumbnailUrl: pkg.thumbnailUrl,
     inclusionIds: pkg.inclusions.map((i) => i.inclusion.id),
-    addonIds: pkg.addons.map((a) => a.addon.id),
+    addonEntries: pkg.addons.map((a) => ({
+      addonId: a.addon.id,
+      price: String(a.price),
+      desc: a.desc ?? '',
+    })),
     hmuId:
       pkg.partners.find((p) => p.partner.role === 'hmu')?.partner.id ?? null,
     dressId:
@@ -107,4 +111,13 @@ export function pkgFormFromPackage(pkg: Package): PkgForm {
 
 export function toggleId(ids: number[], id: number): number[] {
   return ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id];
+}
+
+export function toggleAddonEntry(
+  entries: { addonId: number; price: string; desc: string }[],
+  addon: Addon,
+): { addonId: number; price: string; desc: string }[] {
+  return entries.some((e) => e.addonId === addon.id)
+    ? entries.filter((e) => e.addonId !== addon.id)
+    : [...entries, { addonId: addon.id, price: String(addon.price), desc: addon.desc ?? '' }];
 }

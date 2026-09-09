@@ -1,17 +1,16 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import Image from 'next/image';
+import { useState } from 'react';
 import { inputStyle, labelStyle, btnStyle } from './types';
 import PackagePreview from './package-preview';
 import {
   toggleId,
+  toggleAddonEntry,
   type PkgForm,
   type Inclusion,
   type Addon,
   type Partner,
 } from './wedding-photographer-types';
-import { resizeImageFile } from '@/lib/client-image-resize';
 
 // ── Package Form ──────────────────────────────────────────────────────────────
 export default function PackageForm({
@@ -24,7 +23,6 @@ export default function PackageForm({
   onCancel,
   saving,
   hideButtons = false,
-  packageId,
 }: {
   form: PkgForm;
   onChange: (f: PkgForm) => void;
@@ -35,37 +33,7 @@ export default function PackageForm({
   onCancel: () => void;
   saving: boolean;
   hideButtons?: boolean;
-  // 기존 패키지 수정일 때만 전달됨 — 새 패키지 작성 중엔 id가 없어 썸네일 업로드 불가
-  packageId?: number;
 }) {
-  const thumbInputRef = useRef<HTMLInputElement>(null);
-  const [thumbUploading, setThumbUploading] = useState(false);
-  const [thumbError, setThumbError] = useState<string | null>(null);
-
-  async function handleThumbUpload(file: File) {
-    if (!packageId) return;
-    setThumbUploading(true);
-    setThumbError(null);
-    try {
-      const resized = await resizeImageFile(file);
-      const fd = new FormData();
-      fd.append('key', `package_thumb_${packageId}_${Date.now()}`);
-      fd.append('image', resized);
-      const res = await fetch('/api/images', { method: 'POST', body: fd });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error ?? 'Upload failed');
-      await fetch(`/api/admin/packages/${packageId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ thumbnailUrl: data.imageUrl }),
-      });
-      onChange({ ...form, thumbnailUrl: data.imageUrl });
-    } catch (e) {
-      setThumbError(e instanceof Error ? e.message : 'Upload failed');
-    } finally {
-      setThumbUploading(false);
-    }
-  }
   const hmuList = allPartners.filter((p) => p.role === 'hmu');
   const dressList = allPartners.filter((p) => p.role === 'dress');
   const suitList = allPartners.filter((p) => p.role === 'suit');
@@ -129,55 +97,6 @@ export default function PackageForm({
           미리보기
         </button>
       </div>
-
-      {/* 썸네일 */}
-      {packageId ? (
-        <div style={{ marginBottom: 16 }}>
-          <label style={labelStyle}>썸네일</label>
-          <div
-            style={{
-              position: 'relative',
-              width: 140,
-              aspectRatio: '4/5',
-              border: '1px solid #000',
-              borderRadius: 8,
-              overflow: 'hidden',
-              cursor: 'pointer',
-              background: '#f5f5f5',
-            }}
-            onClick={() => thumbInputRef.current?.click()}
-          >
-            {form.thumbnailUrl ? (
-              <Image src={form.thumbnailUrl} alt="썸네일" fill sizes="140px" quality={20} style={{ objectFit: 'cover' }} />
-            ) : (
-              <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, color: '#888' }}>
-                이미지 없음
-              </div>
-            )}
-            {thumbUploading && (
-              <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.8)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ width: 18, height: 18, borderRadius: '50%', border: '2px solid #000', borderTopColor: '#acacac', animation: 'spin 0.7s linear infinite' }} />
-              </div>
-            )}
-            <input
-              ref={thumbInputRef}
-              type="file"
-              accept="image/*"
-              style={{ display: 'none' }}
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) handleThumbUpload(f);
-                e.target.value = '';
-              }}
-            />
-          </div>
-          {thumbError && <p style={{ fontSize: 11, color: '#5c5c5c', marginTop: 4 }}>{thumbError}</p>}
-        </div>
-      ) : (
-        <p style={{ fontSize: 12, color: '#888', marginBottom: 16 }}>
-          패키지를 먼저 저장하면 썸네일을 등록할 수 있어요.
-        </p>
-      )}
 
       {/* 기본 정보 */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -399,44 +318,78 @@ export default function PackageForm({
         </>
       )}
 
-      {/* Addons */}
+      {/* Addons — 같은 이름이라도 패키지마다 가격/설명이 다를 수 있어서 체크한 항목마다 따로 입력 */}
       {allAddons.length > 0 && (
         <>
           <p style={sectionTitle}>Add-ons</p>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-              gap: 6,
-            }}
-          >
-            {allAddons.map((addon) => (
-              <label
-                key={addon.id}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  fontSize: 13,
-                  cursor: 'pointer',
-                }}
-              >
-                <input
-                  type="checkbox"
-                  checked={form.addonIds.includes(addon.id)}
-                  onChange={() =>
-                    onChange({
-                      ...form,
-                      addonIds: toggleId(form.addonIds, addon.id),
-                    })
-                  }
-                />
-                {addon.name}{' '}
-                <span style={{ color: '#acacac', fontSize: 12 }}>
-                  ${addon.price}
-                </span>
-              </label>
-            ))}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {allAddons.map((addon) => {
+              const entry = form.addonEntries.find((e) => e.addonId === addon.id);
+              return (
+                <div key={addon.id}>
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                      fontSize: 13,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={!!entry}
+                      onChange={() =>
+                        onChange({
+                          ...form,
+                          addonEntries: toggleAddonEntry(form.addonEntries, addon),
+                        })
+                      }
+                    />
+                    {addon.name}
+                  </label>
+                  {entry && (
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '120px 1fr',
+                        gap: 8,
+                        marginTop: 4,
+                        marginLeft: 24,
+                      }}
+                    >
+                      <input
+                        style={inputStyle}
+                        type="number"
+                        placeholder="가격 (USD)"
+                        value={entry.price}
+                        onChange={(e) =>
+                          onChange({
+                            ...form,
+                            addonEntries: form.addonEntries.map((x) =>
+                              x.addonId === addon.id ? { ...x, price: e.target.value } : x,
+                            ),
+                          })
+                        }
+                      />
+                      <input
+                        style={inputStyle}
+                        placeholder="설명"
+                        value={entry.desc}
+                        onChange={(e) =>
+                          onChange({
+                            ...form,
+                            addonEntries: form.addonEntries.map((x) =>
+                              x.addonId === addon.id ? { ...x, desc: e.target.value } : x,
+                            ),
+                          })
+                        }
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </>
       )}
@@ -496,9 +449,9 @@ export default function PackageForm({
               onReorderInclusions={(inclusionIds) =>
                 onChange({ ...form, inclusionIds })
               }
-              addonIds={form.addonIds}
+              addonEntries={form.addonEntries}
               allAddons={allAddons}
-              onReorderAddons={(addonIds) => onChange({ ...form, addonIds })}
+              onReorderAddons={(addonEntries) => onChange({ ...form, addonEntries })}
               partnerRows={partnerRows}
             />
           </div>

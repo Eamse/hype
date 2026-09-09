@@ -170,19 +170,19 @@ async function syncAddons(packageId: string, rows: string[][]) {
   await prisma.packageAddon.deleteMany({ where: { packageId: pkgDbId } });
 
   for (const [, name, price, desc] of rows) {
+    // Addon.price/desc는 더 이상 값의 출처가 아님 — 같은 이름이 감독마다 가격/설명이 달라서
+    // 실제 값은 PackageAddon에 패키지별로 저장하고, Addon은 이름 참조용으로만 씀
     let addon = await prisma.addon.findFirst({ where: { name } });
     if (!addon) {
-      addon = await prisma.addon.create({
-        data: { name, price: price ? Number(price) : 0, desc: desc || null },
-      });
-    } else {
-      await prisma.addon.update({
-        where: { id: addon.id },
-        data: { price: price ? Number(price) : 0, desc: desc || null },
-      });
+      addon = await prisma.addon.create({ data: { name, price: 0 } });
     }
     await prisma.packageAddon.create({
-      data: { packageId: pkgDbId, addonId: addon.id },
+      data: {
+        packageId: pkgDbId,
+        addonId: addon.id,
+        price: price ? Number(price) : 0,
+        desc: desc || null,
+      },
     });
   }
 }

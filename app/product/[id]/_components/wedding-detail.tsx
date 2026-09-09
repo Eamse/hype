@@ -11,7 +11,8 @@ type Director = {
   instagram: string | null;
 };
 
-type Addon = { id: number; name: string; price: number; desc: string | null };
+type Addon = { id: number; name: string };
+type PackageAddon = { price: number; desc: string | null; addon: Addon };
 type Inclusion = { id: number; name: string };
 type Partner = {
   id: number;
@@ -37,7 +38,7 @@ type Package = {
   retouched: number;
   retouchedDetail: string | null;
   director: Director;
-  addons: { addon: Addon }[];
+  addons: PackageAddon[];
   inclusions: { inclusion: Inclusion }[];
   partners: { partner: Partner }[];
   images: {
@@ -442,7 +443,7 @@ export default function WeddingDetail({
             className={`py-5 px-4 sm:py-6 sm:px-8 border-t ${BORDER} bg-[#FAFAFA]`}
           >
             <div className={secLabelBase}>Add-ons</div>
-            {addons.map(({ addon }, i) => (
+            {addons.map(({ addon, price, desc }, i) => (
               <div
                 key={addon.id}
                 className={i === addons.length - 1 ? '' : 'mb-2'}
@@ -461,8 +462,8 @@ export default function WeddingDetail({
                   <div
                     className={`text-[12px] sm:text-[13px] font-medium ${GRAY1} flex items-center gap-[6px] shrink-0`}
                   >
-                    {addon.price > 0
-                      ? `+$${addon.price.toLocaleString()}`
+                    {price > 0
+                      ? `+$${price.toLocaleString()}`
                       : 'See details'}
                     <div
                       className={`w-5 h-5 rounded-full border ${BORDER} flex items-center justify-center text-[11px] ${GRAY3} shrink-0`}
@@ -471,11 +472,11 @@ export default function WeddingDetail({
                     </div>
                   </div>
                 </div>
-                {expandedAddon === i && addon.desc && (
+                {expandedAddon === i && desc && (
                   <p
                     className={`text-[11px] sm:text-[12px] pt-2 ${GRAY2} leading-[1.6] -mt-[2px] mb-[10px] px-3 sm:px-[14px]`}
                   >
-                    <AddonDesc text={addon.desc} />
+                    <AddonDesc text={desc} />
                   </p>
                 )}
               </div>

@@ -238,7 +238,13 @@ export default function WeddingPhotographerPanel() {
       fetch(`/api/admin/packages/${pkgId}/addons`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ addonIds: form.addonIds }),
+        body: JSON.stringify({
+          addons: form.addonEntries.map((e) => ({
+            addonId: e.addonId,
+            price: Number(e.price) || 0,
+            desc: e.desc || null,
+          })),
+        }),
       }),
       fetch(`/api/admin/packages/${pkgId}/partners`, {
         method: 'PUT',
@@ -628,6 +634,7 @@ export default function WeddingPhotographerPanel() {
                         (dir.location as '' | 'Jeju' | 'Seoul' | null) ?? '',
                       productId: dir.products[0]?.productId ?? '',
                     });
+                    if (!dirPackages[dir.id]) loadPackages(dir.id);
                   }}
                   onSaveEditDir={() =>
                     handleUpdateDir(dir.id, dir.products[0]?.productId)

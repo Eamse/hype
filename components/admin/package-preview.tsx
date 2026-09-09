@@ -115,7 +115,7 @@ export default function PackagePreview({
   inclusionIds,
   allInclusions,
   onReorderInclusions,
-  addonIds,
+  addonEntries,
   allAddons,
   onReorderAddons,
   partnerRows,
@@ -133,9 +133,9 @@ export default function PackagePreview({
   inclusionIds: number[];
   allInclusions: { id: number; name: string }[];
   onReorderInclusions: (ids: number[]) => void;
-  addonIds: number[];
-  allAddons: { id: number; name: string; price: number }[];
-  onReorderAddons: (ids: number[]) => void;
+  addonEntries: { addonId: number; price: string; desc: string }[];
+  allAddons: { id: number; name: string }[];
+  onReorderAddons: (entries: { addonId: number; price: string; desc: string }[]) => void;
   partnerRows: { role: string; name: string }[];
   onClose?: () => void;
 }) {
@@ -372,26 +372,26 @@ export default function PackagePreview({
         </div>
       )}
 
-      {addonIds.length > 0 && (
+      {addonEntries.length > 0 && (
         <div>
           <p style={sectionLabel}>Add-ons</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {addonIds.map((id, i) => {
-              const item = allAddons.find((x) => x.id === id);
+            {addonEntries.map((entry, i) => {
+              const item = allAddons.find((x) => x.id === entry.addonId);
               if (!item) return null;
               return (
                 <ReorderRow
-                  key={id}
+                  key={entry.addonId}
                   position={i + 1}
                   label={item.name}
-                  extra={`$${item.price}`}
+                  extra={`$${entry.price || 0}`}
                   canMoveUp={i > 0}
-                  canMoveDown={i < addonIds.length - 1}
+                  canMoveDown={i < addonEntries.length - 1}
                   onMoveUp={() =>
-                    onReorderAddons(moveInArray(addonIds, i, 'up'))
+                    onReorderAddons(moveInArray(addonEntries, i, 'up'))
                   }
                   onMoveDown={() =>
-                    onReorderAddons(moveInArray(addonIds, i, 'down'))
+                    onReorderAddons(moveInArray(addonEntries, i, 'down'))
                   }
                 />
               );

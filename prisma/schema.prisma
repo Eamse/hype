@@ -208,6 +208,9 @@ model Addon {
 model PackageAddon {
   packageId Int
   addonId   Int
+  // 같은 addon 이름이 감독/패키지마다 가격·설명이 달라서 Addon(전역 공유) 대신 여기에 실제 값을 저장함
+  price     Int     @default(0)
+  desc      String?
   order     Int     @default(0)
   package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
   addon     Addon   @relation(fields: [addonId], references: [id], onDelete: Cascade)

@@ -242,11 +242,22 @@ body {
 .about-intro-copy {
   display: flex;
   width: 100%;
+  min-width: 0;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   text-align: left;
   padding: clamp(23px, 5vw, 55px) clamp(28px, 5vw, 80px) 0;
+  /* 뷰포트(vw)가 아니라 이 컬럼 자체의 실제 렌더링 폭을 기준으로 글자 크기를
+     계산하기 위한 컨테이너 쿼리 컨텍스트 — 이미지 컬럼이 최소폭(260px)에 걸려도
+     텍스트 컬럼의 진짜 남은 폭에 맞춰 자동으로 줄어듦 */
+  container-type: inline-size;
+}
+
+/* Introduction 섹션 제목만 컨테이너 폭 기준(cqw)으로 스케일 — 다른 섹션의
+   .about-section-title은 컨테이너 컨텍스트가 없어 영향받지 않음 */
+.about-intro-copy .about-section-title {
+  font-size: clamp(28px, 10cqw, 84px);
 }
 
 .about-section-number {
@@ -269,6 +280,7 @@ body {
   font-style: italic;
   letter-spacing: -0.06em;
   line-height: 1.05;
+  overflow-wrap: break-word;
 }
 
 .about-section-title-1,
@@ -302,6 +314,7 @@ body {
 }
 
 .about-intro-quote {
+  width: 100%;
   max-width: 660px;
   color: #666;
   font-size: clamp(20px, 15.7px + 1.1vw, 34px);
@@ -310,7 +323,7 @@ body {
   letter-spacing: -0.045em;
   line-height: 1.15;
   text-align: center;
-  margin: 0 auto clamp(22px, 2vw, 34px);
+  margin: 0 0 clamp(22px, 2vw, 34px);
 }
 
 .how-started-layout {
@@ -818,9 +831,6 @@ body {
     font-size: 15px;
   }
 
-  /* 날짜 칸이 min-width:100px로 고정돼있어서, "Apr"/"May"처럼 짧은 날짜는
-     텍스트 뒤로 빈 공간이 많이 남고 거기에 gap 26px까지 더해져서 날짜와
-     본문 사이가 유독 크게 벌어져 보임 — 모바일에서는 폭을 줄이고 gap도 줄임 */
   .journey-timeline-row {
     gap: 10px;
   }
@@ -830,13 +840,6 @@ body {
     font-size: 19px;
   }
 
-  /* 데스크탑은 텍스트가 한 줄(nowrap)이라 row가 44px로 고정되고, 점이 그
-     44px 한가운데(약 22~25px)에 오는 걸 전제로 연결선 top/bottom이
-     하드코딩돼있음. 모바일은 텍스트가 여러 줄로 줄바꿈되면서 row 높이가
-     내용마다 들쭉날쭉해지고, align-items:center라 점도 같이 아래로 밀려서
-     연결선이 다음 점까지 못 닿고 끊겨 보임 — 점을 row 맨 위(flex-start)에
-     고정해서 위치를 내용 높이와 무관하게 예측 가능하게 만들고, 연결선도
-     그 고정된 위치(점 반지름 11.5px) 기준으로 다시 계산 */
   .journey-timeline-row {
     align-items: flex-start;
   }
@@ -847,7 +850,6 @@ body {
   }
 }
 
-/* /offer — "What makes us different" 롱폼 스크롤 섹션 */
 .offer-page {
   padding-inline: clamp(20px, 4vw, 64px);
 }
@@ -859,13 +861,10 @@ body {
 .offer-number {
   margin: 0 0 4px;
   font-size: clamp(20px, 17.6px + 0.7vw, 28px);
-  /* 상단 고정 헤더(56px) + 서브탭바 높이만큼 스크롤 도착 지점을 내려서,
-     핀포인트로 스크롤했을 때 번호가 sticky 바에 가려지지 않게 함 */
   scroll-margin-top: 105px;
 }
 
 .offer-eyebrow {
-  margin: 0 0 clamp(24px, 2.4vw, 38px);
   font-size: clamp(24px, 20px + 1.1vw, 37px);
   line-height: 1.1;
 }

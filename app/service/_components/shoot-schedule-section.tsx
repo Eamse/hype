@@ -51,11 +51,8 @@ export default function ShootScheduleSection() {
           03
         </p>
         <p data-offer-reveal className="offer-eyebrow offer-fade">
-          SHOOT TIMELINE
-        </p>
-        <h2 data-offer-reveal className="offer-headline offer-fade">
           PRE-WEDDING SHOOT TIMELINE
-        </h2>
+        </p>
       </div>
 
       <div className="schedule-cards">
