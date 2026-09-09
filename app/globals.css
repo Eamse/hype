@@ -1339,6 +1339,11 @@ body {
        구형 padding-top 비율 트릭으로 대체 — 모든 브라우저에서 안전하게 동작함 */
     height: 0;
     padding-top: 125%; /* 4:5 비율 (5/4 = 1.25) */
+    /* grid item은 기본 min-width:auto라 콘텐츠 크기만큼 트랙을 넘어서려는 특성이
+       있어서(옆에 여백/가로스크롤 원인) 0으로 강제 — hero-carousel처럼 grid 밖에
+       있는 요소는 이 문제가 없어서 필요없지만, 여긴 grid 아이템이라 필요함 */
+    min-width: 0;
+    width: 100%;
   }
 
   .about-intro-copy {
@@ -1447,7 +1452,7 @@ body {
   .philosophy-deco-coast-combined {
     top: -11.45cqw;
     aspect-ratio: 353.8/378;
-    right: clamp(-46.6px, -1.12%, -49.3px);
+    right: clamp(-46.6px, -1.12%, -34.3px);
     width: clamp(106.15px, 52.21%, 353.8px);
   }
 
