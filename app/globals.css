@@ -248,6 +248,16 @@ body {
   justify-content: flex-start;
   text-align: left;
   padding: clamp(23px, 5vw, 55px) clamp(28px, 5vw, 80px) 0;
+  /* 뷰포트(vw)가 아니라 이 컬럼 자체의 실제 렌더링 폭을 기준으로 글자 크기를
+     계산하기 위한 컨테이너 쿼리 컨텍스트 — 이미지 컬럼이 최소폭(260px)에 걸려도
+     텍스트 컬럼의 진짜 남은 폭에 맞춰 자동으로 줄어듦 */
+  container-type: inline-size;
+}
+
+/* Introduction 섹션 제목만 컨테이너 폭 기준(cqw)으로 스케일 — 다른 섹션의
+   .about-section-title은 컨테이너 컨텍스트가 없어 영향받지 않음 */
+.about-intro-copy .about-section-title {
+  font-size: clamp(28px, 10cqw, 84px);
 }
 
 .about-section-number {
