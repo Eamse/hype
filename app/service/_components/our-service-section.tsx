@@ -95,9 +95,11 @@ export default function OurServiceSection({
             </p>
           </>
         )}
-        <h2 data-offer-reveal className="offer-headline offer-fade">
-          Our Service
-        </h2>
+        {!showHeader && (
+          <h2 data-offer-reveal className="offer-headline offer-fade">
+            Our Service
+          </h2>
+        )}
       </div>
 
       <div className="service-grid">
