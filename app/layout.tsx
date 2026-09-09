@@ -18,6 +18,9 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
+  // 없으면 og:image 등 절대경로가 기본값(localhost)으로 생성돼서 카카오톡/슬랙 등
+  // 외부 크롤러가 이미지를 못 가져옴
+  metadataBase: new URL('https://hypewedding.kr'),
   title: 'HYPE WEDDING',
   description:
     'Find your perfect wedding photographer in Korea. HYPE WEDDING connects couples around the world with top studios in Jeju and Seoul.',
