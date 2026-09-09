@@ -847,6 +847,10 @@ body {
        0으로 계산하는 버그 회피 — about-intro-image와 동일한 padding-top 트릭 */
     height: 0;
     padding-top: 125%; /* 4:5 비율 */
+    /* .journey-pin-wrap이 grid라 grid item 기본 min-width:auto 때문에 옆 여백/
+       이미지 미표시 문제가 생길 수 있어서 about-intro-image와 동일하게 방지 */
+    min-width: 0;
+    width: 100%;
   }
 
   .journey-milestone {
