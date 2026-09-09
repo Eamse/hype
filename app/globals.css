@@ -80,9 +80,12 @@
   box-sizing: border-box;
 }
 
-html {
-  /* body에 걸면 position:sticky의 기준이 깨지므로 html에만 적용 */
-  overflow-x: hidden;
+@media (max-width: 767px) {
+  html {
+    /* body에 걸면 position:sticky의 기준이 깨지므로 html에만, 그리고 실제 문제가
+       있는 모바일 폭에서만 적용 (데스크탑 sticky에는 영향 없음) */
+    overflow-x: hidden;
+  }
 }
 
 body {
