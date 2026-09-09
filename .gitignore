@@ -36,6 +36,10 @@ yarn-error.log*
 # google service account key (secret — never commit)
 google-service-account.json
 
+# scripts/transform-appjsx-to-schema.ts 실행 산출물 (일회성 리포트)
+scripts/.transform-appjsx-output.json
+scripts/.price-diff-report.json
+
 # database
 *.db
 *.db-shm

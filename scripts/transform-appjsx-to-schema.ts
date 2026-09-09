@@ -16,6 +16,8 @@ type Pkg = {
   originalPhotos: string;
   retouched: number;
   retouchedDetail?: string;
+  priceSNS?: number;
+  priceNoSNS?: number;
   addons: Addon[];
 };
 type SubPhotographer = {
@@ -118,6 +120,11 @@ async function main() {
     else processLeaf(dir, 'Seoul');
   }
 
+  // --apply-prices 없이는 기존 DB 가격을 그대로 유지 (기본값) — 클라이언트가 가격 반영을
+  // 요청하면 이 플래그를 켜서 App.jsx의 priceSNS/priceNoSNS를 그대로 반영할 수 있음
+  const applyPrices = process.argv.includes('--apply-prices');
+  const priceDiffs: { packageId: string; director: string; pkg: string; oldSNS: number; newSNS: number; oldNoSNS: number; newNoSNS: number }[] = [];
+
   for (const { packageId, director, pkg } of prismaPackageQueue) {
     const existingPkg = await prisma.package.findFirst({
       where: { directorId: director.id, name: pkg.name },
@@ -127,6 +134,25 @@ async function main() {
       continue;
     }
 
+    if (
+      pkg.priceSNS != null &&
+      pkg.priceNoSNS != null &&
+      (pkg.priceSNS !== existingPkg.priceSNS || pkg.priceNoSNS !== existingPkg.priceNoSNS)
+    ) {
+      priceDiffs.push({
+        packageId,
+        director: `${director.number} ${director.name}`,
+        pkg: pkg.name,
+        oldSNS: existingPkg.priceSNS,
+        newSNS: pkg.priceSNS,
+        oldNoSNS: existingPkg.priceNoSNS,
+        newNoSNS: pkg.priceNoSNS,
+      });
+    }
+
+    const finalSNS = applyPrices && pkg.priceSNS != null ? pkg.priceSNS : existingPkg.priceSNS;
+    const finalNoSNS = applyPrices && pkg.priceNoSNS != null ? pkg.priceNoSNS : existingPkg.priceNoSNS;
+
     const location = packageId.split('-')[0];
     packageRows.push([
       packageId,
@@ -134,8 +160,8 @@ async function main() {
       location,
       pkg.name,
       pkg.subtitle ?? '',
-      String(existingPkg.priceSNS),
-      String(existingPkg.priceNoSNS),
+      String(finalSNS),
+      String(finalNoSNS),
       pkg.shootingTime,
       pkg.locations,
       pkg.originalPhotos,
@@ -198,7 +224,27 @@ async function main() {
     bouquetRows: bouquetRows.length,
     warnings: warnings.length,
     notes: notes.length,
+    priceDiffs: priceDiffs.length,
+    applyPrices,
   });
+
+  if (priceDiffs.length) {
+    console.log(
+      applyPrices
+        ? `\n=== 가격 반영됨 (${priceDiffs.length}건, DB 기존 값 → App.jsx 값으로 교체) ===`
+        : `\n=== 가격 차이 있음 (${priceDiffs.length}건, --apply-prices 없이 실행돼서 기존 DB 값 유지함) ===`,
+    );
+    priceDiffs.forEach((d) =>
+      console.log(
+        ` - ${d.packageId} (${d.director} ${d.pkg}): SNS ${d.oldSNS}→${d.newSNS}, No SNS ${d.oldNoSNS}→${d.newNoSNS}`,
+      ),
+    );
+    fs.writeFileSync(
+      path.join(process.cwd(), 'scripts/.price-diff-report.json'),
+      JSON.stringify(priceDiffs, null, 2),
+    );
+    console.log('\n(전체 목록은 scripts/.price-diff-report.json 에도 저장됨)');
+  }
   if (warnings.length) {
     console.log('\n=== 경고 ===');
     warnings.forEach((w) => console.log(' -', w));

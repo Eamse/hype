@@ -125,6 +125,8 @@ export default function AboutClient({
   const philosophyRef = useRef<HTMLDivElement>(null);
   const minjuPhotoRef = useRef<HTMLDivElement>(null);
   const [minjuCaptionLeft, setMinjuCaptionLeft] = useState<number | null>(null);
+  const morganPhotoRef = useRef<HTMLDivElement>(null);
+  const [morganCaptionLeft, setMorganCaptionLeft] = useState<number | null>(null);
 
   useEffect(() => {
     const el = introRef.current;
@@ -238,6 +240,22 @@ export default function AboutClient({
     return () => window.removeEventListener('resize', recompute);
   }, []);
 
+  useEffect(() => {
+    function recompute() {
+      const container = morganPhotoRef.current;
+      const img = container?.querySelector('img');
+      if (!container || !img || !img.naturalWidth || !img.naturalHeight) return;
+      const cw = container.clientWidth;
+      const ch = container.clientHeight;
+      const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
+      const renderedWidth = img.naturalWidth * scale;
+      setMorganCaptionLeft(cw - renderedWidth + 16);
+    }
+    recompute();
+    window.addEventListener('resize', recompute);
+    return () => window.removeEventListener('resize', recompute);
+  }, []);
+
   return (
     <div style={{ minHeight: '100vh' }}>
       <SubTabBar tabs={SECTIONS} />
@@ -248,13 +266,19 @@ export default function AboutClient({
           margin: '0 auto',
         }}
       >
-        {SECTIONS.map((section) => (
+        {SECTIONS.map((section, i) => (
           <section
             key={section.id}
             id={section.id}
             style={{
               scrollMarginTop: 106,
-              minHeight: section.id === 'achievement' ? undefined : '50vh',
+              minHeight: '100vh',
+              // 섹션 사이 간격 — 사이트 다른 페이지(.partnership-section 등)와 같은
+              // clamp(64px, 7vw, 100px) 패턴의 2배. 마지막 섹션은 다음 섹션이 없어서 생략
+              paddingBottom:
+                i < SECTIONS.length - 1
+                  ? 'clamp(128px, 14vw, 200px)'
+                  : undefined,
             }}
           >
             {section.id === 'introduction' ? (
@@ -463,15 +487,38 @@ export default function AboutClient({
                           <p>Co-founder</p>
                         </div>
                       </div>
-                      <div className="how-started-photo how-started-photo-morgan">
+                      <div
+                        ref={morganPhotoRef}
+                        className="how-started-photo how-started-photo-morgan"
+                      >
                         <Image
-                          src="/about/morgan.jpg"
+                          src="/about/morgan-.jpg"
                           alt="Saeyoung (Morgan), Co-founder"
                           fill
-                          className="object-cover"
-                          style={{ objectPosition: 'top' }}
+                          className="object-contain object-right-bottom"
+                          onLoad={(e) => {
+                            const img = e.currentTarget;
+                            const container = morganPhotoRef.current;
+                            if (!container) return;
+                            const cw = container.clientWidth;
+                            const ch = container.clientHeight;
+                            const scale = Math.min(
+                              cw / img.naturalWidth,
+                              ch / img.naturalHeight,
+                            );
+                            setMorganCaptionLeft(
+                              cw - img.naturalWidth * scale + 16,
+                            );
+                          }}
                         />
-                        <div className="how-started-photo-caption">
+                        <div
+                          className="how-started-photo-caption"
+                          style={
+                            morganCaptionLeft !== null
+                              ? { left: morganCaptionLeft }
+                              : undefined
+                          }
+                        >
                           <p className="font-bold">Saeyoung (Morgan)</p>
                           <p>Co-founder</p>
                         </div>

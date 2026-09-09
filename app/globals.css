@@ -362,6 +362,10 @@ body {
   min-height: 600px;
 }
 
+.how-started-photo.how-started-photo-morgan {
+  min-height: 508px;
+}
+
 .how-started-photo-caption {
   position: absolute;
   left: clamp(10px, 1.2vw, 16px);
@@ -441,7 +445,7 @@ body {
 .how-started-goal p {
   margin-bottom: 10px;
   color: #666;
-  font-size: clamp(32px, 25.9px + 1.6vw, 52px);
+  font-size: clamp(20px, 15.7px + 1.1vw, 34px);
   font-weight: 700;
   font-style: italic;
   line-height: 1;
@@ -458,7 +462,7 @@ body {
 
 /* About > Philosophy: 아이콘은 추후 추가하며, 원칙 텍스트는 대각선 흐름으로 배치 */
 .philosophy-content {
-  padding: clamp(56px, 5.5vw, 90px) clamp(24px, 2vw, 32px)
+  padding: clamp(23px, 5vw, 55px) clamp(24px, 2vw, 32px)
     clamp(120px, 13vw, 210px);
 }
 
@@ -471,7 +475,9 @@ body {
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  margin-top: clamp(38px, 4vw, 64px);
+  /* ABOUT US → 타이틀 간격(.about-section-eyebrow의 margin-bottom)과 동일하게 맞춤 —
+     eyebrow 자체 여백만으로 간격이 만들어지므로 여기선 추가 margin-top을 두지 않음 */
+  margin-top: 0;
 }
 
 /* philosophy-heading의 이탤릭 폰트 광학 정렬 보정 + 좁은 flex 컬럼에서 줄바꿈 방지 —
@@ -638,8 +644,7 @@ body {
 }
 /* About > 04 History("Our journey so far"): 연도별 타임라인 + 사진 */
 .journey-header {
-  /* 아래 StatsBar의 py-20(80px)과 위쪽 여백을 맞춰서 섹션 상/하단 간격을 동일하게 함 */
-  padding: 80px clamp(24px, 2vw, 32px) 0;
+  padding: clamp(23px, 5vw, 55px) clamp(24px, 2vw, 32px) 0;
 }
 
 .journey-subtext {
@@ -662,7 +667,9 @@ body {
 
 .journey-year-title {
   margin: 0 0 clamp(20px, 1.2vw, 23px);
-  font-size: clamp(55px, 7.5vw, 112px);
+  /* Month(journey-date) 폰트 사이즈와 통일 — 그 Month 사이즈 자체도 본문(journey-milestone)과
+     통일했으므로 결과적으로 연도/Month/본문이 전부 같은 크기가 됨 */
+  font-size: clamp(18px, 1.4vw, 23px);
   font-weight: 800;
   font-style: italic;
   letter-spacing: -0.06em;
@@ -707,7 +714,8 @@ body {
   position: absolute;
   top: 25px;
   bottom: -22px;
-  left: 10.4px;
+  /* journey-dot 중심(16px 폭 → 8px)에 맞춤 - 선 두께(2px)의 절반만큼 왼쪽으로 */
+  left: 7px;
   width: 2px;
   background: #000;
 }
@@ -715,8 +723,9 @@ body {
 .journey-dot {
   position: relative;
   flex-shrink: 0;
-  width: 23px;
-  height: 23px;
+  /* 기존 23px 대비 30% 축소 */
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: #000;
 }
@@ -725,7 +734,8 @@ body {
   flex: 0 0 auto;
   min-width: 100px;
   margin: 0;
-  font-size: clamp(23px, 2vw, 34px);
+  /* 본문(journey-milestone)과 동일한 크기로 통일 */
+  font-size: clamp(18px, 1.4vw, 23px);
   font-weight: 700;
 }
 
@@ -837,7 +847,7 @@ body {
 
   .journey-date {
     min-width: 64px;
-    font-size: 19px;
+    font-size: 15px;
   }
 
   .journey-timeline-row {
@@ -1358,6 +1368,10 @@ body {
     min-height: 0;
   }
 
+  .how-started-photo.how-started-photo-morgan {
+    min-height: 0;
+  }
+
   .how-started-description {
     font-size: 20px;
   }
@@ -1380,7 +1394,7 @@ body {
 
   .philosophy-title-row {
     display: block;
-    margin-top: 42px;
+    margin-top: 0;
   }
 
   .philosophy-title-tight {

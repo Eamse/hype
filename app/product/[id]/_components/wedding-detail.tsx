@@ -462,9 +462,7 @@ export default function WeddingDetail({
                   <div
                     className={`text-[12px] sm:text-[13px] font-medium ${GRAY1} flex items-center gap-[6px] shrink-0`}
                   >
-                    {price > 0
-                      ? `+$${price.toLocaleString()}`
-                      : 'See details'}
+                    {price > 0 ? `+$${price.toLocaleString()}` : 'See details'}
                     <div
                       className={`w-5 h-5 rounded-full border ${BORDER} flex items-center justify-center text-[11px] ${GRAY3} shrink-0`}
                     >
@@ -606,35 +604,34 @@ export default function WeddingDetail({
           className={`py-5 px-4 sm:py-6 sm:px-8 border-t ${BORDER} text-center bg-white`}
         >
           {!session ? (
-            <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-x-2 sm:gap-x-4 mb-4">
+            <>
               <p
-                className={`row-start-1 col-start-1 text-[11px] sm:text-[13px] font-normal ${GRAY2} text-center px-1`}
+                className={
+                  'text-center py-2 text-[11px] sm:text-[18px] font-medium text-black'
+                }
               >
-                Log in to check the price
+                Want to Check the price?
               </p>
-              <span className="row-start-1 row-span-2 col-start-2 self-center text-[15px] font-normal text-black">
-                or
-              </span>
-              <p
-                className={`row-start-1 col-start-3 text-[11px] sm:text-[13px] font-normal ${GRAY2} text-center px-1`}
-              >
-                Ready to book or have questions?
-              </p>
-              <button
-                onClick={() => router.push('?auth=1')}
-                className="row-start-2 col-start-1 justify-self-center mt-3 mx-1 py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none bg-[#0D0D0D] text-white"
-              >
-                Check Price
-              </button>
-              <a
-                href={INQUIRY_FORM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="row-start-2 col-start-3 justify-self-center mt-3 mx-1 py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none no-underline bg-[#0D0D0D] text-white text-center"
-              >
-                Submit your Inquiry
-              </a>
-            </div>
+              <div className="grid grid-cols-[1fr_auto_1fr] items-start gap-x-2 sm:gap-x-4 mb-4">
+                <span className="row-start-1 row-span-2 col-start-2 self-center text-[15px] font-normal text-black">
+                  or
+                </span>
+                <button
+                  onClick={() => router.push('?auth=1')}
+                  className="row-start-2 col-start-1 justify-self-center w-[130px] sm:w-[142px] mt-3 mx-1 py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none bg-[#0D0D0D] text-white text-center"
+                >
+                  Login / Sign up
+                </button>
+                <a
+                  href={INQUIRY_FORM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="row-start-2 col-start-3 justify-self-center mt-3 mx-1 py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none no-underline bg-[#0D0D0D] text-white text-center"
+                >
+                  Submit your Inquiry
+                </a>
+              </div>
+            </>
           ) : (
             <>
               <p className={`text-[14px] font-normal ${GRAY4} mb-4`}>
