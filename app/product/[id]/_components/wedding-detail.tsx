@@ -274,10 +274,9 @@ export default function WeddingDetail({
             className={`text-[20px] sm:text-[24px] font-semibold ${BLACK} tracking-[-0.02em] mb-5`}
           >
             {title}
-            {/* 괄호 안 작가이름 */}
-            {/* {directors.length > 1 &&
+            {directors.length > 1 &&
               activePackage &&
-              ` (${activePackage.director.name})`} */}
+              ` (${activePackage.director.name})`}
           </div>
 
           {directors.length > 1 && (

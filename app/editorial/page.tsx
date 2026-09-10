@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
-import MagazineMasterActions from './_components/magazine-master-actions';
+import EditorialHeader from './_components/editorial-header';
 import MagazineGrid from './_components/magazine-grid';
 import Pagination from '@/components/pagination';
 import HomeFooter from '@/app/_components/home-footer';
@@ -24,7 +24,10 @@ export default async function MagazinePage({ searchParams }: Props) {
   const currentPage = Number(page) || 1;
 
   const where = { published: true };
-  const orderBy = [{ isPinned: 'desc' as const }, { createdAt: 'desc' as const }];
+  const orderBy = [
+    { isPinned: 'desc' as const },
+    { createdAt: 'desc' as const },
+  ];
 
   const [hero, totalCount, rest] = await Promise.all([
     currentPage === 1
@@ -53,39 +56,7 @@ export default async function MagazinePage({ searchParams }: Props) {
       <Header brand={brand} />
 
       <div className="magazine-page-padding">
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            gap: 8,
-          }}
-        >
-          <div>
-            <p
-              style={{
-                fontSize: 11,
-                letterSpacing: '3px',
-                textTransform: 'uppercase',
-                color: '#000',
-                marginBottom: 12,
-              }}
-            >
-              Hype Wedding
-            </p>
-            <h1
-              className="inquiry-heading"
-              style={{
-                fontWeight: 800,
-                color: '#000',
-                letterSpacing: '-0.5px',
-              }}
-            >
-              Editorial
-            </h1>
-          </div>
-          <MagazineMasterActions />
-        </div>
+        <EditorialHeader />
 
         {magazines.length === 0 ? (
           <p style={{ color: '#000', fontSize: 14 }}>

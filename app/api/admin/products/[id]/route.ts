@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAdminId } from '@/lib/admin-auth';
+import { logFieldChanges } from '@/lib/audit-log';
 
 // PATCH /api/admin/products/[id]
 export async function PATCH(
@@ -20,6 +21,7 @@ export async function PATCH(
   const { title, imageUrl, order } = body as Record<string, unknown>;
 
   try {
+    const before = await prisma.product.findUnique({ where: { id: productId } });
     const product = await prisma.product.update({
       where: { id: productId },
       data: {
@@ -28,6 +30,9 @@ export async function PATCH(
         ...(typeof order === 'number' && Number.isFinite(order) && { order }),
       },
     });
+    if (before) {
+      await logFieldChanges(adminId, 'Product', productId, before, product);
+    }
     return NextResponse.json(product);
   } catch (e) {
     console.error('[PATCH /api/admin/products/:id]', e);

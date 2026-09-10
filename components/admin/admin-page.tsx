@@ -15,6 +15,7 @@ import WeddingPhotographerPanel from './wedding-photographer-panel';
 import AddonPanel from './addon-panel';
 import InclusionPanel from './inclusion-panel';
 import PartnerPanel from './partner-panel';
+import AuditLogPanel from './audit-log-panel';
 import { ADMIN_PANEL_PATH } from '@/lib/admin-paths';
 
 const IconDashboard = () => (
@@ -107,6 +108,20 @@ const IconSettings = () => (
   </svg>
 );
 
+const IconLog = () => (
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.6"
+  >
+    <circle cx="12" cy="12" r="9" />
+    <polyline points="12 7 12 12 16 14" />
+  </svg>
+);
+
 const IconUsers = () => (
   <svg
     width="15"
@@ -159,6 +174,7 @@ const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
   },
   { id: 'users', label: 'Members', icon: <IconUsers /> },
   { id: 'accounts', label: 'Account Setting', icon: <IconSettings /> },
+  { id: 'audit-log', label: 'Audit Log', icon: <IconLog /> },
   { id: 'my-account', label: 'My Account', icon: <IconSettings /> },
 ];
 
@@ -706,6 +722,7 @@ export default function AdminPage() {
           )}
           {active === 'users' && <UserPanel />}
           {active === 'accounts' && <AccountsPanel />}
+          {active === 'audit-log' && <AuditLogPanel />}
           {active === 'my-account' && <MyAccountPanel />}
         </main>
       </div>

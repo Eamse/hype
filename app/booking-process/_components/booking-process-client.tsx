@@ -182,7 +182,7 @@ export default function BookingProcessClient() {
 
       <div className="booking-process-actions">
         <Link
-          href={inquiryHref}
+          href="https://docs.google.com/forms/d/e/1FAIpQLSf5wIchc4qYFhPbX1VOlMiFvkNugZpeFa16ArIjuuwd5EW6UA/viewform"
           className="booking-process-cta"
           // className="booking-process-cta inquiry-rise"
           // data-reveal

@@ -86,13 +86,19 @@ export default function HomeFooter() {
             fontSize: 11,
             color: '#000',
             lineHeight: 1.9,
-            marginTop: 10,
-            paddingTop: 10,
           }}
         >
           <p>HYPE PIG&nbsp;|&nbsp; CEO: Minju Lee, Saeyoung Lee</p>
           <p>Business Reg: 722-46-01107</p>
-          <p>Email: hypepig227@gmail.com</p>
+          <p>
+            Email:{' '}
+            <a
+              href="mailto:hypepig227@gmail.com"
+              style={{ color: 'inherit', textDecoration: 'none' }}
+            >
+              hypepig227@gmail.com
+            </a>
+          </p>
           <p>
             Address: 36 Dongtanjungsimsangga 1-gil, Dongtan-gu, Hwaseong-si,
             Gyeonggi-do, Republic of Korea

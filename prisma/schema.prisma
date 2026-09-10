@@ -102,16 +102,33 @@ model Session {
 }
 
 model Admin {
-  id                String   @id @default(cuid())
-  loginId           String   @unique
+  id                String     @id @default(cuid())
+  loginId           String     @unique
   password          String
   name              String
-  role              String   @default("staff")
+  role              String     @default("staff")
   phone             String
-  isActive          Boolean  @default(true)
-  isPasswordChanged Boolean  @default(false)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  isActive          Boolean    @default(true)
+  isPasswordChanged Boolean    @default(false)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  auditLogs         AuditLog[]
+}
+
+// 어드민이 콘텐츠(Product/Package 등)를 수정할 때 남기는 변경 기록 — 삭제 API를
+// 일부러 안 만들어서 앱에서는 지울 수 없음 (실수로 값이 바뀐 걸 나중에 추적하기 위함)
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  adminId   String
+  admin     Admin    @relation(fields: [adminId], references: [id])
+  model     String // 예: "Product"
+  recordId  String // 대상 레코드 id (문자열로 통일)
+  field     String // 예: "title"
+  oldValue  String?
+  newValue  String?
+  createdAt DateTime @default(now())
+
+  @@index([model, recordId])
 }
 
 model Magazine {

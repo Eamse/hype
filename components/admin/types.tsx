@@ -24,7 +24,8 @@ export type Section =
   | 'partners-hmu'
   | 'partners-dress'
   | 'partners-suit'
-  | 'partners-bouquet';
+  | 'partners-bouquet'
+  | 'audit-log';
 
 export type Account = {
   id: string;

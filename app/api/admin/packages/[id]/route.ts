@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAdminId } from '@/lib/admin-auth';
+import { logFieldChanges } from '@/lib/audit-log';
 
 // PATCH /api/admin/packages/[id]
 export async function PATCH(
@@ -33,6 +34,7 @@ export async function PATCH(
     body as Record<string, unknown>;
 
   try {
+    const before = await prisma.package.findUnique({ where: { id: pkgId } });
     const pkg = await prisma.package.update({
       where: { id: pkgId },
       data: {
@@ -48,6 +50,9 @@ export async function PATCH(
         ...(thumbnailUrl !== undefined && { thumbnailUrl: typeof thumbnailUrl === 'string' ? thumbnailUrl : null }),
       },
     });
+    if (before) {
+      await logFieldChanges(adminId, 'Package', pkgId, before, pkg);
+    }
     return NextResponse.json(pkg);
   } catch (e) {
     console.error('[PATCH /api/admin/packages/[id]]', e);
