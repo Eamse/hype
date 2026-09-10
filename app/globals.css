@@ -1422,6 +1422,9 @@ body {
     padding-top: 72px;
     gap: 70px;
   }
+  /* .philosophy-principle {
+    overflow-x: hidden;
+  } */
 
   .philosophy-principle-2,
   .philosophy-principle-3,
