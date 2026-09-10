@@ -1425,14 +1425,6 @@ body {
     gap: 70px;
   }
 
-  /* 카드 밖으로 삐져나오게 배치된 장식 이미지들을 카드 경계에서 실제로 잘라냄 —
-     overflow-x:hidden(html)만으로는 iOS Safari가 삐져나온 콘텐츠를 포함해서
-     레이아웃 뷰포트를 넓게 잡고 페이지 전체를 축소해버리는 것을 못 막아서,
-     여기서 근본적으로 넘치지 않게 함 */
-  .philosophy-principle {
-    overflow-x: hidden;
-  }
-
   .philosophy-principle-2,
   .philosophy-principle-3,
   .philosophy-principle-4 {
