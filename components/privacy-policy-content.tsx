@@ -1,6 +1,5 @@
 export default function PrivacyPolicyContent() {
-  return (
-    <div className="privacy-policy-body">
+    return (<div className="privacy-policy-body">
       <h2>Article 1. Consent to Collection and Use of Personal Information</h2>
       <p>
         HYPEWEDDING and HYPESNAP are brand names operated by HYPEPIG (&quot;we,&quot;
@@ -265,6 +264,5 @@ export default function PrivacyPolicyContent() {
       <p style={{ marginTop: 40, fontWeight: 600 }}>
         This Privacy Policy is effective as of August 20th, 2026.
       </p>
-    </div>
-  );
+    </div>);
 }

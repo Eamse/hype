@@ -1,7 +1,5 @@
 'use client';
-
 import { useEffect, useRef, useState } from 'react';
-
 type Stat = {
   target: number;
   suffix: string;
@@ -9,7 +7,6 @@ type Stat = {
   label?: string;
   sublabel: string;
 };
-
 const STATS: Stat[] = [
   { target: 70, suffix: '+', label: 'Couples', sublabel: 'In our first year' },
   {
@@ -30,20 +27,16 @@ const STATS: Stat[] = [
     sublabel: 'Founded Jeju & Seoul, Korea',
   },
 ];
-
 const DURATION = 1400;
-
 function useCountUp(target: number, start: boolean, delay: number) {
   const [value, setValue] = useState(0);
-
   useEffect(() => {
     if (!start) {
-      setValue(0); // 뷰포트를 벗어나면 리셋 — 다음에 다시 들어올 때 0부터 재생
+      setValue(0);
       return;
     }
     let raf: number;
     const startTime = performance.now() + delay;
-
     const tick = (now: number) => {
       const elapsed = now - startTime;
       if (elapsed < 0) {
@@ -51,26 +44,21 @@ function useCountUp(target: number, start: boolean, delay: number) {
         return;
       }
       const progress = Math.min(elapsed / DURATION, 1);
-      const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+      const eased = 1 - Math.pow(1 - progress, 3);
       setValue(Math.round(target * eased));
       if (progress < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, [start, target, delay]);
-
   return value;
 }
-
 const DIVIDER_CLASSES = [
   'border-b border-black pb-8 lg:border-b-0 lg:pb-0 lg:px-8',
   'border-b border-black pb-8 lg:border-b-0 lg:pb-0 lg:px-8',
   'border-b border-black pb-8 sm:border-b-0 sm:pb-0 lg:px-8',
   'lg:px-8',
 ];
-
-// gap-x-15(60px)의 정중앙에 오도록 컬럼 오른쪽 바깥으로 절반(30px)만큼 밀어서 배치
-// — border-r을 쓰면 패딩 위치에 따라 선이 텍스트 쪽으로 치우쳐 보임
 function StatColumn({
   stat,
   start,
@@ -86,17 +74,20 @@ function StatColumn({
 }) {
   const value = useCountUp(stat.target, start, delay);
   const classes = `relative flex-1 min-w-0 flex flex-col items-center text-center ${dividerClass}`;
-
   return (
     <div className={classes}>
       {showDivider && (
         <span className="hidden lg:block absolute top-0 bottom-0 right-[-30px] w-px bg-black" />
       )}
-      <div className="inline-flex flex-col items-start">
-        <p className="text-[clamp(1.5rem,2.7vw,2rem)] font-bold italic leading-none mb-[-15px]">
-          {stat.topLabel ?? ' '}
-        </p>
-        <div className="flex items-baseline gap-2">
+      <div className="inline-flex flex-col items-center">
+        <div className="h-[clamp(1.5rem,2.7vw,2rem)] w-full flex items-end">
+          <span
+            className={`text-[clamp(1.15rem,2.3vw,1.5rem)] font-bold italic leading-none mb-[-10px] ${stat.topLabel ? '' : 'invisible'}`}
+          >
+            {stat.topLabel ?? 'x'}
+          </span>
+        </div>
+        <div className="flex items-baseline gap-2 self-start">
           <span className="text-[clamp(60px,3vw,96px)] font-bold italic tracking-tight">
             {value}
             {stat.suffix}
@@ -114,11 +105,9 @@ function StatColumn({
     </div>
   );
 }
-
 export default function StatsBar() {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -131,7 +120,6 @@ export default function StatsBar() {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
-
   return (
     <div
       ref={ref}

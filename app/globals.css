@@ -82,8 +82,7 @@
 
 @media (max-width: 767px) {
   html {
-    /* body에 걸면 position:sticky의 기준이 깨지므로 html에만, 그리고 실제 문제가
-       있는 모바일 폭에서만 적용 (데스크탑 sticky에는 영향 없음) */
+    
     overflow-x: hidden;
   }
 }
@@ -256,14 +255,11 @@ body {
   justify-content: flex-start;
   text-align: left;
   padding: clamp(23px, 5vw, 55px) clamp(28px, 5vw, 80px) 0;
-  /* 뷰포트(vw)가 아니라 이 컬럼 자체의 실제 렌더링 폭을 기준으로 글자 크기를
-     계산하기 위한 컨테이너 쿼리 컨텍스트 — 이미지 컬럼이 최소폭(260px)에 걸려도
-     텍스트 컬럼의 진짜 남은 폭에 맞춰 자동으로 줄어듦 */
+  
   container-type: inline-size;
 }
 
-/* Introduction 섹션 제목만 컨테이너 폭 기준(cqw)으로 스케일 — 다른 섹션의
-   .about-section-title은 컨테이너 컨텍스트가 없어 영향받지 않음 */
+
 .about-intro-copy .about-section-title {
   font-size: clamp(28px, 10cqw, 84px);
 }
@@ -388,7 +384,7 @@ body {
   margin: 0;
 }
 
-/* History 텍스트: 아래에서 떠오르며 순차적으로 등장 */
+
 .history-rise {
   opacity: 0;
   transform: translateY(28px);
@@ -402,7 +398,7 @@ body {
   transform: translateY(0);
 }
 
-/* 인용구: 가려진 영역이 열리면서 위로 떠오르는 splice/lift 효과 */
+
 .history-quote-lift {
   opacity: 0;
   clip-path: inset(0 0 100% 0);
@@ -440,7 +436,7 @@ body {
   background: #000;
 }
 
-/* 텍스트 간격은 각 요소의 margin-bottom(clamp(28px, 2.6vw, 40px))으로 통일 관리 */
+
 .how-started-goal {
   margin-top: 0;
 }
@@ -468,7 +464,7 @@ body {
   letter-spacing: -0.04em;
 }
 
-/* About > Philosophy: 아이콘은 추후 추가하며, 원칙 텍스트는 대각선 흐름으로 배치 */
+
 .philosophy-content {
   padding: clamp(23px, 5vw, 55px) clamp(24px, 2vw, 32px)
     clamp(120px, 13vw, 210px);
@@ -483,13 +479,11 @@ body {
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-  /* ABOUT US → 타이틀 간격(.about-section-eyebrow의 margin-bottom)과 동일하게 맞춤 —
-     eyebrow 자체 여백만으로 간격이 만들어지므로 여기선 추가 margin-top을 두지 않음 */
+  
   margin-top: 0;
 }
 
-/* philosophy-heading의 이탤릭 폰트 광학 정렬 보정 + 좁은 flex 컬럼에서 줄바꿈 방지 —
-   .about-section-title(공용 타이틀)에 얹어서 쓰는 보조 클래스 */
+
 .philosophy-title-tight {
   margin-left: -0.17em;
   white-space: nowrap;
@@ -534,8 +528,7 @@ body {
   white-space: nowrap;
 }
 
-/* max-width는 항목마다 따로 관리 — 공용 규칙으로 묶으면 한 곳만 조정해도
-   나머지 전부 같이 바뀌어버려서 개별 폭 조절이 불가능해짐 */
+
 .philosophy-principle-1,
 .philosophy-principle-3 {
   margin-left: clamp(20px, 20vw, 55px);
@@ -548,8 +541,7 @@ body {
 }
 
 .philosophy-principle-2 p {
-  /* position:absolute + 고정 px 대신, 문서 흐름 안에서 margin-left를 clamp로 줘서
-     화면이 좁아질수록 오프셋도 같이 줄어들게 함 (h3와 겹치거나 화면 밖으로 밀리지 않음) */
+  
   margin-left: clamp(20px, 4vw, 50px);
 }
 
@@ -563,7 +555,7 @@ body {
   margin-left: clamp(20px, 9vw, 124px);
 }
 
-/* 각 원칙은 확대되며 제자리로 들어와, 쌓이는 레이어 감각을 만든다. */
+
 .philosophy-pop {
   opacity: 0;
   transform-origin: left;
@@ -578,7 +570,7 @@ body {
   transform: translateY(0) scale(1);
 }
 
-/* Philosophy 카드 배경 장식 SVG — 텍스트 뒤에 겹쳐 배치, 1600px 기준 좌표를 vw로 환산 */
+
 .philosophy-principle-1,
 .philosophy-principle-2,
 .philosophy-principle-3,
@@ -597,10 +589,7 @@ body {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  /* 텍스트 없는 순수 장식 레이어라 컨테이너로 만들어도 h3/p 줄바꿈 계산에는
-     영향 없음 — top을 cqw(카드 폭 기준)로 써서 right(%)와 같은 비율로
-     움직이게 함. vw(뷰포트 기준)와 섞이면 화면이 조금만 커져도 서로 다른
-     비율로 움직여서 위치가 어긋나 보임 */
+  
   container-type: inline-size;
 }
 
@@ -610,9 +599,7 @@ body {
   background: transparent;
 }
 
-/* 카드마다 장식 이미지 1장 — 텍스트가 왼쪽 정렬인 카드(1,3)는 이미지를
-   오른쪽 위 구석에, 텍스트가 오른쪽 정렬인 카드(2,4)는 왼쪽 위 구석에 둬서
-   텍스트와 겹치지 않게 함 */
+
 .philosophy-deco-korean-combined {
   top: clamp(-34px, -17vw, -31px);
   right: clamp(-76px, -17%, -86px);
@@ -645,13 +632,13 @@ body {
   width: clamp(158.8px, 73%, 391.6px);
 }
 
-/* Coast to Concrete 전용 — 지도 이미지 옆에 작게 */
+
 .philosophy-deco-plane {
   top: clamp(-119.4px, -7.9vw, -71.7px);
   right: clamp(46.4px, 26.5vw, 470.7px);
   width: clamp(98px, 22vw, 262px);
 }
-/* About > 04 History("Our journey so far"): 연도별 타임라인 + 사진 */
+
 .journey-header {
   padding: clamp(23px, 5vw, 55px) clamp(24px, 2vw, 32px) 0;
 }
@@ -676,8 +663,7 @@ body {
 
 .journey-year-title {
   margin: 0 0 clamp(20px, 1.2vw, 23px);
-  /* Month(journey-date) 폰트 사이즈와 통일 — 그 Month 사이즈 자체도 본문(journey-milestone)과
-     통일했으므로 결과적으로 연도/Month/본문이 전부 같은 크기가 됨 */
+  
   font-size: clamp(18px, 1.4vw, 23px);
   font-weight: 800;
   font-style: italic;
@@ -707,9 +693,7 @@ body {
   padding-bottom: 0;
 }
 
-/* 닷+날짜+텍스트를 한 줄로 묶은 실제 콘텐츠 영역 — padding-bottom(다음 줄과의 간격)은
-   여기 포함되지 않으므로, 닷은 항상 이 줄의 실제 텍스트 높이에 맞춰 중앙정렬됨
-   (날짜 폰트가 크거나 로고 배지(40px)가 붙어도 자동으로 맞음, 픽셀 하드코딩 불필요) */
+
 .journey-timeline-row {
   min-height: 44px;
   display: flex;
@@ -717,13 +701,13 @@ body {
   gap: 26px;
 }
 
-/* 이 점의 중심에서 다음 점의 중심까지만 선을 그림 — 첫/마지막 점 밖으로 삐져나오지 않게 */
+
 .journey-timeline-item:not(:last-child)::before {
   content: '';
   position: absolute;
   top: 25px;
   bottom: -22px;
-  /* journey-dot 중심(16px 폭 → 8px)에 맞춤 - 선 두께(2px)의 절반만큼 왼쪽으로 */
+  
   left: 7px;
   width: 2px;
   background: #000;
@@ -732,9 +716,9 @@ body {
 .journey-dot {
   position: relative;
   flex-shrink: 0;
-  /* 기존 23px 대비 30% 축소 */
-  width: 16px;
-  height: 16px;
+
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #000;
 }
@@ -743,7 +727,7 @@ body {
   flex: 0 0 auto;
   min-width: 100px;
   margin: 0;
-  /* 본문(journey-milestone)과 동일한 크기로 통일 */
+  
   font-size: clamp(18px, 1.4vw, 23px);
   font-weight: 700;
 }
@@ -776,11 +760,10 @@ body {
   }
 }
 
-/* History — 좌측 타임라인은 일반 스크롤 흐름, 우측 사진 패널만 sticky로 고정되어
-   2025~2026 전체가 하나로 이어지는 통일된 슬라이드 효과를 냄 (GSAP ScrollTrigger 없이 구현) */
+
 .journey-pin-wrap {
   display: grid;
-  grid-template-columns: minmax(0, 62.25fr) minmax(0, 37.75fr);
+  grid-template-columns: minmax(0, 55fr) minmax(0, 45fr);
   align-items: start;
   margin-top: clamp(56px, 6vw, 96px);
   background: #fff;
@@ -797,7 +780,7 @@ body {
   padding: 0 clamp(50px, 6vw, 104px) clamp(48px, 6vw, 99px);
 }
 
-/* "2025"/"2026" 타이틀이 화면 상단 쪽 감지 밴드에 들어와 있는 동안만 키컬러로 전환 */
+
 .journey-year-title--keycolor {
   color: rgb(45, 90, 69);
 }
@@ -843,8 +826,7 @@ body {
     top: 0;
     height: auto;
     aspect-ratio: 4 / 5;
-    /* .journey-pin-wrap이 grid라 grid item 기본 min-width:auto 때문에
-       옆에 여백이 생길 수 있어서 방지 */
+    
     min-width: 0;
     width: 100%;
   }
@@ -902,7 +884,7 @@ body {
   line-height: 1;
 }
 
-/* 데스크탑 2열, 모바일 1열 그리드 */
+
 .offer-items-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -938,7 +920,7 @@ body {
   color: #666;
 }
 
-/* 헤더/각 항목 페이드·라이즈 — 벗어나면 리셋되어 재진입 시 다시 재생됨 */
+
 .offer-fade {
   opacity: 0;
   transition: opacity 0.7s ease;
@@ -959,7 +941,7 @@ body {
   transform: translateY(0);
 }
 
-/* /offer — "Our Service" 4개 항목 — 데스크탑: 세로 구분선, 모바일: 얇은 그리드라인 카드 */
+
 .service-grid {
   display: flex;
   flex-direction: column;
@@ -986,7 +968,7 @@ body {
   padding-right: 0;
 }
 
-/* 컬럼 사이 세로 구분선 (데스크탑 전용) — 컬럼 텍스트보다 살짝 먼저 페이드 */
+
 .service-divider {
   position: absolute;
   top: 4px;
@@ -1049,13 +1031,13 @@ body {
 }
 
 .service-col-note {
-  /* margin-top: 6px; */
+  
   font-size: 12px;
   font-style: italic;
   color: #888;
 }
 
-/* /offer — 3-1 Shoot Schedule */
+
 .schedule-cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1132,7 +1114,7 @@ body {
   animation: timeline-arrow-bounce 1.4s ease-in-out infinite;
 }
 
-/* 카드 팝 — Step 03 강조 */
+
 .card-pop {
   opacity: 0;
   transform: translateY(24px) scale(0.95);
@@ -1145,7 +1127,7 @@ body {
   transform: translateY(0) scale(1);
 }
 
-/* /offer — 3-2 Shoot Day Timeline */
+
 .timeline-wrap {
   padding-bottom: clamp(48px, 6vw, 80px);
 }
@@ -1205,8 +1187,7 @@ body {
   align-self: center;
   height: 2px;
   background: #000;
-  /* 점 6개가 각자 셀 중앙(50%)에 있으므로, 라인도 첫/마지막 점 중앙에서
-     시작·끝나도록 셀 하나 폭(1/6)만큼 좌우에서 줄여서 중앙 정렬 */
+  
   width: calc(100% - (100% / 6));
   margin: 0 auto;
 }
@@ -1215,7 +1196,7 @@ body {
   background: #000;
 }
 
-/* 라인이 왼쪽에서 오른쪽으로 그려지듯 등장 — 점들과 같은 시점에 같이 재생됨 */
+
 .timeline-connector-line.offer-fade {
   opacity: 1;
   transform: scaleX(0);
@@ -1291,8 +1272,7 @@ body {
   color: #ddd;
 }
 
-/* 타임라인 표의 첫 카드("Preparation Session")와 왼쪽 정렬을 맞춤
-   — 라벨 칸(140px) + 칸 간격(4px)만큼 밀어서 카드 시작 지점과 일치시킴 */
+
 .timeline-footnotes-block {
   margin-left: 144px;
 }
@@ -1376,9 +1356,7 @@ body {
     aspect-ratio: 4 / 3.5;
   }
 
-  /* 데스크탑 전용 min-height(600px)가 좁은 화면에서 박스를 실제 사진보다 훨씬
-     길게 만들어서, 세로로 위아래 여백이 생기며 사진이 박스 가운데로 뜨는 문제를
-     막기 위해 모바일에서는 aspect-ratio만으로 높이가 정해지게 리셋함 */
+  
   .how-started-photo.how-started-photo-minju {
     min-height: 0;
   }
@@ -1397,7 +1375,7 @@ body {
   }
 }
 
-/* Philosophy 섹션만 헤더 토글 기준(1055px)에 맞춰 별도 브레이크포인트 사용 */
+
 @media (max-width: 1055px) {
   .philosophy-content {
     padding: 48px 24px 96px;
@@ -1422,9 +1400,7 @@ body {
     padding-top: 72px;
     gap: 70px;
   }
-  /* .philosophy-principle {
-    overflow-x: hidden;
-  } */
+  
 
   .philosophy-principle-2,
   .philosophy-principle-3,
@@ -1496,7 +1472,7 @@ body {
   }
 }
 
-/* ── 반응형 레이아웃 ─────────────────────────────────────── */
+
 .magazine-detail-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -1514,7 +1490,7 @@ body {
   }
 }
 
-/* 모바일 하단 네비게이션 바 높이(56px)만큼 콘텐츠가 가려지지 않게 여백 확보 */
+
 @media (max-width: 767px) {
   body {
     padding-bottom: 56px;
@@ -1531,7 +1507,7 @@ body {
   text-decoration: underline;
 }
 
-/* ── 히어로 캐러셀 반응형 비율 ─────────────────────────────── */
+
 .hero-carousel {
   aspect-ratio: 21 / 9;
 }
@@ -1541,7 +1517,7 @@ body {
   }
 }
 
-/* ── 히어로 캐러셀 스와이프 가능 힌트 — 마우스 커서를 그대로 따라다니는 커스텀 커서 ── */
+
 .hero-carousel-swipe-hint {
   position: absolute;
   top: 0;
@@ -1569,7 +1545,7 @@ body {
   }
 }
 
-/* ── D-Day 배너 (히어로 이미지 좌하단 플로팅 카드) ────────────────── */
+
 .dday-banner {
   display: inline-flex;
   flex-direction: column;
@@ -1621,7 +1597,7 @@ body {
   }
 }
 
-/* ── 매거진 목록 반응형 ────────────────────────────────────── */
+
 .magazine-hero-grid {
   display: grid;
   grid-template-columns: 2fr 3fr;
@@ -1659,7 +1635,7 @@ body {
   }
 }
 
-/* ── Inquiry 페이지 애니메이션 ──────────────────────────────── */
+
 @keyframes modalScaleIn {
   from {
     opacity: 0;
@@ -1760,9 +1736,7 @@ body {
     transform: translateX(0);
   }
   to {
-    /* --marquee-shift: 트랙 컴포넌트가 인라인으로 넘겨주는 값(카드 1개 너비% × 상품 개수).
-       트랙 자신의 박스 너비는 컨테이너 너비뿐이라 "-50%"로는 원본 리스트 폭만큼 못 옮겨가서
-       루프 지점에서 눈에 띄게 끊겨 보였음 — 실제 넘쳐 흐른 콘텐츠 폭 기준으로 계산한 값을 써야 함 */
+    
     transform: translateX(calc(-1 * var(--marquee-shift, 50%)));
   }
 }
@@ -1772,7 +1746,7 @@ body {
   animation-iteration-count: infinite;
 }
 
-/* ─── Magazine rich text content (TipTap) ─────────────── */
+
 .magazine-content,
 .ProseMirror {
   font-size: 15px;
@@ -1822,7 +1796,7 @@ body {
   pointer-events: none;
 }
 
-/* ── Inquiry 페이지: 예약 프로세스 7단계 + Inquiry CTA (챕터 번호 없는 하나의 연속 페이지) ── */
+
 .inquiry-eyebrow {
   margin: 0 0 12px;
   font-size: 12px;
@@ -2046,7 +2020,7 @@ body {
   color: #fff;
 }
 
-/* 등장 애니메이션: 재진입할 때마다 재생 (visible 클래스는 JS에서 토글) */
+
 .inquiry-fade {
   opacity: 0;
   transition: opacity 0.6s ease-out;
@@ -2076,8 +2050,7 @@ body {
 }
 
 @media (max-width: 767px) {
-  /* row 안(1↔2↔3, 4↔5↔6↔7)과 row 사이(3↔4) 간격이 같아지도록 —
-     row 사이는 원래 데스크탑 2줄 레이아웃용 큰 gap(56~92px)이 그대로 남아있었음 */
+  
   .inquiry-steps {
     gap: 40px;
   }
@@ -2093,8 +2066,7 @@ body {
     display: none;
   }
 
-  /* 스타일이 없는 빈 div라 원래 눈에 안 보이지만, column 방향에서는 실제
-     flex item으로 gap 한 칸을 더 차지해서 3↔4번 사이만 간격이 2배로 벌어짐 */
+  
   .inquiry-step-line {
     display: none;
   }
@@ -2103,8 +2075,7 @@ body {
     max-width: 260px;
   }
 
-  /* "Secure Date" 뱃지가 column 위쪽으로 절대위치라 gap 40px 안으로 파고들어서
-     이전 스텝과의 간격이 다른 스텝 사이보다 훨씬 좁아 보임 — 뱃지만큼 밀어서 보정 */
+  
   .inquiry-step-col:has(.inquiry-step-badge) {
     margin-top: 30px;
   }
@@ -2125,7 +2096,7 @@ body {
   }
 }
 
-/* ── Partnership 페이지: Hero → Influencer Portfolio → Booking Process → Partners & Press → Get the full story ── */
+
 .partnership-page {
   padding-inline: clamp(20px, 4vw, 64px);
   max-width: 1600px;
@@ -2221,7 +2192,7 @@ body {
   color: #000;
 }
 
-/* 2. Influencer Portfolio */
+
 .partnership-influencer-group {
   margin-top: clamp(44px, 5vw, 64px);
 }
@@ -2273,7 +2244,7 @@ body {
   background: rgba(0, 0, 0, 0.28);
 }
 
-/* 3. Booking Process — 얇은 그리드 라인 박스 (채움 카드 아님) */
+
 .partnership-steps-grid {
   margin-top: clamp(36px, 4vw, 52px);
   display: grid;
@@ -2321,7 +2292,7 @@ body {
   color: #000;
 }
 
-/* 4. Partners & Press — 로고 자리에 텍스트 placeholder, 유연한 그리드 (5개 이상 대비) */
+
 .partnership-logo-grid {
   margin-top: clamp(36px, 4vw, 52px);
   display: flex;
@@ -2350,7 +2321,7 @@ body {
   object-fit: contain;
 }
 
-/* 5. Get the full story */
+
 .partnership-doc-buttons {
   margin-top: clamp(32px, 3.5vw, 44px);
   display: flex;
@@ -2419,7 +2390,7 @@ body {
   text-decoration: underline;
 }
 
-/* 등장 애니메이션: 재진입할 때마다 재생 */
+
 .partnership-fade {
   opacity: 0;
   transition: opacity 0.6s ease-out;
@@ -2476,7 +2447,7 @@ body {
   }
 }
 
-/* ── 검색 모달 ─────────────────────────────────────────────── */
+
 @keyframes searchOverlayFadeIn {
   from {
     opacity: 0;
@@ -2542,7 +2513,7 @@ body {
   }
 }
 
-/* ── Review 페이지 스크롤 재등장 애니메이션 ────────────────────── */
+
 .review-fade {
   opacity: 0;
   transform: translateY(8px);
@@ -2579,7 +2550,7 @@ body {
   }
 }
 
-/* ── 약관/개인정보처리방침 본문 (Privacy Policy / Terms of Service 공용) ── */
+
 .privacy-policy-body h2 {
   font-size: 18px;
   font-weight: 700;
@@ -2610,7 +2581,7 @@ body {
   margin-bottom: 6px;
 }
 
-/* 회원가입 동의 화면 — 약관 미리보기 스크롤 박스 */
+
 .consent-preview-box {
   max-height: 160px;
   overflow-y: auto;

@@ -1,6 +1,5 @@
 export default function TermsOfServiceContent() {
-  return (
-    <div className="privacy-policy-body">
+    return (<div className="privacy-policy-body">
       <h2>Article 1. Purpose</h2>
       <p>
         The purpose of these Terms of Service (&quot;Terms&quot;) is to set out all matters
@@ -334,6 +333,5 @@ export default function TermsOfServiceContent() {
 
       <h2>Supplementary Provision</h2>
       <p>These Terms take effect from the date the Site is launched.</p>
-    </div>
-  );
+    </div>);
 }

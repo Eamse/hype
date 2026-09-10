@@ -7,33 +7,26 @@ import OurServiceSection from './_components/our-service-section';
 import ShootScheduleSection from './_components/shoot-schedule-section';
 import ShootDayTimelineSection from './_components/shoot-day-timeline-section';
 import HomeFooter from '@/app/_components/home-footer';
-
 export const metadata: Metadata = {
-  title: 'Service | HYPE WEDDING',
-  description: 'What HYPE WEDDING and HYPE SNAP offer.',
+    title: 'Service | HYPE WEDDING',
+    description: 'What HYPE WEDDING and HYPE SNAP offer.',
 };
-
-export default async function OfferPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ brand?: string }>;
+export default async function OfferPage({ searchParams, }: {
+    searchParams: Promise<{
+        brand?: string;
+    }>;
 }) {
-  const { brand } = await searchParams;
-  const activeBrand = brand === 'hype-snap' ? 'hype-snap' : 'hype-wedding';
-
-  return (
-    <div
-      style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
-    >
-      <Header brand={activeBrand} />
+    const { brand } = await searchParams;
+    const activeBrand = brand === 'hype-snap' ? 'hype-snap' : 'hype-wedding';
+    return (<div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Header brand={activeBrand}/>
       <main style={{ paddingTop: 56, flex: 1 }}>
-        <SubTabBar tabs={offerSubTabs(activeBrand)} />
+        <SubTabBar tabs={offerSubTabs(activeBrand)}/>
         <WhyHypeSection />
         <OurServiceSection />
         <ShootScheduleSection />
         <ShootDayTimelineSection />
       </main>
       <HomeFooter />
-    </div>
-  );
+    </div>);
 }

@@ -1,404 +1,284 @@
 'use client';
-
-function moveInArray<T>(
-  items: T[],
-  index: number,
-  direction: 'up' | 'down',
-): T[] {
-  const targetIndex = direction === 'up' ? index - 1 : index + 1;
-  if (targetIndex < 0 || targetIndex >= items.length) return items;
-  const next = [...items];
-  [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
-  return next;
+function moveInArray<T>(items: T[], index: number, direction: 'up' | 'down'): T[] {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= items.length)
+        return items;
+    const next = [...items];
+    [next[index], next[targetIndex]] = [next[targetIndex], next[index]];
+    return next;
 }
-
 const sectionLabel: React.CSSProperties = {
-  fontSize: 12,
-  color: '#000',
-  letterSpacing: '2px',
-  textTransform: 'uppercase',
-  margin: '0 0 12px',
-  fontWeight: 'bold',
+    fontSize: 12,
+    color: '#000',
+    letterSpacing: '2px',
+    textTransform: 'uppercase',
+    margin: '0 0 12px',
+    fontWeight: 'bold',
 };
-
-function ReorderRow({
-  position,
-  label,
-  extra,
-  canMoveUp,
-  canMoveDown,
-  onMoveUp,
-  onMoveDown,
-}: {
-  position: number;
-  label: string;
-  extra?: string;
-  canMoveUp: boolean;
-  canMoveDown: boolean;
-  onMoveUp: () => void;
-  onMoveDown: () => void;
+function ReorderRow({ position, label, extra, canMoveUp, canMoveDown, onMoveUp, onMoveDown, }: {
+    position: number;
+    label: string;
+    extra?: string;
+    canMoveUp: boolean;
+    canMoveDown: boolean;
+    onMoveUp: () => void;
+    onMoveDown: () => void;
 }) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        padding: '8px 10px',
-        border: '1px solid #000',
-        borderRadius: 4,
-        background: '#fff',
-      }}
-    >
-      <span
-        style={{
-          color: '#000',
-          fontWeight: 700,
-          flexShrink: 0,
-          minWidth: 16,
-        }}
-      >
+    return (<div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '8px 10px',
+            border: '1px solid #000',
+            borderRadius: 4,
+            background: '#fff',
+        }}>
+      <span style={{
+            color: '#000',
+            fontWeight: 700,
+            flexShrink: 0,
+            minWidth: 16,
+        }}>
         {position}
       </span>
       <span style={{ flex: 1, fontSize: 13, color: '#000' }}>{label}</span>
-      {extra && (
-        <span style={{ fontSize: 12, color: '#000', fontWeight: 500 }}>
+      {extra && (<span style={{ fontSize: 12, color: '#000', fontWeight: 500 }}>
           {extra}
-        </span>
-      )}
-      <button
-        type="button"
-        disabled={!canMoveUp}
-        onClick={onMoveUp}
-        style={{
-          background: 'none',
-          border: '1px solid #e0d8c8',
-          borderRadius: 4,
-          cursor: canMoveUp ? 'pointer' : 'default',
-          color: canMoveUp ? '#000' : '#bbb',
-          padding: '1px 6px',
-          fontSize: 11,
-        }}
-      >
+        </span>)}
+      <button type="button" disabled={!canMoveUp} onClick={onMoveUp} style={{
+            background: 'none',
+            border: '1px solid #e0d8c8',
+            borderRadius: 4,
+            cursor: canMoveUp ? 'pointer' : 'default',
+            color: canMoveUp ? '#000' : '#bbb',
+            padding: '1px 6px',
+            fontSize: 11,
+        }}>
         ▲
       </button>
-      <button
-        type="button"
-        disabled={!canMoveDown}
-        onClick={onMoveDown}
-        style={{
-          background: 'none',
-          border: '1px solid #e0d8c8',
-          borderRadius: 4,
-          cursor: canMoveDown ? 'pointer' : 'default',
-          color: canMoveDown ? '#000' : '#bbb',
-          padding: '1px 6px',
-          fontSize: 11,
-        }}
-      >
+      <button type="button" disabled={!canMoveDown} onClick={onMoveDown} style={{
+            background: 'none',
+            border: '1px solid #e0d8c8',
+            borderRadius: 4,
+            cursor: canMoveDown ? 'pointer' : 'default',
+            color: canMoveDown ? '#000' : '#bbb',
+            padding: '1px 6px',
+            fontSize: 11,
+        }}>
         ▼
       </button>
-    </div>
-  );
+    </div>);
 }
-
-export default function PackagePreview({
-  name,
-  subtitle,
-  priceSNS,
-  priceNoSNS,
-  shootingTime,
-  locations,
-  originalPhotos,
-  retouched,
-  retouchedDetail,
-  inclusionIds,
-  allInclusions,
-  onReorderInclusions,
-  addonEntries,
-  allAddons,
-  onReorderAddons,
-  partnerRows,
-  onClose,
-}: {
-  name: string;
-  subtitle: string;
-  priceSNS: number;
-  priceNoSNS: number;
-  shootingTime: string;
-  locations: string;
-  originalPhotos: string;
-  retouched: number;
-  retouchedDetail: string;
-  inclusionIds: number[];
-  allInclusions: { id: number; name: string }[];
-  onReorderInclusions: (ids: number[]) => void;
-  addonEntries: { addonId: number; price: string; desc: string }[];
-  allAddons: { id: number; name: string }[];
-  onReorderAddons: (entries: { addonId: number; price: string; desc: string }[]) => void;
-  partnerRows: { role: string; name: string }[];
-  onClose?: () => void;
+export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, shootingTime, locations, originalPhotos, retouched, retouchedDetail, inclusionIds, allInclusions, onReorderInclusions, addonEntries, allAddons, onReorderAddons, partnerRows, onClose, }: {
+    name: string;
+    subtitle: string;
+    priceSNS: number;
+    priceNoSNS: number;
+    shootingTime: string;
+    locations: string;
+    originalPhotos: string;
+    retouched: number;
+    retouchedDetail: string;
+    inclusionIds: number[];
+    allInclusions: {
+        id: number;
+        name: string;
+    }[];
+    onReorderInclusions: (ids: number[]) => void;
+    addonEntries: {
+        addonId: number;
+        price: string;
+        desc: string;
+    }[];
+    allAddons: {
+        id: number;
+        name: string;
+    }[];
+    onReorderAddons: (entries: {
+        addonId: number;
+        price: string;
+        desc: string;
+    }[]) => void;
+    partnerRows: {
+        role: string;
+        name: string;
+    }[];
+    onClose?: () => void;
 }) {
-  return (
-    <div
-      style={{
-        position: 'relative',
-        color: '#2C2420',
-        background: '#fff',
-        border: '1px solid #000',
-        borderRadius: 8,
-        padding: 24,
-        maxWidth: 680,
-        width: '100%',
-      }}
-    >
-      {onClose && (
-        <button
-          type="button"
-          onClick={onClose}
-          style={{
-            position: 'absolute',
-            top: 12,
-            right: 12,
-            width: 38,
-            height: 38,
+    return (<div style={{
+            position: 'relative',
+            color: '#2C2420',
             background: '#fff',
-            color: '#3a1a2a',
-            fontSize: 30,
-            lineHeight: 1,
-            cursor: 'pointer',
-          }}
-        >
+            border: '1px solid #000',
+            borderRadius: 8,
+            padding: 24,
+            maxWidth: 680,
+            width: '100%',
+        }}>
+      {onClose && (<button type="button" onClick={onClose} style={{
+                position: 'absolute',
+                top: 12,
+                right: 12,
+                width: 38,
+                height: 38,
+                background: '#fff',
+                color: '#3a1a2a',
+                fontSize: 30,
+                lineHeight: 1,
+                cursor: 'pointer',
+            }}>
           ×
-        </button>
-      )}
+        </button>)}
       <div style={{ textAlign: 'center', marginBottom: 20 }}>
-        <p
-          style={{
+        <p style={{
             fontSize: 11,
             color: '#000',
             letterSpacing: '1px',
             textTransform: 'uppercase',
             margin: 0,
-          }}
-        >
+        }}>
           미리보기
         </p>
         <h3 style={{ fontSize: 20, fontWeight: 600, margin: '4px 0 0' }}>
           {name || '(패키지명 없음)'}
         </h3>
-        {subtitle && (
-          <p
-            style={{
-              fontSize: 13,
-              color: '#000',
-              fontWeight: 500,
-              margin: '6px 0 0',
-            }}
-          >
+        {subtitle && (<p style={{
+                fontSize: 13,
+                color: '#000',
+                fontWeight: 500,
+                margin: '6px 0 0',
+            }}>
             {subtitle}
-          </p>
-        )}
+          </p>)}
       </div>
 
-      {partnerRows.length > 0 && (
-        <div
-          style={{
-            border: '1px solid #000',
-            borderRadius: 4,
-            background: '#fff',
-            padding: '16px 20px',
-            marginBottom: 20,
-          }}
-        >
+      {partnerRows.length > 0 && (<div style={{
+                border: '1px solid #000',
+                borderRadius: 4,
+                background: '#fff',
+                padding: '16px 20px',
+                marginBottom: 20,
+            }}>
           <p style={{ ...sectionLabel, margin: '0 0 12px' }}>Partners</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {partnerRows.map((item) => (
-              <div key={item.role} style={{ fontSize: 13 }}>
+            {partnerRows.map((item) => (<div key={item.role} style={{ fontSize: 13 }}>
                 <span style={{ color: '#000' }}>{item.role}: </span>
                 <span style={{ fontWeight: 600 }}>{item.name}</span>
-              </div>
-            ))}
+              </div>))}
           </div>
-        </div>
-      )}
+        </div>)}
 
-      {inclusionIds.length > 0 && (
-        <div style={{ marginBottom: 20 }}>
+      {inclusionIds.length > 0 && (<div style={{ marginBottom: 20 }}>
           <p style={sectionLabel}>Package Inclusive</p>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gridTemplateRows: `repeat(${Math.ceil(inclusionIds.length / 2)}, auto)`,
-              gridAutoFlow: 'column',
-              gap: 6,
-            }}
-          >
+          <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gridTemplateRows: `repeat(${Math.ceil(inclusionIds.length / 2)}, auto)`,
+                gridAutoFlow: 'column',
+                gap: 6,
+            }}>
             {inclusionIds.map((id, i) => {
-              const item = allInclusions.find((x) => x.id === id);
-              if (!item) return null;
-              return (
-                <ReorderRow
-                  key={id}
-                  position={i + 1}
-                  label={item.name}
-                  canMoveUp={i > 0}
-                  canMoveDown={i < inclusionIds.length - 1}
-                  onMoveUp={() =>
-                    onReorderInclusions(moveInArray(inclusionIds, i, 'up'))
-                  }
-                  onMoveDown={() =>
-                    onReorderInclusions(moveInArray(inclusionIds, i, 'down'))
-                  }
-                />
-              );
+                const item = allInclusions.find((x) => x.id === id);
+                if (!item)
+                    return null;
+                return (<ReorderRow key={id} position={i + 1} label={item.name} canMoveUp={i > 0} canMoveDown={i < inclusionIds.length - 1} onMoveUp={() => onReorderInclusions(moveInArray(inclusionIds, i, 'up'))} onMoveDown={() => onReorderInclusions(moveInArray(inclusionIds, i, 'down'))}/>);
             })}
           </div>
-        </div>
-      )}
+        </div>)}
 
-      {(shootingTime || locations || originalPhotos || retouched > 0) && (
-        <div
-          style={{
-            border: '1px solid #000',
-            background: '#fff',
-            borderRadius: 4,
-            padding: '16px 20px',
-            marginBottom: 20,
-          }}
-        >
+      {(shootingTime || locations || originalPhotos || retouched > 0) && (<div style={{
+                border: '1px solid #000',
+                background: '#fff',
+                borderRadius: 4,
+                padding: '16px 20px',
+                marginBottom: 20,
+            }}>
           <p style={{ ...sectionLabel, margin: '0 0 12px' }}>
             Photography Details
           </p>
-          <div
-            style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}
-          >
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             {[
-              { label: 'Shooting Time', value: shootingTime },
-              { label: 'Locations', value: locations },
-              { label: 'Original Photos', value: originalPhotos },
-              {
-                label: 'Retouched',
-                value: retouched ? `${retouched} images` : '',
-              },
-            ].map((d) => (
-              <div key={d.label}>
+                { label: 'Shooting Time', value: shootingTime },
+                { label: 'Locations', value: locations },
+                { label: 'Original Photos', value: originalPhotos },
+                {
+                    label: 'Retouched',
+                    value: retouched ? `${retouched} images` : '',
+                },
+            ].map((d) => (<div key={d.label}>
                 <div style={{ fontSize: 11, color: '#000', marginBottom: 2 }}>
                   {d.label}
                 </div>
                 <div style={{ fontSize: 14, color: '#000' }}>
                   {d.value || '-'}
                 </div>
-              </div>
-            ))}
+              </div>))}
           </div>
-          {retouchedDetail && (
-            <p
-              style={{
-                fontSize: 12,
-                color: '#000',
-                margin: '12px 0 0',
-                lineHeight: 1.5,
-              }}
-            >
+          {retouchedDetail && (<p style={{
+                    fontSize: 12,
+                    color: '#000',
+                    margin: '12px 0 0',
+                    lineHeight: 1.5,
+                }}>
               {retouchedDetail}
-            </p>
-          )}
-        </div>
-      )}
+            </p>)}
+        </div>)}
 
-      {(priceSNS > 0 || priceNoSNS > 0) && (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns:
-              priceSNS > 0 && priceNoSNS > 0 ? '1fr 1fr' : '1fr',
-            gap: 10,
-            marginBottom: 20,
-          }}
-        >
-          {priceSNS > 0 && (
-            <div
-              style={{
-                background: '#2C2420',
-                borderRadius: 4,
-                padding: '16px 12px',
-                textAlign: 'center',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 11,
-                  color: 'rgba(255,255,255,0.75)',
-                  textTransform: 'uppercase',
-                  marginBottom: 6,
-                }}
-              >
+      {(priceSNS > 0 || priceNoSNS > 0) && (<div style={{
+                display: 'grid',
+                gridTemplateColumns: priceSNS > 0 && priceNoSNS > 0 ? '1fr 1fr' : '1fr',
+                gap: 10,
+                marginBottom: 20,
+            }}>
+          {priceSNS > 0 && (<div style={{
+                    background: '#2C2420',
+                    borderRadius: 4,
+                    padding: '16px 12px',
+                    textAlign: 'center',
+                }}>
+              <div style={{
+                    fontSize: 11,
+                    color: 'rgba(255,255,255,0.75)',
+                    textTransform: 'uppercase',
+                    marginBottom: 6,
+                }}>
                 Agree to SNS
               </div>
               <div style={{ fontSize: 22, fontWeight: 'bold', color: '#fff' }}>
                 ${priceSNS.toLocaleString()}
               </div>
-            </div>
-          )}
-          {priceNoSNS > 0 && (
-            <div
-              style={{
-                background: '#fff',
-                border: '1px solid #000',
-                borderRadius: 4,
-                padding: '16px 12px',
-                textAlign: 'center',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 11,
-                  color: '#000',
-                  textTransform: 'uppercase',
-                  marginBottom: 6,
-                }}
-              >
+            </div>)}
+          {priceNoSNS > 0 && (<div style={{
+                    background: '#fff',
+                    border: '1px solid #000',
+                    borderRadius: 4,
+                    padding: '16px 12px',
+                    textAlign: 'center',
+                }}>
+              <div style={{
+                    fontSize: 11,
+                    color: '#000',
+                    textTransform: 'uppercase',
+                    marginBottom: 6,
+                }}>
                 Decline SNS
               </div>
-              <div
-                style={{ fontSize: 22, fontWeight: 'bold', color: '#2C2420' }}
-              >
+              <div style={{ fontSize: 22, fontWeight: 'bold', color: '#2C2420' }}>
                 ${priceNoSNS.toLocaleString()}
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            </div>)}
+        </div>)}
 
-      {addonEntries.length > 0 && (
-        <div>
+      {addonEntries.length > 0 && (<div>
           <p style={sectionLabel}>Add-ons</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
             {addonEntries.map((entry, i) => {
-              const item = allAddons.find((x) => x.id === entry.addonId);
-              if (!item) return null;
-              return (
-                <ReorderRow
-                  key={entry.addonId}
-                  position={i + 1}
-                  label={item.name}
-                  extra={`$${entry.price || 0}`}
-                  canMoveUp={i > 0}
-                  canMoveDown={i < addonEntries.length - 1}
-                  onMoveUp={() =>
-                    onReorderAddons(moveInArray(addonEntries, i, 'up'))
-                  }
-                  onMoveDown={() =>
-                    onReorderAddons(moveInArray(addonEntries, i, 'down'))
-                  }
-                />
-              );
+                const item = allAddons.find((x) => x.id === entry.addonId);
+                if (!item)
+                    return null;
+                return (<ReorderRow key={entry.addonId} position={i + 1} label={item.name} extra={`$${entry.price || 0}`} canMoveUp={i > 0} canMoveDown={i < addonEntries.length - 1} onMoveUp={() => onReorderAddons(moveInArray(addonEntries, i, 'up'))} onMoveDown={() => onReorderAddons(moveInArray(addonEntries, i, 'down'))}/>);
             })}
           </div>
-        </div>
-      )}
-    </div>
-  );
+        </div>)}
+    </div>);
 }

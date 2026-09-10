@@ -5,41 +5,27 @@ import localFont from 'next/font/local';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { cn } from '@/lib/utils';
 import NextSessionProvider from '@/components/session-provider';
-
+import FloatingContactButton from '@/components/floating-contact-button';
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
-
-// CDN(@import)으로 매 페이지마다 굵기별 900KB짜리 폰트 파일들을 따로 받던 걸
-// self-host 가변 폰트 파일 하나로 교체 — 요청 수/용량을 크게 줄임
 const pretendard = localFont({
-  src: '../node_modules/pretendard/dist/web/variable/woff2/PretendardVariable.woff2',
-  display: 'swap',
-  weight: '45 920',
-  variable: '--font-pretendard',
+    src: '../node_modules/pretendard/dist/web/variable/woff2/PretendardVariable.woff2',
+    display: 'swap',
+    weight: '45 920',
+    variable: '--font-pretendard',
 });
-
 export const metadata: Metadata = {
-  // 없으면 og:image 등 절대경로가 기본값(localhost)으로 생성돼서 카카오톡/슬랙 등
-  // 외부 크롤러가 이미지를 못 가져옴
-  metadataBase: new URL('https://hypewedding.kr'),
-  title: 'HYPE WEDDING',
-  description:
-    'Find your perfect wedding photographer in Korea. HYPE WEDDING connects couples around the world with top studios in Jeju and Seoul.',
+    metadataBase: new URL('https://hypewedding.kr'),
+    title: 'HYPE WEDDING',
+    description: 'Find your perfect wedding photographer in Korea. HYPE WEDDING connects couples around the world with top studios in Jeju and Seoul.',
 };
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
+export default function RootLayout({ children, }: Readonly<{
+    children: React.ReactNode;
 }>) {
-  return (
-    <html
-      lang="en"
-      className={cn('h-full', 'font-sans', geist.variable, pretendard.variable)}
-    >
+    return (<html lang="en" className={cn('h-full', 'font-sans', geist.variable, pretendard.variable)}>
       <body className="min-h-full flex flex-col">
         <NextSessionProvider>{children}</NextSessionProvider>
+        <FloatingContactButton />
       </body>
-      <GoogleAnalytics gaId="G-42MJ74SYP4" />
-    </html>
-  );
+      <GoogleAnalytics gaId="G-42MJ74SYP4"/>
+    </html>);
 }
