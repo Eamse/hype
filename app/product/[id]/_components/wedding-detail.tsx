@@ -25,6 +25,7 @@ type Partner = {
     id: number;
     role: string;
     name: string;
+    displayName: string | null;
     instagram: string | null;
 };
 type Package = {
@@ -176,17 +177,17 @@ export default function WeddingDetail({ productId, title, section, directors, pa
             instagram: activePackage?.director.instagram ?? null,
         },
         videographer
-            ? { role: 'Videographer', name: videographer.name, instagram: videographer.instagram }
+            ? { role: 'Videographer', name: videographer.displayName ?? videographer.name, instagram: videographer.instagram }
             : null,
         hmu
-            ? { role: 'Hair & Makeup', name: hmu.name, instagram: hmu.instagram }
+            ? { role: 'Hair & Makeup', name: hmu.displayName ?? hmu.name, instagram: hmu.instagram }
             : null,
         dress
-            ? { role: 'Dress', name: dress.name, instagram: dress.instagram }
+            ? { role: 'Dress', name: dress.displayName ?? dress.name, instagram: dress.instagram }
             : null,
-        suit ? { role: 'Suit', name: suit.name, instagram: suit.instagram } : null,
+        suit ? { role: 'Suit', name: suit.displayName ?? suit.name, instagram: suit.instagram } : null,
         bouquet
-            ? { role: 'Bouquet', name: bouquet.name, instagram: bouquet.instagram }
+            ? { role: 'Bouquet', name: bouquet.displayName ?? bouquet.name, instagram: bouquet.instagram }
             : null,
     ].filter(Boolean) as {
         role: string;

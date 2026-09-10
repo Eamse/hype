@@ -253,13 +253,14 @@ model PackageInclusion {
 }
 
 model Partner {
-  id        Int              @id @default(autoincrement())
-  role      String           // "hmu" | "dress" | "suit" | "bouquet"
-  name      String
-  instagram String?
-  imageUrl  String?
-  order     Int              @default(0)
-  packages  PackagePartner[]
+  id          Int              @id @default(autoincrement())
+  role        String           // "hmu" | "dress" | "suit" | "bouquet"
+  name        String           // 내부 식별용 이름 (지역별로 다른 레코드를 구분하기 위해 접미사가 붙을 수 있음, 예: "K Salon (Jeju)")
+  displayName String?          // 화면에 실제로 노출할 이름. null이면 name을 그대로 씀
+  instagram   String?
+  imageUrl    String?
+  order       Int              @default(0)
+  packages    PackagePartner[]
 }
 
 model PackagePartner {
