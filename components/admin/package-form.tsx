@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { inputStyle, labelStyle, btnStyle } from './types';
 import PackagePreview from './package-preview';
 import { toggleId, type PkgForm, type Inclusion, type Addon, type Partner, } from './wedding-photographer-types';
+import { applySinglePriceToggle } from '@/lib/single-price';
 export default function PackageForm({ form, onChange, allInclusions, allAddons, allPartners, onSave, onCancel, saving, hideButtons = false, }: {
     form: PkgForm;
     onChange: (f: PkgForm) => void;
@@ -93,8 +94,7 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
                 onChange({
                     ...form,
                     isSinglePrice: checked,
-                    priceSNS: checked ? form.priceSNS : '',
-                    priceNoSNS: checked ? form.priceSNS : '',
+                    ...applySinglePriceToggle(checked, form.priceSNS),
                 });
             }}/>
             단일가격 (SNS 동의/비동의 구분 없이 가격 1개만 사용)
