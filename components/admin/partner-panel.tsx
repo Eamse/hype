@@ -25,6 +25,9 @@ function HandleListEditor({ handles, onChange }: {
 }) {
     return (<div>
       <label style={labelStyle}>인스타그램 (여러 개 등록 가능)</label>
+      <p style={{ fontSize: 11, color: '#999', margin: '0 0 6px' }}>
+        @handle 형식으로만 입력하세요 (예: @k__salon). URL 전체를 넣지 않아도 자동으로 링크가 연결됩니다.
+      </p>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {handles.map((h, i) => (<div key={i} style={{ display: 'flex', gap: 6 }}>
             <input style={inputStyle} placeholder="@instagram" value={h} onChange={(e) => {
