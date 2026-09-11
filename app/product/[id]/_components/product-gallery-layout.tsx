@@ -24,12 +24,14 @@ export default function ProductGalleryLayout({ product, section, isPackageProduc
         packages: React.ComponentProps<typeof WeddingDetail>['packages'];
     } | null;
 }) {
+    const firstDirectorId = weddingData?.directors[0]?.id ?? null;
+    const initialPackageImages = weddingData?.packages.find((p) => p.directorId === firstDirectorId)?.images ?? [];
     const [packageImages, setPackageImages] = useState<{
         id: number;
         webUrl: string;
         originalUrl: string;
         thumbUrl: string | null;
-    }[]>([]);
+    }[]>(initialPackageImages);
     const hasPackageImages = packageImages.length > 0;
     const galleryImages: ProductImage[] = hasPackageImages
         ? packageImages.map((img, order) => ({
