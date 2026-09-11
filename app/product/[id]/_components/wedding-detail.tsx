@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { parseShootDetailValue } from '@/lib/package-display';
 type Director = {
     id: number;
     number: string;
@@ -303,9 +304,8 @@ export default function WeddingDetail({ productId, title, section, directors, pa
               </div>
               <div className="grid grid-cols-2 gap-y-4 min-[480px]:grid-cols-4 min-[480px]:gap-y-0">
                 {shootDetails.map((d) => {
-                const m = d.value.match(/^([\d,.+]+(?:\s*-\s*[\d,.+]+)?)\s*(.*)$/);
-                const num = m ? m[1] : d.value;
-                const unit = (m ? m[2] : '') || (d.label === 'Original Photos' ? 'photos' : '');
+                const { num, unit: parsedUnit } = parseShootDetailValue(d.value);
+                const unit = parsedUnit || (d.label === 'Original Photos' ? 'photos' : '');
                 return (<div key={d.label} className="pr-0 min-[480px]:pr-4 min-[480px]:last:pr-0">
                       <div className={`text-[11px] font-normal ${GRAY3} mb-[6px]`}>
                         {d.label}

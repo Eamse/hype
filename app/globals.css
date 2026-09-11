@@ -1040,8 +1040,9 @@ body {
 }
 
 .schedule-card-step {
+  font-weight: bold;
   margin: 0 0 6px;
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 1px;
   color: #666;
 }
