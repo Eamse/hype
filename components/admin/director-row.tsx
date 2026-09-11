@@ -216,13 +216,15 @@ export default function DirectorRow({ dir, isExpanded, packages, isSelected, onT
                             borderRadius: 4,
                             padding: '2px 6px',
                         }}>
-                            {partner.role === 'hmu'
-                            ? 'HMU'
-                            : partner.role === 'dress'
-                                ? 'Dress'
-                                : partner.role === 'suit'
-                                    ? 'Suit'
-                                    : 'Bouquet'}
+                            {partner.role === 'videographer'
+                            ? 'Videographer'
+                            : partner.role === 'hmu'
+                                ? 'HMU'
+                                : partner.role === 'dress'
+                                    ? 'Dress'
+                                    : partner.role === 'suit'
+                                        ? 'Suit'
+                                        : 'Bouquet'}
                             : {partner.name}
                           </span>))}
                         {pkg.inclusions.length > 0 && (<span style={{

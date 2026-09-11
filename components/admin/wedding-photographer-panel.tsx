@@ -184,7 +184,7 @@ export default function WeddingPhotographerPanel() {
             setExpandedDirId(null);
     }
     async function savePkgRelations(pkgId: number, form: PkgForm) {
-        const partnerIds = [form.hmuId, form.dressId, form.suitId, form.bouquetId].filter((id): id is number => id !== null);
+        const partnerIds = [form.videographerId, form.hmuId, form.dressId, form.suitId, form.bouquetId].filter((id): id is number => id !== null);
         await Promise.all([
             fetch(`/api/admin/packages/${pkgId}/inclusions`, {
                 method: 'PUT',

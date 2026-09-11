@@ -14,12 +14,19 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
     saving: boolean;
     hideButtons?: boolean;
 }) {
+    const videographerList = allPartners.filter((p) => p.role === 'videographer');
     const hmuList = allPartners.filter((p) => p.role === 'hmu');
     const dressList = allPartners.filter((p) => p.role === 'dress');
     const suitList = allPartners.filter((p) => p.role === 'suit');
     const bouquetList = allPartners.filter((p) => p.role === 'bouquet');
     const [showPreview, setShowPreview] = useState(false);
     const partnerRows = [
+        form.videographerId
+            ? {
+                role: 'Videographer',
+                name: allPartners.find((p) => p.id === form.videographerId)?.name ?? '',
+            }
+            : null,
         form.hmuId
             ? {
                 role: 'Hair & Makeup',
@@ -138,7 +145,19 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
 
       
       <p style={sectionTitle}>Partners</p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: 12 }}>
+        <div>
+          <label style={labelStyle}>Videographer</label>
+          <select style={inputStyle} value={form.videographerId ?? ''} onChange={(e) => onChange({
+            ...form,
+            videographerId: e.target.value ? Number(e.target.value) : null,
+        })}>
+            <option value="">없음</option>
+            {videographerList.map((p) => (<option key={p.id} value={p.id}>
+                {p.name}
+              </option>))}
+          </select>
+        </div>
         <div>
           <label style={labelStyle}>Hair &amp; Makeup</label>
           <select style={inputStyle} value={form.hmuId ?? ''} onChange={(e) => onChange({

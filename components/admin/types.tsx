@@ -12,7 +12,7 @@ export type Product = {
     }[];
     order: number;
 };
-export type Section = 'dashboard' | 'hero-wedding' | 'hero-snap' | 'wedding-photographers' | 'Photographers' | 'Casual Photoshoot' | 'users' | 'accounts' | 'my-account' | 'addons' | 'inclusions' | 'partners-hmu' | 'partners-dress' | 'partners-suit' | 'partners-bouquet' | 'audit-log';
+export type Section = 'dashboard' | 'hero-wedding' | 'hero-snap' | 'wedding-photographers' | 'Photographers' | 'Casual Photoshoot' | 'users' | 'accounts' | 'my-account' | 'addons' | 'inclusions' | 'partners-hmu' | 'partners-dress' | 'partners-suit' | 'partners-bouquet' | 'partners-videographer' | 'audit-log';
 export type Account = {
     id: string;
     loginId: string;

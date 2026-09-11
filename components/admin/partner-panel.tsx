@@ -14,10 +14,11 @@ const ROLE_LABELS: Record<string, string> = {
     dress: '드레스',
     suit: '수트',
     bouquet: '부케',
+    videographer: '영상작가',
 };
 const emptyForm = { name: '', instagram: '' };
 export default function PartnerPanel({ role }: {
-    role: 'hmu' | 'dress' | 'suit' | 'bouquet';
+    role: 'hmu' | 'dress' | 'suit' | 'bouquet' | 'videographer';
 }) {
     const [partners, setPartners] = useState<Partner[]>([]);
     const [loading, setLoading] = useState(true);

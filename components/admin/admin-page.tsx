@@ -66,6 +66,7 @@ const MANAGE_SECTIONS: Section[] = [
     'partners-dress',
     'partners-suit',
     'partners-bouquet',
+    'partners-videographer',
 ];
 const MANAGE_ITEMS: {
     id: Section;
@@ -78,6 +79,7 @@ const MANAGE_ITEMS: {
     { id: 'partners-dress', label: 'Dress' },
     { id: 'partners-suit', label: 'Suit' },
     { id: 'partners-bouquet', label: 'Bouquet' },
+    { id: 'partners-videographer', label: 'Videographer' },
 ];
 const MENU: {
     id: Section;
@@ -525,6 +527,7 @@ export default function AdminPage() {
           {active === 'partners-dress' && <PartnerPanel role="dress"/>}
           {active === 'partners-suit' && <PartnerPanel role="suit"/>}
           {active === 'partners-bouquet' && <PartnerPanel role="bouquet"/>}
+          {active === 'partners-videographer' && <PartnerPanel role="videographer"/>}
           {active === 'Photographers' && (<ProductPanel category="Photographers"/>)}
           {active === 'Casual Photoshoot' && (<ProductPanel category="Casual Photoshoot"/>)}
           {active === 'users' && <UserPanel />}

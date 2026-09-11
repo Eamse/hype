@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
     const { role, name, instagram, imageUrl } = body as Record<string, unknown>;
-    if (typeof role !== 'string' || !['hmu', 'dress', 'suit', 'bouquet'].includes(role)) {
+    if (typeof role !== 'string' || !['hmu', 'dress', 'suit', 'bouquet', 'videographer'].includes(role)) {
         return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
     }
     if (typeof name !== 'string' || !name.trim()) {
