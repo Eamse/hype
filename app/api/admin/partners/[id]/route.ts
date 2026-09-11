@@ -25,15 +25,29 @@ export async function PATCH(request: NextRequest, { params }: {
     if (typeof body !== 'object' || body === null) {
         return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
-    const { name, instagram, imageUrl } = body as Record<string, unknown>;
+    const { name, displayName, instagramHandles, imageUrl } = body as Record<string, unknown>;
     try {
+        if (instagramHandles !== undefined) {
+            const handles: string[] = Array.isArray(instagramHandles)
+                ? instagramHandles.filter((h): h is string => typeof h === 'string' && h.trim() !== '').map((h) => h.trim())
+                : [];
+            await prisma.$transaction([
+                prisma.partnerInstagram.deleteMany({ where: { partnerId } }),
+                ...(handles.length > 0
+                    ? [prisma.partnerInstagram.createMany({
+                            data: handles.map((handle, order) => ({ partnerId, handle, order })),
+                        })]
+                    : []),
+            ]);
+        }
         const partner = await prisma.partner.update({
             where: { id: partnerId },
             data: {
                 ...(typeof name === 'string' && { name: name.trim() }),
-                ...(instagram !== undefined && { instagram: typeof instagram === 'string' ? instagram.trim() : null }),
+                ...(displayName !== undefined && { displayName: typeof displayName === 'string' && displayName.trim() ? displayName.trim() : null }),
                 ...(imageUrl !== undefined && { imageUrl: typeof imageUrl === 'string' ? imageUrl.trim() : null }),
             },
+            include: { instagramAccounts: { orderBy: { order: 'asc' } } },
         });
         return NextResponse.json(partner);
     }

@@ -29,6 +29,7 @@ type Partner = {
     name: string;
     displayName: string | null;
     instagram: string | null;
+    instagramAccounts: { handle: string }[];
 };
 type Package = {
     id: number;
@@ -77,12 +78,11 @@ const GRAY4 = 'text-[rgb(85,85,85)]';
 const BLACK = 'text-[#0D0D0D]';
 const BORDER = 'border-[#EEEEEE]';
 const GRAYL = 'text-[rgba(255,255,255,0.75)]';
-function InstagramLink({ handle }: {
-    handle: string | null;
+function InstagramLink({ handles }: {
+    handles: string[];
 }) {
-    if (!handle)
+    if (handles.length === 0)
         return null;
-    const handles = handle.split(' / ');
     return (<span>
       {handles.map((h, i) => (<span key={h}>
           <a href={`https://instagram.com/${h.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className={`text-[11px] font-normal ${GRAY2} no-underline hover:underline`}>
@@ -164,39 +164,28 @@ export default function WeddingDetail({ productId, title, section, directors, pa
     const inclusionNotes = allInclusions.filter(({ inclusion }) => inclusion.name.trim().startsWith('Note:'));
     const addons = activePackage?.addons ?? [];
     const packagePartners = activePackage?.partners ?? [];
-    const videographer = packagePartners.find(({ partner }) => partner.role === 'videographer')?.partner ??
-        null;
-    const hmu = packagePartners.find(({ partner }) => partner.role === 'hmu')?.partner ??
-        null;
-    const dress = packagePartners.find(({ partner }) => partner.role === 'dress')?.partner ??
-        null;
-    const suit = packagePartners.find(({ partner }) => partner.role === 'suit')?.partner ??
-        null;
-    const bouquet = packagePartners.find(({ partner }) => partner.role === 'bouquet')
-        ?.partner ?? null;
+    const ROLE_LABELS: Record<string, string> = {
+        videographer: 'Videographer',
+        hmu: 'Hair & Makeup',
+        dress: 'Dress',
+        suit: 'Suit',
+        bouquet: 'Bouquet',
+    };
     const partnerRows = [
         {
             role: 'Photographer',
             name: activePackage?.director.name ?? '',
-            instagram: activePackage?.director.instagram ?? null,
+            instagramHandles: (activePackage?.director.instagram ?? '').split(' / ').map((h) => h.trim()).filter(Boolean),
         },
-        videographer
-            ? { role: 'Videographer', name: videographer.displayName ?? videographer.name, instagram: videographer.instagram }
-            : null,
-        hmu
-            ? { role: 'Hair & Makeup', name: hmu.displayName ?? hmu.name, instagram: hmu.instagram }
-            : null,
-        dress
-            ? { role: 'Dress', name: dress.displayName ?? dress.name, instagram: dress.instagram }
-            : null,
-        suit ? { role: 'Suit', name: suit.displayName ?? suit.name, instagram: suit.instagram } : null,
-        bouquet
-            ? { role: 'Bouquet', name: bouquet.displayName ?? bouquet.name, instagram: bouquet.instagram }
-            : null,
-    ].filter(Boolean) as {
+        ...packagePartners.map(({ partner }) => ({
+            role: ROLE_LABELS[partner.role] ?? partner.role,
+            name: partner.displayName ?? partner.name,
+            instagramHandles: partner.instagramAccounts.map((a) => a.handle),
+        })),
+    ] as {
         role: string;
         name: string;
-        instagram: string | null;
+        instagramHandles: string[];
     }[];
     const shootDetails = activePackage
         ? [
@@ -266,7 +255,7 @@ export default function WeddingDetail({ productId, title, section, directors, pa
                     <div className={`text-[13px] font-semibold ${BLACK} mb-[1px]`}>
                       {item.name}
                     </div>
-                    <InstagramLink handle={item.instagram}/>
+                    <InstagramLink handles={item.instagramHandles}/>
                   </div>))}
               </div>
               <p className={`text-[11px] font-normal ${GRAY3} italic mt-2`}>

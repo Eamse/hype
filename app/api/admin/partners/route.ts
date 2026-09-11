@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     try {
         const partners = await prisma.partner.findMany({
             where: role ? { role } : undefined,
+            include: { instagramAccounts: { orderBy: { order: 'asc' } } },
             orderBy: { order: 'asc' },
         });
         return NextResponse.json(partners);
@@ -35,21 +36,28 @@ export async function POST(request: NextRequest) {
     if (typeof body !== 'object' || body === null) {
         return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
-    const { role, name, instagram, imageUrl } = body as Record<string, unknown>;
+    const { role, name, displayName, instagramHandles, imageUrl } = body as Record<string, unknown>;
     if (typeof role !== 'string' || !['hmu', 'dress', 'suit', 'bouquet', 'videographer'].includes(role)) {
         return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
     }
     if (typeof name !== 'string' || !name.trim()) {
         return NextResponse.json({ error: 'name is required' }, { status: 400 });
     }
+    const handles: string[] = Array.isArray(instagramHandles)
+        ? instagramHandles.filter((h): h is string => typeof h === 'string' && h.trim() !== '').map((h) => h.trim())
+        : [];
     try {
         const partner = await prisma.partner.create({
             data: {
                 role,
                 name: name.trim(),
-                instagram: typeof instagram === 'string' ? instagram.trim() : null,
+                displayName: typeof displayName === 'string' && displayName.trim() ? displayName.trim() : null,
                 imageUrl: typeof imageUrl === 'string' ? imageUrl.trim() : null,
+                instagramAccounts: {
+                    create: handles.map((handle, order) => ({ handle, order })),
+                },
             },
+            include: { instagramAccounts: true },
         });
         return NextResponse.json(partner, { status: 201 });
     }

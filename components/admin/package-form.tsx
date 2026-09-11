@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { inputStyle, labelStyle, btnStyle } from './types';
 import PackagePreview from './package-preview';
 import { toggleId, type PkgForm, type Inclusion, type Addon, type Partner, } from './wedding-photographer-types';
@@ -15,6 +15,10 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
     saving: boolean;
     hideButtons?: boolean;
 }) {
+    function partnerLabel(p: Partner): string {
+        const handles = p.instagramAccounts.map((a) => a.handle).join(' / ');
+        return handles ? `${p.name} (${handles})` : p.name;
+    }
     const videographerList = allPartners.filter((p) => p.role === 'videographer');
     const hmuList = allPartners.filter((p) => p.role === 'hmu');
     const dressList = allPartners.filter((p) => p.role === 'dress');
@@ -22,40 +26,12 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
     const bouquetList = allPartners.filter((p) => p.role === 'bouquet');
     const [showPreview, setShowPreview] = useState(false);
     const partnerRows = [
-        form.videographerId
-            ? {
-                role: 'Videographer',
-                name: allPartners.find((p) => p.id === form.videographerId)?.name ?? '',
-            }
-            : null,
-        form.hmuId
-            ? {
-                role: 'Hair & Makeup',
-                name: allPartners.find((p) => p.id === form.hmuId)?.name ?? '',
-            }
-            : null,
-        form.dressId
-            ? {
-                role: 'Dress',
-                name: allPartners.find((p) => p.id === form.dressId)?.name ?? '',
-            }
-            : null,
-        form.suitId
-            ? {
-                role: 'Suit',
-                name: allPartners.find((p) => p.id === form.suitId)?.name ?? '',
-            }
-            : null,
-        form.bouquetId
-            ? {
-                role: 'Bouquet',
-                name: allPartners.find((p) => p.id === form.bouquetId)?.name ?? '',
-            }
-            : null,
-    ].filter(Boolean) as {
-        role: string;
-        name: string;
-    }[];
+        ...form.videographerIds.map((id) => ({ role: 'Videographer', name: allPartners.find((p) => p.id === id)?.name ?? '' })),
+        ...form.hmuIds.map((id) => ({ role: 'Hair & Makeup', name: allPartners.find((p) => p.id === id)?.name ?? '' })),
+        ...form.dressIds.map((id) => ({ role: 'Dress', name: allPartners.find((p) => p.id === id)?.name ?? '' })),
+        ...form.suitIds.map((id) => ({ role: 'Suit', name: allPartners.find((p) => p.id === id)?.name ?? '' })),
+        ...form.bouquetIds.map((id) => ({ role: 'Bouquet', name: allPartners.find((p) => p.id === id)?.name ?? '' })),
+    ];
     const sectionTitle: React.CSSProperties = {
         fontSize: 10,
         fontWeight: 700,
@@ -143,74 +119,20 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
         </div>
       </div>
 
-      
-      <p style={sectionTitle}>Partners</p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: 12 }}>
-        <div>
-          <label style={labelStyle}>Videographer</label>
-          <select style={inputStyle} value={form.videographerId ?? ''} onChange={(e) => onChange({
-            ...form,
-            videographerId: e.target.value ? Number(e.target.value) : null,
-        })}>
-            <option value="">없음</option>
-            {videographerList.map((p) => (<option key={p.id} value={p.id}>
-                {p.name}
-              </option>))}
-          </select>
-        </div>
-        <div>
-          <label style={labelStyle}>Hair &amp; Makeup</label>
-          <select style={inputStyle} value={form.hmuId ?? ''} onChange={(e) => onChange({
-            ...form,
-            hmuId: e.target.value ? Number(e.target.value) : null,
-        })}>
-            <option value="">없음</option>
-            {hmuList.map((p) => (<option key={p.id} value={p.id}>
-                {p.name}
-              </option>))}
-          </select>
-        </div>
-        <div>
-          <label style={labelStyle}>Dress</label>
-          <select style={inputStyle} value={form.dressId ?? ''} onChange={(e) => onChange({
-            ...form,
-            dressId: e.target.value ? Number(e.target.value) : null,
-        })}>
-            <option value="">없음</option>
-            {dressList.map((p) => (<option key={p.id} value={p.id}>
-                {p.name}
-              </option>))}
-          </select>
-        </div>
-        <div>
-          <label style={labelStyle}>Suit</label>
-          <select style={inputStyle} value={form.suitId ?? ''} onChange={(e) => onChange({
-            ...form,
-            suitId: e.target.value ? Number(e.target.value) : null,
-        })}>
-            <option value="">없음</option>
-            {suitList.map((p) => (<option key={p.id} value={p.id}>
-                {p.name}
-              </option>))}
-          </select>
-        </div>
-        <div>
-          <label style={labelStyle}>Bouquet</label>
-          <select style={inputStyle} value={form.bouquetId ?? ''} onChange={(e) => onChange({
-            ...form,
-            bouquetId: e.target.value ? Number(e.target.value) : null,
-        })}>
-            <option value="">없음</option>
-            {bouquetList.map((p) => (<option key={p.id} value={p.id}>
-                {p.name}
-              </option>))}
-          </select>
-        </div>
-      </div>
 
-      
-      {allInclusions.length > 0 && (<>
-          <p style={sectionTitle}>Package Inclusive</p>
+      <CollapsibleSection title="Partners" count={form.videographerIds.length + form.hmuIds.length + form.dressIds.length + form.suitIds.length + form.bouquetIds.length}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: 12 }}>
+          <PartnerCheckboxGroup label="Videographer" list={videographerList} selectedIds={form.videographerIds} onToggle={(id) => onChange({ ...form, videographerIds: toggleId(form.videographerIds, id) })} partnerLabel={partnerLabel}/>
+          <PartnerCheckboxGroup label="Hair &amp; Makeup" list={hmuList} selectedIds={form.hmuIds} onToggle={(id) => onChange({ ...form, hmuIds: toggleId(form.hmuIds, id) })} partnerLabel={partnerLabel}/>
+          <PartnerCheckboxGroup label="Dress" list={dressList} selectedIds={form.dressIds} onToggle={(id) => onChange({ ...form, dressIds: toggleId(form.dressIds, id) })} partnerLabel={partnerLabel}/>
+          <PartnerCheckboxGroup label="Suit" list={suitList} selectedIds={form.suitIds} onToggle={(id) => onChange({ ...form, suitIds: toggleId(form.suitIds, id) })} partnerLabel={partnerLabel}/>
+          <PartnerCheckboxGroup label="Bouquet" list={bouquetList} selectedIds={form.bouquetIds} onToggle={(id) => onChange({ ...form, bouquetIds: toggleId(form.bouquetIds, id) })} partnerLabel={partnerLabel}/>
+        </div>
+      </CollapsibleSection>
+
+
+      {allInclusions.length > 0 && (
+        <CollapsibleSection title="Package Inclusive" count={form.inclusionIds.length}>
           <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
@@ -230,11 +152,12 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
                 {inc.name}
               </label>))}
           </div>
-        </>)}
+        </CollapsibleSection>
+      )}
 
-      
-      {allAddons.length > 0 && (<>
-          <p style={sectionTitle}>Add-ons</p>
+
+      {allAddons.length > 0 && (
+        <CollapsibleSection title="Add-ons" count={form.addonIds.length}>
           <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
@@ -260,7 +183,8 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
                 </span>
               </label>))}
           </div>
-        </>)}
+        </CollapsibleSection>
+      )}
 
       
       {!hideButtons && (<div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
@@ -293,5 +217,57 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
             <PackagePreview onClose={() => setShowPreview(false)} name={form.name} subtitle={form.subtitle} priceSNS={Number(form.priceSNS) || 0} priceNoSNS={Number(form.priceNoSNS) || 0} shootingTime={form.shootingTime} shootingTimeDetail={form.shootingTimeDetail} locations={form.locations} locationsDetail={form.locationsDetail} originalPhotos={form.originalPhotos} retouched={Number(form.retouched) || 0} retouchedDetail={form.retouchedDetail} inclusionIds={form.inclusionIds} allInclusions={allInclusions} onReorderInclusions={(inclusionIds) => onChange({ ...form, inclusionIds })} addonIds={form.addonIds} allAddons={allAddons} onReorderAddons={(addonIds) => onChange({ ...form, addonIds })} partnerRows={partnerRows}/>
           </div>
         </div>)}
+    </div>);
+}
+function PartnerCheckboxGroup({ label, list, selectedIds, onToggle, partnerLabel, }: {
+    label: string;
+    list: Partner[];
+    selectedIds: number[];
+    onToggle: (id: number) => void;
+    partnerLabel: (p: Partner) => string;
+}) {
+    return (<div>
+      <label style={labelStyle}>{label}</label>
+      <div style={{
+            border: '1px solid #d5d5d5',
+            borderRadius: 6,
+            padding: 8,
+            maxHeight: 160,
+            overflowY: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+        }}>
+        {list.length === 0 && (<span style={{ fontSize: 12, color: '#999' }}>등록된 항목 없음</span>)}
+        {list.map((p) => (<label key={p.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 6, fontSize: 12, cursor: 'pointer' }}>
+            <input type="checkbox" checked={selectedIds.includes(p.id)} onChange={() => onToggle(p.id)}/>
+            {partnerLabel(p)}
+          </label>))}
+      </div>
+    </div>);
+}
+function CollapsibleSection({ title, count, children }: {
+    title: string;
+    count: number;
+    children: ReactNode;
+}) {
+    const [open, setOpen] = useState(false);
+    return (<div style={{ marginTop: 16 }}>
+      <button type="button" onClick={() => setOpen((v) => !v)} style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            width: '100%',
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            textAlign: 'left',
+        }}>
+        <span style={{ fontSize: 10, fontWeight: 700, color: '#acacac', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{title}</span>
+        <span style={{ fontSize: 11, color: '#acacac' }}>({count}개 선택됨)</span>
+        <span style={{ marginLeft: 'auto', fontSize: 11, color: '#000' }}>{open ? '▲' : '▼'}</span>
+      </button>
+      {open && <div style={{ marginTop: 8 }}>{children}</div>}
     </div>);
 }

@@ -50,6 +50,7 @@ export type Partner = {
     role: string;
     name: string;
     instagram: string | null;
+    instagramAccounts: { handle: string }[];
 };
 export type Package = {
     id: number;
@@ -100,11 +101,11 @@ export const emptyPkgForm = {
     thumbnailUrl: '' as string | null,
     inclusionIds: [] as number[],
     addonIds: [] as number[],
-    videographerId: null as number | null,
-    hmuId: null as number | null,
-    dressId: null as number | null,
-    suitId: null as number | null,
-    bouquetId: null as number | null,
+    videographerIds: [] as number[],
+    hmuIds: [] as number[],
+    dressIds: [] as number[],
+    suitIds: [] as number[],
+    bouquetIds: [] as number[],
 };
 export type PkgForm = typeof emptyPkgForm;
 export function pkgFormFromPackage(pkg: Package): PkgForm {
@@ -124,11 +125,11 @@ export function pkgFormFromPackage(pkg: Package): PkgForm {
         thumbnailUrl: pkg.thumbnailUrl,
         inclusionIds: pkg.inclusions.map((i) => i.inclusion.id),
         addonIds: pkg.addons.map((a) => a.addon.id),
-        videographerId: pkg.partners.find((p) => p.partner.role === 'videographer')?.partner.id ?? null,
-        hmuId: pkg.partners.find((p) => p.partner.role === 'hmu')?.partner.id ?? null,
-        dressId: pkg.partners.find((p) => p.partner.role === 'dress')?.partner.id ?? null,
-        suitId: pkg.partners.find((p) => p.partner.role === 'suit')?.partner.id ?? null,
-        bouquetId: pkg.partners.find((p) => p.partner.role === 'bouquet')?.partner.id ?? null,
+        videographerIds: pkg.partners.filter((p) => p.partner.role === 'videographer').map((p) => p.partner.id),
+        hmuIds: pkg.partners.filter((p) => p.partner.role === 'hmu').map((p) => p.partner.id),
+        dressIds: pkg.partners.filter((p) => p.partner.role === 'dress').map((p) => p.partner.id),
+        suitIds: pkg.partners.filter((p) => p.partner.role === 'suit').map((p) => p.partner.id),
+        bouquetIds: pkg.partners.filter((p) => p.partner.role === 'bouquet').map((p) => p.partner.id),
     };
 }
 export function toggleId(ids: number[], id: number): number[] {

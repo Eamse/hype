@@ -48,7 +48,13 @@ export default async function ProductDetailPage({ params }: Props) {
                                     include: { inclusion: true },
                                     orderBy: { order: 'asc' },
                                 },
-                                partners: { include: { partner: true } },
+                                partners: {
+                                    include: {
+                                        partner: {
+                                            include: { instagramAccounts: { orderBy: { order: 'asc' } } },
+                                        },
+                                    },
+                                },
                                 images: { orderBy: { order: 'asc' } },
                             },
                             orderBy: { order: 'asc' },
