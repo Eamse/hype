@@ -76,6 +76,7 @@ export type Package = {
     }[];
     partners: {
         partner: Partner;
+        order: number;
     }[];
 };
 export const emptyDirForm = {
@@ -106,6 +107,7 @@ export const emptyPkgForm = {
     dressIds: [] as number[],
     suitIds: [] as number[],
     bouquetIds: [] as number[],
+    partnerOrder: [] as number[], // 역할과 무관하게 실제 노출 순서를 결정하는 파트너 id 목록
 };
 export type PkgForm = typeof emptyPkgForm;
 export function pkgFormFromPackage(pkg: Package): PkgForm {
@@ -130,6 +132,7 @@ export function pkgFormFromPackage(pkg: Package): PkgForm {
         dressIds: pkg.partners.filter((p) => p.partner.role === 'dress').map((p) => p.partner.id),
         suitIds: pkg.partners.filter((p) => p.partner.role === 'suit').map((p) => p.partner.id),
         bouquetIds: pkg.partners.filter((p) => p.partner.role === 'bouquet').map((p) => p.partner.id),
+        partnerOrder: [...pkg.partners].sort((a, b) => a.order - b.order).map((p) => p.partner.id),
     };
 }
 export function toggleId(ids: number[], id: number): number[] {

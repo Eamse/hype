@@ -54,6 +54,7 @@ export default async function ProductDetailPage({ params }: Props) {
                                             include: { instagramAccounts: { orderBy: { order: 'asc' } } },
                                         },
                                     },
+                                    orderBy: { order: 'asc' },
                                 },
                                 images: { orderBy: { order: 'asc' } },
                             },

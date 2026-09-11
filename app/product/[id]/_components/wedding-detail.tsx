@@ -163,7 +163,6 @@ export default function WeddingDetail({ productId, title, section, directors, pa
     const inclusions = allInclusions.filter(({ inclusion }) => !inclusion.name.trim().startsWith('Note:'));
     const inclusionNotes = allInclusions.filter(({ inclusion }) => inclusion.name.trim().startsWith('Note:'));
     const addons = activePackage?.addons ?? [];
-    const packagePartners = activePackage?.partners ?? [];
     const ROLE_LABELS: Record<string, string> = {
         videographer: 'Videographer',
         hmu: 'Hair & Makeup',
@@ -171,10 +170,11 @@ export default function WeddingDetail({ productId, title, section, directors, pa
         suit: 'Suit',
         bouquet: 'Bouquet',
     };
+    const packagePartners = activePackage?.partners ?? [];
     const partnerRowsRaw = [
         {
             role: 'Photographer',
-            name: activePackage?.director.name ?? '',
+            name: title,
             instagramHandles: (activePackage?.director.instagram ?? '').split(' / ').map((h) => h.trim()).filter(Boolean),
         },
         ...packagePartners.map(({ partner }) => ({

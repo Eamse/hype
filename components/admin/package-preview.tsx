@@ -1,5 +1,5 @@
 'use client';
-function moveInArray<T>(items: T[], index: number, direction: 'up' | 'down'): T[] {
+export function moveInArray<T>(items: T[], index: number, direction: 'up' | 'down'): T[] {
     const targetIndex = direction === 'up' ? index - 1 : index + 1;
     if (targetIndex < 0 || targetIndex >= items.length)
         return items;
@@ -15,7 +15,7 @@ const sectionLabel: React.CSSProperties = {
     margin: '0 0 12px',
     fontWeight: 'bold',
 };
-function ReorderRow({ position, label, extra, canMoveUp, canMoveDown, onMoveUp, onMoveDown, }: {
+export function ReorderRow({ position, label, extra, canMoveUp, canMoveDown, onMoveUp, onMoveDown, }: {
     position: number;
     label: string;
     extra?: string;
@@ -69,11 +69,12 @@ function ReorderRow({ position, label, extra, canMoveUp, canMoveDown, onMoveUp, 
       </button>
     </div>);
 }
-export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, shootingTime, shootingTimeDetail, locations, locationsDetail, originalPhotos, retouched, retouchedDetail, inclusionIds, allInclusions, onReorderInclusions, addonIds, allAddons, onReorderAddons, partnerRows, onClose, }: {
+export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, isSinglePrice, shootingTime, shootingTimeDetail, locations, locationsDetail, originalPhotos, retouched, retouchedDetail, inclusionIds, allInclusions, onReorderInclusions, addonIds, allAddons, onReorderAddons, partnerRows, onReorderPartners, onClose, }: {
     name: string;
     subtitle: string;
     priceSNS: number;
     priceNoSNS: number;
+    isSinglePrice: boolean;
     shootingTime: string;
     shootingTimeDetail: string;
     locations: string;
@@ -97,11 +98,14 @@ export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, s
     }[];
     onReorderAddons: (ids: number[]) => void;
     partnerRows: {
+        id: number;
         role: string;
         name: string;
     }[];
+    onReorderPartners: (ids: number[]) => void;
     onClose?: () => void;
 }) {
+    const partnerIds = partnerRows.filter((p) => p.id !== -1).map((p) => p.id);
     return (<div style={{
             position: 'relative',
             color: '#2C2420',
@@ -157,11 +161,14 @@ export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, s
                 marginBottom: 20,
             }}>
           <p style={{ ...sectionLabel, margin: '0 0 12px' }}>Partners</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {partnerRows.map((item) => (<div key={item.role} style={{ fontSize: 13 }}>
-                <span style={{ color: '#000' }}>{item.role}: </span>
-                <span style={{ fontWeight: 600 }}>{item.name}</span>
-              </div>))}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 6 }}>
+            {partnerRows.map((item, i) => {
+                    if (item.id === -1) {
+                        return (<ReorderRow key="photographer" position={i + 1} label={item.role} extra={item.name} canMoveUp={false} canMoveDown={false} onMoveUp={() => { }} onMoveDown={() => { }}/>);
+                    }
+                    const j = partnerIds.indexOf(item.id);
+                    return (<ReorderRow key={item.id} position={i + 1} label={item.role} extra={item.name} canMoveUp={j > 0} canMoveDown={j < partnerIds.length - 1} onMoveUp={() => onReorderPartners(moveInArray(partnerIds, j, 'up'))} onMoveDown={() => onReorderPartners(moveInArray(partnerIds, j, 'down'))}/>);
+                })}
           </div>
         </div>)}
 
@@ -225,7 +232,7 @@ export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, s
 
       {(priceSNS > 0 || priceNoSNS > 0) && (<div style={{
                 display: 'grid',
-                gridTemplateColumns: priceSNS > 0 && priceNoSNS > 0 ? '1fr 1fr' : '1fr',
+                gridTemplateColumns: !isSinglePrice && priceSNS > 0 && priceNoSNS > 0 ? '1fr 1fr' : '1fr',
                 gap: 10,
                 marginBottom: 20,
             }}>
@@ -241,13 +248,13 @@ export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, s
                     textTransform: 'uppercase',
                     marginBottom: 6,
                 }}>
-                Agree to SNS
+                {isSinglePrice ? 'Price' : 'Agree to SNS'}
               </div>
               <div style={{ fontSize: 22, fontWeight: 'bold', color: '#fff' }}>
                 ${priceSNS.toLocaleString()}
               </div>
             </div>)}
-          {priceNoSNS > 0 && (<div style={{
+          {!isSinglePrice && priceNoSNS > 0 && (<div style={{
                     background: '#fff',
                     border: '1px solid #000',
                     borderRadius: 4,

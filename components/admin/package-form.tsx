@@ -4,12 +4,14 @@ import { inputStyle, labelStyle, btnStyle } from './types';
 import PackagePreview from './package-preview';
 import { toggleId, type PkgForm, type Inclusion, type Addon, type Partner, } from './wedding-photographer-types';
 import { applySinglePriceToggle } from '@/lib/single-price';
-export default function PackageForm({ form, onChange, allInclusions, allAddons, allPartners, onSave, onCancel, saving, hideButtons = false, }: {
+export default function PackageForm({ form, onChange, allInclusions, allAddons, allPartners, photographerName, photographerInstagram, onSave, onCancel, saving, hideButtons = false, }: {
     form: PkgForm;
     onChange: (f: PkgForm) => void;
     allInclusions: Inclusion[];
     allAddons: Addon[];
     allPartners: Partner[];
+    photographerName?: string;
+    photographerInstagram?: string | null;
     onSave: () => void;
     onCancel: () => void;
     saving: boolean;
@@ -25,13 +27,30 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
     const suitList = allPartners.filter((p) => p.role === 'suit');
     const bouquetList = allPartners.filter((p) => p.role === 'bouquet');
     const [showPreview, setShowPreview] = useState(false);
+    const ROLE_LABELS: Record<string, string> = {
+        videographer: 'Videographer',
+        hmu: 'Hair & Makeup',
+        dress: 'Dress',
+        suit: 'Suit',
+        bouquet: 'Bouquet',
+    };
+    // partnerOrder(역할 무관 노출 순서)에 있는 id 기준으로 미리보기용 행을 만든다.
+    // Photographer는 Partner 테이블 소속이 아니라 항상 맨 앞에 고정으로 참고용으로만 보여준다 (순서 변경 대상 아님).
     const partnerRows = [
-        ...form.videographerIds.map((id) => ({ role: 'Videographer', name: allPartners.find((p) => p.id === id)?.name ?? '' })),
-        ...form.hmuIds.map((id) => ({ role: 'Hair & Makeup', name: allPartners.find((p) => p.id === id)?.name ?? '' })),
-        ...form.dressIds.map((id) => ({ role: 'Dress', name: allPartners.find((p) => p.id === id)?.name ?? '' })),
-        ...form.suitIds.map((id) => ({ role: 'Suit', name: allPartners.find((p) => p.id === id)?.name ?? '' })),
-        ...form.bouquetIds.map((id) => ({ role: 'Bouquet', name: allPartners.find((p) => p.id === id)?.name ?? '' })),
+        ...(photographerName ? [{ id: -1, role: 'Photographer', name: photographerInstagram ? `${photographerName} (${photographerInstagram})` : photographerName }] : []),
+        ...form.partnerOrder
+            .map((id) => allPartners.find((p) => p.id === id))
+            .filter((p): p is Partner => !!p)
+            .map((p) => ({ id: p.id, role: ROLE_LABELS[p.role] ?? p.role, name: partnerLabel(p) })),
     ];
+    function togglePartner(field: 'videographerIds' | 'hmuIds' | 'dressIds' | 'suitIds' | 'bouquetIds', id: number) {
+        const wasSelected = form[field].includes(id);
+        const nextIds = toggleId(form[field], id);
+        const nextOrder = wasSelected
+            ? form.partnerOrder.filter((pid) => pid !== id)
+            : [...form.partnerOrder, id];
+        onChange({ ...form, [field]: nextIds, partnerOrder: nextOrder });
+    }
     const sectionTitle: React.CSSProperties = {
         fontSize: 10,
         fontWeight: 700,
@@ -122,12 +141,13 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
 
       <CollapsibleSection title="Partners" count={form.videographerIds.length + form.hmuIds.length + form.dressIds.length + form.suitIds.length + form.bouquetIds.length}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr', gap: 12 }}>
-          <PartnerCheckboxGroup label="Videographer" list={videographerList} selectedIds={form.videographerIds} onToggle={(id) => onChange({ ...form, videographerIds: toggleId(form.videographerIds, id) })} partnerLabel={partnerLabel}/>
-          <PartnerCheckboxGroup label="Hair &amp; Makeup" list={hmuList} selectedIds={form.hmuIds} onToggle={(id) => onChange({ ...form, hmuIds: toggleId(form.hmuIds, id) })} partnerLabel={partnerLabel}/>
-          <PartnerCheckboxGroup label="Dress" list={dressList} selectedIds={form.dressIds} onToggle={(id) => onChange({ ...form, dressIds: toggleId(form.dressIds, id) })} partnerLabel={partnerLabel}/>
-          <PartnerCheckboxGroup label="Suit" list={suitList} selectedIds={form.suitIds} onToggle={(id) => onChange({ ...form, suitIds: toggleId(form.suitIds, id) })} partnerLabel={partnerLabel}/>
-          <PartnerCheckboxGroup label="Bouquet" list={bouquetList} selectedIds={form.bouquetIds} onToggle={(id) => onChange({ ...form, bouquetIds: toggleId(form.bouquetIds, id) })} partnerLabel={partnerLabel}/>
+          <PartnerCheckboxGroup label="Videographer" list={videographerList} selectedIds={form.videographerIds} onToggle={(id) => togglePartner('videographerIds', id)} partnerLabel={partnerLabel}/>
+          <PartnerCheckboxGroup label="Hair &amp; Makeup" list={hmuList} selectedIds={form.hmuIds} onToggle={(id) => togglePartner('hmuIds', id)} partnerLabel={partnerLabel}/>
+          <PartnerCheckboxGroup label="Dress" list={dressList} selectedIds={form.dressIds} onToggle={(id) => togglePartner('dressIds', id)} partnerLabel={partnerLabel}/>
+          <PartnerCheckboxGroup label="Suit" list={suitList} selectedIds={form.suitIds} onToggle={(id) => togglePartner('suitIds', id)} partnerLabel={partnerLabel}/>
+          <PartnerCheckboxGroup label="Bouquet" list={bouquetList} selectedIds={form.bouquetIds} onToggle={(id) => togglePartner('bouquetIds', id)} partnerLabel={partnerLabel}/>
         </div>
+        <p style={{ fontSize: 11, color: '#999', marginTop: 8 }}>노출 순서는 우측 상단 "미리보기"에서 변경할 수 있습니다.</p>
       </CollapsibleSection>
 
 
@@ -214,7 +234,7 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
                 maxHeight: '90vh',
                 overflowY: 'auto',
             }}>
-            <PackagePreview onClose={() => setShowPreview(false)} name={form.name} subtitle={form.subtitle} priceSNS={Number(form.priceSNS) || 0} priceNoSNS={Number(form.priceNoSNS) || 0} shootingTime={form.shootingTime} shootingTimeDetail={form.shootingTimeDetail} locations={form.locations} locationsDetail={form.locationsDetail} originalPhotos={form.originalPhotos} retouched={Number(form.retouched) || 0} retouchedDetail={form.retouchedDetail} inclusionIds={form.inclusionIds} allInclusions={allInclusions} onReorderInclusions={(inclusionIds) => onChange({ ...form, inclusionIds })} addonIds={form.addonIds} allAddons={allAddons} onReorderAddons={(addonIds) => onChange({ ...form, addonIds })} partnerRows={partnerRows}/>
+            <PackagePreview onClose={() => setShowPreview(false)} name={form.name} subtitle={form.subtitle} priceSNS={Number(form.priceSNS) || 0} priceNoSNS={Number(form.priceNoSNS) || 0} isSinglePrice={form.isSinglePrice} shootingTime={form.shootingTime} shootingTimeDetail={form.shootingTimeDetail} locations={form.locations} locationsDetail={form.locationsDetail} originalPhotos={form.originalPhotos} retouched={Number(form.retouched) || 0} retouchedDetail={form.retouchedDetail} inclusionIds={form.inclusionIds} allInclusions={allInclusions} onReorderInclusions={(inclusionIds) => onChange({ ...form, inclusionIds })} addonIds={form.addonIds} allAddons={allAddons} onReorderAddons={(addonIds) => onChange({ ...form, addonIds })} partnerRows={partnerRows} onReorderPartners={(ids) => onChange({ ...form, partnerOrder: ids })}/>
           </div>
         </div>)}
     </div>);

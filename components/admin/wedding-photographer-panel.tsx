@@ -184,7 +184,7 @@ export default function WeddingPhotographerPanel() {
             setExpandedDirId(null);
     }
     async function savePkgRelations(pkgId: number, form: PkgForm) {
-        const partnerIds = [...form.videographerIds, ...form.hmuIds, ...form.dressIds, ...form.suitIds, ...form.bouquetIds];
+        const partnerIds = form.partnerOrder;
         await Promise.all([
             fetch(`/api/admin/packages/${pkgId}/inclusions`, {
                 method: 'PUT',

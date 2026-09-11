@@ -278,6 +278,7 @@ model PartnerInstagram {
 model PackagePartner {
   packageId Int
   partnerId Int
+  order     Int     @default(0)
   package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
   partner   Partner @relation(fields: [partnerId], references: [id], onDelete: Cascade)
 

@@ -172,7 +172,7 @@ export default function DirectorRow({ dir, isExpanded, packages, isSelected, onT
               <p style={{ fontSize: 13, fontWeight: 600, color: '#252525', marginBottom: 10 }}>
                 새 패키지
               </p>
-              <PackageForm form={newPkgForm} onChange={onNewPkgFormChange} allInclusions={allInclusions} allAddons={allAddons} allPartners={allPartners} onSave={onSaveNewPkg} onCancel={onCancelAddPkg} saving={saving}/>
+              <PackageForm form={newPkgForm} onChange={onNewPkgFormChange} allInclusions={allInclusions} allAddons={allAddons} allPartners={allPartners} photographerName={dir.name} photographerInstagram={dir.instagram} onSave={onSaveNewPkg} onCancel={onCancelAddPkg} saving={saving}/>
             </div>)}
 
           
@@ -187,7 +187,7 @@ export default function DirectorRow({ dir, isExpanded, packages, isSelected, onT
                     <p style={{ fontSize: 13, fontWeight: 600, color: '#252525', marginBottom: 10 }}>
                       {pkg.name} 수정
                     </p>
-                    <PackageForm form={editPkgForm} onChange={onEditPkgFormChange} allInclusions={allInclusions} allAddons={allAddons} allPartners={allPartners} onSave={() => onSaveEditPkg(pkg.id)} onCancel={onCancelEditPkg} saving={saving}/>
+                    <PackageForm form={editPkgForm} onChange={onEditPkgFormChange} allInclusions={allInclusions} allAddons={allAddons} allPartners={allPartners} photographerName={dir.name} photographerInstagram={dir.instagram} onSave={() => onSaveEditPkg(pkg.id)} onCancel={onCancelEditPkg} saving={saving}/>
                   </div>) : (<div style={{
                         padding: '14px 16px',
                         display: 'flex',

@@ -44,7 +44,7 @@ export async function PUT(request: NextRequest, { params }: {
             prisma.packagePartner.deleteMany({ where: { packageId: pkgId } }),
             ...(partnerIds.length > 0
                 ? [prisma.packagePartner.createMany({
-                        data: partnerIds.map((partnerId) => ({ packageId: pkgId, partnerId })),
+                        data: partnerIds.map((partnerId, order) => ({ packageId: pkgId, partnerId, order })),
                         skipDuplicates: true,
                     })]
                 : []),
