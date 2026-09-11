@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { inputStyle, labelStyle, btnStyle } from './types';
 import PackagePreview from './package-preview';
-import { toggleId, toggleAddonEntry, type PkgForm, type Inclusion, type Addon, type Partner, } from './wedding-photographer-types';
+import { toggleId, type PkgForm, type Inclusion, type Addon, type Partner, } from './wedding-photographer-types';
 export default function PackageForm({ form, onChange, allInclusions, allAddons, allPartners, onSave, onCancel, saving, hideButtons = false, }: {
     form: PkgForm;
     onChange: (f: PkgForm) => void;
@@ -79,21 +79,48 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
           <label style={labelStyle}>서브타이틀</label>
           <input style={inputStyle} value={form.subtitle} placeholder="Jeju and You Main & Nervi" onChange={(e) => onChange({ ...form, subtitle: e.target.value })}/>
         </div>
-        <div>
-          <label style={labelStyle}>SNS 동의 가격 (USD)</label>
-          <input style={inputStyle} type="number" value={form.priceSNS} placeholder="2690" onChange={(e) => onChange({ ...form, priceSNS: e.target.value })}/>
+        <div style={{ gridColumn: '1 / -1' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, cursor: 'pointer' }}>
+            <input type="checkbox" checked={form.isSinglePrice} onChange={(e) => {
+                const checked = e.target.checked;
+                onChange({
+                    ...form,
+                    isSinglePrice: checked,
+                    priceSNS: checked ? form.priceSNS : '',
+                    priceNoSNS: checked ? form.priceSNS : '',
+                });
+            }}/>
+            단일가격 (SNS 동의/비동의 구분 없이 가격 1개만 사용)
+          </label>
         </div>
-        <div>
-          <label style={labelStyle}>SNS 비동의 가격 (USD)</label>
-          <input style={inputStyle} type="number" value={form.priceNoSNS} placeholder="2830" onChange={(e) => onChange({ ...form, priceNoSNS: e.target.value })}/>
-        </div>
+        {form.isSinglePrice ? (<div>
+            <label style={labelStyle}>가격 (USD)</label>
+            <input style={inputStyle} type="number" value={form.priceSNS} placeholder="0" onChange={(e) => onChange({ ...form, priceSNS: e.target.value, priceNoSNS: e.target.value })}/>
+          </div>) : (<>
+            <div>
+              <label style={labelStyle}>SNS 동의 가격 (USD)</label>
+              <input style={inputStyle} type="number" value={form.priceSNS} placeholder="2690" onChange={(e) => onChange({ ...form, priceSNS: e.target.value })}/>
+            </div>
+            <div>
+              <label style={labelStyle}>SNS 비동의 가격 (USD)</label>
+              <input style={inputStyle} type="number" value={form.priceNoSNS} placeholder="2830" onChange={(e) => onChange({ ...form, priceNoSNS: e.target.value })}/>
+            </div>
+          </>)}
         <div>
           <label style={labelStyle}>촬영 시간</label>
           <input style={inputStyle} value={form.shootingTime} placeholder="4 hours" onChange={(e) => onChange({ ...form, shootingTime: e.target.value })}/>
         </div>
         <div>
+          <label style={labelStyle}>촬영 시간 상세 (숫자 아래 작은 참고문구)</label>
+          <input style={inputStyle} value={form.shootingTimeDetail} placeholder="예: Up to 2 outfits" onChange={(e) => onChange({ ...form, shootingTimeDetail: e.target.value })}/>
+        </div>
+        <div>
           <label style={labelStyle}>장소 수</label>
           <input style={inputStyle} value={form.locations} placeholder="3 sites" onChange={(e) => onChange({ ...form, locations: e.target.value })}/>
+        </div>
+        <div>
+          <label style={labelStyle}>장소 수 상세 (숫자 아래 작은 참고문구)</label>
+          <input style={inputStyle} value={form.locationsDetail} placeholder="예: 1 Outdoor site + 1 Indoor studio" onChange={(e) => onChange({ ...form, locationsDetail: e.target.value })}/>
         </div>
         <div>
           <label style={labelStyle}>원본 사진 수</label>
@@ -189,50 +216,30 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
       
       {allAddons.length > 0 && (<>
           <p style={sectionTitle}>Add-ons</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {allAddons.map((addon) => {
-                const entry = form.addonEntries.find((e) => e.addonId === addon.id);
-                return (<div key={addon.id}>
-                  <label style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8,
-                        fontSize: 13,
-                        cursor: 'pointer',
-                    }}>
-                    <input type="checkbox" checked={!!entry} onChange={() => onChange({
-                        ...form,
-                        addonEntries: toggleAddonEntry(form.addonEntries, addon),
-                    })}/>
-                    {addon.name}
-                  </label>
-                  {entry && (<div style={{
-                            display: 'grid',
-                            gridTemplateColumns: '120px 1fr',
-                            gap: 8,
-                            marginTop: 4,
-                            marginLeft: 24,
-                        }}>
-                      <input style={inputStyle} type="number" placeholder="가격 (USD)" value={entry.price} onChange={(e) => onChange({
-                            ...form,
-                            addonEntries: form.addonEntries.map((x) => x.addonId === addon.id ? { ...x, price: e.target.value } : x),
-                        })}/>
-                      <textarea style={{ ...inputStyle, minHeight: 40, resize: 'vertical', fontFamily: 'inherit', overflow: 'hidden' }} placeholder="설명 (줄바꿈한 대로 프론트에 그대로 표시됩니다)" value={entry.desc} onInput={(e) => {
-                            const el = e.currentTarget;
-                            el.style.height = 'auto';
-                            el.style.height = `${el.scrollHeight}px`;
-                        }} ref={(el) => {
-                            if (el) {
-                                el.style.height = 'auto';
-                                el.style.height = `${el.scrollHeight}px`;
-                            }
-                        }} onChange={(e) => onChange({
-                            ...form,
-                            addonEntries: form.addonEntries.map((x) => x.addonId === addon.id ? { ...x, desc: e.target.value } : x),
-                        })}/>
-                    </div>)}
-                </div>);
-            })}
+          <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                gap: 6,
+            }}>
+            {allAddons.map((addon) => (<label key={addon.id} style={{
+                    display: 'flex',
+                    alignItems: 'flex-start',
+                    gap: 8,
+                    fontSize: 13,
+                    cursor: 'pointer',
+                }}>
+                <input type="checkbox" checked={form.addonIds.includes(addon.id)} onChange={() => onChange({
+                    ...form,
+                    addonIds: toggleId(form.addonIds, addon.id),
+                })}/>
+                <span>
+                  {addon.name}
+                  <span style={{ display: 'block', fontSize: 11, color: '#888' }}>
+                    USD {addon.price.toLocaleString()}
+                    {addon.desc ? ` · ${addon.desc.slice(0, 40)}${addon.desc.length > 40 ? '…' : ''}` : ''}
+                  </span>
+                </span>
+              </label>))}
           </div>
         </>)}
 
@@ -264,7 +271,7 @@ export default function PackageForm({ form, onChange, allInclusions, allAddons, 
                 maxHeight: '90vh',
                 overflowY: 'auto',
             }}>
-            <PackagePreview onClose={() => setShowPreview(false)} name={form.name} subtitle={form.subtitle} priceSNS={Number(form.priceSNS) || 0} priceNoSNS={Number(form.priceNoSNS) || 0} shootingTime={form.shootingTime} locations={form.locations} originalPhotos={form.originalPhotos} retouched={Number(form.retouched) || 0} retouchedDetail={form.retouchedDetail} inclusionIds={form.inclusionIds} allInclusions={allInclusions} onReorderInclusions={(inclusionIds) => onChange({ ...form, inclusionIds })} addonEntries={form.addonEntries} allAddons={allAddons} onReorderAddons={(addonEntries) => onChange({ ...form, addonEntries })} partnerRows={partnerRows}/>
+            <PackagePreview onClose={() => setShowPreview(false)} name={form.name} subtitle={form.subtitle} priceSNS={Number(form.priceSNS) || 0} priceNoSNS={Number(form.priceNoSNS) || 0} shootingTime={form.shootingTime} shootingTimeDetail={form.shootingTimeDetail} locations={form.locations} locationsDetail={form.locationsDetail} originalPhotos={form.originalPhotos} retouched={Number(form.retouched) || 0} retouchedDetail={form.retouchedDetail} inclusionIds={form.inclusionIds} allInclusions={allInclusions} onReorderInclusions={(inclusionIds) => onChange({ ...form, inclusionIds })} addonIds={form.addonIds} allAddons={allAddons} onReorderAddons={(addonIds) => onChange({ ...form, addonIds })} partnerRows={partnerRows}/>
           </div>
         </div>)}
     </div>);

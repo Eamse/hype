@@ -185,8 +185,11 @@ model Package {
   subtitle        String?
   priceSNS        Int
   priceNoSNS      Int
+  isSinglePrice   Boolean            @default(false) // true면 priceSNS/priceNoSNS가 같은 단일 가격 (어드민에서 가격 입력칸 1개만 노출)
   shootingTime    String             // "4 hours"
+  shootingTimeDetail String?
   locations       String             // "3 sites"
+  locationsDetail String?
   originalPhotos  String             // "800+"
   retouched       Int
   retouchedDetail String?
@@ -214,20 +217,18 @@ model PackageImage {
 }
 
 model Addon {
-  id       Int            @id @default(autoincrement())
-  name     String
-  price    Int
-  desc     String?
-  order    Int            @default(0)
-  packages PackageAddon[]
+  id          Int            @id @default(autoincrement())
+  name        String         // 내부 식별용 이름 (같은 displayName인데 가격/설명이 다른 버전을 구분하기 위해 접미사가 붙을 수 있음)
+  displayName String?        // 화면에 실제로 노출할 이름. null이면 name을 그대로 씀
+  price       Int
+  desc        String?
+  order       Int            @default(0)
+  packages    PackageAddon[]
 }
 
 model PackageAddon {
   packageId Int
   addonId   Int
-  // 같은 addon 이름이 감독/패키지마다 가격·설명이 달라서 Addon(전역 공유) 대신 여기에 실제 값을 저장함
-  price     Int     @default(0)
-  desc      String?
   order     Int     @default(0)
   package   Package @relation(fields: [packageId], references: [id], onDelete: Cascade)
   addon     Addon   @relation(fields: [addonId], references: [id], onDelete: Cascade)

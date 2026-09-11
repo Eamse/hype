@@ -11,10 +11,11 @@ type Director = {
 type Addon = {
     id: number;
     name: string;
-};
-type PackageAddon = {
+    displayName: string | null;
     price: number;
     desc: string | null;
+};
+type PackageAddon = {
     addon: Addon;
 };
 type Inclusion = {
@@ -39,7 +40,9 @@ type Package = {
     hasPriceNoSNS: boolean;
     isSinglePrice: boolean;
     shootingTime: string;
+    shootingTimeDetail: string | null;
     locations: string;
+    locationsDetail: string | null;
     originalPhotos: string;
     retouched: number;
     retouchedDetail: string | null;
@@ -196,9 +199,9 @@ export default function WeddingDetail({ productId, title, section, directors, pa
     }[];
     const shootDetails = activePackage
         ? [
-            { label: 'Duration', value: activePackage.shootingTime },
-            { label: 'Locations', value: activePackage.locations },
-            { label: 'Original Photos', value: activePackage.originalPhotos },
+            { label: 'Duration', value: activePackage.shootingTime, detail: activePackage.shootingTimeDetail },
+            { label: 'Locations', value: activePackage.locations, detail: activePackage.locationsDetail },
+            { label: 'Original Photos', value: activePackage.originalPhotos, detail: null },
         ]
         : [];
     const hasPartners = partnerRows.length > 0;
@@ -241,7 +244,7 @@ export default function WeddingDetail({ productId, title, section, directors, pa
 
           {activePkgs.length > 0 && (<div className="flex gap-[6px] justify-center flex-wrap mb-2">
               {activePkgs.map((pkg) => (<span key={pkg.id} className={`text-[13px] py-[5px] px-[14px] font-normal tracking-normal border rounded-[2px] cursor-pointer ${tabState(activePackageId === pkg.id)}`} onClick={() => setActivePackageId(pkg.id)}>
-                  {pkg.name}
+                  {activePkgs.length === 1 ? pkg.name.replace(/\s+[A-Z]$/, '') : pkg.name}
                 </span>))}
             </div>)}
         </div>
@@ -283,9 +286,14 @@ export default function WeddingDetail({ productId, title, section, directors, pa
                     {inclusion.name}
                   </div>))}
               </div>
-              {inclusionNotes.map(({ inclusion }) => (<p key={inclusion.id} className={`text-[11px] font-normal ${GRAY3} italic mt-2`}>
-                  {inclusion.name}
-                </p>))}
+              {inclusionNotes.length > 0 && (<div className="border-t border-[#F5F5F5] mt-2 pt-2">
+                  {inclusionNotes.map(({ inclusion }) => (<p key={inclusion.id} className={`flex gap-2 items-center text-[11px] font-normal ${GRAY3} leading-[1.5]`}>
+                      <span className={`${GREEN} shrink-0 text-[12px] font-semibold leading-[1.5]`}>
+                        ✓
+                      </span>
+                      {inclusion.name}
+                    </p>))}
+                </div>)}
             </>)}
 
           
@@ -295,9 +303,9 @@ export default function WeddingDetail({ productId, title, section, directors, pa
               </div>
               <div className="grid grid-cols-2 gap-y-4 min-[480px]:grid-cols-4 min-[480px]:gap-y-0">
                 {shootDetails.map((d) => {
-                const m = d.value.match(/^([\d,.+]+)\s*(.*)$/);
+                const m = d.value.match(/^([\d,.+]+(?:\s*-\s*[\d,.+]+)?)\s*(.*)$/);
                 const num = m ? m[1] : d.value;
-                const unit = m ? m[2] : '';
+                const unit = (m ? m[2] : '') || (d.label === 'Original Photos' ? 'photos' : '');
                 return (<div key={d.label} className="pr-0 min-[480px]:pr-4 min-[480px]:last:pr-0">
                       <div className={`text-[11px] font-normal ${GRAY3} mb-[6px]`}>
                         {d.label}
@@ -307,6 +315,9 @@ export default function WeddingDetail({ productId, title, section, directors, pa
                       </div>
                       {unit && (<div className={`text-[11px] font-normal ${GRAY2} mt-[2px]`}>
                           {unit}
+                        </div>)}
+                      {d.detail && (<div className={`text-[10px] font-normal ${GRAY3} mt-1 leading-[1.5]`}>
+                          {d.detail}
                         </div>)}
                     </div>);
             })}
@@ -331,20 +342,20 @@ export default function WeddingDetail({ productId, title, section, directors, pa
         
         {addons.length > 0 && (<div className={`py-5 px-4 sm:py-6 sm:px-8 border-t ${BORDER} bg-[#FAFAFA]`}>
             <div className={secLabelBase}>Add-ons</div>
-            {addons.map(({ addon, price, desc }, i) => (<div key={addon.id} className={i === addons.length - 1 ? '' : 'mb-2'}>
+            {addons.map(({ addon }, i) => (<div key={addon.id} className={i === addons.length - 1 ? '' : 'mb-2'}>
                 <div className={`flex justify-between items-center gap-2 py-[10px] px-3 sm:py-[11px] sm:px-[14px] border ${BORDER} rounded-[8px] bg-white cursor-pointer`} onClick={() => setExpandedAddon(expandedAddon === i ? null : i)}>
                   <span className={`text-[12px] sm:text-[13px] font-normal ${BLACK}`}>
-                    {addon.name}
+                    {addon.displayName ?? addon.name}
                   </span>
                   <div className={`text-[12px] sm:text-[13px] font-medium ${GRAY1} flex items-center gap-[6px] shrink-0`}>
-                    {price > 0 ? `+$${price.toLocaleString()}` : 'See details'}
+                    {addon.price > 0 ? `+$${addon.price.toLocaleString()}` : 'See details'}
                     <div className={`w-5 h-5 rounded-full border ${BORDER} flex items-center justify-center text-[11px] ${GRAY3} shrink-0`}>
                       {expandedAddon === i ? '−' : '+'}
                     </div>
                   </div>
                 </div>
-                {expandedAddon === i && desc && (<p className={`text-[11px] sm:text-[12px] pt-2 ${GRAY2} leading-[1.6] -mt-[2px] mb-[10px] px-3 sm:px-[14px]`}>
-                    <AddonDesc text={desc}/>
+                {expandedAddon === i && addon.desc && (<p className={`text-[11px] sm:text-[12px] pt-2 ${GRAY2} leading-[1.6] -mt-[2px] mb-[10px] px-3 sm:px-[14px]`}>
+                    <AddonDesc text={addon.desc}/>
                   </p>)}
               </div>))}
             <p className={`text-[11px] font-normal ${GRAY3} italic mt-[10px]`}>
@@ -356,13 +367,13 @@ export default function WeddingDetail({ productId, title, section, directors, pa
         
         {activePackage && priceCount > 0 && session && (<div className={`border-t ${BORDER}`}>
             <div className={`grid ${priceCount === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
-              {activePackage.isSinglePrice ? (<div className="py-4 px-3 sm:py-5 sm:px-6 flex flex-col gap-1">
+              {activePackage.isSinglePrice ? (<div className="py-4 px-3 sm:py-5 sm:px-6 flex flex-col gap-1 bg-[#2d5a45] border-r border-[#EEEEEE]">
                   <div className="flex flex-col items-center gap-[2px] text-center">
-                    <span className="text-[10px] sm:text-[14px] font-bold leading-tight text-[#666666]">
+                    <span className="text-[10px] sm:text-[14px] font-bold leading-tight text-[rgba(255,255,255,0.75)]">
                       PACKAGE PRICE
                     </span>
                   </div>
-                  <div className={`text-[16px] text-center font-normal ${BLACK} tracking-[-0.02em]`}>
+                  <div className="text-[16px] text-center font-medium text-[#fff] tracking-[-0.02em]">
                     {activePrice
                     ? `USD ${(activePrice.priceSNS || activePrice.priceNoSNS).toLocaleString()}`
                     : '···'}

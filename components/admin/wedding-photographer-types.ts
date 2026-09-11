@@ -37,6 +37,7 @@ export type SimpleProduct = {
 export type Addon = {
     id: number;
     name: string;
+    displayName: string | null;
     price: number;
     desc: string | null;
 };
@@ -57,16 +58,17 @@ export type Package = {
     subtitle: string | null;
     priceSNS: number;
     priceNoSNS: number;
+    isSinglePrice: boolean;
     shootingTime: string;
+    shootingTimeDetail: string | null;
     locations: string;
+    locationsDetail: string | null;
     originalPhotos: string;
     retouched: number;
     retouchedDetail: string | null;
     thumbnailUrl: string | null;
     addons: {
         addon: Addon;
-        price: number;
-        desc: string | null;
     }[];
     inclusions: {
         inclusion: Inclusion;
@@ -87,18 +89,17 @@ export const emptyPkgForm = {
     subtitle: '',
     priceSNS: '',
     priceNoSNS: '',
+    isSinglePrice: false,
     shootingTime: '',
+    shootingTimeDetail: '',
     locations: '',
+    locationsDetail: '',
     originalPhotos: '',
     retouched: '',
     retouchedDetail: '',
     thumbnailUrl: '' as string | null,
     inclusionIds: [] as number[],
-    addonEntries: [] as {
-        addonId: number;
-        price: string;
-        desc: string;
-    }[],
+    addonIds: [] as number[],
     hmuId: null as number | null,
     dressId: null as number | null,
     suitId: null as number | null,
@@ -111,18 +112,17 @@ export function pkgFormFromPackage(pkg: Package): PkgForm {
         subtitle: pkg.subtitle ?? '',
         priceSNS: String(pkg.priceSNS),
         priceNoSNS: String(pkg.priceNoSNS),
+        isSinglePrice: pkg.isSinglePrice,
         shootingTime: pkg.shootingTime,
+        shootingTimeDetail: pkg.shootingTimeDetail ?? '',
         locations: pkg.locations,
+        locationsDetail: pkg.locationsDetail ?? '',
         originalPhotos: pkg.originalPhotos,
         retouched: String(pkg.retouched),
         retouchedDetail: pkg.retouchedDetail ?? '',
         thumbnailUrl: pkg.thumbnailUrl,
         inclusionIds: pkg.inclusions.map((i) => i.inclusion.id),
-        addonEntries: pkg.addons.map((a) => ({
-            addonId: a.addon.id,
-            price: String(a.price),
-            desc: a.desc ?? '',
-        })),
+        addonIds: pkg.addons.map((a) => a.addon.id),
         hmuId: pkg.partners.find((p) => p.partner.role === 'hmu')?.partner.id ?? null,
         dressId: pkg.partners.find((p) => p.partner.role === 'dress')?.partner.id ?? null,
         suitId: pkg.partners.find((p) => p.partner.role === 'suit')?.partner.id ?? null,
@@ -131,17 +131,4 @@ export function pkgFormFromPackage(pkg: Package): PkgForm {
 }
 export function toggleId(ids: number[], id: number): number[] {
     return ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id];
-}
-export function toggleAddonEntry(entries: {
-    addonId: number;
-    price: string;
-    desc: string;
-}[], addon: Addon): {
-    addonId: number;
-    price: string;
-    desc: string;
-}[] {
-    return entries.some((e) => e.addonId === addon.id)
-        ? entries.filter((e) => e.addonId !== addon.id)
-        : [...entries, { addonId: addon.id, price: String(addon.price), desc: addon.desc ?? '' }];
 }

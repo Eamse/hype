@@ -6,13 +6,18 @@ import BulkActions from './bulk-actions';
 export type CrudField = {
     key: string;
     label: string;
-    type?: 'text' | 'number';
+    type?: 'text' | 'number' | 'textarea';
     placeholder?: string;
     required?: boolean;
     showInSummary?: boolean;
     summaryPrefix?: string;
     showInDetailView?: boolean;
+    fullWidth?: boolean;
 };
+function autoGrow(el: HTMLTextAreaElement) {
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+}
 type CrudItem = {
     id: number;
 } & Record<string, string | number | null>;
@@ -56,9 +61,9 @@ export default function SimpleCrudPanel({ category, title, createLabel, apiBase,
         return body;
     }
     async function handleCreate() {
-        const primary = fields[0];
-        if (primary.required && !form[primary.key]?.trim()) {
-            alert(`${primary.label}은(는) 필수입니다.`);
+        const missing = fields.find((f) => f.required && !form[f.key]?.trim());
+        if (missing) {
+            alert(`${missing.label}은(는) 필수입니다.`);
             return;
         }
         const res = await fetch(apiBase, {
@@ -144,11 +149,11 @@ export default function SimpleCrudPanel({ category, title, createLabel, apiBase,
             gap: 12,
             marginBottom: 16,
         }}>
-          {fields.map((f) => (<div key={f.key}>
+          {fields.map((f) => (<div key={f.key} style={f.fullWidth ? { gridColumn: '1 / -1' } : undefined}>
               <label style={labelStyle}>
                 {f.label} {f.required && '*'}
               </label>
-              <input style={inputStyle} type={f.type === 'number' ? 'number' : 'text'} placeholder={f.placeholder ?? f.label} value={form[f.key]} onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}/>
+              {f.type === 'textarea' ? (<textarea style={{ ...inputStyle, minHeight: 120, resize: 'vertical', fontFamily: 'inherit', overflow: 'hidden' }} placeholder={f.placeholder ?? f.label} value={form[f.key]} ref={(el) => { if (el) autoGrow(el); }} onInput={(e) => autoGrow(e.currentTarget)} onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}/>) : (<input style={inputStyle} type={f.type === 'number' ? 'number' : 'text'} placeholder={f.placeholder ?? f.label} value={form[f.key]} onChange={(e) => setForm((prev) => ({ ...prev, [f.key]: e.target.value }))}/>)}
             </div>))}
         </div>
         <button style={btnStyle('#000', '#fff')} onClick={handleCreate}>
@@ -209,12 +214,15 @@ export default function SimpleCrudPanel({ category, title, createLabel, apiBase,
                         gridTemplateColumns: gridColumns ?? `repeat(${fields.length}, 1fr)`,
                         gap: 12,
                     }}>
-                      {fields.map((f) => (<div key={f.key}>
+                      {fields.map((f) => (<div key={f.key} style={f.fullWidth ? { gridColumn: '1 / -1' } : undefined}>
                           <label style={labelStyle}>{f.label}</label>
-                          <input style={inputStyle} type={f.type === 'number' ? 'number' : 'text'} value={editForm[f.key]} onChange={(e) => setEditForm((prev) => ({
+                          {f.type === 'textarea' ? (<textarea style={{ ...inputStyle, minHeight: 120, resize: 'vertical', fontFamily: 'inherit', overflow: 'hidden' }} value={editForm[f.key]} ref={(el) => { if (el) autoGrow(el); }} onInput={(e) => autoGrow(e.currentTarget)} onChange={(e) => setEditForm((prev) => ({
                             ...prev,
                             [f.key]: e.target.value,
-                        }))}/>
+                        }))}/>) : (<input style={inputStyle} type={f.type === 'number' ? 'number' : 'text'} value={editForm[f.key]} onChange={(e) => setEditForm((prev) => ({
+                            ...prev,
+                            [f.key]: e.target.value,
+                        }))}/>)}
                         </div>))}
                     </div>
                     <div style={{ display: 'flex', gap: 8 }}>
@@ -230,7 +238,7 @@ export default function SimpleCrudPanel({ category, title, createLabel, apiBase,
                         flexDirection: 'column',
                         gap: 10,
                     }}>
-                    {detailFields.map((f) => item[f.key] && (<p key={f.key} style={{ fontSize: 13, color: '#000' }}>
+                    {detailFields.map((f) => item[f.key] && (<p key={f.key} style={{ fontSize: 13, color: '#000', whiteSpace: 'pre-wrap' }}>
                             {item[f.key]}
                           </p>))}
                     <div style={{ display: 'flex', gap: 8 }}>

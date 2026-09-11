@@ -26,7 +26,7 @@ export async function PATCH(request: NextRequest, { params }: {
     if (typeof body !== 'object' || body === null) {
         return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
-    const { name, subtitle, priceSNS, priceNoSNS, shootingTime, locations, originalPhotos, retouched, retouchedDetail, thumbnailUrl } = body as Record<string, unknown>;
+    const { name, subtitle, priceSNS, priceNoSNS, isSinglePrice, shootingTime, shootingTimeDetail, locations, locationsDetail, originalPhotos, retouched, retouchedDetail, thumbnailUrl } = body as Record<string, unknown>;
     try {
         const before = await prisma.package.findUnique({ where: { id: pkgId } });
         const pkg = await prisma.package.update({
@@ -36,8 +36,11 @@ export async function PATCH(request: NextRequest, { params }: {
                 ...(subtitle !== undefined && { subtitle: typeof subtitle === 'string' ? subtitle.trim() : null }),
                 ...(priceSNS !== undefined && { priceSNS: Number(priceSNS) || 0 }),
                 ...(priceNoSNS !== undefined && { priceNoSNS: Number(priceNoSNS) || 0 }),
+                ...(isSinglePrice !== undefined && { isSinglePrice: Boolean(isSinglePrice) }),
                 ...(typeof shootingTime === 'string' && { shootingTime: shootingTime.trim() }),
+                ...(shootingTimeDetail !== undefined && { shootingTimeDetail: typeof shootingTimeDetail === 'string' ? shootingTimeDetail.trim() || null : null }),
                 ...(typeof locations === 'string' && { locations: locations.trim() }),
+                ...(locationsDetail !== undefined && { locationsDetail: typeof locationsDetail === 'string' ? locationsDetail.trim() || null : null }),
                 ...(typeof originalPhotos === 'string' && { originalPhotos: originalPhotos.trim() }),
                 ...(retouched !== undefined && { retouched: Number(retouched) || 0 }),
                 ...(retouchedDetail !== undefined && { retouchedDetail: typeof retouchedDetail === 'string' ? retouchedDetail.trim() : null }),

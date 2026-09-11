@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     if (typeof body !== 'object' || body === null) {
         return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
-    const { name, price, desc } = body as Record<string, unknown>;
+    const { name, displayName, price, desc } = body as Record<string, unknown>;
     if (typeof name !== 'string' || !name.trim()) {
         return NextResponse.json({ error: 'name is required' }, { status: 400 });
     }
@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
         const addon = await prisma.addon.create({
             data: {
                 name: name.trim(),
+                displayName: typeof displayName === 'string' && displayName.trim() ? displayName.trim() : null,
                 price,
                 desc: typeof desc === 'string' ? desc.trim() : null,
             },

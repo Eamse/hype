@@ -69,13 +69,15 @@ function ReorderRow({ position, label, extra, canMoveUp, canMoveDown, onMoveUp, 
       </button>
     </div>);
 }
-export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, shootingTime, locations, originalPhotos, retouched, retouchedDetail, inclusionIds, allInclusions, onReorderInclusions, addonEntries, allAddons, onReorderAddons, partnerRows, onClose, }: {
+export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, shootingTime, shootingTimeDetail, locations, locationsDetail, originalPhotos, retouched, retouchedDetail, inclusionIds, allInclusions, onReorderInclusions, addonIds, allAddons, onReorderAddons, partnerRows, onClose, }: {
     name: string;
     subtitle: string;
     priceSNS: number;
     priceNoSNS: number;
     shootingTime: string;
+    shootingTimeDetail: string;
     locations: string;
+    locationsDetail: string;
     originalPhotos: string;
     retouched: number;
     retouchedDetail: string;
@@ -85,20 +87,15 @@ export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, s
         name: string;
     }[];
     onReorderInclusions: (ids: number[]) => void;
-    addonEntries: {
-        addonId: number;
-        price: string;
-        desc: string;
-    }[];
+    addonIds: number[];
     allAddons: {
         id: number;
         name: string;
+        displayName: string | null;
+        price: number;
+        desc: string | null;
     }[];
-    onReorderAddons: (entries: {
-        addonId: number;
-        price: string;
-        desc: string;
-    }[]) => void;
+    onReorderAddons: (ids: number[]) => void;
     partnerRows: {
         role: string;
         name: string;
@@ -173,8 +170,6 @@ export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, s
           <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
-                gridTemplateRows: `repeat(${Math.ceil(inclusionIds.length / 2)}, auto)`,
-                gridAutoFlow: 'column',
                 gap: 6,
             }}>
             {inclusionIds.map((id, i) => {
@@ -198,12 +193,13 @@ export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, s
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             {[
-                { label: 'Shooting Time', value: shootingTime },
-                { label: 'Locations', value: locations },
-                { label: 'Original Photos', value: originalPhotos },
+                { label: 'Shooting Time', value: shootingTime, detail: shootingTimeDetail },
+                { label: 'Locations', value: locations, detail: locationsDetail },
+                { label: 'Original Photos', value: originalPhotos, detail: '' },
                 {
                     label: 'Retouched',
                     value: retouched ? `${retouched} images` : '',
+                    detail: '',
                 },
             ].map((d) => (<div key={d.label}>
                 <div style={{ fontSize: 11, color: '#000', marginBottom: 2 }}>
@@ -212,6 +208,9 @@ export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, s
                 <div style={{ fontSize: 14, color: '#000' }}>
                   {d.value || '-'}
                 </div>
+                {d.detail && (<div style={{ fontSize: 11, color: '#666', marginTop: 2 }}>
+                    {d.detail}
+                  </div>)}
               </div>))}
           </div>
           {retouchedDetail && (<p style={{
@@ -269,14 +268,14 @@ export default function PackagePreview({ name, subtitle, priceSNS, priceNoSNS, s
             </div>)}
         </div>)}
 
-      {addonEntries.length > 0 && (<div>
+      {addonIds.length > 0 && (<div>
           <p style={sectionLabel}>Add-ons</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {addonEntries.map((entry, i) => {
-                const item = allAddons.find((x) => x.id === entry.addonId);
+            {addonIds.map((id, i) => {
+                const item = allAddons.find((x) => x.id === id);
                 if (!item)
                     return null;
-                return (<ReorderRow key={entry.addonId} position={i + 1} label={item.name} extra={`$${entry.price || 0}`} canMoveUp={i > 0} canMoveDown={i < addonEntries.length - 1} onMoveUp={() => onReorderAddons(moveInArray(addonEntries, i, 'up'))} onMoveDown={() => onReorderAddons(moveInArray(addonEntries, i, 'down'))}/>);
+                return (<ReorderRow key={id} position={i + 1} label={item.displayName ?? item.name} extra={`$${item.price || 0}`} canMoveUp={i > 0} canMoveDown={i < addonIds.length - 1} onMoveUp={() => onReorderAddons(moveInArray(addonIds, i, 'up'))} onMoveDown={() => onReorderAddons(moveInArray(addonIds, i, 'down'))}/>);
             })}
           </div>
         </div>)}

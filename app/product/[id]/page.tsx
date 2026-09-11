@@ -76,7 +76,7 @@ export default async function ProductDetailPage({ params }: Props) {
                 priceNoSNS: 0,
                 hasPriceSNS: pkg.priceSNS > 0,
                 hasPriceNoSNS: pkg.priceNoSNS > 0,
-                isSinglePrice: pkg.priceSNS > 0 && pkg.priceSNS === pkg.priceNoSNS,
+                isSinglePrice: pkg.isSinglePrice,
             })));
             return { directors, packages };
         })()

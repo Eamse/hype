@@ -16,10 +16,10 @@ export async function GET(request: NextRequest, { params }: {
     try {
         const links = await prisma.packageAddon.findMany({
             where: { packageId: pkgId },
-            select: { addonId: true, price: true, desc: true },
+            select: { addonId: true },
             orderBy: { order: 'asc' },
         });
-        return NextResponse.json(links);
+        return NextResponse.json(links.map((l) => l.addonId));
     }
     catch (e) {
         console.error('[GET /api/admin/packages/:id/addons]', e);
@@ -39,25 +39,13 @@ export async function PUT(request: NextRequest, { params }: {
     if (!Number.isFinite(pkgId))
         return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
     const body = await request.json().catch(() => null);
-    const addons: {
-        addonId: number;
-        price: number;
-        desc?: string | null;
-    }[] = Array.isArray(body?.addons)
-        ? body.addons
-        : [];
+    const addonIds: number[] = Array.isArray(body?.addonIds) ? body.addonIds : [];
     try {
         await prisma.$transaction([
             prisma.packageAddon.deleteMany({ where: { packageId: pkgId } }),
-            ...(addons.length > 0
+            ...(addonIds.length > 0
                 ? [prisma.packageAddon.createMany({
-                        data: addons.map((a, order) => ({
-                            packageId: pkgId,
-                            addonId: a.addonId,
-                            price: Number(a.price) || 0,
-                            desc: a.desc || null,
-                            order,
-                        })),
+                        data: addonIds.map((addonId, order) => ({ packageId: pkgId, addonId, order })),
                         skipDuplicates: true,
                     })]
                 : []),

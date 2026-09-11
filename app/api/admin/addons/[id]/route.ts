@@ -25,12 +25,15 @@ export async function PATCH(request: NextRequest, { params }: {
     if (typeof body !== 'object' || body === null) {
         return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
-    const { name, price, desc } = body as Record<string, unknown>;
+    const { name, displayName, price, desc } = body as Record<string, unknown>;
     try {
         const addon = await prisma.addon.update({
             where: { id: addonId },
             data: {
                 ...(typeof name === 'string' && { name: name.trim() }),
+                ...(displayName !== undefined && {
+                    displayName: typeof displayName === 'string' && displayName.trim() ? displayName.trim() : null,
+                }),
                 ...(typeof price === 'number' && { price }),
                 ...(desc !== undefined && {
                     desc: typeof desc === 'string' ? desc.trim() : null,

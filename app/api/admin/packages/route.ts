@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     if (typeof body !== 'object' || body === null) {
         return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
     }
-    const { directorId, name, subtitle, priceSNS, priceNoSNS, shootingTime, locations, originalPhotos, retouched, retouchedDetail, } = body as Record<string, unknown>;
+    const { directorId, name, subtitle, priceSNS, priceNoSNS, isSinglePrice, shootingTime, shootingTimeDetail, locations, locationsDetail, originalPhotos, retouched, retouchedDetail, } = body as Record<string, unknown>;
     if (!Number.isFinite(Number(directorId))) {
         return NextResponse.json({ error: 'directorId is required' }, { status: 400 });
     }
@@ -60,8 +60,11 @@ export async function POST(request: NextRequest) {
                 subtitle: typeof subtitle === 'string' ? subtitle.trim() : null,
                 priceSNS: Number(priceSNS) || 0,
                 priceNoSNS: Number(priceNoSNS) || 0,
+                isSinglePrice: Boolean(isSinglePrice),
                 shootingTime: typeof shootingTime === 'string' ? shootingTime.trim() : '',
+                shootingTimeDetail: typeof shootingTimeDetail === 'string' ? shootingTimeDetail.trim() || null : null,
                 locations: typeof locations === 'string' ? locations.trim() : '',
+                locationsDetail: typeof locationsDetail === 'string' ? locationsDetail.trim() || null : null,
                 originalPhotos: typeof originalPhotos === 'string' ? originalPhotos.trim() : '',
                 retouched: Number(retouched) || 0,
                 retouchedDetail: typeof retouchedDetail === 'string' ? retouchedDetail.trim() : null,
