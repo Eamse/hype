@@ -171,7 +171,7 @@ export default function WeddingDetail({ productId, title, section, directors, pa
         suit: 'Suit',
         bouquet: 'Bouquet',
     };
-    const partnerRows = [
+    const partnerRowsRaw = [
         {
             role: 'Photographer',
             name: activePackage?.director.name ?? '',
@@ -187,6 +187,18 @@ export default function WeddingDetail({ productId, title, section, directors, pa
         name: string;
         instagramHandles: string[];
     }[];
+    // 같은 role에 파트너가 여러 명이면 한 행으로 합쳐서 이름/계정을 " / "로 이어붙임
+    const partnerRows = Object.values(partnerRowsRaw.reduce((acc, row) => {
+        const existing = acc[row.role];
+        if (existing) {
+            existing.name = [...new Set([...existing.name.split(' / '), row.name])].join(' / ');
+            existing.instagramHandles = [...existing.instagramHandles, ...row.instagramHandles];
+        }
+        else {
+            acc[row.role] = { ...row, instagramHandles: [...row.instagramHandles] };
+        }
+        return acc;
+    }, {} as Record<string, { role: string; name: string; instagramHandles: string[] }>));
     const shootDetails = activePackage
         ? [
             { label: 'Duration', value: activePackage.shootingTime, detail: activePackage.shootingTimeDetail },
