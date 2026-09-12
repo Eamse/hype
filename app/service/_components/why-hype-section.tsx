@@ -24,10 +24,7 @@ export default function WhyHypeSection() {
     useScrollReveal(rootRef);
     return (<div ref={rootRef} className="offer-page">
       <div className="offer-header">
-        <p id="why-us" data-offer-reveal className="offer-number offer-fade">
-          01
-        </p>
-        <p data-offer-reveal className="offer-eyebrow offer-fade">
+        <p id="why-us" data-offer-reveal className="offer-eyebrow type-eyebrow offer-fade">
           WHY HYPE WEDDING
         </p>
       </div>
@@ -36,10 +33,10 @@ export default function WhyHypeSection() {
         {ITEMS.map((item, idx) => {
             const rowDelay = Math.floor(idx / 2) * 200;
             return (<div key={item.title} className="offer-item">
-              <h3 data-offer-reveal data-offer-reveal-delay={rowDelay} className="offer-item-title offer-rise">
+              <h3 data-offer-reveal data-offer-reveal-delay={rowDelay} className="offer-item-title type-section-header-offer offer-rise">
                 {item.title}
               </h3>
-              <p data-offer-reveal data-offer-reveal-delay={rowDelay + 150} className="offer-item-subtitle offer-fade">
+              <p data-offer-reveal data-offer-reveal-delay={rowDelay + 150} className="offer-item-subtitle type-body-large offer-fade">
                 {item.subtitle}
               </p>
             </div>);

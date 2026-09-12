@@ -71,9 +71,10 @@ function TimelineRow({ item }: {
     return (<div className="journey-timeline-item">
       <div className="journey-timeline-row">
         <span className="journey-dot"/>
-        <p className="journey-date">{item.date}</p>
+        <p className="journey-date type-body-large">{item.date}</p>
         <p className={[
             'journey-milestone',
+            'type-body-large',
             (item.bold || item.staticBold) && 'journey-milestone--static-bold',
         ]
             .filter(Boolean)

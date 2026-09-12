@@ -12,7 +12,7 @@ export default function FloatingContactButton() {
   const pathname = usePathname();
   if (pathname?.startsWith('/gatekeeper-7f3k9')) return null;
   return (
-    <div style={{ position: 'fixed', right: 20, bottom: 20, zIndex: 9999 }}>
+    <div style={{ position: 'fixed', right: 20, bottom: 65, zIndex: 9999 }}>
       {open && (
         <div
           style={{
@@ -109,7 +109,7 @@ export default function FloatingContactButton() {
         style={{
           width: 65,
           height: 65,
-          borderRadius: '50%',
+          borderRadius: '24px',
           background: '#2d5a45',
           color: '#fff',
           border: 'none',
@@ -129,7 +129,7 @@ export default function FloatingContactButton() {
               flexDirection: 'column',
               alignItems: 'center',
               lineHeight: 1.2,
-              fontSize: 13,
+              fontSize: 18,
               fontWeight: 700,
             }}
           >
