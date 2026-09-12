@@ -56,14 +56,14 @@ export default function ReviewFeatured({ reviews, }: {
         }}>
         WHAT THEY&apos;RE SAYING
       </p>
-      <h1 className="review-fade type-subheadline" data-reveal data-reveal-delay="80" style={{
+      <h1 className="review-fade type-hero-display" data-reveal data-reveal-delay="80" style={{
             fontWeight: 800,
             letterSpacing: '-0.02em',
             margin: '0 0 10px',
         }}>
         Review
       </h1>
-      <p className="review-fade type-body-19" data-reveal data-reveal-delay="140" style={{ color: '#555', marginBottom: 28 }}>
+      <p className="review-fade type-body" data-reveal data-reveal-delay="140" style={{ color: '#555', marginBottom: 28 }}>
         Real stories from real couples
       </p>
 

@@ -54,14 +54,14 @@ export default function InquiryClient() {
         YOUR NEXT STEP
       </p>
       <h2
-        className="inquiry-heading type-subheadline inquiry-fade"
+        className="inquiry-heading type-hero-display inquiry-fade"
         data-reveal
         data-reveal-delay="200"
       >
         Start your Inquiry
       </h2>
       <p
-        className="inquiry-cta-body type-body-inquiry inquiry-fade"
+        className="inquiry-cta-body type-body inquiry-fade"
         data-reveal
         data-reveal-delay="320"
       >
