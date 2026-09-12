@@ -793,9 +793,9 @@ body {
 }
 
 .philosophy-deco-strip {
-  top: clamp(-98px, -20.5cqw, 0px);
+  top: clamp(-114px, -17cqw, 0px);
   left: 0;
-  width: clamp(190px, 23vw, 240px);
+  width: 43%;
   z-index: -1;
 }
 
@@ -1107,7 +1107,6 @@ body {
 }
 
 .offer-items-grid,
-.service-grid,
 .timeline-wrap {
   margin-top: 50px;
   margin-bottom: 50px;
@@ -1205,12 +1204,30 @@ body {
 }
 
 .service-grid {
-  padding-bottom: clamp(60px, 8vw, 110px);
+  padding-bottom: clamp(60px, 8vw, 40px);
+}
+
+@media (min-width: 1024px) and (max-width: 1499px) {
+  .service-grid {
+    grid-template-columns: repeat(2, minmax(320px, 1fr));
+  }
+  .service-col {
+    text-align: center;
+  }
+  .service-divider {
+    display: none;
+  }
+}
+
+@media (min-width: 1500px) {
+  .service-grid {
+    grid-template-columns: repeat(4, minmax(320px, 1fr));
+  }
 }
 
 .service-col {
   position: relative;
-  padding: 0 clamp(16px, 2vw, 32px);
+  min-width: 0;
 }
 
 .service-divider {
@@ -1240,6 +1257,18 @@ body {
   }
 }
 
+@media (max-width: 639px) {
+  .service-col {
+    padding-top: 0;
+  }
+
+  .schedule-card-title {
+    display: inline-block;
+    width: 260px;
+    margin-inline: auto;
+  }
+}
+
 @media (max-width: 1023px) {
   .service-divider {
     display: none;
@@ -1250,12 +1279,13 @@ body {
 }
 
 .service-col-title {
-  margin: 0 0 8px;
+  margin: 0 0 19px;
 }
 
 .service-col-title-badge {
   box-sizing: border-box;
-  width: 13ch;
+  min-width: clamp(200px, 25vw, 319px);
+  white-space: nowrap;
   display: inline-block;
   padding: 0 6px;
   border: 1px solid var(--deep-green);
@@ -1283,6 +1313,23 @@ body {
 }
 
 @media (max-width: 1023px) {
+  .service-col-list.bulleted {
+    width: min(280px, 100%);
+    margin: 0 auto;
+    padding-left: 0;
+    list-style: none;
+    text-align: left;
+  }
+  .service-col-list.bulleted li {
+    padding-left: 20px;
+  }
+  .service-col-list.bulleted li::before {
+    content: '•';
+    margin-right: 6px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1499px) {
   .service-col-list.bulleted {
     width: min(280px, 100%);
     margin: 0 auto;
@@ -1395,7 +1442,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding-bottom: clamp(60px, 7vw, 96px);
+  padding-bottom: clamp(40px, 7vw, 53px);
   font-weight: 800;
   color: #3f6b52;
 }
@@ -1515,8 +1562,8 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #000;
   transform: translate(-50%, -50%);
