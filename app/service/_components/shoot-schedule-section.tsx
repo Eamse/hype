@@ -46,14 +46,14 @@ export default function ShootScheduleSection() {
       <div className="schedule-cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-15 gap-y-10 items-stretch justify-items-stretch lg:px-2">
         {STEPS.map((s, idx) => (<div key={s.step} data-offer-reveal data-offer-reveal-delay={idx * 150} className={`schedule-card card-pop${s.emphasis ? ' schedule-card--emphasis' : ''}`}>
             <p className="schedule-card-step">{s.step}</p>
-            <h3 className="schedule-card-title type-body-large-schedule">{s.title}</h3>
+            <h3 className="schedule-card-title type-body-large">{s.title}</h3>
             <ul className="schedule-card-list">
               {s.items.map((item) => (<li key={item}>{item}</li>))}
             </ul>
           </div>))}
       </div>
 
-      <p data-offer-reveal data-offer-reveal-delay={STEPS.length * 150 + 200} className="schedule-cta type-body-large-schedule offer-fade">
+      <p data-offer-reveal data-offer-reveal-delay={STEPS.length * 150 + 200} className="schedule-cta type-body-large offer-fade">
         Shoot day Schedule
         <span className="schedule-cta-arrow">↓</span>
       </p>

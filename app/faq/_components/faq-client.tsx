@@ -381,8 +381,7 @@ export default function FaqClient() {
             justifyContent: 'space-between',
             gap: 24,
         }}>
-        <h1 className="inquiry-fade-up" style={{
-            fontSize: 'clamp(46px, 34.4px + 3.1vw, 84px)',
+        <h1 className="inquiry-fade-up type-subheadline" style={{
             fontWeight: 900,
             letterSpacing: '-2px',
             color: '#000',

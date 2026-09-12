@@ -102,7 +102,7 @@ export default function OurServiceSection({
                 data-offer-reveal-delay={base + TITLE_OFFSET}
                 className="service-col-title offer-rise"
               >
-                <span className="service-col-title-badge type-body-large-service-col">{service.title}</span>
+                <span className="service-col-title-badge type-body-large">{service.title}</span>
               </h3>
               <ul
                 data-offer-reveal

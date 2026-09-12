@@ -47,21 +47,21 @@ export default function InquiryClient() {
   return (
     <section ref={ctaRef} className="inquiry-cta">
       <p
-        className="inquiry-eyebrow inquiry-fade"
+        className="inquiry-eyebrow type-eyebrow inquiry-fade"
         data-reveal
         data-reveal-delay="0"
       >
         YOUR NEXT STEP
       </p>
       <h2
-        className="inquiry-heading inquiry-fade"
+        className="inquiry-heading type-subheadline inquiry-fade"
         data-reveal
         data-reveal-delay="200"
       >
         Start your Inquiry
       </h2>
       <p
-        className="inquiry-cta-body inquiry-fade"
+        className="inquiry-cta-body type-body-inquiry inquiry-fade"
         data-reveal
         data-reveal-delay="320"
       >
