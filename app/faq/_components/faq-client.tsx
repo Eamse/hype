@@ -510,14 +510,14 @@ export default function FaqClient() {
         </div>)}
 
       
-      <div ref={listRef} style={{
+      <section ref={listRef} style={{
             maxWidth: 1200,
             margin: '0 auto',
-            padding: isMobile ? '24px 20px 80px' : '32px 40px 80px',
+            padding: 'clamp(40px, 4.5vw, 70px) clamp(20px, 4vw, 60px) clamp(50px, 5vw, 80px)',
         }}>
         {displayItems.length === 0 ? (<p style={{ color: '#000', fontSize: 14 }}>No results found.</p>) : (displayItems.map(({ q, a }, idx) => (<div key={idx} className="faq-item-animate inquiry-step" style={{ transitionDelay: `${idx * 0.07}s` }}>
               <FaqItem q={q} a={a} isOpen={openIndex === idx} onToggle={() => setOpenIndex(openIndex === idx ? null : idx)}/>
             </div>)))}
-      </div>
+      </section>
     </>);
 }

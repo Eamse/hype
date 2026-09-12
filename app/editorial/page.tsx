@@ -45,10 +45,11 @@ export default async function MagazinePage({ searchParams }: Props) {
     const restCount = Math.max(0, totalCount - 1);
     const totalPages = Math.max(1, Math.ceil(restCount / PAGE_SIZE));
     const magazines = hero ? [hero, ...rest] : rest;
-    return (<div>
+    return (<div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header brand={brand}/>
 
-      <div className="magazine-page-padding">
+      <main style={{ paddingTop: 56, flex: 1 }}>
+      <section className="magazine-page-padding">
         <EditorialHeader />
 
         {magazines.length === 0 ? (<p style={{ color: '#000', fontSize: 14 }}>
@@ -144,7 +145,8 @@ export default async function MagazinePage({ searchParams }: Props) {
             }}/>
             </div>
           </>)}
-      </div>
+      </section>
+      </main>
       <HomeFooter />
     </div>);
 }
