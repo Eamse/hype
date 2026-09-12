@@ -161,6 +161,41 @@ export default function AboutClient({
     if (!el) return;
     const targets = el.querySelectorAll<HTMLElement>('[data-reveal]');
     const timers: ReturnType<typeof setTimeout>[] = [];
+    const isMobile =
+      typeof window !== 'undefined' && window.innerWidth <= 767;
+
+    // 모바일: 인트로 섹션 전체가 로드 시점에 이미 화면 안에 있어서
+    // 컨테이너 기준 트리거는 즉시 실행돼버림 — 대신 각 요소가 실제로
+    // 화면에 들어올 때 개별적으로 트리거되게 함
+    if (isMobile) {
+      const perTargetTimers = new Map<Element, ReturnType<typeof setTimeout>>();
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const target = entry.target as HTMLElement;
+            const existing = perTargetTimers.get(target);
+            if (existing) clearTimeout(existing);
+            if (entry.isIntersecting) {
+              const delay = Number(target.dataset.revealDelay ?? 0);
+              const timer = setTimeout(
+                () => target.classList.add('visible'),
+                delay,
+              );
+              perTargetTimers.set(target, timer);
+            } else {
+              target.classList.remove('visible');
+            }
+          });
+        },
+        { threshold: 0.05, rootMargin: '0px 0px 0px 0px' },
+      );
+      targets.forEach((target) => observer.observe(target));
+      return () => {
+        observer.disconnect();
+        perTargetTimers.forEach((timer) => clearTimeout(timer));
+      };
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         timers.forEach(clearTimeout);
@@ -190,6 +225,37 @@ export default function AboutClient({
     const targets = section.querySelectorAll<HTMLElement>(
       '[data-philosophy-reveal]',
     );
+    const isMobile =
+      typeof window !== 'undefined' && window.innerWidth <= 767;
+
+    if (isMobile) {
+      const perTargetTimers = new Map<Element, number>();
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const target = entry.target as HTMLElement;
+            const existing = perTargetTimers.get(target);
+            if (existing) clearTimeout(existing);
+            if (entry.isIntersecting) {
+              const delay = Number(target.dataset.philosophyReveal ?? 0);
+              perTargetTimers.set(
+                target,
+                window.setTimeout(() => target.classList.add('visible'), delay),
+              );
+            } else {
+              target.classList.remove('visible');
+            }
+          });
+        },
+        { threshold: 0.05, rootMargin: '0px 0px 0px 0px' },
+      );
+      targets.forEach((target) => observer.observe(target));
+      return () => {
+        observer.disconnect();
+        perTargetTimers.forEach((timer) => clearTimeout(timer));
+      };
+    }
+
     const timers: number[] = [];
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -220,6 +286,37 @@ export default function AboutClient({
     const targets = section.querySelectorAll<HTMLElement>(
       '[data-history-reveal]',
     );
+    const isMobile =
+      typeof window !== 'undefined' && window.innerWidth <= 767;
+
+    if (isMobile) {
+      const perTargetTimers = new Map<Element, number>();
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const target = entry.target as HTMLElement;
+            const existing = perTargetTimers.get(target);
+            if (existing) clearTimeout(existing);
+            if (entry.isIntersecting) {
+              const delay = Number(target.dataset.historyReveal ?? 0);
+              perTargetTimers.set(
+                target,
+                window.setTimeout(() => target.classList.add('visible'), delay),
+              );
+            } else {
+              target.classList.remove('visible');
+            }
+          });
+        },
+        { threshold: 0.05, rootMargin: '0px 0px 0px 0px' },
+      );
+      targets.forEach((target) => observer.observe(target));
+      return () => {
+        observer.disconnect();
+        perTargetTimers.forEach((timer) => clearTimeout(timer));
+      };
+    }
+
     const timers: number[] = [];
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -227,7 +324,11 @@ export default function AboutClient({
         timers.length = 0;
         if (entry.isIntersecting) {
           targets.forEach((target) => {
-            const delay = Number(target.dataset.historyReveal ?? 0);
+            const rawDelay = Number(target.dataset.historyReveal ?? 0);
+            // THE GOAL 섹션은 모바일(개별 트리거) 기준으로 값을 맞춰놔서
+            // 데스크톱(섹션 전체 한번에 트리거)에서는 너무 빨라 보임 — 데스크톱만 늘려줌
+            const isGoalEl = target.closest('.the-goal') !== null;
+            const delay = isGoalEl ? rawDelay * 3 : rawDelay;
             timers.push(
               window.setTimeout(() => target.classList.add('visible'), delay),
             );
@@ -298,7 +399,7 @@ export default function AboutClient({
                     </h2>
                     <p
                       data-reveal
-                      data-reveal-delay="200"
+                      data-reveal-delay="100"
                       className="about-intro-body type-body about-fade"
                     >
                       <strong>Hype Wedding</strong> curates every detail of your
@@ -308,7 +409,7 @@ export default function AboutClient({
                     </p>
                     <p
                       data-reveal
-                      data-reveal-delay="400"
+                      data-reveal-delay="200"
                       className="about-intro-body type-body about-fade"
                     >
                       Based in{' '}
@@ -324,7 +425,7 @@ export default function AboutClient({
                     </p>
                     <p
                       data-reveal
-                      data-reveal-delay="700"
+                      data-reveal-delay="350"
                       className="about-intro-quote type-body-large about-fade-slow"
                     >
                       &quot;K-Wedding, to the World&apos;
@@ -332,7 +433,7 @@ export default function AboutClient({
                     </p>
                     <p
                       data-reveal
-                      data-reveal-delay="900"
+                      data-reveal-delay="450"
                       className="about-intro-body type-body about-fade"
                     >
                       In 2026, we launched <strong>Hype Snap</strong>, expanding
@@ -359,19 +460,19 @@ export default function AboutClient({
                   <div className="how-started-layout">
                     <div className="how-started-copy">
                       <p
-                        data-history-reveal="100"
+                        data-history-reveal="50"
                         className="about-section-eyebrow type-eyebrow history-rise"
                       >
                         HOW WE STARTED
                       </p>
                       <h2
-                        data-history-reveal="220"
+                        data-history-reveal="110"
                         className="about-section-title about-section-title-3 type-subheadline history-rise"
                       >
                         It started with a photo
                       </h2>
                       <p
-                        data-history-reveal="420"
+                        data-history-reveal="210"
                         className="how-started-description type-body history-rise"
                       >
                         <strong>Minju</strong> was living abroad when she flew
@@ -381,8 +482,8 @@ export default function AboutClient({
                         do I get this done?&quot;
                       </p>
                       <blockquote
-                        data-history-reveal="600"
-                        className="how-started-quote type-body-large history-quote-lift"
+                        data-history-reveal="300"
+                        className="how-started-quote type-body-large history-rise"
                       >
                         <p>
                           &quot;What if I could connect global couples to the
@@ -391,7 +492,7 @@ export default function AboutClient({
                         </p>
                       </blockquote>
                       <p
-                        data-history-reveal="750"
+                        data-history-reveal="375"
                         className="how-started-description type-body history-rise"
                       >
                         She brought that idea to <strong>Morgan</strong>, who
@@ -402,7 +503,7 @@ export default function AboutClient({
                         promised.
                       </p>
                       <p
-                        data-history-reveal="900"
+                        data-history-reveal="450"
                         className="how-started-description type-body history-rise"
                       >
                         Together they returned to Korea in 2025, flew to Jeju,
@@ -463,7 +564,7 @@ export default function AboutClient({
                   </div>
                   <div className="the-goal">
                     <p
-                      data-history-reveal="1050"
+                      data-history-reveal="150"
                       className="the-goal-label type-eyebrow history-rise"
                     >
                       THE GOAL
@@ -471,13 +572,13 @@ export default function AboutClient({
                     <div className="the-goal-row">
                       <div className="the-goal-item">
                         <p
-                          data-history-reveal="1200"
+                          data-history-reveal="190"
                           className="the-goal-word history-rise"
                         >
                           Top
                         </p>
                         <p
-                          data-history-reveal="1350"
+                          data-history-reveal="230"
                           className="the-goal-rest history-rise"
                         >
                           Korean Artists
@@ -485,13 +586,13 @@ export default function AboutClient({
                       </div>
                       <div className="the-goal-item">
                         <p
-                          data-history-reveal="1200"
+                          data-history-reveal="190"
                           className="the-goal-word history-rise"
                         >
                           Full
                         </p>
                         <p
-                          data-history-reveal="1350"
+                          data-history-reveal="230"
                           className="the-goal-rest history-rise"
                         >
                           Transparency
@@ -499,13 +600,13 @@ export default function AboutClient({
                       </div>
                       <div className="the-goal-item">
                         <p
-                          data-history-reveal="1200"
+                          data-history-reveal="190"
                           className="the-goal-word history-rise"
                         >
                           Zero
                         </p>
                         <p
-                          data-history-reveal="1350"
+                          data-history-reveal="230"
                           className="the-goal-rest history-rise"
                         >
                           Stress
@@ -521,7 +622,7 @@ export default function AboutClient({
                   <div className="philosophy-intro">
                     <div>
                       <p
-                        data-philosophy-reveal="80"
+                        data-philosophy-reveal="40"
                         className="about-section-eyebrow type-eyebrow philosophy-pop"
                       >
                         PHILOSOPHY
@@ -530,7 +631,7 @@ export default function AboutClient({
                   </div>
                   <div className="philosophy-title-row">
                     <h2
-                      data-philosophy-reveal="180"
+                      data-philosophy-reveal="90"
                       className="about-section-title about-section-title-4 type-subheadline philosophy-title-tight philosophy-pop"
                     >
                       What we believe in
@@ -539,7 +640,7 @@ export default function AboutClient({
 
                   <div className="philosophy-principles">
                     <article
-                      data-philosophy-reveal="420"
+                      data-philosophy-reveal="210"
                       className="philosophy-principle philosophy-principle-1 philosophy-pop"
                     >
                       <div
@@ -564,7 +665,7 @@ export default function AboutClient({
                       </div>
                     </article>
                     <article
-                      data-philosophy-reveal="560"
+                      data-philosophy-reveal="280"
                       className="philosophy-principle philosophy-principle-2 philosophy-pop"
                     >
                       <div
@@ -598,7 +699,7 @@ export default function AboutClient({
                       </div>
                     </article>
                     <article
-                      data-philosophy-reveal="700"
+                      data-philosophy-reveal="350"
                       className="philosophy-principle philosophy-principle-3 philosophy-pop"
                     >
                       <div
@@ -630,7 +731,7 @@ export default function AboutClient({
                       </div>
                     </article>
                     <article
-                      data-philosophy-reveal="840"
+                      data-philosophy-reveal="420"
                       className="philosophy-principle philosophy-principle-4 philosophy-pop"
                     >
                       <div

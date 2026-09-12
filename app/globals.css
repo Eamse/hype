@@ -494,10 +494,6 @@ body {
   }
 }
 
-.how-started-quote p {
-  margin: 0;
-}
-
 .the-goal {
   display: flex;
   flex-direction: column;
@@ -757,7 +753,7 @@ body {
     left: 50%;
     right: auto;
     width: 69%;
-    transform: translate(-50%, -50%);
+    transform: translate(-65%, -50%);
   }
 }
 
@@ -1860,6 +1856,10 @@ body {
     font-size: 23px;
   }
 
+  .how-started-quote {
+    padding-left: 0;
+  }
+
   .the-goal-row {
     gap: clamp(20px, 8vw, 40px);
   }
@@ -1869,22 +1869,6 @@ body {
   .the-goal-row {
     grid-template-columns: 1fr;
     gap: 72px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .history-rise,
-  .history-quote-lift {
-    opacity: 1;
-    clip-path: none;
-    transform: none;
-    transition: none;
-  }
-
-  .philosophy-pop {
-    opacity: 1;
-    transform: none;
-    transition: none;
   }
 }
 
