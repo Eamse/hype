@@ -817,6 +817,13 @@ body {
     width: 50%;
     transform: translate(-50%, -50%);
   }
+  .philosophy-principle h3,
+  .philosophy-principle-2 p,
+  .philosophy-principle-4 p,
+  .philosophy-principle-1 p,
+  .philosophy-principle-3 p {
+    text-align: center;
+  }
 }
 
 .philosophy-deco-coast-combined {
