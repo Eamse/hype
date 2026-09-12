@@ -27,6 +27,7 @@ jobs:
           script: |
             set -e
             cd /root/hypepig
+            git checkout -- package-lock.json
             git pull origin main
             bash deploy/maintenance-on.sh
             npm install
