@@ -33,10 +33,10 @@ export default function WhyHypeSection() {
         {ITEMS.map((item, idx) => {
             const rowDelay = Math.floor(idx / 2) * 200;
             return (<div key={item.title} className="offer-item">
-              <h3 data-offer-reveal data-offer-reveal-delay={rowDelay} className="offer-item-title type-section-header-offer offer-rise">
+              <h3 data-offer-reveal data-offer-reveal-delay={rowDelay} className="offer-item-title type-section-header offer-rise">
                 {item.title}
               </h3>
-              <p data-offer-reveal data-offer-reveal-delay={rowDelay + 150} className="offer-item-subtitle type-body-large offer-fade">
+              <p data-offer-reveal data-offer-reveal-delay={rowDelay + 150} className="offer-item-subtitle type-body offer-fade">
                 {item.subtitle}
               </p>
             </div>);

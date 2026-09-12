@@ -109,6 +109,20 @@ const JOURNEY_2026: JourneyItem[] = [
     ),
   },
 ];
+const STARTED_PHOTOS = [
+  {
+    src: '/about/minju.jpg',
+    alt: 'Minju, Co-founder',
+    name: 'Minju (Emily)',
+    captionPosition: 'bottom-right',
+  },
+  {
+    src: '/about/morgan-.jpg',
+    alt: 'Saeyoung (Morgan), Co-founder',
+    name: 'Saeyoung (Morgan)',
+    captionPosition: 'top-left',
+  },
+] as const;
 export default function AboutClient({
   brand,
 }: {
@@ -117,12 +131,31 @@ export default function AboutClient({
   const introRef = useRef<HTMLDivElement>(null);
   const startedRef = useRef<HTMLDivElement>(null);
   const philosophyRef = useRef<HTMLDivElement>(null);
-  const minjuPhotoRef = useRef<HTMLDivElement>(null);
-  const [minjuCaptionLeft, setMinjuCaptionLeft] = useState<number | null>(null);
-  const morganPhotoRef = useRef<HTMLDivElement>(null);
-  const [morganCaptionLeft, setMorganCaptionLeft] = useState<number | null>(
-    null,
-  );
+  const startedPhotosRef = useRef<HTMLDivElement>(null);
+  const [activeStartedPhoto, setActiveStartedPhoto] = useState(0);
+  useEffect(() => {
+    const wrap = startedPhotosRef.current;
+    if (!wrap) return;
+    let intervalId: number | undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          intervalId = window.setInterval(() => {
+            setActiveStartedPhoto((prev) => (prev + 1) % STARTED_PHOTOS.length);
+          }, 2600);
+        } else if (intervalId !== undefined) {
+          clearInterval(intervalId);
+          intervalId = undefined;
+        }
+      },
+      { threshold: 0.15 },
+    );
+    observer.observe(wrap);
+    return () => {
+      observer.disconnect();
+      if (intervalId !== undefined) clearInterval(intervalId);
+    };
+  }, []);
   useEffect(() => {
     const el = introRef.current;
     if (!el) return;
@@ -211,36 +244,6 @@ export default function AboutClient({
       timers.forEach(clearTimeout);
     };
   }, []);
-  useEffect(() => {
-    function recompute() {
-      const container = minjuPhotoRef.current;
-      const img = container?.querySelector('img');
-      if (!container || !img || !img.naturalWidth || !img.naturalHeight) return;
-      const cw = container.clientWidth;
-      const ch = container.clientHeight;
-      const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
-      const renderedWidth = img.naturalWidth * scale;
-      setMinjuCaptionLeft(cw - renderedWidth + 16);
-    }
-    recompute();
-    window.addEventListener('resize', recompute);
-    return () => window.removeEventListener('resize', recompute);
-  }, []);
-  useEffect(() => {
-    function recompute() {
-      const container = morganPhotoRef.current;
-      const img = container?.querySelector('img');
-      if (!container || !img || !img.naturalWidth || !img.naturalHeight) return;
-      const cw = container.clientWidth;
-      const ch = container.clientHeight;
-      const scale = Math.min(cw / img.naturalWidth, ch / img.naturalHeight);
-      const renderedWidth = img.naturalWidth * scale;
-      setMorganCaptionLeft(cw - renderedWidth + 16);
-    }
-    recompute();
-    window.addEventListener('resize', recompute);
-    return () => window.removeEventListener('resize', recompute);
-  }, []);
   return (
     <div style={{ minHeight: '100vh' }}>
       <SubTabBar tabs={SECTIONS} />
@@ -296,7 +299,7 @@ export default function AboutClient({
                     <p
                       data-reveal
                       data-reveal-delay="200"
-                      className="about-intro-body type-body-large about-fade"
+                      className="about-intro-body type-body about-fade"
                     >
                       <strong>Hype Wedding</strong> curates every detail of your
                       Korean pre-wedding — from Korea&apos;s leading
@@ -306,7 +309,7 @@ export default function AboutClient({
                     <p
                       data-reveal
                       data-reveal-delay="400"
-                      className="about-intro-body type-body-large about-fade"
+                      className="about-intro-body type-body about-fade"
                     >
                       Based in{' '}
                       <strong style={{ color: 'rgb(45, 90, 69)' }}>
@@ -322,7 +325,7 @@ export default function AboutClient({
                     <p
                       data-reveal
                       data-reveal-delay="700"
-                      className="about-intro-quote type-body-large-quote about-fade-slow"
+                      className="about-intro-quote type-body-large about-fade-slow"
                     >
                       &quot;K-Wedding, to the World&apos;
                       <br />
@@ -330,7 +333,7 @@ export default function AboutClient({
                     <p
                       data-reveal
                       data-reveal-delay="900"
-                      className="about-intro-body type-body-large about-fade"
+                      className="about-intro-body type-body about-fade"
                     >
                       In 2026, we launched <strong>Hype Snap</strong>, expanding
                       beyond pre-wedding photography to offer casual snaps for
@@ -367,7 +370,7 @@ export default function AboutClient({
                       </h2>
                       <p
                         data-history-reveal="420"
-                        className="how-started-description type-body-large history-rise"
+                        className="how-started-description type-body history-rise"
                       >
                         <strong>Minju</strong> was living abroad when she flew
                         back to Korea to shoot her own pre-wedding photos. When
@@ -377,7 +380,7 @@ export default function AboutClient({
                       </p>
                       <blockquote
                         data-history-reveal="600"
-                        className="how-started-quote type-body-large-quote history-quote-lift"
+                        className="how-started-quote type-body-large history-quote-lift"
                       >
                         <p>
                           &quot;What if I could connect global couples to the
@@ -387,7 +390,7 @@ export default function AboutClient({
                       </blockquote>
                       <p
                         data-history-reveal="750"
-                        className="how-started-description type-body-large history-rise"
+                        className="how-started-description type-body history-rise"
                       >
                         She brought that idea to <strong>Morgan</strong>, who
                         had worked with Minju abroad. Both knew firsthand what
@@ -398,95 +401,113 @@ export default function AboutClient({
                       </p>
                       <p
                         data-history-reveal="900"
-                        className="how-started-description type-body-large history-rise"
+                        className="how-started-description type-body history-rise"
                       >
                         Together they returned to Korea in 2025, flew to Jeju,
                         and met top-tier photographers face to face, building
                         real partnerships from the ground up.{' '}
                         <strong>And that&apos;s how Hype Wedding began.</strong>
                       </p>
+                    </div>
+                    <div className="how-started-photos" ref={startedPhotosRef}>
+                      {STARTED_PHOTOS.map((photo, idx) => (
+                        <div
+                          key={photo.src}
+                          className={
+                            idx === activeStartedPhoto
+                              ? 'how-started-photo-slide active'
+                              : 'how-started-photo-slide'
+                          }
+                        >
+                          <Image
+                            src={photo.src}
+                            alt={photo.alt}
+                            fill
+                            className="object-cover"
+                          />
+                          <div
+                            className={`how-started-photo-caption how-started-photo-caption-${photo.captionPosition} type-caption`}
+                          >
+                            <p className="font-bold">{photo.name}</p>
+                            <p>Co-founder</p>
+                          </div>
+                        </div>
+                      ))}
                       <div
-                        data-history-reveal="1050"
-                        className="how-started-goal history-rise"
+                        style={{
+                          position: 'absolute',
+                          left: '50%',
+                          bottom: '20px',
+                          transform: 'translateX(-50%)',
+                          zIndex: 3,
+                          display: 'flex',
+                          gap: '6px',
+                          width: '60%',
+                          maxWidth: '100px',
+                        }}
                       >
-                        <p className="type-body-large-quote">THE GOAL</p>
-                        <strong className="type-body-large-quote">
-                          Top Korean artists. Full transparency, Zero stress
-                        </strong>
+                        {STARTED_PHOTOS.map((photo, idx) => (
+                          <div
+                            key={photo.src}
+                            className={
+                              idx === activeStartedPhoto
+                                ? 'how-started-photo-dot active'
+                                : 'how-started-photo-dot'
+                            }
+                          />
+                        ))}
                       </div>
                     </div>
-                    <div className="how-started-photos">
-                      <div
-                        ref={minjuPhotoRef}
-                        className="how-started-photo how-started-photo-minju"
-                      >
-                        <Image
-                          src="/about/minju.jpg"
-                          alt="Minju, Co-founder"
-                          fill
-                          className="object-contain object-right-bottom"
-                          onLoad={(e) => {
-                            const img = e.currentTarget;
-                            const container = minjuPhotoRef.current;
-                            if (!container) return;
-                            const cw = container.clientWidth;
-                            const ch = container.clientHeight;
-                            const scale = Math.min(
-                              cw / img.naturalWidth,
-                              ch / img.naturalHeight,
-                            );
-                            setMinjuCaptionLeft(
-                              cw - img.naturalWidth * scale + 16,
-                            );
-                          }}
-                        />
-                        <div
-                          className="how-started-photo-caption type-caption"
-                          style={
-                            minjuCaptionLeft !== null
-                              ? { left: minjuCaptionLeft }
-                              : undefined
-                          }
+                  </div>
+                  <div className="the-goal">
+                    <p
+                      data-history-reveal="1050"
+                      className="the-goal-label type-eyebrow history-rise"
+                    >
+                      THE GOAL
+                    </p>
+                    <div className="the-goal-row">
+                      <div className="the-goal-item">
+                        <p
+                          data-history-reveal="1200"
+                          className="the-goal-word history-rise"
                         >
-                          <p className="font-bold">Minju (Emily)</p>
-                          <p>Co-founder</p>
-                        </div>
+                          Top
+                        </p>
+                        <p
+                          data-history-reveal="1350"
+                          className="the-goal-rest history-rise"
+                        >
+                          Korean Artists
+                        </p>
                       </div>
-                      <div
-                        ref={morganPhotoRef}
-                        className="how-started-photo how-started-photo-morgan"
-                      >
-                        <Image
-                          src="/about/morgan-.jpg"
-                          alt="Saeyoung (Morgan), Co-founder"
-                          fill
-                          className="object-contain object-right-bottom"
-                          onLoad={(e) => {
-                            const img = e.currentTarget;
-                            const container = morganPhotoRef.current;
-                            if (!container) return;
-                            const cw = container.clientWidth;
-                            const ch = container.clientHeight;
-                            const scale = Math.min(
-                              cw / img.naturalWidth,
-                              ch / img.naturalHeight,
-                            );
-                            setMorganCaptionLeft(
-                              cw - img.naturalWidth * scale + 16,
-                            );
-                          }}
-                        />
-                        <div
-                          className="how-started-photo-caption type-caption"
-                          style={
-                            morganCaptionLeft !== null
-                              ? { left: morganCaptionLeft }
-                              : undefined
-                          }
+                      <div className="the-goal-item">
+                        <p
+                          data-history-reveal="1200"
+                          className="the-goal-word history-rise"
                         >
-                          <p className="font-bold">Saeyoung (Morgan)</p>
-                          <p>Co-founder</p>
-                        </div>
+                          Full
+                        </p>
+                        <p
+                          data-history-reveal="1350"
+                          className="the-goal-rest history-rise"
+                        >
+                          Transparency
+                        </p>
+                      </div>
+                      <div className="the-goal-item">
+                        <p
+                          data-history-reveal="1200"
+                          className="the-goal-word history-rise"
+                        >
+                          Zero
+                        </p>
+                        <p
+                          data-history-reveal="1350"
+                          className="the-goal-rest history-rise"
+                        >
+                          Stress
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -531,12 +552,14 @@ export default function AboutClient({
                           className="philosophy-deco-korean-combined"
                         />
                       </div>
-                      <h3 className="type-section-header-philosophy">The Korean Edit</h3>
-                      <p className="type-body-large">
-                        Korean beauty trends meet high-fashion
-                        <br />
-                        editorial — never cookie-cutter.
-                      </p>
+                      <div className="philosophy-principle-text">
+                        <h3 className="type-section-header">The Korean Edit</h3>
+                        <p className="type-body">
+                          Korean beauty trends meet high-fashion
+                          <br />
+                          editorial — never cookie-cutter.
+                        </p>
+                      </div>
                     </article>
                     <article
                       data-philosophy-reveal="560"
@@ -561,12 +584,14 @@ export default function AboutClient({
                           className="philosophy-deco-plane"
                         />
                       </div>
-                      <h3 className="type-section-header-philosophy">Coast to Concrete</h3>
-                      <p className="type-body-large">
-                        From Jeju&apos;s wild landscapes to Seoul&apos;s urban
-                        <br />
-                        grit — one country, endless contrast.
-                      </p>
+                      <div className="philosophy-principle-text">
+                        <h3 className="type-section-header">Coast to Concrete</h3>
+                        <p className="type-body">
+                          From Jeju&apos;s wild landscapes to Seoul&apos;s urban
+                          <br />
+                          grit — one country, endless contrast.
+                        </p>
+                      </div>
                     </article>
                     <article
                       data-philosophy-reveal="700"
@@ -591,12 +616,14 @@ export default function AboutClient({
                           className="philosophy-deco-strip"
                         />
                       </div>
-                      <h3 className="type-section-header-philosophy">Authenticity</h3>
-                      <p className="type-body-large">
-                        We capture what&apos;s genuine —
-                        <br />
-                        your chemistry, unscripted.
-                      </p>
+                      <div className="philosophy-principle-text">
+                        <h3 className="type-section-header">Authenticity</h3>
+                        <p className="type-body">
+                          We capture what&apos;s genuine —
+                          <br />
+                          your chemistry, unscripted.
+                        </p>
+                      </div>
                     </article>
                     <article
                       data-philosophy-reveal="840"
@@ -614,12 +641,14 @@ export default function AboutClient({
                           className="philosophy-deco-effortless-combined"
                         />
                       </div>
-                      <h3 className="type-section-header-philosophy">Effortless, End to End</h3>
-                      <p className="type-body-large">
-                        From first inquiry to final gallery —
-                        <br />
-                        we handle everything so you don&apos;t have to.
-                      </p>
+                      <div className="philosophy-principle-text">
+                        <h3 className="type-section-header">Effortless, End to End</h3>
+                        <p className="type-body">
+                          From first inquiry to final gallery —
+                          <br />
+                          we handle everything so you don&apos;t have to.
+                        </p>
+                      </div>
                     </article>
                   </div>
                 </div>

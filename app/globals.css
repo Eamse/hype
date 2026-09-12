@@ -253,20 +253,32 @@ body {
 
   /* Sub-headline — Your story deserves... / It started with… / what we believe / our journey… */
   --type-subheadline: clamp(46px, 34.4px + 3.1vw, 84px);
-  --type-subheadline-intro: clamp(28px, 10cqw, 84px);
+  --type-subheadline-intro: clamp(28px, 10cqw, 70px);
+  /* Hero Display — Start your Inquiry / How to book your slot (값이 같아 위 --type-subheadline 그대로 씀), Editorial/Review/FAQ 타이틀도 동일 */
+
+  /* Body 19px — Editorial/Review 하단 문구 */
+  --type-body-19: 19px;
+
+  /* Giant Stat / Impact Word — ACHIEVEMENT 섹션 통계 숫자 */
+  --type-giant-stat: clamp(60px, 3vw, 96px);
 
   /* Section Header — tho goal 하단 슬로건 3개, 필로소피 서브헤드라인 4개, Photographers/Transparency/On-Day Support/All-Inclusive */
-  --type-section-header-philosophy: clamp(20px, 17.9px + 2.7vw, 68px);
-  --type-section-header-offer: clamp(20px, 9.9px + 2.7vw, 53px);
+  --type-section-header: clamp(20px, 17.9px + 2.7vw, 68px);
 
   /* Body Large — 어바웃어스 본문 중 K-wedding…. / how we started "What if I could connect..." / Photography·Styling·Support·Add-ons / Before the Shoot 등 / Shoot day timeline / 히스토리 월·내용(journey-date, journey-milestone) */
-  --type-body-large-quote: clamp(20px, 15.7px + 1.1vw, 34px);
-  --type-body-large: clamp(16px, 13.2px + 0.7vw, 21px);
-  --type-body-large-service-col: clamp(20px, 1.7vw, 26px);
-  --type-body-large-schedule: clamp(20px, 1.8vw, 26px);
+  --type-body-large: clamp(20px, 15.7px + 1.1vw, 34px);
+  /* Body Large — 부킹프로세스 7단계 타이틀 (값이 달라 별도 토큰) */
+  --type-body-large-step: clamp(14px, 12.8px + 0.3vw, 18px);
+
+  /* Body — ABOUT US 하단내용 / how we started 본문 / 필로소피 하단내용 / History 본문(월·내용) / Photographers 등 하단 본문 */
+  --type-body: clamp(16px, 13.2px + 0.7vw, 24px);
+  /* Body — Inquiry 설명 (값이 달라 별도 토큰) */
+  --type-body-inquiry: clamp(16px, 13.2px + 0.7vw, 25px);
 
   /* Caption — how we started 프로필 이미지 Co-founder 캡션 (18px) */
   --type-caption: clamp(14px, 12.8px + 0.3vw, 18px);
+  /* Caption — 부킹프로세스 7단계 설명 / Secure Date 배지 / 단계번호 (값이 달라 별도 토큰) */
+  --type-caption-step: clamp(12px, 0.95vw, 14px);
 }
 
 /* 위 변수를 실제 className으로도 붙일 수 있게 만든 유틸리티 클래스 */
@@ -279,26 +291,32 @@ body {
 .type-subheadline-intro {
   font-size: var(--type-subheadline-intro);
 }
-.type-section-header-philosophy {
-  font-size: var(--type-section-header-philosophy);
+.type-giant-stat {
+  font-size: var(--type-giant-stat);
 }
-.type-section-header-offer {
-  font-size: var(--type-section-header-offer);
-}
-.type-body-large-quote {
-  font-size: var(--type-body-large-quote);
+.type-section-header {
+  font-size: var(--type-section-header);
 }
 .type-body-large {
   font-size: var(--type-body-large);
 }
-.type-body-large-service-col {
-  font-size: var(--type-body-large-service-col);
+.type-body-large-step {
+  font-size: var(--type-body-large-step);
 }
-.type-body-large-schedule {
-  font-size: var(--type-body-large-schedule);
+.type-body {
+  font-size: var(--type-body);
+}
+.type-body-inquiry {
+  font-size: var(--type-body-inquiry);
+}
+.type-body-19 {
+  font-size: var(--type-body-19);
 }
 .type-caption {
   font-size: var(--type-caption);
+}
+.type-caption-step {
+  font-size: var(--type-caption-step);
 }
 
 .about-intro-copy {
@@ -318,6 +336,7 @@ body {
   margin: 0 0 clamp(15px, 3.1vw, 21px);
   font-weight: 400;
   line-height: 1.1;
+  font-style: italic;
 }
 
 .about-section-title {
@@ -331,7 +350,8 @@ body {
 }
 
 .about-section-title-1,
-.about-section-title-3 {
+.about-section-title-3,
+.about-section-title-4 {
   margin-bottom: clamp(34px, 3vw, 48px);
 }
 
@@ -385,39 +405,56 @@ body {
 }
 
 .how-started-photos {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  height: 100%;
-  gap: clamp(12px, 1.5vw, 20px);
-}
-
-.how-started-photo {
   position: relative;
-  width: 100%;
-  flex: 1;
+  width: 90%;
+  margin-left: auto;
+  aspect-ratio: 1600 / 2400;
   overflow: hidden;
 }
 
-.how-started-photo.how-started-photo-minju {
-  min-height: 600px;
+.how-started-photo-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-.how-started-photo.how-started-photo-morgan {
-  min-height: 508px;
+.how-started-photo-slide.active {
+  opacity: 1;
 }
 
 .how-started-photo-caption {
   position: absolute;
-  left: clamp(10px, 1.2vw, 16px);
-  bottom: clamp(10px, 1.2vw, 16px);
   color: #000;
   line-height: 1.2;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
 }
 
+.how-started-photo-caption-bottom-right {
+  right: clamp(10px, 1.2vw, 16px);
+  bottom: clamp(10px, 1.2vw, 16px);
+  text-align: right;
+}
+
+.how-started-photo-caption-top-left {
+  left: clamp(10px, 1.2vw, 16px);
+  top: clamp(10px, 1.2vw, 16px);
+}
+
 .how-started-photo-caption p {
   margin: 0;
+}
+
+.how-started-photo-dot {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.4);
+  transition: background 0.3s ease;
+}
+
+.how-started-photo-dot.active {
+  background: #fff;
 }
 
 .history-rise {
@@ -469,29 +506,56 @@ body {
   background: #000;
 }
 
-.how-started-goal {
-  margin-top: 0;
-}
-
-.how-started-quote p,
-.how-started-goal p {
+.how-started-quote p {
   margin: 0;
 }
 
-.how-started-goal p {
-  margin-bottom: 10px;
-  color: #666;
-  font-weight: 700;
-  font-style: italic;
-  line-height: 1;
+.the-goal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(48px, 6vw, 96px) clamp(24px, 5vw, 80px);
 }
 
-.how-started-goal strong {
-  display: block;
-  max-width: 720px;
+.the-goal-label {
+  margin: 0 0 clamp(15px, 3.1vw, 21px);
+  font-weight: 400;
+  line-height: 1.1;
   font-style: italic;
-  line-height: 1.27;
+  color: #666;
+}
+
+.the-goal-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(48px, 11vw, 200px);
+  width: min(100%, 1600px);
+  margin: 0 auto;
+}
+
+.the-goal-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.the-goal-word {
+  margin: 0;
+  font-weight: 800;
+  line-height: 1.15;
   letter-spacing: -0.04em;
+  color: var(--deep-green);
+  font-size: var(--type-section-header);
+}
+
+.the-goal-rest {
+  white-space: nowrap;
+  margin: 0;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  font-size: var(--type-section-header);
 }
 
 .philosophy-content {
@@ -566,6 +630,10 @@ body {
   margin-top: clamp(100px, 14vw, 150px);
   text-align: right;
   margin-left: auto;
+}
+
+.philosophy-principle-text {
+  max-width: 100%;
 }
 
 .philosophy-principle-4 p {
@@ -677,7 +745,6 @@ body {
 .journey-year-title {
   margin: 0 0 clamp(20px, 1.2vw, 23px);
 
-  font-size: clamp(18px, 1.4vw, 23px);
   font-weight: 800;
   font-style: italic;
   letter-spacing: -0.06em;
@@ -699,7 +766,7 @@ body {
 
 .journey-timeline-item {
   position: relative;
-  padding-bottom: clamp(28px, 4.6vw, 50px);
+  padding-bottom: clamp(17px, 4.6vw, 30px);
 }
 
 .journey-timeline-item:last-child {
@@ -710,7 +777,7 @@ body {
   min-height: 44px;
   display: flex;
   align-items: center;
-  gap: 26px;
+  gap: 15px;
 }
 
 .journey-timeline-item:not(:last-child)::before {
@@ -736,7 +803,7 @@ body {
 
 .journey-date {
   flex: 0 0 auto;
-  min-width: 100px;
+  min-width: 79px;
   margin: 0;
   font-weight: 700;
 }
@@ -1291,6 +1358,10 @@ body {
   color: #555;
 }
 
+.timeline-mobile {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .timeline-row,
   .timeline-boxes,
@@ -1306,6 +1377,135 @@ body {
 }
 
 @media (max-width: 767px) {
+  .timeline-row,
+  .timeline-line-row,
+  .timeline-boxes {
+    display: none;
+  }
+
+  .timeline-wrap {
+    overflow-x: visible;
+  }
+
+  .timeline-mobile {
+    display: block;
+    padding: 0 4px;
+  }
+
+  .timeline-mobile-header {
+    display: grid;
+    grid-template-columns: min-content 1fr min-content;
+    column-gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .timeline-mobile-header-label {
+    grid-column: 1;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.3;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .timeline-mobile-header-label--winter {
+    grid-column: 3;
+  }
+
+  .timeline-mobile-header-sub {
+    display: block;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 400;
+    color: #666;
+    text-align: center;
+  }
+
+  .timeline-mobile-row {
+    display: grid;
+    grid-template-columns: 74px 1fr 74px;
+    align-items: stretch;
+    margin-bottom: 10px;
+    gap: 10px;
+  }
+
+  .timeline-mobile-dot-col {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .timeline-mobile-dot-col--winter {
+    justify-content: flex-start;
+  }
+
+  .timeline-mobile-time {
+    padding-top: 3px;
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .timeline-mobile-dot-wrap {
+    position: relative;
+    width: 9px;
+    height: 100%;
+  }
+
+  .timeline-mobile-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #000;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .timeline-mobile-list {
+    position: relative;
+  }
+
+  .timeline-mobile-list-line {
+    position: absolute;
+    top: 65px;
+    bottom: 65px;
+    width: 2px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .timeline-mobile-list-line--left {
+    left: 69.5px;
+  }
+
+  .timeline-mobile-list-line--right {
+    right: 69.5px;
+  }
+
+  .timeline-mobile-box {
+    min-height: 130px;
+    margin: 0 4px;
+  }
+
+  .timeline-mobile-box .timeline-box-title {
+    font-size: 15px;
+  }
+
+  .timeline-mobile-box .timeline-box-desc,
+  .timeline-mobile-box .timeline-box-desc-list {
+    font-size: 12px;
+  }
+
+  .timeline-footnotes-block {
+    margin-left: 0;
+  }
+
   .about-intro-layout {
     grid-template-columns: 1fr;
     min-height: 0;
@@ -1319,6 +1519,8 @@ body {
   }
 
   .about-intro-copy {
+    align-items: center;
+    text-align: center;
     padding: 48px 24px 0;
   }
 
@@ -1340,26 +1542,17 @@ body {
   }
 
   .how-started-copy {
-    order: 2;
+    order: 1;
+    text-align: center;
     padding: 48px 24px 56px;
   }
 
   .how-started-photos {
-    order: 1;
-    padding: 24px;
-  }
-
-  .how-started-photo {
+    order: 2;
     width: 100%;
-    aspect-ratio: 4 / 3.5;
-  }
-
-  .how-started-photo.how-started-photo-minju {
+    margin-left: 0;
     min-height: 0;
-  }
-
-  .how-started-photo.how-started-photo-morgan {
-    min-height: 0;
+    aspect-ratio: 1600 / 2400;
   }
 
   .how-started-description {
@@ -1367,13 +1560,19 @@ body {
   }
 
   .how-started-quote,
-  .how-started-goal strong {
+  .the-goal-word,
+  .the-goal-rest {
     font-size: 23px;
+  }
+
+  .the-goal-row {
+    gap: clamp(20px, 8vw, 40px);
   }
 }
 
 @media (max-width: 1055px) {
   .philosophy-content {
+    text-align: center;
     padding: 48px 24px 96px;
   }
 
@@ -1383,6 +1582,7 @@ body {
 
   .philosophy-title-row {
     display: block;
+    text-align: center;
     margin-top: 0;
   }
 
@@ -1401,6 +1601,31 @@ body {
   .philosophy-principle-3,
   .philosophy-principle-4 {
     margin-top: 0;
+  }
+
+  .philosophy-principle-1,
+  .philosophy-principle-3 {
+    margin-left: 0;
+  }
+
+  .philosophy-principle-2,
+  .philosophy-principle-4 {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .philosophy-principle-2 p {
+    margin-left: 0;
+  }
+
+  .philosophy-principle-text {
+    max-width: 420px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .philosophy-principle p {
+    white-space: normal;
   }
 
   .philosophy-deco-korean-combined {
@@ -1784,7 +2009,6 @@ body {
 
 .inquiry-eyebrow {
   margin: 0 0 -10px;
-  font-size: 12px;
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -1793,7 +2017,6 @@ body {
 
 .inquiry-heading {
   margin: 0 0 clamp(13px, 3vw, 37px);
-  font-size: clamp(46px, 34.4px + 3.1vw, 84px);
   font-weight: 800;
   letter-spacing: -0.02em;
   text-align: center;
@@ -1901,7 +2124,6 @@ body {
   border-radius: 50%;
   background: #000;
   color: #fff;
-  font-size: 12px;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -1910,14 +2132,12 @@ body {
 
 .inquiry-step-title {
   margin: 0 0 6px;
-  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 800;
 }
 
 .inquiry-step-desc {
   margin: 0;
   max-width: 220px;
-  font-size: clamp(12px, 0.95vw, 14px);
   line-height: 1.5;
   color: #555;
 }
@@ -1931,7 +2151,6 @@ body {
   border-radius: 999px;
   background: var(--deep-green);
   color: #fff;
-  font-size: 12px;
   font-weight: 700;
   white-space: nowrap;
   z-index: 1;
@@ -1955,7 +2174,6 @@ body {
 
 .inquiry-cta-body {
   margin: 0 0 clamp(13px, 3vw, 37px);
-  font-size: clamp(16px, 13.2px + 0.7vw, 25px);
   line-height: 1.7;
   color: #555;
   text-align: center;

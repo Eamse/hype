@@ -116,6 +116,48 @@ export default function ShootDayTimelineSection() {
             </p>))}
         </div>
 
+        <div className="timeline-mobile">
+          <div className="timeline-mobile-header">
+            <p data-offer-reveal data-offer-reveal-delay={0} className="timeline-mobile-header-label offer-fade">
+              Spring–Summer
+              <br />
+              <span className="timeline-mobile-header-sub">(Mar–Aug)</span>
+            </p>
+            <p data-offer-reveal data-offer-reveal-delay={0} className="timeline-mobile-header-label timeline-mobile-header-label--winter offer-fade">
+              Fall–Winter
+              <br />
+              <span className="timeline-mobile-header-sub">(Sep–Feb)</span>
+            </p>
+          </div>
+          <div className="timeline-mobile-list">
+            <span data-offer-reveal data-offer-reveal-delay={200} className="timeline-mobile-list-line timeline-mobile-list-line--left offer-fade" />
+            <span data-offer-reveal data-offer-reveal-delay={200} className="timeline-mobile-list-line timeline-mobile-list-line--right offer-fade" />
+            {BOXES.map((box, idx) => (<div key={box.title} className="timeline-mobile-row">
+                <div className="timeline-mobile-dot-col">
+                  <span data-offer-reveal data-offer-reveal-delay={BOX_BASE + idx * BOX_STAGGER} className="timeline-mobile-time offer-fade">{SUMMER_TIMES[idx]}</span>
+                  <span className="timeline-mobile-dot-wrap">
+                    <span data-offer-reveal data-offer-reveal-delay={BOX_BASE + idx * BOX_STAGGER} className="timeline-mobile-dot offer-fade" />
+                  </span>
+                </div>
+                <div data-offer-reveal data-offer-reveal-delay={BOX_BASE + idx * BOX_STAGGER} className={`timeline-box timeline-mobile-box${box.finish ? ' timeline-box--finish card-pop' : ' offer-rise'}`}>
+                  <p className="timeline-box-title">{box.title}</p>
+                  {box.desc &&
+                    (Array.isArray(box.desc) ? (<ul className="timeline-box-desc-list">
+                        {box.desc.map((d) => (<li key={d} className="timeline-box-desc">
+                            {d}
+                          </li>))}
+                      </ul>) : (<p className="timeline-box-desc">{box.desc}</p>))}
+                </div>
+                <div className="timeline-mobile-dot-col timeline-mobile-dot-col--winter">
+                  <span className="timeline-mobile-dot-wrap">
+                    <span data-offer-reveal data-offer-reveal-delay={BOX_BASE + idx * BOX_STAGGER} className="timeline-mobile-dot offer-fade" />
+                  </span>
+                  <span data-offer-reveal data-offer-reveal-delay={BOX_BASE + idx * BOX_STAGGER} className="timeline-mobile-time timeline-mobile-time--winter offer-fade">{WINTER_TIMES[idx]}</span>
+                </div>
+              </div>))}
+          </div>
+        </div>
+
         <div className="timeline-footnotes-block">
           <p className="timeline-footnotes-title"><span className="timeline-footnotes-badge">Note</span></p>
           <ul className="timeline-footnotes">

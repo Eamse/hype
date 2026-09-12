@@ -71,10 +71,10 @@ function TimelineRow({ item }: {
     return (<div className="journey-timeline-item">
       <div className="journey-timeline-row">
         <span className="journey-dot"/>
-        <p className="journey-date type-body-large">{item.date}</p>
+        <p className="journey-date type-body">{item.date}</p>
         <p className={[
             'journey-milestone',
-            'type-body-large',
+            'type-body',
             (item.bold || item.staticBold) && 'journey-milestone--static-bold',
         ]
             .filter(Boolean)
@@ -157,6 +157,7 @@ export default function JourneyPin({ journey2025, journey2026, }: {
             title2025Ref.current = el;
         }} titleClassName={[
             'journey-year-title',
+            'type-eyebrow',
             'journey-year-title--2025',
             is2025InView && 'journey-year-title--keycolor',
         ]
@@ -164,6 +165,7 @@ export default function JourneyPin({ journey2025, journey2026, }: {
             .join(' ')}/>
         <YearBlock year="2026" items={journey2026} titleRef={() => { }} titleClassName={[
             'journey-year-title',
+            'type-eyebrow',
             'journey-year-title--2026',
             is2026InView && 'journey-year-title--keycolor',
         ]

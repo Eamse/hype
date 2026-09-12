@@ -88,7 +88,7 @@ function StatColumn({
           </span>
         </div>
         <div className="flex items-baseline gap-2 self-start">
-          <span className="text-[clamp(60px,3vw,96px)] font-bold italic tracking-tight">
+          <span className="type-giant-stat font-bold italic tracking-tight">
             {value}
             {stat.suffix}
           </span>
