@@ -52,19 +52,19 @@ function StepColumn({ step, num }: {
     num: number;
 }) {
     return (<div className="inquiry-step-col">
-      {step.badge && (<span className="inquiry-step-badge type-caption-step inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 260}`}>
+      {step.badge && (<span className="inquiry-step-badge type-caption inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 260}`}>
           {step.badge}
         </span>)}
       <div className="inquiry-step-icon inquiry-rise" data-reveal data-reveal-delay={`${(num - 1) * 120}`}>
         <Image src={step.icon} alt="" width={36} height={36}/>
       </div>
-      <div className="inquiry-step-dot type-caption-step inquiry-rise" data-reveal data-reveal-delay={`${(num - 1) * 120 + 60}`}>
+      <div className="inquiry-step-dot type-caption inquiry-rise" data-reveal data-reveal-delay={`${(num - 1) * 120 + 60}`}>
         {num}
       </div>
-      <p className="inquiry-step-title type-body-large-step inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 200}`}>
+      <p className="inquiry-step-title type-body inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 200}`}>
         {step.title}
       </p>
-      <p className="inquiry-step-desc type-caption-step inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 260}`}>
+      <p className="inquiry-step-desc type-caption inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 260}`}>
         {step.description}
       </p>
     </div>);
@@ -120,7 +120,7 @@ export default function BookingProcessClient() {
       <p className="inquiry-eyebrow type-eyebrow inquiry-fade" data-reveal data-reveal-delay="0">
         LET&apos;S GET STARTED!
       </p>
-      <h2 className="inquiry-heading type-subheadline inquiry-fade" data-reveal data-reveal-delay="80">
+      <h2 className="inquiry-heading type-hero-display inquiry-fade" data-reveal data-reveal-delay="80">
         How to book your slot
       </h2>
 

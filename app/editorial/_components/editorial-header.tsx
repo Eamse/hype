@@ -51,7 +51,7 @@ export default function EditorialHeader() {
         }}>
           Hype Wedding
         </p>
-        <h1 className="inquiry-rise type-subheadline" data-reveal data-reveal-delay="120" style={{
+        <h1 className="inquiry-rise type-hero-display" data-reveal data-reveal-delay="120" style={{
             fontWeight: 800,
             letterSpacing: '-0.02em',
             color: '#000',
@@ -59,7 +59,7 @@ export default function EditorialHeader() {
         }}>
           Editorial
         </h1>
-        <p className="inquiry-fade type-body-19" data-reveal data-reveal-delay="220" style={{ color: '#555' }}>
+        <p className="inquiry-fade type-body" data-reveal data-reveal-delay="220" style={{ color: '#555' }}>
           Stories from behind the lens
         </p>
       </div>

@@ -254,31 +254,23 @@ body {
   /* Sub-headline — Your story deserves... / It started with… / what we believe / our journey… */
   --type-subheadline: clamp(46px, 34.4px + 3.1vw, 84px);
   --type-subheadline-intro: clamp(28px, 10cqw, 70px);
-  /* Hero Display — Start your Inquiry / How to book your slot (값이 같아 위 --type-subheadline 그대로 씀), Editorial/Review/FAQ 타이틀도 동일 */
-
-  /* Body 19px — Editorial/Review 하단 문구 */
-  --type-body-19: 19px;
+  /* Hero Display — Start your Inquiry / How to book your slot / Editorial·Review·FAQ 타이틀 (값이 같아 위 --type-subheadline과 동일하게 공유) */
+  --type-hero-display: clamp(46px, 34.4px + 3.1vw, 84px);
 
   /* Giant Stat / Impact Word — ACHIEVEMENT 섹션 통계 숫자 */
   --type-giant-stat: clamp(60px, 3vw, 96px);
 
   /* Section Header — tho goal 하단 슬로건 3개, 필로소피 서브헤드라인 4개, Photographers/Transparency/On-Day Support/All-Inclusive */
-  --type-section-header: clamp(20px, 17.9px + 2.7vw, 68px);
+  --type-section-header: clamp(20px, 17.9px + 2.7vw, 49px);
 
   /* Body Large — 어바웃어스 본문 중 K-wedding…. / how we started "What if I could connect..." / Photography·Styling·Support·Add-ons / Before the Shoot 등 / Shoot day timeline / 히스토리 월·내용(journey-date, journey-milestone) */
   --type-body-large: clamp(20px, 15.7px + 1.1vw, 34px);
-  /* Body Large — 부킹프로세스 7단계 타이틀 (값이 달라 별도 토큰) */
-  --type-body-large-step: clamp(14px, 12.8px + 0.3vw, 18px);
 
   /* Body — ABOUT US 하단내용 / how we started 본문 / 필로소피 하단내용 / History 본문(월·내용) / Photographers 등 하단 본문 */
-  --type-body: clamp(16px, 13.2px + 0.7vw, 24px);
-  /* Body — Inquiry 설명 (값이 달라 별도 토큰) */
-  --type-body-inquiry: clamp(16px, 13.2px + 0.7vw, 25px);
+  --type-body: clamp(20px, 13.2px + 0.7vw, 24px);
 
   /* Caption — how we started 프로필 이미지 Co-founder 캡션 (18px) */
   --type-caption: clamp(14px, 12.8px + 0.3vw, 18px);
-  /* Caption — 부킹프로세스 7단계 설명 / Secure Date 배지 / 단계번호 (값이 달라 별도 토큰) */
-  --type-caption-step: clamp(12px, 0.95vw, 14px);
 }
 
 /* 위 변수를 실제 className으로도 붙일 수 있게 만든 유틸리티 클래스 */
@@ -287,6 +279,9 @@ body {
 }
 .type-subheadline {
   font-size: var(--type-subheadline);
+}
+.type-hero-display {
+  font-size: var(--type-hero-display);
 }
 .type-subheadline-intro {
   font-size: var(--type-subheadline-intro);
@@ -300,25 +295,12 @@ body {
 .type-body-large {
   font-size: var(--type-body-large);
 }
-.type-body-large-step {
-  font-size: var(--type-body-large-step);
-}
 .type-body {
   font-size: var(--type-body);
-}
-.type-body-inquiry {
-  font-size: var(--type-body-inquiry);
-}
-.type-body-19 {
-  font-size: var(--type-body-19);
 }
 .type-caption {
   font-size: var(--type-caption);
 }
-.type-caption-step {
-  font-size: var(--type-caption-step);
-}
-
 .about-intro-copy {
   display: flex;
   width: 100%;
@@ -357,7 +339,7 @@ body {
 
 .about-intro-layout {
   display: grid;
-  grid-template-columns: minmax(260px, 45fr) minmax(0, 55fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: stretch;
   min-height: calc(100vh - 101px);
 }
@@ -389,7 +371,8 @@ body {
 
 .how-started-layout {
   display: grid;
-  grid-template-columns: minmax(0, 62.25fr) minmax(260px, 37.75fr);
+  grid-template-columns: minmax(0, 6fr) minmax(0, 4fr);
+  align-items: stretch;
   background: #fff;
 }
 
@@ -406,9 +389,8 @@ body {
 
 .how-started-photos {
   position: relative;
-  width: 90%;
-  margin-left: auto;
-  aspect-ratio: 1600 / 2400;
+  width: 100%;
+  height: calc(100vh - 106px);
   overflow: hidden;
 }
 
@@ -520,7 +502,7 @@ body {
 
 .the-goal-label {
   margin: 0 0 clamp(15px, 3.1vw, 21px);
-  font-weight: 400;
+  font-weight: bold;
   line-height: 1.1;
   font-style: italic;
   color: #666;
@@ -585,8 +567,30 @@ body {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: clamp(3px, 8vw, 15px);
-  row-gap: clamp(40px, 6vw, 100px);
-  padding-top: clamp(90px, 9vw, 150px);
+  row-gap: clamp(270px, 6vw, 100px);
+  padding-top: clamp(240px, 9vw, 150px);
+}
+
+@media (max-width: 700px) {
+  .philosophy-content {
+    text-align: center;
+  }
+
+  .philosophy-principles {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .philosophy-title-row {
+    align-items: center;
+    text-align: center;
+  }
+
+  .philosophy-title-tight {
+    margin-left: 0;
+    white-space: normal;
+  }
 }
 
 .philosophy-principle {
@@ -613,7 +617,7 @@ body {
 
 .philosophy-principle-1,
 .philosophy-principle-3 {
-  margin-left: clamp(20px, 20vw, 55px);
+  margin-left: 0;
 }
 
 .philosophy-principle-2 {
@@ -636,8 +640,36 @@ body {
   max-width: 100%;
 }
 
-.philosophy-principle-4 p {
+/* .philosophy-principle-4 p {
   margin-left: clamp(20px, 9vw, 124px);
+} */
+
+@media (max-width: 700px) {
+  .philosophy-principle-1,
+  .philosophy-principle-2,
+  .philosophy-principle-3,
+  .philosophy-principle-4 {
+    margin-top: 0;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .philosophy-principle p {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 767px) {
+  .philosophy-principle-4 p {
+    margin-left: 0;
+  }
+  .philosophy-principle.h3 {
+    text-align: right;
+
+    .philosophy-principle h3 {
+      white-space: nowrap;
+    }
+  }
 }
 
 .philosophy-pop {
@@ -677,51 +709,153 @@ body {
 }
 
 .philosophy-deco img {
+  opacity: 0.65;
   position: absolute;
   object-fit: contain;
   background: transparent;
 }
 
 .philosophy-deco-korean-combined {
-  top: clamp(-34px, -17vw, -31px);
-  right: clamp(-76px, -17%, -86px);
-  width: clamp(120px, 65%, 369px);
+  top: clamp(25px, 7vw, 25px);
+  left: clamp(0px, 23vw, 240px);
+  width: clamp(96px, 52%, 295.2px);
   z-index: -1;
+}
+
+@media (max-width: 700px) {
+  .philosophy-deco-korean-combined {
+    top: -95%;
+    left: 50%;
+    right: auto;
+    width: 69%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .philosophy-deco-authenticity-combined {
   top: clamp(0px, -3vw, -16px);
-  right: clamp(-85.2px, 4.1vw, 77.3px);
-  width: clamp(126px, 65%, 400px);
+  left: clamp(0px, 13vw, 240px);
+  width: clamp(320px, 52%, 320px);
+}
+
+@media (max-width: 767px) {
+  .philosophy-principle-2 p {
+    margin-left: 0;
+  }
+  .philosophy-deco-korean-combined {
+    left: clamp(190px, 0vw, 0px);
+  }
+
+  .philosophy-deco-authenticity-combined {
+    left: clamp(140px, 0vw, 0px);
+    width: clamp(220px, 52%, 220px);
+  }
+}
+
+@media (max-width: 700px) {
+  .philosophy-deco-authenticity-combined {
+    top: -85%;
+    left: 50%;
+    right: auto;
+    width: 80%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .philosophy-deco-strip {
-  top: clamp(-110.4px, -7.3vw, -66.2px);
-  left: clamp(-19px, -2.5vw, -22.7px);
-  width: clamp(172.4px, 19vw, 287.3px);
+  top: clamp(-98px, -20.5cqw, 0px);
+  left: 0;
+  width: clamp(190px, 23vw, 240px);
   z-index: -1;
 }
 
+@media (max-width: 767px) {
+  .philosophy-principle h3 {
+    white-space: nowrap;
+  }
+  .philosophy-deco-strip {
+    top: clamp(-67px, -22.5vw, 0px);
+    width: clamp(166px, 23vw, 166px);
+  }
+}
+
+@media (max-width: 700px) {
+  .philosophy-deco-strip {
+    top: -70%;
+    left: 50%;
+    right: auto;
+    width: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
 .philosophy-deco-coast-combined {
-  top: clamp(-190px, -17vw, -8px);
-  right: clamp(-86.2px, 0.3vw, 27.3px);
-  width: clamp(120px, 45%, 347px);
+  top: clamp(-190px, -8vw, -8px);
+  right: -10px;
+  width: clamp(96px, 36%, 277.6px);
+}
+
+@media (max-width: 700px) {
+  .philosophy-deco-coast-combined {
+    top: -110%;
+    left: 50%;
+    right: auto;
+    width: 30%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .philosophy-deco-effortless-combined {
-  top: clamp(-37.4px, -15.9vw, -71.7px);
-  right: clamp(240.4px, 31.5vw, 538.7px);
-  width: clamp(158.8px, 73%, 391.6px);
+  top: clamp(-142.4px, -15.9vw, -23.7px);
+  right: 0;
+  width: clamp(127px, 78.4%, 348.3px);
+}
+
+@media (max-width: 700px) {
+  .philosophy-deco-effortless-combined {
+    top: -94%;
+    left: 50%;
+    right: auto;
+    width: 49%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .philosophy-deco-plane {
-  top: clamp(-119.4px, -7.9vw, -71.7px);
-  right: clamp(46.4px, 26.5vw, 470.7px);
-  width: clamp(98px, 22vw, 262px);
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .philosophy-deco img {
+    opacity: 1;
+  }
+  .philosophy-deco-plane {
+    top: -100%;
+    left: 50%;
+    right: auto;
+    width: 25%;
+    transform: translate(-103%, -50%);
+  }
+}
+
+@media (max-width: 700px) {
+  .philosophy-deco-strip {
+    display: none;
+  }
+
+  .philosophy-deco-plane {
+    display: block;
+  }
 }
 
 .journey-header {
   padding: clamp(23px, 5vw, 55px) clamp(24px, 2vw, 32px) 0;
+}
+
+@media (max-width: 767px) {
+  .journey-header {
+    text-align: center;
+  }
 }
 
 .journey-subtext {
@@ -748,7 +882,7 @@ body {
   font-weight: 800;
   font-style: italic;
   letter-spacing: -0.06em;
-  line-height: 1;
+  line-height: 1.1;
   transition: color 0.5s ease;
 }
 
@@ -810,7 +944,8 @@ body {
 
 .journey-milestone {
   margin: 0;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: break-word;
   line-height: 1.4;
 }
 
@@ -837,7 +972,7 @@ body {
 
 .journey-pin-wrap {
   display: grid;
-  grid-template-columns: minmax(0, 55fr) minmax(0, 45fr);
+  grid-template-columns: minmax(0, 6fr) minmax(0, 4fr);
   align-items: start;
   margin-top: clamp(56px, 6vw, 96px);
   background: #fff;
@@ -851,7 +986,8 @@ body {
 .journey-year-layer {
   display: flex;
   flex-direction: column;
-  padding: 0 clamp(50px, 6vw, 104px) clamp(48px, 6vw, 99px);
+  padding: 0 clamp(24px, 3vw, 48px) clamp(48px, 6vw, 99px)
+    clamp(50px, 6vw, 104px);
 }
 
 .journey-year-title--keycolor {
@@ -906,7 +1042,6 @@ body {
 
   .journey-milestone {
     white-space: normal;
-    font-size: 15px;
   }
 
   .journey-timeline-row {
@@ -915,23 +1050,45 @@ body {
 
   .journey-date {
     min-width: 64px;
-    font-size: 15px;
   }
 
   .journey-timeline-row {
     align-items: flex-start;
   }
 
+  .journey-dot {
+    margin-top: 4px;
+  }
+
   .journey-timeline-item:not(:last-child)::before {
-    top: 11.5px;
-    bottom: -11.5px;
+    top: 8px;
+    bottom: -8px;
   }
 }
 
 .offer-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   max-width: 1600px;
+  width: 100%;
   margin: 0 auto;
   padding-inline: clamp(20px, 4vw, 64px);
+}
+
+.offer-items-grid,
+.service-grid,
+.timeline-wrap {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.schedule-cards {
+  margin-top: auto;
+}
+
+.schedule-cta {
+  margin-bottom: auto;
 }
 
 .offer-header {
@@ -1052,6 +1209,9 @@ body {
   .service-divider {
     display: none;
   }
+  .service-col {
+    text-align: center;
+  }
 }
 
 .service-col-title {
@@ -1059,7 +1219,8 @@ body {
 }
 
 .service-col-title-badge {
-  padding-bottom: 10px;
+  box-sizing: border-box;
+  width: 13ch;
   display: inline-block;
   padding: 0 6px;
   border: 1px solid var(--deep-green);
@@ -1069,6 +1230,7 @@ body {
   font-weight: 800;
   letter-spacing: -0.02em;
   text-transform: uppercase;
+  text-align: center;
 }
 
 .service-col-list {
@@ -1085,6 +1247,29 @@ body {
   list-style: disc;
 }
 
+@media (max-width: 1023px) {
+  .service-col-list.bulleted {
+    width: min(280px, 100%);
+    margin: 0 auto;
+    padding-left: 0;
+    list-style: none;
+    text-align: left;
+  }
+  .service-col-list.bulleted li {
+    padding-left: 20px;
+  }
+  .service-col-list.bulleted li::before {
+    content: '•';
+    margin-right: 6px;
+  }
+}
+
+@media (max-width: 639px) {
+  .service-col-list.bulleted li {
+    padding-left: 40px;
+  }
+}
+
 .service-col-note {
   font-size: 12px;
   font-style: italic;
@@ -1096,6 +1281,12 @@ body {
   color: var(--deep-green);
   font-style: normal;
   font-weight: 700;
+}
+
+@media (max-width: 1023px) {
+  .service-col-note--accent {
+    margin: 0;
+  }
 }
 
 .schedule-cards {
@@ -1126,12 +1317,6 @@ body {
   font-weight: 800;
 }
 
-@media (min-width: 640px) and (max-width: 1023px) {
-  .schedule-card:nth-child(odd) .schedule-card-title {
-    margin-right: calc(-1 * (2 * clamp(16px, 2vw, 32px) + 60px));
-  }
-}
-
 @media (min-width: 1024px) {
   .schedule-card:not(:last-child) .schedule-card-title {
     margin-right: calc(-1 * (2 * clamp(16px, 2vw, 32px) + 60px));
@@ -1146,8 +1331,28 @@ body {
   margin: 0;
   padding-left: 18px;
   list-style: disc;
-  font-size: 14px;
+  font-size: clamp(14px, 1.1vw, 16px);
   line-height: 1.6;
+}
+
+@media (max-width: 1023px) {
+  .schedule-card {
+    text-align: center;
+  }
+  .schedule-card-list {
+    width: min(280px, 100%);
+    margin: 0 auto;
+    padding-left: 0;
+    list-style: none;
+    text-align: left;
+  }
+  .schedule-card-list li {
+    padding-left: 8px;
+  }
+  .schedule-card-list li::before {
+    content: '•';
+    margin-right: 6px;
+  }
 }
 
 .schedule-cta {
@@ -1550,6 +1755,7 @@ body {
   .how-started-photos {
     order: 2;
     width: 100%;
+    height: auto;
     margin-left: 0;
     min-height: 0;
     aspect-ratio: 1600 / 2400;
@@ -1567,112 +1773,6 @@ body {
 
   .the-goal-row {
     gap: clamp(20px, 8vw, 40px);
-  }
-}
-
-@media (max-width: 1055px) {
-  .philosophy-content {
-    text-align: center;
-    padding: 48px 24px 96px;
-  }
-
-  .philosophy-intro {
-    display: block;
-  }
-
-  .philosophy-title-row {
-    display: block;
-    text-align: center;
-    margin-top: 0;
-  }
-
-  .philosophy-title-tight {
-    margin-left: -0.17em;
-    white-space: normal;
-  }
-
-  .philosophy-principles {
-    grid-template-columns: 1fr;
-    padding-top: 72px;
-    gap: 70px;
-  }
-
-  .philosophy-principle-2,
-  .philosophy-principle-3,
-  .philosophy-principle-4 {
-    margin-top: 0;
-  }
-
-  .philosophy-principle-1,
-  .philosophy-principle-3 {
-    margin-left: 0;
-  }
-
-  .philosophy-principle-2,
-  .philosophy-principle-4 {
-    margin-left: 0;
-    text-align: center;
-  }
-
-  .philosophy-principle-2 p {
-    margin-left: 0;
-  }
-
-  .philosophy-principle-text {
-    max-width: 420px;
-    margin: 0 auto;
-    text-align: center;
-  }
-
-  .philosophy-principle p {
-    white-space: normal;
-  }
-
-  .philosophy-deco-korean-combined {
-    top: clamp(-50px, -11vw, 21px);
-    left: clamp(216px, 6%, 0px);
-    width: clamp(120px, 34%, 369px);
-    z-index: 0;
-  }
-
-  .philosophy-deco-authenticity-combined {
-    top: clamp(-6px, -17cqw, -25px);
-    left: clamp(188px, 6%, 0px);
-    width: clamp(103px, 48%, 369px);
-    z-index: 0;
-  }
-
-  .philosophy-deco-coast-combined {
-    top: -11.45cqw;
-    aspect-ratio: 353.8/378;
-    right: clamp(-46.6px, -1.12%, -34.3px);
-    width: clamp(106.15px, 52.21%, 353.8px);
-  }
-
-  .philosophy-deco-strip {
-    top: clamp(-76.4px, -5.3vw, -58.2px);
-    left: clamp(-19px, -2.5vw, -22.7px);
-    width: clamp(147.4px, 25vw, 287.3px);
-  }
-
-  .philosophy-deco-plane {
-    margin: 0 50px 0 61px;
-    top: clamp(-47.4px, 10.1vw, -71.7px);
-    left: clamp(-92px, -15vw, 100px);
-    width: clamp(98px, 22vw, 262px);
-  }
-
-  .philosophy-deco-effortless-combined {
-    aspect-ratio: 287.3 / 775.7;
-    width: clamp(87.2px, 55.1%, 287.3px);
-    top: clamp(-286.4px, -52.4cqw, 0px);
-    height: auto;
-    right: clamp(37.3px, 66.37%, 235.9px);
-  }
-
-  .philosophy-principle-1,
-  .philosophy-principle-3 {
-    margin-left: 0;
   }
 }
 
@@ -2118,8 +2218,8 @@ body {
 .inquiry-step-dot {
   position: relative;
   z-index: 1;
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
   margin-bottom: 18px;
   border-radius: 50%;
   background: #000;
@@ -2144,7 +2244,7 @@ body {
 
 .inquiry-step-badge {
   position: absolute;
-  top: -30px;
+  top: -40px;
   left: 50%;
   transform: translateX(-50%);
   padding: 5px 14px;

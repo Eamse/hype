@@ -347,7 +347,9 @@ export default function AboutClient({
             ) : section.id === 'achievement' ? (
               <>
                 <div className="journey-header">
-                  <p className="about-section-eyebrow type-eyebrow">ACHIEVEMENT</p>
+                  <p className="about-section-eyebrow type-eyebrow">
+                    ACHIEVEMENT
+                  </p>
                 </div>
                 <StatsBar />
               </>
@@ -547,8 +549,8 @@ export default function AboutClient({
                         <Image
                           src="/about/philosophy/flowers-and-lip.webp"
                           alt=""
-                          width={1200}
-                          height={1002}
+                          width={590}
+                          height={493}
                           className="philosophy-deco-korean-combined"
                         />
                       </div>
@@ -572,20 +574,22 @@ export default function AboutClient({
                         <Image
                           src="/about/philosophy/map-with-pointers.webp"
                           alt=""
-                          width={1200}
-                          height={2055}
+                          width={554}
+                          height={949}
                           className="philosophy-deco-coast-combined"
                         />
                         <Image
                           src="/about/philosophy/4-philosophy-coast-to-concrete-1.webp"
                           alt=""
-                          width={800}
-                          height={800}
+                          width={400}
+                          height={400}
                           className="philosophy-deco-plane"
                         />
                       </div>
                       <div className="philosophy-principle-text">
-                        <h3 className="type-section-header">Coast to Concrete</h3>
+                        <h3 className="type-section-header">
+                          Coast to Concrete
+                        </h3>
                         <p className="type-body">
                           From Jeju&apos;s wild landscapes to Seoul&apos;s urban
                           <br />
@@ -604,15 +608,15 @@ export default function AboutClient({
                         <Image
                           src="/about/philosophy/camera.webp"
                           alt=""
-                          width={1200}
-                          height={1133}
+                          width={640}
+                          height={604}
                           className="philosophy-deco-authenticity-combined"
                         />
                         <Image
                           src="/about/philosophy/4-philosophy-authenticity-1.webp"
                           alt=""
-                          width={800}
-                          height={800}
+                          width={574}
+                          height={574}
                           className="philosophy-deco-strip"
                         />
                       </div>
@@ -634,15 +638,17 @@ export default function AboutClient({
                         aria-hidden="true"
                       >
                         <Image
-                          src="/about/philosophy/gramophone-with-heart-and-musicnote.webp"
+                          src="/about/philosophy/gramophone-and-musicnote.webp"
                           alt=""
-                          width={1200}
-                          height={907}
+                          width={900}
+                          height={927}
                           className="philosophy-deco-effortless-combined"
                         />
                       </div>
                       <div className="philosophy-principle-text">
-                        <h3 className="type-section-header">Effortless, End to End</h3>
+                        <h3 className="type-section-header">
+                          Effortless, End to End
+                        </h3>
                         <p className="type-body">
                           From first inquiry to final gallery —
                           <br />
