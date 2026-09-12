@@ -5,7 +5,7 @@ const WHATSAPP_URL = 'http://Wa.me/+821062695990';
 const WECHAT_URL = 'https://u.wechat.com/kAo3Jp9jOyXemuB2BBeo6Vc?s=2';
 const LINE_URL = 'https://line.me/ti/p/MxawLJXY5t';
 export default function ReviewInquirySidebar() {
-    return (<div style={{
+    return (<div className="review-inquiry-sidebar" style={{
             position: 'sticky',
             top: 100,
             background: '#2d5a45',

@@ -18,7 +18,7 @@ export default async function PartnershipPage({ searchParams, }: {
     return (<div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header brand={activeBrand}/>
       <SubTabBar tabs={inquirySubTabs(activeBrand)}/>
-      <main className="partnership-page" style={{ flex: 1 }}>
+      <main className="partnership-page" style={{ paddingTop: 56, flex: 1 }}>
         <PartnershipClient />
       </main>
       <HomeFooter />

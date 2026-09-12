@@ -9,6 +9,7 @@ type Director = {
     name: string;
 };
 const selectStyle: React.CSSProperties = {
+    width: 180,
     padding: '8px 12px',
     borderRadius: 6,
     border: '1px solid #000',
@@ -63,6 +64,7 @@ export default function ReviewFilters({ productType, location, directorId, }: {
       <div style={{
             display: 'flex',
             flexWrap: 'wrap',
+            justifyContent: 'center',
             gap: 12,
         }}>
         <select style={{ ...selectStyle, flex: isMobile ? '1 1 auto' : undefined }} value={productType ?? ''} onChange={(e) => updateParam('productType', e.target.value)}>

@@ -228,7 +228,7 @@ export default function PartnershipClient() {
         </div>
       </section>
 
-      
+
       <section ref={storyRef} className="partnership-section partnership-section--last">
         <p className="partnership-eyebrow partnership-fade" data-reveal data-reveal-delay="0">
           GET THE FULL STORY
