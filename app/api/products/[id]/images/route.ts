@@ -17,17 +17,17 @@ export async function POST(request: NextRequest, props: {
 }) {
     const adminId = await getAdminId(request);
     if (!adminId)
-        return NextResponse.json({ error: 'Unautorized' }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const { id } = await props.params;
     const productId = parseId(id);
     if (productId === null)
-        return NextResponse.json({ error: 'Invaild ID' }, { status: 400 });
+        return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     let formData: FormData;
     try {
         formData = await request.formData();
     }
     catch {
-        return NextResponse.json({ error: 'Invaild form data' }, { status: 400 });
+        return NextResponse.json({ error: 'Invalid form data' }, { status: 400 });
     }
     const file = formData.get('image');
     if (!(file instanceof File))
@@ -72,15 +72,15 @@ export async function DELETE(request: NextRequest, props: {
 }) {
     const adminId = await getAdminId(request);
     if (!adminId)
-        return NextResponse.json({ error: 'Unautorized' }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const { id } = await props.params;
     const productId = parseId(id);
     if (productId === null)
-        return NextResponse.json({ error: 'Invaild ID' }, { status: 400 });
+        return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     const imageIdParam = request.nextUrl.searchParams.get('imageId');
     const imageId = imageIdParam !== null ? Number(imageIdParam) : NaN;
     if (!Number.isInteger(imageId) || imageId <= 0) {
-        return NextResponse.json({ error: 'Invaild imageId' }, { status: 400 });
+        return NextResponse.json({ error: 'Invalid imageId' }, { status: 400 });
     }
     const image = await prisma.productImage.findUnique({
         where: { id: imageId },
@@ -99,17 +99,17 @@ export async function PATCH(request: NextRequest, props: {
 }) {
     const adminId = await getAdminId(request);
     if (!adminId)
-        return NextResponse.json({ error: 'Unautorized' }, { status: 401 });
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const { id } = await props.params;
     const productId = parseId(id);
     const body = await request.json();
     const order = body.order;
     if (productId === null)
-        return NextResponse.json({ error: 'Invaild ID' }, { status: 400 });
+        return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
     const imageIdParam = request.nextUrl.searchParams.get('imageId');
     const imageId = imageIdParam !== null ? Number(imageIdParam) : NaN;
     if (!Number.isInteger(imageId) || imageId <= 0) {
-        return NextResponse.json({ error: 'Invaild imageId' }, { status: 400 });
+        return NextResponse.json({ error: 'Invalid imageId' }, { status: 400 });
     }
     const image = await prisma.productImage.findUnique({
         where: { id: imageId },

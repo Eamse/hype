@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
             (error as {
                 code: string;
             }).code === 'P2002') {
-            return NextResponse.json({ success: true, message: 'Account created successfully' }, { status: 201 });
+            return NextResponse.json({ success: true, message: 'If this email is already registered, please sign in instead.' }, { status: 200 });
         }
         console.error('Signup error');
         return NextResponse.json({ success: false, message: 'Server error' }, { status: 500 });
