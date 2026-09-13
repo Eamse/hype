@@ -58,12 +58,14 @@ function StepColumn({ step, num }: {
       <div className="inquiry-step-icon inquiry-rise" data-reveal data-reveal-delay={`${(num - 1) * 120}`}>
         <Image src={step.icon} alt="" width={36} height={36}/>
       </div>
-      <div className="inquiry-step-dot type-caption inquiry-rise" data-reveal data-reveal-delay={`${(num - 1) * 120 + 60}`}>
-        {num}
+      <div className="inquiry-step-top-row">
+        <div className="inquiry-step-dot type-caption inquiry-rise" data-reveal data-reveal-delay={`${(num - 1) * 120 + 60}`}>
+          {num}
+        </div>
+        <p className="inquiry-step-title type-body inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 200}`}>
+          {step.title}
+        </p>
       </div>
-      <p className="inquiry-step-title type-body inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 200}`}>
-        {step.title}
-      </p>
       <p className="inquiry-step-desc type-caption inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 260}`}>
         {step.description}
       </p>
