@@ -2293,6 +2293,12 @@ body {
   justify-content: center;
 }
 
+.inquiry-step-top-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .inquiry-step-dot {
   position: relative;
   z-index: 1;
@@ -2465,7 +2471,9 @@ body {
     font-weight: 700;
     color: #000;
   } */
-
+  .inquiry-step-col {
+    padding: 0px 0 0px 42px;
+  }
   .inquiry-step-line {
     display: none;
   }
@@ -2475,30 +2483,35 @@ body {
   }
 
   .inquiry-step-col {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     width: 260px;
-    grid-template-columns: auto 1fr;
-    grid-template-areas: 'dot title' 'desc desc';
-    align-items: center;
-    column-gap: 10px;
+    margin: 0 auto;
     text-align: left;
   }
 
+  .inquiry-step-top-row {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    flex-direction: row;
+  }
+
   .inquiry-step-dot {
-    grid-area: dot;
     margin-bottom: 0;
   }
 
   .inquiry-step-title {
-    grid-area: title;
     margin: 0;
-    white-space: normal;
+    white-space: nowrap;
   }
 
   .inquiry-step-desc {
-    grid-area: desc;
     margin-top: 10px;
     max-width: 260px;
+    /* text-align: center; */
+    align-items: flex-start;
   }
 
   .inquiry-step-col:has(.inquiry-step-badge) {
