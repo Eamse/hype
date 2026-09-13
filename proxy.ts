@@ -49,7 +49,10 @@ async function verifyAdminApi(request: NextRequest) {
 }
 
 async function verifyOnboarding(request: NextRequest) {
-  const cookieName = 'authjs.session-token';
+  const cookieName =
+    request.nextUrl.protocol === 'https:'
+      ? '__Secure-authjs.session-token'
+      : 'authjs.session-token';
   const sessionToken = request.cookies.get(cookieName)?.value;
 
   if (!sessionToken) {
