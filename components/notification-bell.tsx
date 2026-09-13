@@ -87,10 +87,9 @@ export default function NotificationBell({ open, onToggle, onClose, }: {
           </span>)}
       </button>
 
-      {open && (<div style={{
+      {open && (<div className="notification-bell-panel" style={{
                 position: 'absolute',
                 top: '100%',
-                right: 0,
                 marginTop: 12,
                 width: 320,
                 maxHeight: 360,
