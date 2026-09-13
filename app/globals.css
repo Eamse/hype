@@ -2283,6 +2283,13 @@ body {
   z-index: 0;
 }
 
+.inquiry-step-head {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .inquiry-step-icon {
   position: relative;
   z-index: 1;
@@ -2491,6 +2498,12 @@ body {
     text-align: left;
   }
 
+  .inquiry-step-head {
+    display: inline-flex;
+    align-items: flex-start;
+    align-self: flex-start;
+  }
+
   .inquiry-step-top-row {
     display: flex;
     align-items: center;
@@ -2506,16 +2519,27 @@ body {
     margin: 0;
     white-space: nowrap;
   }
+  .inquiry-step-badge-col {
+    position: static;
+    display: flex;
+    justify-content: center;
+    padding-left: 27px;
+    margin-bottom: 10px;
+  }
+
+  .inquiry-step-badge {
+    position: static;
+    top: auto;
+    left: auto;
+    transform: none;
+    display: inline-flex;
+  }
 
   .inquiry-step-desc {
     margin-top: 10px;
     max-width: 260px;
     /* text-align: center; */
     align-items: flex-start;
-  }
-
-  .inquiry-step-col:has(.inquiry-step-badge) {
-    margin-top: 30px;
   }
 
   .inquiry-cta-buttons {

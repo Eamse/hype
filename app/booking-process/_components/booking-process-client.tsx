@@ -51,20 +51,24 @@ function StepColumn({ step, num }: {
     step: Step;
     num: number;
 }) {
-    return (<div className="inquiry-step-col">
-      {step.badge && (<span className="inquiry-step-badge type-caption inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 260}`}>
-          {step.badge}
-        </span>)}
-      <div className="inquiry-step-icon inquiry-rise" data-reveal data-reveal-delay={`${(num - 1) * 120}`}>
-        <Image src={step.icon} alt="" width={36} height={36}/>
-      </div>
-      <div className="inquiry-step-top-row">
-        <div className="inquiry-step-dot type-caption inquiry-rise" data-reveal data-reveal-delay={`${(num - 1) * 120 + 60}`}>
-          {num}
+    return (<div className={`inquiry-step-col${step.badge ? ' inquiry-step-col--badged' : ''}`}>
+      {step.badge && (<div className="inquiry-step-badge-col">
+          <span className="inquiry-step-badge type-caption inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 260}`}>
+            {step.badge}
+          </span>
+        </div>)}
+      <div className="inquiry-step-head">
+        <div className="inquiry-step-icon inquiry-rise" data-reveal data-reveal-delay={`${(num - 1) * 120}`}>
+          <Image src={step.icon} alt="" width={36} height={36}/>
         </div>
-        <p className="inquiry-step-title type-body inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 200}`}>
-          {step.title}
-        </p>
+        <div className="inquiry-step-top-row">
+          <div className="inquiry-step-dot type-caption inquiry-rise" data-reveal data-reveal-delay={`${(num - 1) * 120 + 60}`}>
+            {num}
+          </div>
+          <p className="inquiry-step-title type-body inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 200}`}>
+            {step.title}
+          </p>
+        </div>
       </div>
       <p className="inquiry-step-desc type-caption inquiry-fade" data-reveal data-reveal-delay={`${(num - 1) * 120 + 260}`}>
         {step.description}
