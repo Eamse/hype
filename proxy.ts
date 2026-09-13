@@ -60,14 +60,11 @@ async function verifyOnboarding(request: NextRequest) {
   }
 
   try {
-    const decoded = await decode({
+    await decode({
       token: sessionToken,
       secret: process.env.AUTH_SECRET!,
       salt: cookieName,
     });
-    if (decoded?.isOnboarded) {
-      return NextResponse.redirect(new URL('/', request.url));
-    }
 
     return NextResponse.next();
   } catch {
