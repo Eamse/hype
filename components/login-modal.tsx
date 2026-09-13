@@ -185,7 +185,7 @@ export default function LoginModal({ onClose }: {
               <div style={{ flex: 1, height: 1, backgroundColor: '#000' }}/>
             </div>
 
-            <button type="button" onClick={() => signIn('google', { callbackUrl: '/' })} style={{
+            <button type="button" onClick={() => signIn('google', { callbackUrl: '/onboarding' })} style={{
             width: '100%',
             padding: '13px 0',
             backgroundColor: '#fff',
