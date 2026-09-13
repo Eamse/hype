@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { parsePhoneNumber } from 'react-phone-number-input';
 import UserInfoFields, { type UserInfoValues, type UserInfoErrors, } from '@/components/user-info-fields';
@@ -8,8 +8,10 @@ type Errors = UserInfoErrors;
 export default function OnboardingPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
+    const alreadyAlertedRef = useRef(false);
     useEffect(() => {
-        if (status === 'authenticated' && session?.user?.isOnboarded) {
+        if (status === 'authenticated' && session?.user?.isOnboarded && !alreadyAlertedRef.current) {
+            alreadyAlertedRef.current = true;
             alert('You are already a registered member.');
             router.replace('/');
         }
