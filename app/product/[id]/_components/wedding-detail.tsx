@@ -83,9 +83,9 @@ function InstagramLink({ handles }: {
 }) {
     if (handles.length === 0)
         return null;
-    return (<span>
+    return (<span className="partners-grid-item-ig">
       {handles.map((h, i) => (<span key={h}>
-          <a href={`https://instagram.com/${h.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className={`text-[11px] font-normal ${GRAY2} no-underline hover:underline`}>
+          <a href={`https://instagram.com/${h.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="partners-grid-item-ig-link">
             {h}
           </a>
           {i < handles.length - 1 && ' / '}
@@ -256,19 +256,21 @@ export default function WeddingDetail({ productId, title, section, directors, pa
           
           {hasPartners && (<>
               <div className={secLabelBase}>Partners</div>
-              <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-[10px]">
-                {partnerRows.map((item, i) => (<div key={item.role} className={`py-[10px] px-3 bg-[#F9F9F9] rounded-[8px]  ${partnerRows.length % 2 === 1 &&
-                    i === partnerRows.length - 1
-                    ? 'col-span-2'
-                    : ''}`}>
-                    <div className={`text-[10px] font-normal ${GRAY3} mb-[2px]`}>
-                      {item.role}
-                    </div>
-                    <div className={`text-[13px] font-semibold ${BLACK} mb-[1px]`}>
-                      {item.name}
-                    </div>
-                    <InstagramLink handles={item.instagramHandles}/>
-                  </div>))}
+              <div className="partners-grid-wrap">
+                <div className="partners-grid">
+                  {partnerRows.map((item, i) => (<div key={item.role} className={`partners-grid-item${partnerRows.length % 2 === 1 &&
+                      i === partnerRows.length - 1
+                      ? ' partners-grid-item--full'
+                      : ''}`}>
+                      <div className="partners-grid-item-role">
+                        {item.role}
+                      </div>
+                      <div className="partners-grid-item-name">
+                        {item.name}
+                      </div>
+                      <InstagramLink handles={item.instagramHandles}/>
+                    </div>))}
+                </div>
               </div>
               <p className={`text-[11px] font-normal ${GRAY3} italic mt-2`}>
                 * Please check each studio&apos;s portfolio on Instagram

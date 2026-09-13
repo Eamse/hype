@@ -82,14 +82,12 @@ export async function POST(req: NextRequest) {
         };
         const existing = await prisma.user.findUnique({
             where: { email: normalizedEmail },
-            select: { id: true, isOnboarded: true, password: true },
+            select: { id: true },
         });
         if (existing) {
-            // 구글 로그인만 하고 온보딩을 끝내지 않은 "유령 계정" — 이 가입 시도로 완료 처리
-            if (!existing.isOnboarded && !existing.password) {
-                await prisma.user.update({ where: { id: existing.id }, data });
-                return NextResponse.json({ success: true, message: 'Account created successfully' }, { status: 201 });
-            }
+            // 본인 확인 없이 기존 계정(유령 계정 포함)을 덮어쓰면 이메일만 알아도 계정을 가로챌 수 있어
+            // 위험하므로 허용하지 않음. 미완료 유령 계정은 1시간 후 크론이 자동 삭제하므로
+            // 그 이후 재시도하면 자연히 새로 가입됨.
             return NextResponse.json({ success: true, message: 'If this email is already registered, please sign in instead.' }, { status: 200 });
         }
         await prisma.user.create({ data: { email: normalizedEmail, ...data } });
