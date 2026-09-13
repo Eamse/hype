@@ -1,13 +1,19 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { parsePhoneNumber } from 'react-phone-number-input';
 import UserInfoFields, { type UserInfoValues, type UserInfoErrors, } from '@/components/user-info-fields';
 import { useRouter } from 'next/navigation';
 type Errors = UserInfoErrors;
 export default function OnboardingPage() {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const router = useRouter();
+    useEffect(() => {
+        if (status === 'authenticated' && session?.user?.isOnboarded) {
+            alert('You are already a registered member.');
+            router.replace('/');
+        }
+    }, [status, session, router]);
     const [form, setForm] = useState<UserInfoValues>({
         firstName: '',
         middleName: '',
@@ -21,6 +27,8 @@ export default function OnboardingPage() {
     });
     const [phoneValue, setPhoneValue] = useState('');
     const [errors, setErrors] = useState<Errors>({});
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState('');
     function handleFieldChange(name: string, value: string | boolean) {
         setForm((prev) => ({ ...prev, [name]: value }));
         if (errors[name as keyof Errors]) {
@@ -54,24 +62,46 @@ export default function OnboardingPage() {
     }
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        if (submitting)
+            return;
         const validationErrors = validate();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
             return;
         }
+        setSubmitError('');
+        setSubmitting(true);
         const parsed = parsePhoneNumber(phoneValue);
         const phoneCountryCode = parsed?.countryCallingCode
             ? `+${parsed.countryCallingCode}`
             : '';
         const phone = parsed?.nationalNumber ?? '';
-        const res = await fetch('/api/user/onboarding', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...form, phoneCountryCode, phone }),
-        });
-        if (!res.ok)
-            return;
-        router.push('/');
+        try {
+            const res = await fetch('/api/user/onboarding', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...form, phoneCountryCode, phone }),
+            });
+            if (!res.ok) {
+                if (res.status === 401) {
+                    setSubmitError('Your session has expired. Please sign in again.');
+                }
+                else {
+                    const data = await res.json().catch(() => null);
+                    setSubmitError(data?.message ?? 'Something went wrong. Please try again.');
+                }
+                setSubmitting(false);
+                return;
+            }
+            router.push('/');
+        }
+        catch {
+            setSubmitError('Network error. Please check your connection and try again.');
+            setSubmitting(false);
+        }
+    }
+    if (status === 'authenticated' && session?.user?.isOnboarded) {
+        return null;
     }
     return (<div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
       <div className="bg-white w-full max-w-2xl rounded-2xl shadow-sm p-8">
@@ -94,9 +124,10 @@ export default function OnboardingPage() {
           
           <UserInfoFields values={form} errors={errors} phoneValue={phoneValue} onChange={handleFieldChange} onPhoneChange={handlePhoneChange}/>
 
-          
-          <button type="submit" className="w-full bg-gray-900 text-white rounded-lg py-2.5 text-sm font-semibold mt-2 hover:bg-gray-700 transition-colors">
-            Complete Sign Up
+          {submitError && (<p className="text-sm text-red-500">{submitError}</p>)}
+
+          <button type="submit" disabled={submitting} className="w-full bg-gray-900 text-white rounded-lg py-2.5 text-sm font-semibold mt-2 hover:bg-gray-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed">
+            {submitting ? 'Submitting...' : 'Complete Sign Up'}
           </button>
         </form>
       </div>
