@@ -1117,7 +1117,7 @@ body {
   margin-bottom: 50px;
 }
 .schedule-cards {
-  margin-top: auto;
+  margin-top: 50px;
 }
 
 .schedule-cta {
@@ -1209,37 +1209,29 @@ body {
 
 .service-grid {
   padding-bottom: clamp(60px, 8vw, 40px);
+  margin-top: 50px;
+  margin-bottom: 50px;
 }
 
-@media (min-width: 1024px) and (max-width: 1499px) {
+@media (min-width: 1279px) {
   .service-grid {
-    grid-template-columns: repeat(2, minmax(320px, 1fr));
-  }
-  .service-col {
-    text-align: center;
-  }
-  .service-divider {
-    display: none;
-  }
-}
-
-@media (min-width: 1500px) {
-  .service-grid {
-    grid-template-columns: repeat(4, minmax(320px, 1fr));
+    grid-template-columns: repeat(4, 270px);
+    justify-content: center;
   }
 }
 
 .service-col {
   position: relative;
-  min-width: 0;
+  width: min(270px, 100%);
+  margin: 0 auto;
 }
 
 .service-divider {
   position: absolute;
   top: 4px;
   bottom: 4px;
-  left: -30px;
   width: 1px;
+  left: -30px;
   background: #000;
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -1271,12 +1263,13 @@ body {
   }
 }
 
-@media (max-width: 1023px) {
-  .service-divider {
-    display: none;
-  }
+@media (max-width: 1278px) {
   .service-col {
     text-align: center;
+    .service-divider {
+      display: none;
+    }
+    margin: 0 auto;
   }
 }
 
@@ -1286,8 +1279,8 @@ body {
 
 .service-col-title-badge {
   box-sizing: border-box;
-  min-width: clamp(200px, 25vw, 319px);
-  white-space: nowrap;
+  width: 270px;
+  max-width: 100%;
   display: inline-block;
   padding: 0 6px;
   border: 1px solid var(--deep-green);
@@ -1314,43 +1307,22 @@ body {
   list-style: disc;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1278px) {
   .service-col-list.bulleted {
-    width: min(280px, 100%);
+    width: min(270px, 100%);
     margin: 0 auto;
     padding-left: 0;
     list-style: none;
     text-align: left;
   }
   .service-col-list.bulleted li {
-    padding-left: 20px;
+    position: relative;
+    padding-left: 14px;
   }
   .service-col-list.bulleted li::before {
     content: '•';
-    margin-right: 6px;
-  }
-}
-
-@media (min-width: 1024px) and (max-width: 1499px) {
-  .service-col-list.bulleted {
-    width: min(280px, 100%);
-    margin: 0 auto;
-    padding-left: 0;
-    list-style: none;
-    text-align: left;
-  }
-  .service-col-list.bulleted li {
-    padding-left: 20px;
-  }
-  .service-col-list.bulleted li::before {
-    content: '•';
-    margin-right: 6px;
-  }
-}
-
-@media (max-width: 639px) {
-  .service-col-list.bulleted li {
-    padding-left: 40px;
+    position: absolute;
+    left: 0;
   }
 }
 
@@ -1374,7 +1346,13 @@ body {
 }
 
 .schedule-cards {
-  margin-bottom: clamp(40px, 5vw, 64px);
+  margin-bottom: 50px;
+}
+
+@media (min-width: 1191px) {
+  .schedule-cards {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .schedule-card {
@@ -1401,7 +1379,7 @@ body {
   font-weight: 800;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1191px) {
   .schedule-card:not(:last-child) .schedule-card-title {
     margin-right: calc(-1 * (2 * clamp(16px, 2vw, 32px) + 60px));
   }
@@ -1419,23 +1397,33 @@ body {
   line-height: 1.6;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1190px) {
   .schedule-card {
     text-align: center;
   }
+  .schedule-card-step,
+  .schedule-card-title,
   .schedule-card-list {
     width: min(280px, 100%);
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
+  .schedule-card-list {
+    margin-top: 0;
+    margin-bottom: 0;
     padding-left: 0;
     list-style: none;
     text-align: left;
   }
   .schedule-card-list li {
-    padding-left: 8px;
+    position: relative;
+    padding-left: 14px;
   }
   .schedule-card-list li::before {
     content: '•';
-    margin-right: 6px;
+    position: absolute;
+    left: 0;
   }
 }
 
@@ -1628,8 +1616,11 @@ body {
 }
 
 @media (max-width: 767px) {
-  .timeline-footnotes-title {
+  .timeline-footnotes-title.first-note {
     margin-top: 50px;
+  }
+  .timeline-footnotes-title.second-note {
+    margin-top: 10px;
   }
 }
 

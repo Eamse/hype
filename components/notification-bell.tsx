@@ -9,7 +9,8 @@ type Notification = {
     createdAt: string;
     review: {
         id: number;
-        title: string;
+        productType: string;
+        location: string;
     };
     comment: {
         id: number;
@@ -155,7 +156,7 @@ export default function NotificationBell({ open, onToggle, onClose, }: {
                     textOverflow: 'ellipsis',
                     whiteSpace: 'nowrap',
                 }}>
-                  {n.review.title}
+                  {n.review.location} {n.review.productType} review
                 </p>
               </button>)))}
         </div>)}

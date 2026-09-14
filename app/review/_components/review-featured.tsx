@@ -8,7 +8,6 @@ type FeaturedReview = {
   country: string;
   productType: string;
   location: string;
-  title: string;
   content: string;
   shootingDate: string;
 };
@@ -54,18 +53,6 @@ export default function ReviewFeatured({
   useReplayReveal(ref);
   return (
     <div ref={ref} style={{ marginBottom: 48 }}>
-      <p
-        className="review-fade type-body"
-        data-reveal
-        data-reveal-delay="0"
-        style={{
-          fontWeight: 700,
-          letterSpacing: '0.12em',
-          marginBottom: 10,
-        }}
-      >
-        WHAT THEY&apos;RE SAYING
-      </p>
       <h1
         className="review-fade type-hero-display"
         data-reveal
@@ -73,7 +60,7 @@ export default function ReviewFeatured({
         style={{
           fontWeight: 800,
           letterSpacing: '-0.02em',
-          margin: '0 0 10px',
+          margin: '46px 0 10px 0',
         }}
       >
         Review
@@ -132,11 +119,6 @@ export default function ReviewFeatured({
                   <Badge label={review.location} tone="location" />
                   <Badge label={review.productType} tone="product" />
                 </div>
-                <h3
-                  style={{ fontSize: 16, fontWeight: 700, margin: '0 0 8px' }}
-                >
-                  {review.title}
-                </h3>
                 <p
                   style={{
                     fontSize: 13,

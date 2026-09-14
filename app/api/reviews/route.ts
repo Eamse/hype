@@ -49,8 +49,8 @@ export async function POST(request: NextRequest) {
     }
     const session = await auth();
     const body = await request.json();
-    const { title, content, country, shootingDate, productType, location, rating, directorId, name, password, } = body;
-    if (!title || !content || !country || !shootingDate) {
+    const { content, country, shootingDate, productType, location, rating, directorId, name, password, } = body;
+    if (!content || !country || !shootingDate) {
         return NextResponse.json({ error: 'missing required fields' }, { status: 400 });
     }
     if (!ALLOWED_PRODUCT_TYPES.has(productType)) {
@@ -84,7 +84,6 @@ export async function POST(request: NextRequest) {
     try {
         const review = await prisma.review.create({
             data: {
-                title,
                 content,
                 name: finalName,
                 country,

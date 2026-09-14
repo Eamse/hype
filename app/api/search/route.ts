@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { maskName } from '@/lib/mask-name';
 export type SearchResult = {
     type: 'product' | 'magazine' | 'review';
     id: number;
@@ -39,11 +40,11 @@ export async function GET(request: NextRequest) {
         }),
         prisma.review.findMany({
             where: {
-                OR: [{ title: insensitive }, { content: insensitive }, { name: insensitive }],
+                OR: [{ content: insensitive }, { name: insensitive }],
             },
             select: {
                 id: true,
-                title: true,
+                name: true,
                 productType: true,
                 location: true,
                 images: { select: { url: true }, orderBy: { order: 'asc' }, take: 1 },
@@ -69,7 +70,7 @@ export async function GET(request: NextRequest) {
         ...reviews.map((r) => ({
             type: 'review' as const,
             id: r.id,
-            title: r.title,
+            title: maskName(r.name),
             subtitle: `${r.productType} · ${r.location}`,
             imageUrl: r.images[0]?.url ?? null,
         })),

@@ -48,20 +48,6 @@ export default function EditorialHeader() {
       }}
     >
       <div>
-        <p
-          className="inquiry-fade type-body"
-          data-reveal
-          data-reveal-delay="0"
-          style={{
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            color: '#000',
-            marginBottom: 10,
-            fontWeight: 700,
-          }}
-        >
-          Hype Wedding
-        </p>
         <h1
           className="inquiry-rise type-hero-display"
           data-reveal
@@ -70,7 +56,7 @@ export default function EditorialHeader() {
             fontWeight: 800,
             letterSpacing: '-0.02em',
             color: '#000',
-            margin: '0 0 10px',
+            margin: '46px 0 10px 0',
           }}
         >
           Editorial

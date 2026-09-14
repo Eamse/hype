@@ -45,7 +45,6 @@ type ReviewRow = {
     productType: string;
     location: string;
     rating: number | null;
-    title: string;
     content: string;
     shootingDate: string;
     isFeatured: boolean;
@@ -71,7 +70,6 @@ function ReviewCard({ review, index }: {
         <Badge label={review.location} tone="location"/>
         <Badge label={review.productType} tone="product"/>
       </div>
-      <h3 style={{ fontSize: 16, fontWeight: 700, margin: '0 0 8px' }}>{review.title}</h3>
       <p style={{
             fontSize: 13,
             color: '#555',

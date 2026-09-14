@@ -65,7 +65,6 @@ export default async function ReviewPage({
     productType: review.productType,
     location: review.location,
     rating: review.rating,
-    title: review.title,
     content: review.content,
     shootingDate: review.shootingDate,
     isFeatured: review.isFeatured,
@@ -92,7 +91,6 @@ export default async function ReviewPage({
               country: review.country,
               productType: review.productType,
               location: review.location,
-              title: review.title,
               content: review.content,
               shootingDate: review.shootingDate,
             }))}

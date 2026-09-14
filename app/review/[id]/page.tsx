@@ -29,11 +29,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         return { title: 'Not Found' };
     const review = await prisma.review.findUnique({
         where: { id: reviewId },
-        select: { title: true },
+        select: { id: true },
     });
     if (!review)
         return { title: 'Not Found' };
-    return { title: `${review.title} | Review | HYPE WEDDING` };
+    return { title: 'Review | HYPE WEDDING' };
 }
 export default async function ReviewDetailPage({ params }: Props) {
     const { id } = await params;
@@ -95,10 +95,6 @@ export default async function ReviewDetailPage({ params }: Props) {
               </div>
               <ReviewDeleteButton reviewId={reviewId} authorUserId={review.userId}/>
             </div>
-
-            <h1 className="mb-5 text-[22px] font-bold leading-snug text-[#111]">
-              {review.title}
-            </h1>
 
             {review.images.length > 0 && (<div style={{
                 display: 'grid',

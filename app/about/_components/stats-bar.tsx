@@ -54,9 +54,9 @@ function useCountUp(target: number, start: boolean, delay: number) {
   return value;
 }
 const DIVIDER_CLASSES = [
-  'border-b border-black pb-8 lg:border-b-0 lg:pb-0 lg:px-8',
-  'border-b border-black pb-8 lg:border-b-0 lg:pb-0 lg:px-8',
-  'border-b border-black pb-8 sm:border-b-0 sm:pb-0 lg:px-8',
+  'pb-8 sm:border-b sm:border-black lg:border-b-0 lg:pb-0 lg:px-8',
+  'pb-8 sm:border-b sm:border-black lg:border-b-0 lg:pb-0 lg:px-8',
+  'pb-8 lg:px-8',
   'lg:px-8',
 ];
 function StatColumn({

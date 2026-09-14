@@ -114,7 +114,7 @@ const STARTED_PHOTOS = [
     src: '/about/minju.jpg',
     alt: 'Minju, Co-founder',
     name: 'Minju (Emily)',
-    captionPosition: 'bottom-right',
+    captionPosition: 'top-left',
   },
   {
     src: '/about/morgan-.jpg',
