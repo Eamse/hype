@@ -54,9 +54,9 @@ function useCountUp(target: number, start: boolean, delay: number) {
   return value;
 }
 const DIVIDER_CLASSES = [
-  'pb-8 sm:border-b sm:border-black lg:border-b-0 lg:pb-0 lg:px-8',
-  'pb-8 sm:border-b sm:border-black lg:border-b-0 lg:pb-0 lg:px-8',
-  'pb-8 lg:px-8',
+  'pb-8 lg:pb-0 lg:px-8',
+  'pb-8 lg:pb-0 lg:px-8',
+  'pb-8 lg:pb-0 lg:px-8',
   'lg:px-8',
 ];
 function StatColumn({
@@ -65,19 +65,21 @@ function StatColumn({
   delay,
   dividerClass,
   showDivider,
+  alignLeft,
 }: {
   stat: Stat;
   start: boolean;
   delay: number;
   dividerClass: string;
   showDivider: boolean;
+  alignLeft: boolean;
 }) {
   const value = useCountUp(stat.target, start, delay);
-  const classes = `relative flex-1 min-w-0 flex flex-col items-center text-center ${dividerClass}`;
+  const classes = `relative w-full min-w-0 min-h-[175px] flex flex-col items-center text-center ${dividerClass}`;
   return (
     <div className={classes}>
       {showDivider && (
-        <span className="hidden lg:block absolute top-0 bottom-0 right-[-30px] w-px bg-black" />
+        <span className="hidden lg:block absolute top-0 h-[160px] right-[-30px] w-px bg-black" />
       )}
       <div className="inline-flex flex-col items-center">
         <div className="h-[clamp(1.5rem,2.7vw,2rem)] w-full flex items-end">
@@ -87,7 +89,7 @@ function StatColumn({
             {stat.topLabel ?? 'x'}
           </span>
         </div>
-        <div className="flex items-baseline gap-2 self-start">
+        <div className={`flex items-baseline gap-2 ${alignLeft ? 'self-start' : ''}`}>
           <span className="type-giant-stat font-bold italic tracking-tight">
             {value}
             {stat.suffix}
@@ -133,6 +135,7 @@ export default function StatsBar() {
           delay={0}
           dividerClass={DIVIDER_CLASSES[idx]}
           showDivider={idx < STATS.length - 1}
+          alignLeft={idx !== 0}
         />
       ))}
     </div>
