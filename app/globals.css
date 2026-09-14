@@ -3091,11 +3091,13 @@ body {
 }
 
 .partners-grid {
-  display: grid;
+  /* display: grid; */
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 10px;
-  row-gap: 10px;
+  /* grid-template-columns: 1fr 1fr; */
+  /* column-gap: 10px;*/
+  gap: 10px;
 }
 
 .partners-grid-item {
