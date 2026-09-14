@@ -6,7 +6,7 @@ import UserInfoFields, { type UserInfoValues, type UserInfoErrors, } from '@/com
 import { useRouter } from 'next/navigation';
 type Errors = UserInfoErrors;
 export default function OnboardingPage() {
-    const { data: session, status } = useSession();
+    const { data: session, status, update } = useSession();
     const router = useRouter();
     const alreadyAlertedRef = useRef(false);
     useEffect(() => {
@@ -95,6 +95,7 @@ export default function OnboardingPage() {
                 setSubmitting(false);
                 return;
             }
+            await update();
             router.push('/');
         }
         catch {

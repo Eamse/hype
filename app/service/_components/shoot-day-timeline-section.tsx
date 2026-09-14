@@ -159,14 +159,14 @@ export default function ShootDayTimelineSection() {
         </div>
 
         <div className="timeline-footnotes-block">
-          <p className="timeline-footnotes-title"><span className="timeline-footnotes-badge">Note</span></p>
+          <p className="timeline-footnotes-title first-note"><span className="timeline-footnotes-badge">Note</span></p>
           <ul className="timeline-footnotes">
             {FOOTNOTES.map((f) => (<li key={f}>* {f}</li>))}
           </ul>
         </div>
 
         <div className="timeline-footnotes-block">
-          <p className="timeline-footnotes-title"><span className="timeline-footnotes-badge">Note(Jeju Only)</span></p>
+          <p className="timeline-footnotes-title second-note"><span className="timeline-footnotes-badge">Note(Jeju Only)</span></p>
           <ul className="timeline-footnotes">
             {FOOTNOTES_JEJU_ONLY.map((f) => (<li key={f}>* {f}</li>))}
           </ul>

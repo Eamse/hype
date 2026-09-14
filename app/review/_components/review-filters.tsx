@@ -8,6 +8,11 @@ type Director = {
     number: string;
     name: string;
 };
+function formatDirectorLabel(location: string | undefined, d: Director) {
+    const locationLabel = location === 'jeju' ? 'Jeju' : 'Seoul';
+    const num = d.number.replace('#', '').padStart(2, '0');
+    return `${locationLabel} ${num} - ${d.name}`;
+}
 const selectStyle: React.CSSProperties = {
     width: 180,
     padding: '8px 12px',
@@ -80,7 +85,7 @@ export default function ReviewFilters({ productType, location, directorId, }: {
         <select style={{ ...selectStyle, flex: isMobile ? '1 1 100%' : undefined }} value={directorId ?? ''} disabled={!location} onChange={(e) => updateParam('directorId', e.target.value)}>
           <option value="">All Photographers</option>
           {directors.map((d) => (<option key={d.id} value={d.id}>
-              {d.number} {d.name}
+              {formatDirectorLabel(location, d)}
             </option>))}
         </select>
       </div>

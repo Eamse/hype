@@ -43,7 +43,7 @@ export default function ShootScheduleSection() {
         </p>
       </div>
 
-      <div className="schedule-cards grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-15 gap-y-10 items-stretch justify-items-stretch lg:px-2">
+      <div className="schedule-cards grid grid-cols-1 sm:grid-cols-2 gap-x-15 gap-y-10 items-stretch justify-items-stretch lg:px-2">
         {STEPS.map((s, idx) => (<div key={s.step} data-offer-reveal data-offer-reveal-delay={idx * 150} className={`schedule-card card-pop${s.emphasis ? ' schedule-card--emphasis' : ''}`}>
             <p className="schedule-card-step">{s.step}</p>
             <h3 className="schedule-card-title type-body-large">{s.title}</h3>

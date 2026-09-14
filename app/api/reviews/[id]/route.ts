@@ -55,7 +55,7 @@ export async function PATCH(request: NextRequest, props: {
     if (!allowed) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const { title, content, country, shootingDate, productType, location, rating, directorId, isFeatured, } = body;
+    const { content, country, shootingDate, productType, location, rating, directorId, isFeatured, } = body;
     if (productType !== undefined && !ALLOWED_PRODUCT_TYPES.has(productType)) {
         return NextResponse.json({ error: 'invalid productType' }, { status: 400 });
     }
@@ -77,7 +77,6 @@ export async function PATCH(request: NextRequest, props: {
         const updated = await prisma.review.update({
             where: { id: reviewId },
             data: {
-                ...(title !== undefined && { title }),
                 ...(content !== undefined && { content }),
                 ...(country !== undefined && { country }),
                 ...(shootingDate !== undefined && { shootingDate }),

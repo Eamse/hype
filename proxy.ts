@@ -49,10 +49,13 @@ async function verifyAdminApi(request: NextRequest) {
 }
 
 async function verifyOnboarding(request: NextRequest) {
-  const cookieName =
-    request.nextUrl.protocol === 'https:'
-      ? '__Secure-authjs.session-token'
-      : 'authjs.session-token';
+  // 프로토콜 감지에 의존하지 않고 두 쿠키 이름을 다 확인 — 리버스 프록시가
+  // protocol을 다르게 넘겨도(또는 나중에 설정이 바뀌어도) 안전하게 동작
+  const secureCookieName = '__Secure-authjs.session-token';
+  const plainCookieName = 'authjs.session-token';
+  const cookieName = request.cookies.get(secureCookieName)?.value
+    ? secureCookieName
+    : plainCookieName;
   const sessionToken = request.cookies.get(cookieName)?.value;
 
   if (!sessionToken) {

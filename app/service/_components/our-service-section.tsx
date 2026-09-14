@@ -16,7 +16,7 @@ const SERVICES: ServiceColumn[] = [
     title: 'Photography',
     bulleted: true,
     items: [
-      { text: '4–5 hrs · 3–4 locations' },
+      { text: '4–5 hours · 3–4 locations' },
       { text: '1,000+ original photos' },
       { text: '30+ final edits' },
       { text: 'Free weather rescheduling (one-time)' },
@@ -38,13 +38,12 @@ const SERVICES: ServiceColumn[] = [
     bulleted: true,
     items: [
       {
-        text: 'Planning from inquiry to final edits delivery',
-        note: 'On shoot day ↓',
+        text: 'Planning from inquiry to final edits',
         noteAccent: true,
       },
       { text: 'Interpreter & stylist on shoot day' },
       { text: 'Private van on shoot day' },
-      { text: 'Lunch & snacks will be prepared on shoot day' },
+      { text: 'Lunch & snacks on shoot day' },
     ],
   },
   {
@@ -73,19 +72,26 @@ export default function OurServiceSection({
       <div className="offer-header">
         {showHeader && (
           <>
-            <p id="service-details" data-offer-reveal className="offer-eyebrow type-eyebrow offer-fade">
+            <p
+              id="service-details"
+              data-offer-reveal
+              className="offer-eyebrow type-eyebrow offer-fade"
+            >
               OUR SERVICES
             </p>
           </>
         )}
         {!showHeader && (
-          <h2 data-offer-reveal className="offer-headline type-subheadline offer-fade">
+          <h2
+            data-offer-reveal
+            className="offer-headline type-subheadline offer-fade"
+          >
             Our Service
           </h2>
         )}
       </div>
 
-      <div className="service-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-15 gap-y-10 items-stretch justify-items-stretch lg:px-2">
+      <div className="service-grid grid grid-cols-1 sm:grid-cols-2 gap-x-15 gap-y-10 items-stretch justify-items-stretch lg:px-2">
         {SERVICES.map((service, idx) => {
           const base = idx * COL_STAGGER;
           return (
@@ -102,7 +108,9 @@ export default function OurServiceSection({
                 data-offer-reveal-delay={base + TITLE_OFFSET}
                 className="service-col-title offer-rise"
               >
-                <span className="service-col-title-badge type-body-large">{service.title}</span>
+                <span className="service-col-title-badge type-body-large">
+                  {service.title}
+                </span>
               </h3>
               <ul
                 data-offer-reveal

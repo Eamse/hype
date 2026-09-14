@@ -10,7 +10,7 @@ export async function GET() {
         where: { userId: session.user.id, isRead: false },
         orderBy: { createdAt: 'desc' },
         include: {
-            review: { select: { id: true, title: true } },
+            review: { select: { id: true, productType: true, location: true } },
             comment: { select: { id: true, content: true, authorName: true } },
         },
     });
