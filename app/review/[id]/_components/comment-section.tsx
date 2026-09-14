@@ -25,6 +25,7 @@ function countAll(nodes: CommentNode[]): number {
     return nodes.reduce((sum, n) => sum + (n.deletedAt ? 0 : 1) + countAll(n.replies), 0);
 }
 const inputClass = 'w-full rounded-lg border border-[#ddd] px-3 py-2 text-[13px] outline-none transition-colors focus:border-[#2D5A45]';
+const inputErrorClass = 'w-full rounded-lg border border-red-400 px-3 py-2 text-[13px] outline-none transition-colors focus:border-red-500';
 export default function CommentSection({ reviewId, initialComments, }: {
     reviewId: number;
     initialComments: CommentNode[];
@@ -40,6 +41,14 @@ export default function CommentSection({ reviewId, initialComments, }: {
     const [replyContent, setReplyContent] = useState('');
     const [replyGuestName, setReplyGuestName] = useState('');
     const [replyGuestPassword, setReplyGuestPassword] = useState('');
+    const [errors, setErrors] = useState<{
+        content?: boolean;
+        guestName?: boolean;
+        guestPassword?: boolean;
+        replyContent?: boolean;
+        replyGuestName?: boolean;
+        replyGuestPassword?: boolean;
+    }>({});
     const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
     const totalCount = useMemo(() => countAll(comments), [comments]);
     const manageableIds = useMemo(() => {
@@ -84,11 +93,20 @@ export default function CommentSection({ reviewId, initialComments, }: {
                 password: replyGuestPassword,
             }
             : { content, authorName: guestName, password: guestPassword };
+        const contentKey = parentId ? 'replyContent' : 'content';
+        const nameKey = parentId ? 'replyGuestName' : 'guestName';
+        const passwordKey = parentId ? 'replyGuestPassword' : 'guestPassword';
         if (!body.content.trim()) {
+            setErrors((prev) => ({ ...prev, [contentKey]: true }));
             alert('Please enter a comment.');
             return;
         }
         if (!session && (!body.authorName.trim() || !body.password.trim())) {
+            setErrors((prev) => ({
+                ...prev,
+                [nameKey]: !body.authorName.trim(),
+                [passwordKey]: !body.password.trim(),
+            }));
             alert('Please enter your name and password.');
             return;
         }
@@ -188,10 +206,10 @@ export default function CommentSection({ reviewId, initialComments, }: {
         </div>
 
         {replyingTo === comment.id && (<div className="flex flex-col gap-2 rounded-xl border border-dashed border-[#ddd] bg-[#fafafa] p-3" style={{ marginLeft: 24, marginTop: 8 }}>
-            <textarea className={inputClass} style={{ minHeight: 60 }} value={replyContent} onChange={(e) => setReplyContent(e.target.value)} placeholder="Write a reply"/>
+            <textarea className={errors.replyContent ? inputErrorClass : inputClass} style={{ minHeight: 60 }} value={replyContent} onChange={(e) => { setReplyContent(e.target.value); setErrors((prev) => ({ ...prev, replyContent: false })); }} placeholder="Write a reply"/>
             {!session && (<div className="flex gap-2">
-                <input className={inputClass} value={replyGuestName} onChange={(e) => setReplyGuestName(e.target.value)} placeholder="Name"/>
-                <input className={inputClass} type="password" value={replyGuestPassword} onChange={(e) => setReplyGuestPassword(e.target.value)} placeholder="Password"/>
+                <input className={errors.replyGuestName ? inputErrorClass : inputClass} value={replyGuestName} onChange={(e) => { setReplyGuestName(e.target.value); setErrors((prev) => ({ ...prev, replyGuestName: false })); }} placeholder="Name"/>
+                <input className={errors.replyGuestPassword ? inputErrorClass : inputClass} type="password" value={replyGuestPassword} onChange={(e) => { setReplyGuestPassword(e.target.value); setErrors((prev) => ({ ...prev, replyGuestPassword: false })); }} placeholder="Password"/>
               </div>)}
             <button onClick={() => handleSubmit(comment.id)} disabled={submitting} className="cursor-pointer self-end rounded-lg border-none bg-[#0D0D0D] px-4 py-1.5 text-[12px] font-medium text-white transition-opacity hover:opacity-85 disabled:opacity-50">
               Submit
@@ -208,10 +226,10 @@ export default function CommentSection({ reviewId, initialComments, }: {
       </h2>
 
       <div className="mb-6 flex flex-col gap-2 rounded-xl border border-[#eee] bg-[#fafafa] p-4">
-        <textarea className={`${inputClass} bg-white`} style={{ minHeight: 70 }} value={content} onChange={(e) => setContent(e.target.value)} placeholder="Write a comment"/>
+        <textarea className={`${errors.content ? inputErrorClass : inputClass} bg-white`} style={{ minHeight: 70 }} value={content} onChange={(e) => { setContent(e.target.value); setErrors((prev) => ({ ...prev, content: false })); }} placeholder="Write a comment"/>
         {!session && (<div className="flex gap-2">
-            <input className={`${inputClass} bg-white`} value={guestName} onChange={(e) => setGuestName(e.target.value)} placeholder="Name"/>
-            <input className={`${inputClass} bg-white`} type="password" value={guestPassword} onChange={(e) => setGuestPassword(e.target.value)} placeholder="Password"/>
+            <input className={`${errors.guestName ? inputErrorClass : inputClass} bg-white`} value={guestName} onChange={(e) => { setGuestName(e.target.value); setErrors((prev) => ({ ...prev, guestName: false })); }} placeholder="Name"/>
+            <input className={`${errors.guestPassword ? inputErrorClass : inputClass} bg-white`} type="password" value={guestPassword} onChange={(e) => { setGuestPassword(e.target.value); setErrors((prev) => ({ ...prev, guestPassword: false })); }} placeholder="Password"/>
           </div>)}
         <button onClick={() => handleSubmit(null)} disabled={submitting} className="cursor-pointer self-end rounded-lg border-none bg-[#0D0D0D] px-5 py-2 text-[13px] font-medium text-white transition-opacity hover:opacity-85 disabled:opacity-50">
           {submitting ? 'Posting...' : 'Post Comment'}

@@ -81,7 +81,7 @@ function StatColumn({
       {showDivider && (
         <span className="hidden lg:block absolute top-0 h-[160px] right-[-30px] w-px bg-black" />
       )}
-      <div className="inline-flex flex-col items-center">
+      <div className="flex flex-col items-center w-[clamp(194px,22vw,240px)]">
         <div className="h-[clamp(1.5rem,2.7vw,2rem)] w-full flex items-end">
           <span
             className={`text-[clamp(1.15rem,2.3vw,1.5rem)] font-bold italic leading-none mb-[-10px] ${stat.topLabel ? '' : 'invisible'}`}
