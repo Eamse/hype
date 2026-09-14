@@ -344,16 +344,8 @@ export default function WeddingDetail({
               <div className={secLabelBase}>Partners</div>
               <div className="partners-grid-wrap">
                 <div className="partners-grid">
-                  {partnerRows.map((item, i) => (
-                    <div
-                      key={item.role}
-                      className={`partners-grid-item${
-                        partnerRows.length % 2 === 1 &&
-                        i === partnerRows.length - 1
-                          ? ' partners-grid-item--full'
-                          : ''
-                      }`}
-                    >
+                  {partnerRows.map((item) => (
+                    <div key={item.role} className="partners-grid-item">
                       <div className="partners-grid-item-role">{item.role}</div>
                       <div className="partners-grid-item-name">{item.name}</div>
                       <InstagramLink handles={item.instagramHandles} />

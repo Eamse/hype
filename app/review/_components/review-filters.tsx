@@ -7,10 +7,11 @@ type Director = {
     id: number;
     number: string;
     name: string;
+    location: string | null;
 };
-function formatDirectorLabel(location: string | undefined, d: Director) {
-    const locationLabel = location === 'jeju' ? 'Jeju' : 'Seoul';
-    const num = d.number.replace('#', '').padStart(2, '0');
+function formatDirectorLabel(d: Director) {
+    const locationLabel = d.location === 'Jeju' ? 'Jeju' : 'Seoul';
+    const num = d.number.replace('#', '').split('-')[0].padStart(2, '0');
     return `${locationLabel} ${num} - ${d.name}`;
 }
 const selectStyle: React.CSSProperties = {
@@ -33,11 +34,8 @@ export default function ReviewFilters({ productType, location, directorId, }: {
     const isMobile = useIsMobile();
     const [directors, setDirectors] = useState<Director[]>([]);
     useEffect(() => {
-        if (!location) {
-            setDirectors([]);
-            return;
-        }
-        fetch(`/api/directors?location=${location}`)
+        const url = location ? `/api/directors?location=${location}` : '/api/directors';
+        fetch(url)
             .then((res) => res.json())
             .then((data) => setDirectors(Array.isArray(data) ? data : []));
     }, [location]);
@@ -82,10 +80,10 @@ export default function ReviewFilters({ productType, location, directorId, }: {
           <option value="jeju">Jeju</option>
           <option value="seoul">Seoul</option>
         </select>
-        <select style={{ ...selectStyle, flex: isMobile ? '1 1 0' : undefined, minWidth: isMobile ? 0 : undefined, width: isMobile ? 'auto' : selectStyle.width, padding: isMobile ? '8px 4px' : selectStyle.padding, fontSize: isMobile ? 12 : selectStyle.fontSize }} value={directorId ?? ''} disabled={!location} onChange={(e) => updateParam('directorId', e.target.value)}>
+        <select style={{ ...selectStyle, flex: isMobile ? '1 1 0' : undefined, minWidth: isMobile ? 0 : undefined, width: isMobile ? 'auto' : selectStyle.width, padding: isMobile ? '8px 4px' : selectStyle.padding, fontSize: isMobile ? 12 : selectStyle.fontSize }} value={directorId ?? ''} onChange={(e) => updateParam('directorId', e.target.value)}>
           <option value="">All Photographers</option>
           {directors.map((d) => (<option key={d.id} value={d.id}>
-              {formatDirectorLabel(location, d)}
+              {formatDirectorLabel(d)}
             </option>))}
         </select>
       </div>

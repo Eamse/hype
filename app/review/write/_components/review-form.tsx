@@ -9,10 +9,11 @@ type Director = {
   id: number;
   number: string;
   name: string;
+  location: string | null;
 };
-function formatDirectorLabel(location: string, d: Director) {
-  const locationLabel = location === 'jeju' ? 'Jeju' : 'Seoul';
-  const num = d.number.replace('#', '').padStart(2, '0');
+function formatDirectorLabel(d: Director) {
+  const locationLabel = d.location === 'Jeju' ? 'Jeju' : 'Seoul';
+  const num = d.number.replace('#', '').split('-')[0].padStart(2, '0');
   return `${locationLabel} ${num} - ${d.name}`;
 }
 const inputStyle: React.CSSProperties = {
@@ -24,10 +25,25 @@ const inputStyle: React.CSSProperties = {
   background: '#fff',
   color: '#000',
 };
+const errorInputStyle: React.CSSProperties = {
+  ...inputStyle,
+  border: '1.5px solid #dc2626',
+};
+type FormErrors = {
+  productType?: boolean;
+  location?: boolean;
+  directorId?: boolean;
+  shootingDate?: boolean;
+  country?: boolean;
+  content?: boolean;
+  guestName?: boolean;
+  guestPassword?: boolean;
+  guestPasswordConfirm?: boolean;
+};
 const DateInput = forwardRef<
   HTMLInputElement,
   React.InputHTMLAttributes<HTMLInputElement>
->((props, ref) => <input {...props} ref={ref} style={inputStyle} />);
+>((props, ref) => <input {...props} ref={ref} style={props.style ?? inputStyle} />);
 DateInput.displayName = 'DateInput';
 function formatDate(d: Date): string {
   const y = d.getFullYear();
@@ -42,6 +58,15 @@ const labelStyle: React.CSSProperties = {
   color: '#000',
   marginBottom: 6,
 };
+const errorTextStyle: React.CSSProperties = {
+  fontSize: 12,
+  color: '#dc2626',
+  margin: '4px 0 0',
+};
+function ErrorText({ show, children }: { show?: boolean; children: React.ReactNode }) {
+  if (!show) return null;
+  return <p style={errorTextStyle}>{children}</p>;
+}
 export default function ReviewForm() {
   const { data: session } = useSession();
   const router = useRouter();
@@ -56,34 +81,41 @@ export default function ReviewForm() {
   const [guestPasswordConfirm, setGuestPasswordConfirm] = useState('');
   const [directors, setDirectors] = useState<Director[]>([]);
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
   useEffect(() => {
-    if (!location) {
-      setDirectors([]);
-      return;
-    }
-    fetch(`/api/directors?location=${location}`)
+    fetch('/api/directors')
       .then((res) => res.json())
       .then((data) => setDirectors(Array.isArray(data) ? data : []));
-  }, [location]);
+  }, []);
+  function handleDirectorChange(id: string) {
+    setDirectorId(id);
+    const selected = directors.find((d) => String(d.id) === id);
+    if (selected?.location) {
+      setLocation(selected.location.toLowerCase());
+    }
+  }
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (
-      !content.trim() ||
-      !country.trim() ||
-      !shootingDate ||
-      !productType ||
-      !location ||
-      !directorId
-    ) {
-      alert('Please fill in all fields.');
-      return;
-    }
-    if (!session && (!guestName.trim() || !guestPassword.trim())) {
-      alert('Please enter your name and password.');
-      return;
-    }
-    if (!session && guestPassword !== guestPasswordConfirm) {
-      alert('Passwords do not match.');
+    const nextErrors: FormErrors = {
+      productType: !productType,
+      location: !location,
+      directorId: !directorId,
+      shootingDate: !shootingDate,
+      country: !country.trim(),
+      content: !content.trim(),
+      ...(!session && {
+        guestName: !guestName.trim(),
+        guestPassword: !guestPassword.trim(),
+        guestPasswordConfirm: guestPassword !== guestPasswordConfirm,
+      }),
+    };
+    setErrors(nextErrors);
+    if (Object.values(nextErrors).some(Boolean)) {
+      if (!session && guestPassword && guestPasswordConfirm && guestPassword !== guestPasswordConfirm) {
+        alert('Passwords do not match.');
+      } else {
+        alert('Please fill in all fields.');
+      }
       return;
     }
     setSubmitting(true);
@@ -122,70 +154,91 @@ export default function ReviewForm() {
         <div>
           <label style={labelStyle}>Product *</label>
           <select
-            style={inputStyle}
+            style={errors.productType ? errorInputStyle : inputStyle}
             value={productType}
-            onChange={(e) => setProductType(e.target.value)}
+            onChange={(e) => {
+              setProductType(e.target.value);
+              setErrors((prev) => ({ ...prev, productType: false }));
+            }}
           >
             <option value="">Select</option>
             <option value="wedding">Wedding</option>
             <option value="snap">Snap</option>
           </select>
+          <ErrorText show={errors.productType}>Required</ErrorText>
         </div>
         <div>
           <label style={labelStyle}>Location *</label>
           <select
-            style={inputStyle}
+            style={errors.location ? errorInputStyle : inputStyle}
             value={location}
             onChange={(e) => {
               setLocation(e.target.value);
               setDirectorId('');
+              setErrors((prev) => ({ ...prev, location: false }));
             }}
           >
             <option value="">Select</option>
             <option value="jeju">Jeju</option>
             <option value="seoul">Seoul</option>
           </select>
+          <ErrorText show={errors.location}>Required</ErrorText>
         </div>
         <div>
           <label style={labelStyle}>Photographer *</label>
           <select
-            style={inputStyle}
+            style={errors.directorId ? errorInputStyle : inputStyle}
             value={directorId}
-            disabled={!location}
-            onChange={(e) => setDirectorId(e.target.value)}
+            onChange={(e) => {
+              handleDirectorChange(e.target.value);
+              setErrors((prev) => ({ ...prev, directorId: false, location: false }));
+            }}
           >
             <option value="">Select</option>
             {directors.map((d) => (
               <option key={d.id} value={d.id}>
-                {formatDirectorLabel(location, d)}
+                {formatDirectorLabel(d)}
               </option>
             ))}
           </select>
+          <ErrorText show={errors.directorId}>Required</ErrorText>
         </div>
         <div>
           <label style={labelStyle}>Shooting Date *</label>
           <DatePicker
             selected={shootingDate}
-            onChange={(date: Date | null) => setShootingDate(date)}
+            onChange={(date: Date | null) => {
+              setShootingDate(date);
+              setErrors((prev) => ({ ...prev, shootingDate: false }));
+            }}
             dateFormat="MM/dd/yyyy"
             placeholderText="MM/DD/YYYY"
-            customInput={<DateInput />}
+            customInput={<DateInput style={errors.shootingDate ? errorInputStyle : inputStyle} />}
             wrapperClassName="w-full"
           />
+          <ErrorText show={errors.shootingDate}>Required</ErrorText>
         </div>
         <div>
           <label style={labelStyle}>Country *</label>
-          <CountryCombobox value={country} onChange={setCountry} />
+          <CountryCombobox value={country} onChange={(v) => {
+              setCountry(v);
+              setErrors((prev) => ({ ...prev, country: false }));
+            }} />
+          <ErrorText show={errors.country}>Required</ErrorText>
         </div>
       </div>
 
       <div>
         <label style={labelStyle}>Content *</label>
         <textarea
-          style={{ ...inputStyle, minHeight: 160, resize: 'vertical' }}
+          style={{ ...(errors.content ? errorInputStyle : inputStyle), minHeight: 160, resize: 'vertical' }}
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={(e) => {
+            setContent(e.target.value);
+            setErrors((prev) => ({ ...prev, content: false }));
+          }}
         />
+        <ErrorText show={errors.content}>Required</ErrorText>
       </div>
 
       {!session && (
@@ -195,29 +248,43 @@ export default function ReviewForm() {
           <div>
             <label style={labelStyle}>Name *</label>
             <input
-              style={inputStyle}
+              style={errors.guestName ? errorInputStyle : inputStyle}
               value={guestName}
-              onChange={(e) => setGuestName(e.target.value)}
+              onChange={(e) => {
+                setGuestName(e.target.value);
+                setErrors((prev) => ({ ...prev, guestName: false }));
+              }}
             />
+            <ErrorText show={errors.guestName}>Required</ErrorText>
           </div>
           <div />
           <div>
             <label style={labelStyle}>Password</label>
             <input
-              style={inputStyle}
+              style={errors.guestPassword ? errorInputStyle : inputStyle}
               type="password"
               value={guestPassword}
-              onChange={(e) => setGuestPassword(e.target.value)}
+              onChange={(e) => {
+                setGuestPassword(e.target.value);
+                setErrors((prev) => ({ ...prev, guestPassword: false, guestPasswordConfirm: false }));
+              }}
             />
+            <ErrorText show={errors.guestPassword}>Required</ErrorText>
           </div>
           <div>
             <label style={labelStyle}>Verify Password *</label>
             <input
-              style={inputStyle}
+              style={errors.guestPasswordConfirm ? errorInputStyle : inputStyle}
               type="password"
               value={guestPasswordConfirm}
-              onChange={(e) => setGuestPasswordConfirm(e.target.value)}
+              onChange={(e) => {
+                setGuestPasswordConfirm(e.target.value);
+                setErrors((prev) => ({ ...prev, guestPasswordConfirm: false }));
+              }}
             />
+            <ErrorText show={errors.guestPasswordConfirm}>
+              {guestPassword && guestPasswordConfirm && guestPassword !== guestPasswordConfirm ? 'Passwords do not match' : 'Required'}
+            </ErrorText>
           </div>
         </div>
       )}

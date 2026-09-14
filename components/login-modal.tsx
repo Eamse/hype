@@ -8,10 +8,13 @@ export default function LoginModal({ onClose }: {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [emptyFields, setEmptyFields] = useState<{ email?: boolean; password?: boolean }>({});
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        if (!email || !password)
+        if (!email || !password) {
+            setEmptyFields({ email: !email, password: !password });
             return;
+        }
         setLoading(true);
         const result = await signIn('credentials', {
             email,
@@ -109,21 +112,27 @@ export default function LoginModal({ onClose }: {
         
         <div style={{ backgroundColor: '#fafafa', padding: '36px 40px 40px' }}>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <input type="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} style={{
+            <input type="email" placeholder="Email address" value={email} onChange={(e) => {
+            setEmail(e.target.value);
+            setEmptyFields((prev) => ({ ...prev, email: false }));
+        }} style={{
             width: '100%',
             padding: '13px 16px',
             border: 'none',
-            borderBottom: '1px solid #000',
+            borderBottom: emptyFields.email ? '1.5px solid #dc2626' : '1px solid #000',
             backgroundColor: 'transparent',
             fontSize: 14,
             color: '#000',
             outline: 'none',
         }}/>
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} style={{
+            <input type="password" placeholder="Password" value={password} onChange={(e) => {
+            setPassword(e.target.value);
+            setEmptyFields((prev) => ({ ...prev, password: false }));
+        }} style={{
             width: '100%',
             padding: '13px 16px',
             border: 'none',
-            borderBottom: '1px solid #000',
+            borderBottom: emptyFields.password ? '1.5px solid #dc2626' : '1px solid #000',
             backgroundColor: 'transparent',
             fontSize: 14,
             color: '#000',

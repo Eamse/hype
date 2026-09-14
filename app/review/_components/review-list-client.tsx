@@ -118,6 +118,9 @@ export default function ReviewListClient({ reviews }: {
     const isModerator = session?.user?.role === 'master';
     const [deleted, setDeleted] = useState<Set<number>>(new Set());
     const [featured, setFeatured] = useState<Map<number, boolean>>(() => new Map(reviews.map((r) => [r.id, r.isFeatured])));
+    useEffect(() => {
+        setFeatured(new Map(reviews.map((r) => [r.id, r.isFeatured])));
+    }, [reviews]);
     const visibleReviews = reviews
         .filter((r) => !deleted.has(r.id))
         .map((r) => ({ ...r, isFeatured: featured.get(r.id) ?? r.isFeatured }));
@@ -134,20 +137,19 @@ export default function ReviewListClient({ reviews }: {
         clearSelection();
         router.refresh();
     }
-    async function handleSetFeatured(isFeatured: boolean) {
+    function handleSetFeatured(isFeatured: boolean) {
         const ids = [...selectedIds];
-        await Promise.all(ids.map((id) => fetch(`/api/reviews/${id}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ isFeatured }),
-        })));
         setFeatured((prev) => {
             const next = new Map(prev);
             ids.forEach((id) => next.set(id, isFeatured));
             return next;
         });
         clearSelection();
-        router.refresh();
+        Promise.all(ids.map((id) => fetch(`/api/reviews/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ isFeatured }),
+        }))).then(() => router.refresh());
     }
     return (<div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 32 }}>
       <p style={{

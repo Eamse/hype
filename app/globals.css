@@ -738,6 +738,9 @@ body {
   position: absolute;
   object-fit: contain;
   background: transparent;
+  /* 사파리에서 투명 PNG/WebP가 검정으로 렌더링되는 WebKit 합성 버그 우회 */
+  -webkit-mask-image: -webkit-radial-gradient(circle, #fff 100%, #000 100%);
+  mask-image: radial-gradient(circle, #fff 100%, #000 100%);
 }
 
 .philosophy-deco-korean-combined {
@@ -3091,13 +3094,11 @@ body {
 }
 
 .partners-grid {
-  /* display: grid; */
-  display: flex;
-  flex-direction: column;
+  display: grid;
   width: 100%;
-  /* grid-template-columns: 1fr 1fr; */
-  /* column-gap: 10px;*/
-  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 10px;
 }
 
 .partners-grid-item {
@@ -3109,10 +3110,6 @@ body {
   padding: 10px 12px;
   background-color: #f9f9f9;
   border-radius: 8px;
-}
-
-.partners-grid-item--full {
-  grid-column: 1 / -1;
 }
 
 .partners-grid-item-role {

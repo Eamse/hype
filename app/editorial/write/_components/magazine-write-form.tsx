@@ -11,6 +11,10 @@ const inputStyle: React.CSSProperties = {
     border: '1px solid #000',
     fontSize: 14,
 };
+const errorInputStyle: React.CSSProperties = {
+    ...inputStyle,
+    border: '1.5px solid #dc2626',
+};
 const labelStyle: React.CSSProperties = {
     display: 'block',
     fontSize: 13,
@@ -34,6 +38,7 @@ export default function MagazineWriteForm({ magazineId, initialTitle = '', initi
     const isEdit = magazineId !== undefined;
     const [title, setTitle] = useState(initialTitle);
     const [content, setContent] = useState(initialContent);
+    const [errors, setErrors] = useState<{ title?: boolean; content?: boolean }>({});
     const [published, setPublished] = useState(initialPublished);
     const existingImageUrl = initialImageUrl;
     const [existingImages, setExistingImages] = useState(initialImages);
@@ -72,6 +77,7 @@ export default function MagazineWriteForm({ magazineId, initialTitle = '', initi
     }
     async function handleSave() {
         if (!title.trim() || !content.trim()) {
+            setErrors({ title: !title.trim(), content: !content.trim() });
             alert('Please enter a title and content.');
             return;
         }
@@ -176,12 +182,14 @@ export default function MagazineWriteForm({ magazineId, initialTitle = '', initi
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
           <label style={labelStyle}>Title *</label>
-          <input style={inputStyle} value={title} onChange={(e) => setTitle(e.target.value)}/>
+          <input style={errors.title ? errorInputStyle : inputStyle} value={title} onChange={(e) => { setTitle(e.target.value); setErrors((prev) => ({ ...prev, title: false })); }}/>
         </div>
 
         <div>
           <label style={labelStyle}>Content *</label>
-          <TiptapEditor content={content} onChange={setContent}/>
+          <div style={{ border: errors.content ? '1.5px solid #dc2626' : 'none', borderRadius: 6 }}>
+            <TiptapEditor content={content} onChange={(v) => { setContent(v); setErrors((prev) => ({ ...prev, content: false })); }}/>
+          </div>
         </div>
 
         <div>
