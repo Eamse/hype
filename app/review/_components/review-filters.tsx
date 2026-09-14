@@ -68,21 +68,21 @@ export default function ReviewFilters({ productType, location, directorId, }: {
         }}>
       <div style={{
             display: 'flex',
-            flexWrap: 'wrap',
+            flexWrap: isMobile ? 'nowrap' : 'wrap',
             justifyContent: 'center',
-            gap: 12,
+            gap: isMobile ? 6 : 12,
         }}>
-        <select style={{ ...selectStyle, flex: isMobile ? '1 1 auto' : undefined }} value={productType ?? ''} onChange={(e) => updateParam('productType', e.target.value)}>
+        <select style={{ ...selectStyle, flex: isMobile ? '1 1 0' : undefined, minWidth: isMobile ? 0 : undefined, width: isMobile ? 'auto' : selectStyle.width, padding: isMobile ? '8px 4px' : selectStyle.padding, fontSize: isMobile ? 12 : selectStyle.fontSize }} value={productType ?? ''} onChange={(e) => updateParam('productType', e.target.value)}>
           <option value="">All Products</option>
           <option value="wedding">Wedding</option>
           <option value="snap">Snap</option>
         </select>
-        <select style={{ ...selectStyle, flex: isMobile ? '1 1 auto' : undefined }} value={location ?? ''} onChange={(e) => updateParam('location', e.target.value)}>
+        <select style={{ ...selectStyle, flex: isMobile ? '1 1 0' : undefined, minWidth: isMobile ? 0 : undefined, width: isMobile ? 'auto' : selectStyle.width, padding: isMobile ? '8px 4px' : selectStyle.padding, fontSize: isMobile ? 12 : selectStyle.fontSize }} value={location ?? ''} onChange={(e) => updateParam('location', e.target.value)}>
           <option value="">All Locations</option>
           <option value="jeju">Jeju</option>
           <option value="seoul">Seoul</option>
         </select>
-        <select style={{ ...selectStyle, flex: isMobile ? '1 1 100%' : undefined }} value={directorId ?? ''} disabled={!location} onChange={(e) => updateParam('directorId', e.target.value)}>
+        <select style={{ ...selectStyle, flex: isMobile ? '1 1 0' : undefined, minWidth: isMobile ? 0 : undefined, width: isMobile ? 'auto' : selectStyle.width, padding: isMobile ? '8px 4px' : selectStyle.padding, fontSize: isMobile ? 12 : selectStyle.fontSize }} value={directorId ?? ''} disabled={!location} onChange={(e) => updateParam('directorId', e.target.value)}>
           <option value="">All Photographers</option>
           {directors.map((d) => (<option key={d.id} value={d.id}>
               {formatDirectorLabel(location, d)}
