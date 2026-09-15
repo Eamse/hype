@@ -60,9 +60,11 @@ export default async function ReviewDetailPage({ params }: Props) {
     JSON.stringify(buildCommentTree(rawComments)),
   );
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div
+      style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}
+    >
       <Header brand="hype-wedding" />
-      <main style={{ paddingTop: 56 }}>
+      <main style={{ paddingTop: 56, flex: 1 }}>
         <div
           style={{ maxWidth: 800, margin: '0 auto', padding: '40px 20px 80px' }}
         >
@@ -115,7 +117,9 @@ export default async function ReviewDetailPage({ params }: Props) {
                   </span>
                 </div>
                 <p className="text-[11px] text-[#bbb]">
-                  Shot on {review.shootingDate} · Posted{' '}
+                  Shot on {review.shootingDate}
+                  <br />
+                  Posted{' '}
                   {new Date(review.createdAt).toLocaleString('en-US', {
                     year: 'numeric',
                     month: 'short',

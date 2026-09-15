@@ -22,6 +22,11 @@ const MOBILE_BREAK_PHRASES = [
     dot: false,
   },
   {
+    phrase: ' Final edits in 8–9 weeks',
+    className: 'mobile-break-767',
+    dot: false,
+  },
+  {
     phrase: ' from selection date.',
     className: 'mobile-break-767',
     dot: false,

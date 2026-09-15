@@ -267,7 +267,7 @@ body {
   --type-body-large: clamp(20px, 15.7px + 1.1vw, 34px);
 
   /* Body — ABOUT US 하단내용 / how we started 본문 / 필로소피 하단내용 / History 본문(월·내용) / Photographers 등 하단 본문 */
-  --type-body: clamp(14px, 13.2px + 0.7vw, 24px);
+  --type-body: clamp(14px, 13.2px + 0.7vw, 23px);
 
   /* Caption — how we started 프로필 이미지 Co-founder 캡션 (18px) */
   --type-caption: clamp(14px, 12.8px + 0.3vw, 18px);
