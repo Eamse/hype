@@ -2479,30 +2479,29 @@ body {
     font-weight: 700;
     color: #000;
   } */
-  .inquiry-step-col {
-    padding: 0px 0 0px 42px;
-  }
   .inquiry-step-line {
-    display: none;
-  }
-
-  .inquiry-step-icon {
     display: none;
   }
 
   .inquiry-step-col {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     width: 260px;
     margin: 0 auto;
-    text-align: left;
+    text-align: center;
+    padding: 0;
   }
 
   .inquiry-step-head {
     display: inline-flex;
-    align-items: flex-start;
-    align-self: flex-start;
+    align-items: center;
+    align-self: center;
+  }
+
+  .inquiry-step-icon {
+    margin-bottom: 0;
+    margin-right: 10px;
   }
 
   .inquiry-step-top-row {
@@ -2513,7 +2512,16 @@ body {
   }
 
   .inquiry-step-dot {
+    width: auto;
+    height: auto;
     margin-bottom: 0;
+    background: none;
+    color: #000;
+    border-radius: 0;
+  }
+
+  .inquiry-step-dot::after {
+    content: '.';
   }
 
   .inquiry-step-title {
@@ -2524,7 +2532,6 @@ body {
     position: static;
     display: flex;
     justify-content: center;
-    padding-left: 27px;
     margin-bottom: 10px;
   }
 
@@ -2539,8 +2546,8 @@ body {
   .inquiry-step-desc {
     margin-top: 10px;
     max-width: 260px;
-    /* text-align: center; */
-    align-items: flex-start;
+    text-align: center;
+    align-items: center;
   }
 
   .inquiry-cta-buttons {
@@ -3187,6 +3194,12 @@ body {
 
 @media (max-width: 767px) {
   .mobile-break-767 {
+    display: block;
+  }
+}
+
+@media (max-width: 529px) {
+  .mobile-break-529 {
     display: block;
   }
 }

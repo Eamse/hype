@@ -387,13 +387,8 @@ export default function WeddingDetail({
                   {inclusionNotes.map(({ inclusion }) => (
                     <p
                       key={inclusion.id}
-                      className={`flex gap-2 items-center text-[11px] font-normal ${GRAY3} leading-[1.5]`}
+                      className={`italic text-[11px] font-normal ${GRAY3} leading-[1.5]`}
                     >
-                      <span
-                        className={`${GREEN} shrink-0 text-[12px] font-semibold leading-[1.5]`}
-                      >
-                        ✓
-                      </span>
                       {inclusion.name}
                     </p>
                   ))}

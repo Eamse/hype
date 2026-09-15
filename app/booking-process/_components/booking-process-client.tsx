@@ -10,17 +10,29 @@ type Step = {
   badge?: string;
 };
 const MOBILE_BREAK_PHRASES = [
-  ' · 1:1 consultation',
-  ' 7 days prior to the scheduled photoshoot date',
-  ' Final edits in 8–9 weeks from selection date.',
+  { phrase: ' · 1:1 consultation', className: 'mobile-break-767' },
+  {
+    phrase: ' 7 days prior to the scheduled photoshoot date',
+    className: 'mobile-break-767',
+  },
+  {
+    phrase: ' Final edits in 8–9 weeks from selection date.',
+    className: 'mobile-break-767',
+  },
+  {
+    phrase: ' 7 days of the contract signing date',
+    className: 'mobile-break-529',
+  },
 ];
 function renderWithMobileBreak(text: string) {
-  const phrase = MOBILE_BREAK_PHRASES.find((p) => text.includes(p));
-  if (!phrase) return text;
+  const match = MOBILE_BREAK_PHRASES.find(({ phrase }) =>
+    text.includes(phrase),
+  );
+  if (!match) return text;
   return (
     <>
-      {text.replace(phrase, '')}
-      <span className="mobile-break-767">{phrase}</span>
+      {text.replace(match.phrase, '')}
+      <span className={match.className}>{match.phrase}</span>
     </>
   );
 }
