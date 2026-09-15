@@ -1,18 +1,9 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { countryFlag } from '@/lib/country-flag';
-type FeaturedReview = {
-  id: number;
-  name: string;
-  country: string;
-  productType: string;
-  location: string;
-  content: string;
-  shootingDate: string;
-};
+import { useFeaturedReviews } from './featured-reviews-context';
 function useReplayReveal(ref: React.RefObject<HTMLElement | null>) {
   useEffect(() => {
     const el = ref.current;
@@ -46,15 +37,11 @@ function useReplayReveal(ref: React.RefObject<HTMLElement | null>) {
     };
   }, [ref]);
 }
-export default function ReviewFeatured({
-  reviews,
-}: {
-  reviews: FeaturedReview[];
-}) {
+export default function ReviewFeatured() {
+  const { featuredReviews: reviews, refreshFeatured } = useFeaturedReviews();
   const ref = useRef<HTMLDivElement>(null);
   useReplayReveal(ref);
   const { data: session } = useSession();
-  const router = useRouter();
   const isModerator = session?.user?.role === 'master';
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [removed, setRemoved] = useState<Set<number>>(new Set());
@@ -86,7 +73,7 @@ export default function ReviewFeatured({
           body: JSON.stringify({ isFeatured: false }),
         }),
       ),
-    ).then(() => router.refresh());
+    ).then(() => refreshFeatured());
   }
   return (
     <div ref={ref} style={{ marginBottom: 48 }}>
@@ -130,11 +117,31 @@ export default function ReviewFeatured({
           </p>
 
           {isModerator && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 12, marginBottom: 12 }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#000', cursor: 'pointer' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                gap: 12,
+                marginBottom: 12,
+              }}
+            >
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  fontSize: 13,
+                  color: '#000',
+                  cursor: 'pointer',
+                }}
+              >
                 <input
                   type="checkbox"
-                  checked={selected.size === visibleReviews.length && visibleReviews.length > 0}
+                  checked={
+                    selected.size === visibleReviews.length &&
+                    visibleReviews.length > 0
+                  }
                   onChange={toggleSelectAll}
                   style={{ width: 16, height: 16, cursor: 'pointer' }}
                 />
@@ -184,8 +191,8 @@ export default function ReviewFeatured({
                   <label
                     style={{
                       position: 'absolute',
-                      top: 8,
-                      right: 8,
+                      top: 1,
+                      right: 1,
                       width: 24,
                       height: 24,
                       display: 'flex',
@@ -212,30 +219,33 @@ export default function ReviewFeatured({
                     color: 'inherit',
                   }}
                 >
-                <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-                  <Badge label={review.location} tone="location" />
-                  <Badge label={review.productType} tone="product" />
-                </div>
-                <p
-                  style={{
-                    fontSize: 13,
-                    color: '#555',
-                    lineHeight: 1.6,
-                    margin: '0 0 14px',
-                    display: '-webkit-box',
-                    WebkitLineClamp: 3,
-                    WebkitBoxOrient: 'vertical',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {review.content}
-                </p>
-                <p style={{ fontSize: 12, color: '#888', margin: '0 0 6px' }}>
-                  Shoot date: {review.shootingDate}
-                </p>
-                <p style={{ fontSize: 12, color: '#888', margin: 0 }}>
-                  {review.name} {countryFlag(review.country)}
-                </p>
+                  <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
+                    <Badge label={review.location} tone="location" />
+                    <Badge label={review.productType} tone="product" />
+                    {review.directorLabel && (
+                      <Badge label={review.directorLabel} tone="director" />
+                    )}
+                  </div>
+                  <p
+                    style={{
+                      fontSize: 13,
+                      color: '#555',
+                      lineHeight: 1.6,
+                      margin: '0 0 14px',
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {review.content}
+                  </p>
+                  <p style={{ fontSize: 12, color: '#888', margin: '0 0 6px' }}>
+                    Shoot date: {review.shootingDate}
+                  </p>
+                  <p style={{ fontSize: 12, color: '#888', margin: 0 }}>
+                    {review.name} {countryFlag(review.country)}
+                  </p>
                 </Link>
               </div>
             ))}
@@ -250,12 +260,18 @@ export function Badge({
   tone,
 }: {
   label: string;
-  tone: 'location' | 'product';
+  tone: 'location' | 'product' | 'director';
 }) {
+  const isSeoul = /seoul/i.test(label);
+  const isSnap = /snap/i.test(label);
   const style =
-    tone === 'location'
-      ? { background: '#eaf5ee', color: '#2d5a45' }
-      : { background: '#eef2fb', color: '#2b4c8c' };
+    tone === 'product'
+      ? isSnap
+        ? { background: '#fbf3e3', color: '#8c6a1f' }
+        : { background: '#f8eef2', color: '#8c2b56' }
+      : isSeoul
+        ? { background: '#eef1f8', color: '#33456b' }
+        : { background: '#e3f5ef', color: '#146a53' };
   return (
     <span
       style={{

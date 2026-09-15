@@ -10,37 +10,64 @@ type Step = {
   badge?: string;
 };
 const MOBILE_BREAK_PHRASES = [
-  { phrase: ' · 1:1 consultation', className: 'mobile-break-767' },
+  { phrase: ' · Inquiry Form', className: 'mobile-break-767', dot: true },
   {
-    phrase: ' 7 days prior to the scheduled photoshoot date',
+    phrase: ' · 1:1 Online Consultation',
     className: 'mobile-break-767',
+    dot: true,
   },
   {
-    phrase: ' Final edits in 8–9 weeks from selection date.',
+    phrase: ' prior to the scheduled photoshoot date',
     className: 'mobile-break-767',
+    dot: false,
+  },
+  {
+    phrase: ' from selection date.',
+    className: 'mobile-break-767',
+    dot: false,
   },
   {
     phrase: ' 7 days of the contract signing date',
     className: 'mobile-break-529',
+    dot: false,
   },
 ];
 function renderWithMobileBreak(text: string) {
-  const match = MOBILE_BREAK_PHRASES.find(({ phrase }) =>
-    text.includes(phrase),
-  );
-  if (!match) return text;
-  return (
-    <>
-      {text.replace(match.phrase, '')}
-      <span className={match.className}>{match.phrase}</span>
-    </>
-  );
+  const nodes: React.ReactNode[] = [];
+  let remaining = text;
+  let key = 0;
+  while (true) {
+    const match = MOBILE_BREAK_PHRASES.find(({ phrase }) =>
+      remaining.includes(phrase),
+    );
+    if (!match) {
+      nodes.push(remaining);
+      break;
+    }
+    const idx = remaining.indexOf(match.phrase);
+    nodes.push(remaining.slice(0, idx));
+    nodes.push(
+      <span key={key++} className={match.className}>
+        {match.dot ? (
+          <>
+            <span className="mobile-break-dot"> · </span>
+            {match.phrase.slice(3)}
+          </>
+        ) : (
+          match.phrase
+        )}
+      </span>,
+    );
+    remaining = remaining.slice(idx + match.phrase.length);
+  }
+  return <>{nodes}</>;
 }
 const STEPS: Step[] = [
   {
     icon: '/booking-process/01-send-your-plan.svg',
     title: 'Send Your Plan',
-    description: 'DM WhatsApp · Inquiry form · 1:1 consultation',
+    description:
+      'Instagram DM & Whatsapp · Inquiry Form · 1:1 Online Consultation',
   },
   {
     icon: '/booking-process/02-choose-package.svg',
@@ -95,7 +122,7 @@ function StepColumn({ step, num }: { step: Step; num: number }) {
       )}
       <div className="inquiry-step-head">
         <div
-          className="inquiry-step-icon inquiry-rise"
+          className={`inquiry-step-icon inquiry-rise img-${num}`}
           data-reveal
           data-reveal-delay={`${(num - 1) * 120}`}
         >

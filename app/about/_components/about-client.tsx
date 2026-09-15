@@ -28,7 +28,11 @@ const JOURNEY_2025: JourneyItem[] = [
     bold: false,
     content: (
       <>
-        Launched first brand<span className="mobile-break-539"> — <strong>Hype Wedding</strong></span>
+        Launched first brand
+        <span className="mobile-break-539">
+          {' '}
+          — <strong>Hype Wedding</strong>
+        </span>
       </>
     ),
   },
@@ -37,7 +41,11 @@ const JOURNEY_2025: JourneyItem[] = [
     bold: true,
     content: (
       <>
-        First influencer collab<span className="mobile-break-539"> — <strong>Angel Dei</strong>, Philippines</span>
+        First influencer collab
+        <span className="mobile-break-539">
+          {' '}
+          — <strong>Angel Dei</strong>, Philippines
+        </span>
       </>
     ),
   },
@@ -71,7 +79,11 @@ const JOURNEY_2026: JourneyItem[] = [
     bold: false,
     content: (
       <>
-        First int&apos;l exhibition<span className="mobile-break-539"> — <strong>Hitcheed Fair, Singapore</strong></span>
+        First international exhibition
+        <span className="mobile-break-539">
+          {' '}
+          — <strong>Hitcheed Fair, Singapore</strong>
+        </span>
       </>
     ),
   },
@@ -80,7 +92,11 @@ const JOURNEY_2026: JourneyItem[] = [
     bold: true,
     content: (
       <>
-        Influencer collab<span className="mobile-break-539"> — <strong>Meryem Gündüz, Turkey</strong></span>
+        Influencer collab
+        <span className="mobile-break-539">
+          {' '}
+          — <strong>Meryem Gündüz, Turkey</strong>
+        </span>
       </>
     ),
   },
@@ -89,7 +105,11 @@ const JOURNEY_2026: JourneyItem[] = [
     bold: false,
     content: (
       <>
-        Launched second brand<span className="mobile-break-539"> — <strong>Hype Snap</strong></span>
+        Launched second brand
+        <span className="mobile-break-539">
+          {' '}
+          — <strong>Hype Snap</strong>
+        </span>
       </>
     ),
   },
@@ -161,8 +181,7 @@ export default function AboutClient({
     if (!el) return;
     const targets = el.querySelectorAll<HTMLElement>('[data-reveal]');
     const timers: ReturnType<typeof setTimeout>[] = [];
-    const isMobile =
-      typeof window !== 'undefined' && window.innerWidth <= 767;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 767;
 
     // 모바일: 인트로 섹션 전체가 로드 시점에 이미 화면 안에 있어서
     // 컨테이너 기준 트리거는 즉시 실행돼버림 — 대신 각 요소가 실제로
@@ -225,8 +244,7 @@ export default function AboutClient({
     const targets = section.querySelectorAll<HTMLElement>(
       '[data-philosophy-reveal]',
     );
-    const isMobile =
-      typeof window !== 'undefined' && window.innerWidth <= 767;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 767;
 
     if (isMobile) {
       const perTargetTimers = new Map<Element, number>();
@@ -286,8 +304,7 @@ export default function AboutClient({
     const targets = section.querySelectorAll<HTMLElement>(
       '[data-history-reveal]',
     );
-    const isMobile =
-      typeof window !== 'undefined' && window.innerWidth <= 767;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 767;
 
     if (isMobile) {
       const perTargetTimers = new Map<Element, number>();
