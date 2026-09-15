@@ -124,6 +124,11 @@ export default function OurServiceSection({
                         <u>H&MU</u>
                         {item.text.slice('H&MU'.length)}
                       </>
+                    ) : item.text.includes(' (one-time)') ? (
+                      <>
+                        {item.text.replace(' (one-time)', '')}
+                        <span className="mobile-break"> (one-time)</span>
+                      </>
                     ) : (
                       item.text
                     )}
