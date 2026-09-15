@@ -322,11 +322,11 @@ export default function WeddingDetail({
           )}
 
           {activePkgs.length > 0 && (
-            <div className="flex gap-[6px] justify-center flex-wrap mb-2">
+            <div className="package-tabs-row mb-2">
               {activePkgs.map((pkg) => (
                 <span
                   key={pkg.id}
-                  className={`text-[13px] py-[5px] px-[14px] font-normal tracking-normal border rounded-[2px] cursor-pointer ${tabState(activePackageId === pkg.id)}`}
+                  className={`text-[13px] py-[5px] px-[14px] font-normal tracking-normal border rounded-[2px] cursor-pointer text-center ${tabState(activePackageId === pkg.id)}`}
                   onClick={() => setActivePackageId(pkg.id)}
                 >
                   {activePkgs.length === 1

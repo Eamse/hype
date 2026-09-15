@@ -28,7 +28,7 @@ const JOURNEY_2025: JourneyItem[] = [
     bold: false,
     content: (
       <>
-        Launched first brand — <strong>Hype Wedding</strong>
+        Launched first brand<span className="mobile-break-539"> — <strong>Hype Wedding</strong></span>
       </>
     ),
   },
@@ -37,7 +37,7 @@ const JOURNEY_2025: JourneyItem[] = [
     bold: true,
     content: (
       <>
-        First influencer collab — <strong>Angel Dei</strong>, Philippines
+        First influencer collab<span className="mobile-break-539"> — <strong>Angel Dei</strong>, Philippines</span>
       </>
     ),
   },
@@ -71,7 +71,7 @@ const JOURNEY_2026: JourneyItem[] = [
     bold: false,
     content: (
       <>
-        First int&apos;l exhibition — <strong>Hitcheed Fair, Singapore</strong>
+        First int&apos;l exhibition<span className="mobile-break-539"> — <strong>Hitcheed Fair, Singapore</strong></span>
       </>
     ),
   },
@@ -80,7 +80,7 @@ const JOURNEY_2026: JourneyItem[] = [
     bold: true,
     content: (
       <>
-        Influencer collab — <strong>Meryem Gündüz, Turkey</strong>
+        Influencer collab<span className="mobile-break-539"> — <strong>Meryem Gündüz, Turkey</strong></span>
       </>
     ),
   },
@@ -89,7 +89,7 @@ const JOURNEY_2026: JourneyItem[] = [
     bold: false,
     content: (
       <>
-        Launched second brand — <strong>Hype Snap</strong>
+        Launched second brand<span className="mobile-break-539"> — <strong>Hype Snap</strong></span>
       </>
     ),
   },
@@ -469,7 +469,8 @@ export default function AboutClient({
                         data-history-reveal="110"
                         className="about-section-title about-section-title-3 type-subheadline history-rise"
                       >
-                        It started with a photo
+                        It started with
+                        <span className="mobile-break-413"> a photo</span>
                       </h2>
                       <p
                         data-history-reveal="210"
