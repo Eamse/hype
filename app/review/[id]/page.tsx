@@ -97,11 +97,21 @@ export default async function ReviewDetailPage({ params }: Props) {
                   >
                     {review.productType}
                   </span>
+                  {review.director && (
+                    <span
+                      className={`rounded-full px-2 py-[2px] text-[10px] font-semibold uppercase tracking-wide ${
+                        review.director.location === 'Jeju'
+                          ? 'bg-[#e3f5ef] text-[#146a53]'
+                          : 'bg-[#eef1f8] text-[#33456b]'
+                      }`}
+                    >
+                      {formatDirectorLabel(review.director)}
+                    </span>
+                  )}
                   <span className="text-[12px] text-[#999]">
                     {maskName(review.name)} ·{' '}
                     {getName(review.country) ?? review.country}
-                    {review.director &&
-                      ` · ${formatDirectorLabel(review.director)} ${review.director.name}`}
+                    {review.director && ` · ${review.director.name}`}
                   </span>
                 </div>
                 <p className="text-[11px] text-[#bbb]">
