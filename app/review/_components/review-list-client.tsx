@@ -7,6 +7,7 @@ import { useSelection } from '@/components/admin/use-selection';
 import BulkActions from '@/components/admin/bulk-actions';
 import { countryFlag } from '@/lib/country-flag';
 import { Badge } from './review-featured';
+import { useFeaturedReviews } from './featured-reviews-context';
 function useReplayReveal(ref: React.RefObject<HTMLElement | null>, deps: unknown[]) {
     useEffect(() => {
         const el = ref.current;
@@ -44,6 +45,7 @@ type ReviewRow = {
     countryName: string;
     productType: string;
     location: string;
+    directorLabel: string | null;
     rating: number | null;
     content: string;
     shootingDate: string;
@@ -69,6 +71,9 @@ function ReviewCard({ review, index }: {
       <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
         <Badge label={review.location} tone="location"/>
         <Badge label={review.productType} tone="product"/>
+        {review.directorLabel && (
+          <Badge label={review.directorLabel} tone="director"/>
+        )}
       </div>
       <p style={{
             fontSize: 13,
@@ -110,11 +115,13 @@ function ReviewCard({ review, index }: {
       </p>
     </Link>);
 }
-export default function ReviewListClient({ reviews }: {
+export default function ReviewListClient({ reviews, totalCount }: {
     reviews: ReviewRow[];
+    totalCount: number;
 }) {
     const { data: session } = useSession();
     const router = useRouter();
+    const { refreshFeatured } = useFeaturedReviews();
     const isModerator = session?.user?.role === 'master';
     const [deleted, setDeleted] = useState<Set<number>>(new Set());
     const [featured, setFeatured] = useState<Map<number, boolean>>(() => new Map(reviews.map((r) => [r.id, r.isFeatured])));
@@ -149,7 +156,7 @@ export default function ReviewListClient({ reviews }: {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ isFeatured }),
-        }))).then(() => router.refresh());
+        }))).then(() => refreshFeatured());
     }
     return (<div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 32 }}>
       <p style={{
@@ -158,7 +165,7 @@ export default function ReviewListClient({ reviews }: {
             letterSpacing: '0.06em',
             margin: '4px 0 0',
         }}>
-        ALL REVIEWS
+        ALL REVIEWS ({totalCount})
       </p>
 
       {isModerator && (<div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10 }}>

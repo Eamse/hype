@@ -2188,6 +2188,7 @@ body {
 
 .inquiry-eyebrow {
   margin: 0 0 -10px;
+  margin-left: 7px;
   font-weight: 700;
   letter-spacing: 3px;
   text-transform: uppercase;
@@ -2196,6 +2197,7 @@ body {
 
 .inquiry-heading {
   margin: 0 0 clamp(13px, 3vw, 37px);
+  margin-left: 7px;
   font-weight: 800;
   letter-spacing: -0.02em;
   text-align: center;
@@ -2463,22 +2465,6 @@ body {
     display: none;
   }
 
-  /* 추후 사용할 수도 있음 주석처리*/
-  /* .inquiry-step-col:not(:last-child)::before,
-  .inquiry-step-row:not(:last-child) .inquiry-step-col:last-child::before {
-    content: '↓';
-    position: absolute;
-    top: auto;
-    bottom: clamp(-52px, -8vw, -40px);
-    left: 50%;
-    width: auto;
-    height: auto;
-    background: none;
-    transform: translateX(-50%);
-    font-size: 20px;
-    font-weight: 700;
-    color: #000;
-  } */
   .inquiry-step-line {
     display: none;
   }
@@ -2501,7 +2487,6 @@ body {
 
   .inquiry-step-icon {
     margin-bottom: 0;
-    margin-right: 10px;
   }
 
   .inquiry-step-top-row {
@@ -3186,7 +3171,7 @@ body {
   }
 }
 
-@media (max-width: 408px) {
+@media (max-width: 419px) {
   .mobile-break-408 {
     display: block;
   }
@@ -3195,6 +3180,10 @@ body {
 @media (max-width: 767px) {
   .mobile-break-767 {
     display: block;
+  }
+
+  .mobile-break-dot {
+    display: none;
   }
 }
 

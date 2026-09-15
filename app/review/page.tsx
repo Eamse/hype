@@ -6,6 +6,7 @@ import ReviewFilters from './_components/review-filters';
 import ReviewListClient from './_components/review-list-client';
 import ReviewInquirySidebar from './_components/review-inquiry-sidebar';
 import ReviewFeatured from './_components/review-featured';
+import { FeaturedReviewsProvider } from './_components/featured-reviews-context';
 import Pagination from '@/components/pagination';
 import { prisma } from '@/lib/prisma';
 import { getName } from 'country-list';
@@ -46,6 +47,7 @@ export default async function ReviewPage({
       take: PAGE_SIZE,
       include: {
         images: true,
+        director: { select: { number: true, location: true } },
         _count: { select: { comments: { where: { deletedAt: null } } } },
       },
     }),
@@ -53,10 +55,19 @@ export default async function ReviewPage({
     prisma.review.findMany({
       where: { isFeatured: true },
       orderBy: { createdAt: 'desc' },
-      take: 3,
+      take: 4,
+      include: {
+        director: { select: { number: true, location: true } },
+      },
     }),
   ]);
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+  const formatDirectorBadge = (director: { number: string; location: string | null } | null) => {
+    if (!director) return null;
+    const locationLabel = director.location === 'Jeju' ? 'Jeju' : 'Seoul';
+    const num = director.number.replace('#', '').split('-')[0].padStart(2, '0');
+    return `${locationLabel} ${num}`;
+  };
   const mapReview = (review: (typeof reviews)[number]) => ({
     id: review.id,
     name: maskName(review.name),
@@ -64,6 +75,7 @@ export default async function ReviewPage({
     countryName: getName(review.country) ?? review.country,
     productType: review.productType,
     location: review.location,
+    directorLabel: formatDirectorBadge(review.director),
     rating: review.rating,
     content: review.content,
     shootingDate: review.shootingDate,
@@ -84,55 +96,61 @@ export default async function ReviewPage({
               'clamp(40px, 4.5vw, 70px) clamp(20px, 4vw, 60px) clamp(50px, 5vw, 80px)',
           }}
         >
-          <ReviewFeatured
-            reviews={featuredReviews.map((review) => ({
+          <FeaturedReviewsProvider
+            initialFeatured={featuredReviews.map((review) => ({
               id: review.id,
               name: maskName(review.name),
               country: review.country,
               productType: review.productType,
               location: review.location,
+              directorLabel: formatDirectorBadge(review.director),
               content: review.content,
               shootingDate: review.shootingDate,
             }))}
-          />
-
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 320px',
-              gap: 32,
-              alignItems: 'start',
-            }}
-            className="review-main-grid"
           >
-            <div>
-              <Suspense fallback={null}>
-                <ReviewFilters
-                  productType={productType}
-                  location={location}
-                  directorId={directorId}
+            <ReviewFeatured />
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 320px',
+                gap: 32,
+                alignItems: 'start',
+              }}
+              className="review-main-grid"
+            >
+              <div>
+                <Suspense fallback={null}>
+                  <ReviewFilters
+                    productType={productType}
+                    location={location}
+                    directorId={directorId}
+                  />
+                </Suspense>
+                <ReviewListClient
+                  reviews={reviews.map(mapReview)}
+                  totalCount={totalCount}
                 />
-              </Suspense>
-              <ReviewListClient reviews={reviews.map(mapReview)} />
 
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                buildHref={(p) => {
-                  const params = new URLSearchParams();
-                  if (activeBrand === 'hype-snap')
-                    params.set('brand', 'hype-snap');
-                  if (productType) params.set('productType', productType);
-                  if (location) params.set('location', location);
-                  if (directorId) params.set('directorId', directorId);
-                  params.set('page', String(p));
-                  return `/review?${params.toString()}`;
-                }}
-              />
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  buildHref={(p) => {
+                    const params = new URLSearchParams();
+                    if (activeBrand === 'hype-snap')
+                      params.set('brand', 'hype-snap');
+                    if (productType) params.set('productType', productType);
+                    if (location) params.set('location', location);
+                    if (directorId) params.set('directorId', directorId);
+                    params.set('page', String(p));
+                    return `/review?${params.toString()}`;
+                  }}
+                />
+              </div>
+
+              <ReviewInquirySidebar />
             </div>
-
-            <ReviewInquirySidebar />
-          </div>
+          </FeaturedReviewsProvider>
         </section>
       </main>
       <HomeFooter />
