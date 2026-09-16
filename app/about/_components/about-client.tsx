@@ -143,6 +143,41 @@ const STARTED_PHOTOS = [
     captionPosition: 'top-left',
   },
 ] as const;
+const GOAL_ITEMS = [
+  { word: 'Top', rest: 'Korean Artists' },
+  { word: 'Full', rest: 'Transparency' },
+  { word: 'Zero', rest: 'Stress' },
+];
+function TheGoalSection() {
+  return (
+    <div className="the-goal">
+      <p
+        data-history-reveal="150"
+        className="the-goal-label type-eyebrow history-rise"
+      >
+        THE GOAL
+      </p>
+      <div className="the-goal-row">
+        {GOAL_ITEMS.map((item) => (
+          <div key={item.word} className="the-goal-item">
+            <p
+              data-history-reveal="190"
+              className="the-goal-word history-rise"
+            >
+              {item.word}
+            </p>
+            <p
+              data-history-reveal="230"
+              className="the-goal-rest history-rise"
+            >
+              {item.rest}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 export default function AboutClient({
   brand,
 }: {
@@ -580,58 +615,7 @@ export default function AboutClient({
                       </div>
                     </div>
                   </div>
-                  <div className="the-goal">
-                    <p
-                      data-history-reveal="150"
-                      className="the-goal-label type-eyebrow history-rise"
-                    >
-                      THE GOAL
-                    </p>
-                    <div className="the-goal-row">
-                      <div className="the-goal-item">
-                        <p
-                          data-history-reveal="190"
-                          className="the-goal-word history-rise"
-                        >
-                          Top
-                        </p>
-                        <p
-                          data-history-reveal="230"
-                          className="the-goal-rest history-rise"
-                        >
-                          Korean Artists
-                        </p>
-                      </div>
-                      <div className="the-goal-item">
-                        <p
-                          data-history-reveal="190"
-                          className="the-goal-word history-rise"
-                        >
-                          Full
-                        </p>
-                        <p
-                          data-history-reveal="230"
-                          className="the-goal-rest history-rise"
-                        >
-                          Transparency
-                        </p>
-                      </div>
-                      <div className="the-goal-item">
-                        <p
-                          data-history-reveal="190"
-                          className="the-goal-word history-rise"
-                        >
-                          Zero
-                        </p>
-                        <p
-                          data-history-reveal="230"
-                          className="the-goal-rest history-rise"
-                        >
-                          Stress
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <TheGoalSection />
                 </div>
               </>
             ) : section.id === 'philosophy' ? (
@@ -671,6 +655,7 @@ export default function AboutClient({
                           width={590}
                           height={493}
                           className="philosophy-deco-korean-combined"
+                          unoptimized
                         />
                       </div>
                       <div className="philosophy-principle-text">
@@ -696,6 +681,7 @@ export default function AboutClient({
                           width={554}
                           height={949}
                           className="philosophy-deco-coast-combined"
+                          unoptimized
                         />
                         <Image
                           src="/about/philosophy/4-philosophy-coast-to-concrete-1.webp"
@@ -703,6 +689,7 @@ export default function AboutClient({
                           width={400}
                           height={400}
                           className="philosophy-deco-plane"
+                          unoptimized
                         />
                       </div>
                       <div className="philosophy-principle-text">
@@ -730,6 +717,7 @@ export default function AboutClient({
                           width={640}
                           height={604}
                           className="philosophy-deco-authenticity-combined"
+                          unoptimized
                         />
                         <Image
                           src="/about/philosophy/4-philosophy-authenticity-1.webp"
@@ -737,6 +725,7 @@ export default function AboutClient({
                           width={574}
                           height={574}
                           className="philosophy-deco-strip"
+                          unoptimized
                         />
                       </div>
                       <div className="philosophy-principle-text">
@@ -762,6 +751,7 @@ export default function AboutClient({
                           width={900}
                           height={927}
                           className="philosophy-deco-effortless-combined"
+                          unoptimized
                         />
                       </div>
                       <div className="philosophy-principle-text">
