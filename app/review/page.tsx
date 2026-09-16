@@ -79,6 +79,7 @@ export default async function ReviewPage({
     rating: review.rating,
     content: review.content,
     shootingDate: review.shootingDate,
+    createdAt: review.createdAt.toISOString(),
     isFeatured: review.isFeatured,
     commentCount: review._count.comments,
   });

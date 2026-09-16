@@ -57,11 +57,11 @@ export default function ReviewFeatured() {
     () => reviews.filter((r) => !removed.has(r.id)),
     [reviews, removed],
   );
-  const visibleReviewIds = useMemo(
-    () => visibleReviews.map((r) => r.id),
+  const visibleReviewIdsKey = useMemo(
+    () => visibleReviews.map((r) => r.id).join(','),
     [visibleReviews],
   );
-  useReplayReveal(ref, visibleReviewIds);
+  useReplayReveal(ref, [visibleReviewIdsKey]);
   function toggleSelect(id: number) {
     setSelected((prev) => {
       const next = new Set(prev);

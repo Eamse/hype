@@ -2,6 +2,7 @@ type CommentLike = {
     id: number;
     parentId: number | null;
     password?: string | null;
+    createdAt: Date | string;
 };
 export type CommentNode<T> = Omit<T, 'password'> & {
     replies: CommentNode<T>[];
@@ -21,5 +22,11 @@ export function buildCommentTree<T extends CommentLike>(comments: T[]): CommentN
             roots.push(node);
         }
     }
+    for (const node of byId.values()) {
+        node.replies.sort(
+            (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        );
+    }
+    roots.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     return roots;
 }

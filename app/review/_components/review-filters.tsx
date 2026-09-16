@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useIsMobile } from '@/hooks/useIsMobile';
 type Director = {
   id: number;
@@ -35,7 +35,6 @@ export default function ReviewFilters({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const isMobile = useIsMobile();
   const [directors, setDirectors] = useState<Director[]>([]);
   useEffect(() => {
@@ -47,7 +46,7 @@ export default function ReviewFilters({
       .then((data) => setDirectors(Array.isArray(data) ? data : []));
   }, [location]);
   function updateParam(key: string, value: string) {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(window.location.search);
     if (value) params.set(key, value);
     else params.delete(key);
     if (key === 'location') params.delete('directorId');
