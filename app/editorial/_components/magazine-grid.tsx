@@ -12,7 +12,7 @@ export default function MagazineGrid({ items }: {
     items: MagazineItem[];
 }) {
     const gridRef = useRef<HTMLDivElement>(null);
-    const itemIds = useMemo(() => items.map((m) => m.id), [items]);
+    const itemIdsKey = useMemo(() => items.map((m) => m.id).join(','), [items]);
     useEffect(() => {
         const el = gridRef.current;
         if (!el)
@@ -37,7 +37,7 @@ export default function MagazineGrid({ items }: {
             observer.disconnect();
         }
         return () => observer.disconnect();
-    }, itemIds);
+    }, [itemIdsKey]);
     return (<div ref={gridRef} className="magazine-list-grid">
       {items.map((m) => (<Link key={m.id} href={`/editorial/${m.id}`} className="inquiry-step group" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div>

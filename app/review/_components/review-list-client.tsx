@@ -55,6 +55,7 @@ type ReviewRow = {
     rating: number | null;
     content: string;
     shootingDate: string;
+    createdAt: string;
     isFeatured: boolean;
     commentCount: number;
 };
@@ -116,6 +117,16 @@ function ReviewCard({ review, index }: {
       <p style={{ fontSize: 12, color: '#888', margin: '10px 0 6px' }}>
         Shoot date: {review.shootingDate}
       </p>
+      <p style={{ fontSize: 11, color: '#bbb', margin: '0 0 6px' }}>
+        Posted{' '}
+        {new Date(review.createdAt).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+        })}
+      </p>
       <p style={{ fontSize: 12, color: '#888', margin: 0 }}>
         {review.name} {countryFlag(review.country)}
       </p>
@@ -140,13 +151,13 @@ export default function ReviewListClient({ reviews, totalCount }: {
             .map((r) => ({ ...r, isFeatured: featured.get(r.id) ?? r.isFeatured })),
         [reviews, deleted, featured],
     );
-    const visibleReviewIds = useMemo(
-        () => visibleReviews.map((r) => r.id),
+    const visibleReviewIdsKey = useMemo(
+        () => visibleReviews.map((r) => r.id).join(','),
         [visibleReviews],
     );
     const { selectedIds, toggleSelect, toggleAll, clearSelection } = useSelection(visibleReviews);
     const listRef = useRef<HTMLDivElement>(null);
-    useReplayReveal(listRef, visibleReviewIds);
+    useReplayReveal(listRef, [visibleReviewIdsKey]);
     async function handleBulkDelete() {
         await Promise.all([...selectedIds].map((id) => fetch(`/api/reviews/${id}`, {
             method: 'DELETE',
