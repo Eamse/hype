@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -30,8 +30,14 @@ function useReplayReveal(ref: React.RefObject<HTMLElement | null>, deps: unknown
                     target.classList.remove('visible');
                 }
             });
-        }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
-        targets.forEach((target) => observer.observe(target));
+        }, { threshold: 0.1, rootMargin: '0px' });
+        targets.forEach((target) => {
+            observer.observe(target);
+            const rect = target.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                target.classList.add('visible');
+            }
+        });
         return () => {
             observer.disconnect();
             timers.forEach((timer) => clearTimeout(timer));
@@ -128,12 +134,19 @@ export default function ReviewListClient({ reviews, totalCount }: {
     useEffect(() => {
         setFeatured(new Map(reviews.map((r) => [r.id, r.isFeatured])));
     }, [reviews]);
-    const visibleReviews = reviews
-        .filter((r) => !deleted.has(r.id))
-        .map((r) => ({ ...r, isFeatured: featured.get(r.id) ?? r.isFeatured }));
+    const visibleReviews = useMemo(
+        () => reviews
+            .filter((r) => !deleted.has(r.id))
+            .map((r) => ({ ...r, isFeatured: featured.get(r.id) ?? r.isFeatured })),
+        [reviews, deleted, featured],
+    );
+    const visibleReviewIds = useMemo(
+        () => visibleReviews.map((r) => r.id),
+        [visibleReviews],
+    );
     const { selectedIds, toggleSelect, toggleAll, clearSelection } = useSelection(visibleReviews);
     const listRef = useRef<HTMLDivElement>(null);
-    useReplayReveal(listRef, [visibleReviews.length]);
+    useReplayReveal(listRef, visibleReviewIds);
     async function handleBulkDelete() {
         await Promise.all([...selectedIds].map((id) => fetch(`/api/reviews/${id}`, {
             method: 'DELETE',
