@@ -111,7 +111,7 @@ export default function ReviewFeatured() {
         data-reveal-delay="140"
         style={{ color: '#555', marginBottom: 28 }}
       >
-        Real stories from real couples
+        Real stories from real Clients
       </p>
 
       {visibleReviews.length > 0 && (

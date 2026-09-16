@@ -8,11 +8,13 @@ type Director = {
   number: string;
   name: string;
   location: string | null;
+  category: string;
 };
 function formatDirectorLabel(d: Director) {
+  const categoryLabel = d.category === 'snap' ? 'Snap' : 'Wedding';
   const locationLabel = d.location === 'Jeju' ? 'Jeju' : 'Seoul';
   const num = d.number.replace('#', '').split('-')[0].padStart(2, '0');
-  return `${locationLabel} ${num} - ${d.name}`;
+  return `${categoryLabel} | ${locationLabel} ${num} - ${d.name}`;
 }
 const selectStyle: React.CSSProperties = {
   width: 180,
@@ -38,18 +40,19 @@ export default function ReviewFilters({
   const isMobile = useIsMobile();
   const [directors, setDirectors] = useState<Director[]>([]);
   useEffect(() => {
-    const url = location
-      ? `/api/directors?location=${location}`
-      : '/api/directors';
-    fetch(url)
+    const params = new URLSearchParams();
+    if (location) params.set('location', location);
+    if (productType) params.set('category', productType);
+    const qs = params.toString();
+    fetch(`/api/directors${qs ? `?${qs}` : ''}`)
       .then((res) => res.json())
       .then((data) => setDirectors(Array.isArray(data) ? data : []));
-  }, [location]);
+  }, [location, productType]);
   function updateParam(key: string, value: string) {
     const params = new URLSearchParams(window.location.search);
     if (value) params.set(key, value);
     else params.delete(key);
-    if (key === 'location') params.delete('directorId');
+    if (key === 'location' || key === 'productType') params.delete('directorId');
     params.delete('page');
     router.push(`${pathname}?${params.toString()}`);
   }
@@ -91,7 +94,7 @@ export default function ReviewFilters({
           value={productType ?? ''}
           onChange={(e) => updateParam('productType', e.target.value)}
         >
-          <option value="">All Products</option>
+          <option value="">All Services</option>
           <option value="wedding">Wedding</option>
           <option value="snap">Snap</option>
         </select>
