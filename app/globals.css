@@ -343,12 +343,11 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: stretch;
-  min-height: clamp(560px, calc(100vh - 101px), 900px);
 }
 
 .about-intro-image {
   position: relative;
-  height: clamp(560px, calc(100vh - 101px), 900px);
+  height: 880px;
   overflow: hidden;
 }
 
@@ -392,7 +391,7 @@ body {
 .how-started-photos {
   position: relative;
   width: 100%;
-  height: calc(100vh - 106px);
+  height: 880px;
   overflow: hidden;
 }
 
