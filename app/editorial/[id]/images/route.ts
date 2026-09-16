@@ -90,6 +90,40 @@ export async function POST(request: NextRequest, props: {
         return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
 }
+export async function PATCH(request: NextRequest, props: {
+    params: Promise<{
+        id: string;
+    }>;
+}) {
+    const session = await auth();
+    if (!isMagazineMaster(session)) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    const { id } = await props.params;
+    const idNum = parseId(id);
+    if (idNum === null) {
+        return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
+    }
+    const body = await request.json().catch(() => null);
+    const order = body?.order;
+    if (!Array.isArray(order) || order.some((o) => typeof o?.id !== 'number' || typeof o?.order !== 'number')) {
+        return NextResponse.json({ error: 'Invalid order payload' }, { status: 400 });
+    }
+    try {
+        await prisma.$transaction(order.map(({ id: imageId, order: nextOrder }: {
+            id: number;
+            order: number;
+        }) => prisma.magazineImage.update({
+            where: { id: imageId, magazineId: idNum },
+            data: { order: nextOrder },
+        })));
+        return NextResponse.json({ ok: true });
+    }
+    catch (e) {
+        console.error('[PATCH /editorial/:id/images]', e);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
+}
 export async function DELETE(request: NextRequest, props: {
     params: Promise<{
         id: string;

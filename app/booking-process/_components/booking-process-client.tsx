@@ -10,24 +10,8 @@ type Step = {
   badge?: string;
 };
 const MOBILE_BREAK_PHRASES = [
-  { phrase: ' · Inquiry Form', className: 'mobile-break-767', dot: true },
-  {
-    phrase: ' · 1:1 Online Consultation',
-    className: 'mobile-break-767',
-    dot: true,
-  },
   {
     phrase: ' prior to the scheduled photoshoot date',
-    className: 'mobile-break-767',
-    dot: false,
-  },
-  {
-    phrase: ' Final edits in 8–9 weeks',
-    className: 'mobile-break-767',
-    dot: false,
-  },
-  {
-    phrase: ' from selection date.',
     className: 'mobile-break-767',
     dot: false,
   },
@@ -106,7 +90,7 @@ const STEPS: Step[] = [
     icon: '/booking-process/07-shoot-and-final-edits.svg',
     title: 'Shoot & Final Edits',
     description:
-      'All raw images in 2 weeks. Final edits in 8–9 weeks from selection date.',
+      'All raw images in 2 weeks Final edits in 8–9 weeks from selection date',
   },
 ];
 function StepColumn({ step, num }: { step: Step; num: number }) {
@@ -155,7 +139,22 @@ function StepColumn({ step, num }: { step: Step; num: number }) {
         data-reveal
         data-reveal-delay={`${(num - 1) * 120 + 260}`}
       >
-        {renderWithMobileBreak(step.description)}
+        {step.title === 'Send Your Plan' ? (
+          <>
+            <span style={{ display: 'block' }}>· Instagram DM & Whatsapp</span>
+            <span style={{ display: 'block' }}>· Inquiry Form</span>
+            <span style={{ display: 'block' }}>· 1:1 Online Consultation</span>
+          </>
+        ) : step.title === 'Shoot & Final Edits' ? (
+          <>
+            <span style={{ display: 'block' }}>· All raw images in 2 weeks</span>
+            <span style={{ display: 'block' }}>
+              · Final edits in 8–9 weeks from selection date
+            </span>
+          </>
+        ) : (
+          renderWithMobileBreak(step.description)
+        )}
       </p>
     </div>
   );

@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CountryCombobox from '@/components/country-combobox';
+import { isStrongGuestPassword, GUEST_PASSWORD_HINT } from '@/lib/guest-password';
 type Director = {
   id: number;
   number: string;
@@ -41,6 +42,18 @@ type FormErrors = {
   guestName?: boolean;
   guestPassword?: boolean;
   guestPasswordConfirm?: boolean;
+  editPassword?: boolean;
+};
+export type EditReviewData = {
+  id: number;
+  content: string;
+  country: string;
+  shootingDate: string;
+  productType: string;
+  location: string;
+  directorId: number | null;
+  requiresPassword: boolean;
+  verifiedPassword?: string;
 };
 const DateInput = forwardRef<
   HTMLInputElement,
@@ -69,21 +82,39 @@ function ErrorText({ show, children }: { show?: boolean; children: React.ReactNo
   if (!show) return null;
   return <p style={errorTextStyle}>{children}</p>;
 }
-export default function ReviewForm() {
+export default function ReviewForm({
+  editReview,
+  onEditSuccess,
+}: {
+  editReview?: EditReviewData;
+  onEditSuccess?: () => void;
+}) {
   const { data: session } = useSession();
   const router = useRouter();
-  const [content, setContent] = useState('');
-  const [country, setCountry] = useState('');
-  const [shootingDate, setShootingDate] = useState<Date | null>(null);
-  const [productType, setProductType] = useState('');
-  const [location, setLocation] = useState('');
-  const [directorId, setDirectorId] = useState('');
+  const isModerator = session?.user?.role === 'master';
+  const isEditing = !!editReview;
+  const [content, setContent] = useState(editReview?.content ?? '');
+  const [country, setCountry] = useState(editReview?.country ?? '');
+  const [shootingDate, setShootingDate] = useState<Date | null>(
+    editReview?.shootingDate ? new Date(editReview.shootingDate) : null,
+  );
+  const [productType, setProductType] = useState(editReview?.productType ?? '');
+  const [location, setLocation] = useState(editReview?.location ?? '');
+  const [directorId, setDirectorId] = useState(
+    editReview?.directorId ? String(editReview.directorId) : '',
+  );
   const [guestName, setGuestName] = useState('');
   const [guestPassword, setGuestPassword] = useState('');
   const [guestPasswordConfirm, setGuestPasswordConfirm] = useState('');
+  const [editPassword, setEditPassword] = useState('');
   const [directors, setDirectors] = useState<Director[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
+  const needsEditPassword =
+    isEditing &&
+    editReview.requiresPassword &&
+    !isModerator &&
+    !editReview.verifiedPassword;
   useEffect(() => {
     fetch('/api/directors')
       .then((res) => res.json())
@@ -117,16 +148,19 @@ export default function ReviewForm() {
       shootingDate: !shootingDate,
       country: !country.trim(),
       content: !content.trim(),
-      ...(!session && {
+      ...(!isEditing && !session && {
         guestName: !guestName.trim(),
-        guestPassword: !guestPassword.trim(),
+        guestPassword: !isStrongGuestPassword(guestPassword),
         guestPasswordConfirm: guestPassword !== guestPasswordConfirm,
       }),
+      ...(needsEditPassword && { editPassword: !editPassword.trim() }),
     };
     setErrors(nextErrors);
     if (Object.values(nextErrors).some(Boolean)) {
-      if (!session && guestPassword && guestPasswordConfirm && guestPassword !== guestPasswordConfirm) {
+      if (!isEditing && !session && guestPassword && guestPasswordConfirm && guestPassword !== guestPasswordConfirm) {
         alert('Passwords do not match.');
+      } else if (!isEditing && !session && guestPassword && !isStrongGuestPassword(guestPassword)) {
+        alert(GUEST_PASSWORD_HINT);
       } else {
         alert('Please fill in all fields.');
       }
@@ -134,27 +168,48 @@ export default function ReviewForm() {
     }
     setSubmitting(true);
     try {
-      const res = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          content,
-          country,
-          shootingDate: shootingDate ? formatDate(shootingDate) : '',
-          productType,
-          location,
-          directorId,
-          rating: null,
-          name: guestName,
-          password: guestPassword,
-        }),
-      });
+      const res = isEditing
+        ? await fetch(`/api/reviews/${editReview.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              content,
+              country,
+              shootingDate: shootingDate ? formatDate(shootingDate) : '',
+              productType,
+              location,
+              directorId,
+              password: needsEditPassword
+                ? editPassword
+                : editReview.verifiedPassword,
+            }),
+          })
+        : await fetch('/api/reviews', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              content,
+              country,
+              shootingDate: shootingDate ? formatDate(shootingDate) : '',
+              productType,
+              location,
+              directorId,
+              rating: null,
+              name: guestName,
+              password: guestPassword,
+            }),
+          });
       if (!res.ok) {
         alert((await res.json()).error ?? 'Failed to submit.');
         return;
       }
-      const review = await res.json();
-      router.push(`/review/${review.id}`);
+      if (isEditing) {
+        onEditSuccess?.();
+        router.refresh();
+      } else {
+        const review = await res.json();
+        router.push(`/review/${review.id}`);
+      }
     } finally {
       setSubmitting(false);
     }
@@ -256,7 +311,24 @@ export default function ReviewForm() {
         <ErrorText show={errors.content}>Required</ErrorText>
       </div>
 
-      {!session && (
+      {needsEditPassword && (
+        <div>
+          <label style={labelStyle}>Password *</label>
+          <input
+            style={errors.editPassword ? errorInputStyle : inputStyle}
+            type="password"
+            value={editPassword}
+            onChange={(e) => {
+              setEditPassword(e.target.value);
+              setErrors((prev) => ({ ...prev, editPassword: false }));
+            }}
+            placeholder="Enter the password you used when posting"
+          />
+          <ErrorText show={errors.editPassword}>Required</ErrorText>
+        </div>
+      )}
+
+      {!isEditing && !session && (
         <div
           style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}
         >
@@ -284,7 +356,7 @@ export default function ReviewForm() {
                 setErrors((prev) => ({ ...prev, guestPassword: false, guestPasswordConfirm: false }));
               }}
             />
-            <ErrorText show={errors.guestPassword}>Required</ErrorText>
+            <ErrorText show={errors.guestPassword}>{GUEST_PASSWORD_HINT}</ErrorText>
           </div>
           <div>
             <label style={labelStyle}>Verify Password *</label>
@@ -318,7 +390,13 @@ export default function ReviewForm() {
           cursor: 'pointer',
         }}
       >
-        {submitting ? 'Submitting...' : 'Submit a Review'}
+        {submitting
+          ? isEditing
+            ? 'Saving...'
+            : 'Submitting...'
+          : isEditing
+            ? 'Save Changes'
+            : 'Submit a Review'}
       </button>
     </form>
   );

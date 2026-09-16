@@ -309,8 +309,8 @@ function FaqItem({
         }}
       >
         <span
+          className="type-body"
           style={{
-            fontSize: 22,
             fontWeight: 500,
             color: '#000',
             lineHeight: 1.4,
@@ -334,8 +334,8 @@ function FaqItem({
         <div style={{ padding: '0 36px 32px' }}>
           {a && (
             <p
+              className="type-caption"
               style={{
-                fontSize: 18,
                 color: '#000',
                 lineHeight: 1.8,
                 marginBottom: 24,
@@ -391,7 +391,7 @@ function FaqItem({
 export default function FaqClient() {
   const [activeCategory, setActiveCategory] =
     useState<Category>('Booking & Planning');
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [tabFade, setTabFade] = useState({ left: false, right: true });
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);

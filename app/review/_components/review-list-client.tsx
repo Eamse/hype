@@ -138,7 +138,7 @@ export default function ReviewListClient({ reviews, totalCount }: {
 }) {
     const { data: session } = useSession();
     const router = useRouter();
-    const { refreshFeatured } = useFeaturedReviews();
+    const { refreshFeatured, applyOptimisticFeatured } = useFeaturedReviews();
     const isModerator = session?.user?.role === 'master';
     const [deleted, setDeleted] = useState<Set<number>>(new Set());
     const [featured, setFeatured] = useState<Map<number, boolean>>(() => new Map(reviews.map((r) => [r.id, r.isFeatured])));
@@ -175,6 +175,8 @@ export default function ReviewListClient({ reviews, totalCount }: {
             ids.forEach((id) => next.set(id, isFeatured));
             return next;
         });
+        const selectedReviews = visibleReviews.filter((r) => ids.includes(r.id));
+        applyOptimisticFeatured(isFeatured ? selectedReviews : [], isFeatured ? [] : ids);
         clearSelection();
         Promise.all(ids.map((id) => fetch(`/api/reviews/${id}`, {
             method: 'PATCH',

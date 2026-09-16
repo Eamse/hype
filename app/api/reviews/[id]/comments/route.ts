@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import bcrypt from 'bcryptjs';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { buildCommentTree } from '@/lib/comment-tree';
+import { isStrongGuestPassword } from '@/lib/guest-password';
 function parseId(id: string): number | null {
     const n = Number(id);
     if (!Number.isInteger(n) || n <= 0)
@@ -81,6 +82,9 @@ export async function POST(request: NextRequest, props: {
     else {
         if (!authorName || !password) {
             return NextResponse.json({ error: 'authorName and password are required' }, { status: 400 });
+        }
+        if (!isStrongGuestPassword(password)) {
+            return NextResponse.json({ error: 'password must be at least 8 characters and include a special character' }, { status: 400 });
         }
         finalAuthorName = authorName;
         hashedPassword = await bcrypt.hash(password, 12);

@@ -2,6 +2,7 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import BulkActions from '@/components/admin/bulk-actions';
+import { isStrongGuestPassword, GUEST_PASSWORD_HINT } from '@/lib/guest-password';
 type CommentNode = {
     id: number;
     content: string;
@@ -50,6 +51,10 @@ export default function CommentSection({ reviewId, initialComments, }: {
         replyGuestPassword?: boolean;
     }>({});
     const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+    const [editingId, setEditingId] = useState<number | null>(null);
+    const [editContent, setEditContent] = useState('');
+    const [editPassword, setEditPassword] = useState<string | null>(null);
+    const [editSubmitting, setEditSubmitting] = useState(false);
     const totalCount = useMemo(() => countAll(comments), [comments]);
     const manageableIds = useMemo(() => {
         const ids: number[] = [];
@@ -101,13 +106,17 @@ export default function CommentSection({ reviewId, initialComments, }: {
             alert('Please enter a comment.');
             return;
         }
-        if (!session && (!body.authorName.trim() || !body.password.trim())) {
+        if (!session && (!body.authorName.trim() || !isStrongGuestPassword(body.password))) {
             setErrors((prev) => ({
                 ...prev,
                 [nameKey]: !body.authorName.trim(),
-                [passwordKey]: !body.password.trim(),
+                [passwordKey]: !isStrongGuestPassword(body.password),
             }));
-            alert('Please enter your name and password.');
+            alert(
+                !body.authorName.trim()
+                    ? 'Please enter your name and password.'
+                    : GUEST_PASSWORD_HINT,
+            );
             return;
         }
         setSubmitting(true);
@@ -136,6 +145,48 @@ export default function CommentSection({ reviewId, initialComments, }: {
         }
         finally {
             setSubmitting(false);
+        }
+    }
+    function startEdit(comment: CommentNode) {
+        const isOwner = session?.user?.id === comment.userId;
+        let password: string | null = null;
+        if (!isOwner && !isModerator) {
+            password = window.prompt('Please enter the password you used when posting.');
+            if (password === null)
+                return;
+        }
+        setEditingId(comment.id);
+        setEditContent(comment.content);
+        setEditPassword(password);
+        setReplyingTo(null);
+    }
+    function cancelEdit() {
+        setEditingId(null);
+        setEditContent('');
+        setEditPassword(null);
+    }
+    async function handleSaveEdit(comment: CommentNode) {
+        if (!editContent.trim()) {
+            alert('Please enter a comment.');
+            return;
+        }
+        setEditSubmitting(true);
+        try {
+            const res = await fetch(`/api/reviews/${reviewId}/comments/${comment.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: editContent, password: editPassword }),
+            });
+            if (!res.ok) {
+                alert('Failed to update. Please check your password.');
+                return;
+            }
+            setEditingId(null);
+            setEditPassword(null);
+            await loadComments();
+        }
+        finally {
+            setEditSubmitting(false);
         }
     }
     async function handleDelete(comment: CommentNode) {
@@ -191,17 +242,30 @@ export default function CommentSection({ reviewId, initialComments, }: {
                 {formatDateTime(comment.createdAt)}
               </span>
             </p>
-            <p className="mb-2 whitespace-pre-wrap text-[13px] leading-[1.6] text-[#333]">
-              {comment.content}
-            </p>
-            <div className="flex gap-4">
+            {editingId === comment.id ? (<div className="mb-2 flex flex-col gap-2">
+                <textarea className={inputClass} style={{ minHeight: 60 }} value={editContent} onChange={(e) => setEditContent(e.target.value)}/>
+                <div className="flex gap-2 self-end">
+                  <button onClick={cancelEdit} className="cursor-pointer rounded-lg border border-[#ddd] bg-white px-3 py-1 text-[12px] font-medium text-[#333]">
+                    Cancel
+                  </button>
+                  <button onClick={() => handleSaveEdit(comment)} disabled={editSubmitting} className="cursor-pointer rounded-lg border-none bg-[#0D0D0D] px-3 py-1 text-[12px] font-medium text-white disabled:opacity-50">
+                    {editSubmitting ? 'Saving...' : 'Save'}
+                  </button>
+                </div>
+              </div>) : (<p className="mb-2 whitespace-pre-wrap text-[13px] leading-[1.6] text-[#333]">
+                {comment.content}
+              </p>)}
+            {editingId !== comment.id && (<div className="flex gap-4">
               <button onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)} className="cursor-pointer border-none bg-none p-0 text-[12px] font-semibold text-[#2D5A45] hover:underline">
                 Reply
               </button>
+              {canManage && (<button onClick={() => startEdit(comment)} className="cursor-pointer border-none bg-none p-0 text-[12px] font-semibold text-[#666] hover:underline">
+                  Edit
+                </button>)}
               {canManage && (<button onClick={() => handleDelete(comment)} className="cursor-pointer border-none bg-none p-0 text-[12px] font-semibold text-[#ef4444] hover:underline">
                   Delete
                 </button>)}
-            </div>
+            </div>)}
           </div>
         </div>
 
