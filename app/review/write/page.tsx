@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import Header from '@/components/header';
 import HomeFooter from '@/app/_components/home-footer';
 import ReviewForm from './_components/review-form';
@@ -11,6 +12,12 @@ export default function ReviewWritePage() {
       <Header brand="hype-wedding"/>
       <main style={{ paddingTop: 56 }}>
         <div style={{ maxWidth: 640, margin: '0 auto', padding: '40px 20px 80px' }}>
+          <Link
+            href="/review"
+            className="mb-4 inline-flex items-center gap-1 text-[13px] font-medium text-[#666] no-underline hover:text-[#111]"
+          >
+            ← Back
+          </Link>
           <h1 style={{ fontSize: 28, fontWeight: 800, fontStyle: 'italic', margin: '0 0 24px' }}>
             Write a Review
           </h1>

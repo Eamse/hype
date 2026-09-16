@@ -302,9 +302,6 @@ export default function WeddingDetail({
             className={`text-[20px] sm:text-[24px] font-semibold ${BLACK} tracking-[-0.02em] mb-5`}
           >
             {title}
-            {directors.length > 1 &&
-              activePackage &&
-              ` (${activePackage.director.name})`}
           </div>
 
           {directors.length > 1 && (

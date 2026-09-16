@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import bcrypt from 'bcryptjs';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { isStrongGuestPassword } from '@/lib/guest-password';
 const ALLOWED_PRODUCT_TYPES = new Set(['wedding', 'snap']);
 const ALLOWED_LOCATIONS = new Set(['jeju', 'seoul']);
 export async function GET(request: NextRequest) {
@@ -69,6 +70,9 @@ export async function POST(request: NextRequest) {
     else {
         if (!name || !password) {
             return NextResponse.json({ error: 'name and password are required' }, { status: 400 });
+        }
+        if (!isStrongGuestPassword(password)) {
+            return NextResponse.json({ error: 'password must be at least 8 characters and include a special character' }, { status: 400 });
         }
         finalName = name;
         hashedPassword = await bcrypt.hash(password, 12);

@@ -15,6 +15,10 @@ export type FeaturedReview = {
 type FeaturedReviewsContextValue = {
   featuredReviews: FeaturedReview[];
   refreshFeatured: () => Promise<void>;
+  applyOptimisticFeatured: (
+    added: FeaturedReview[],
+    removedIds: number[],
+  ) => void;
 };
 
 const FeaturedReviewsContext =
@@ -33,9 +37,22 @@ export function FeaturedReviewsProvider({
     const res = await fetch('/api/reviews/featured');
     if (res.ok) setFeaturedReviews(await res.json());
   }
+  function applyOptimisticFeatured(
+    added: FeaturedReview[],
+    removedIds: number[],
+  ) {
+    setFeaturedReviews((prev) => {
+      const removedSet = new Set(removedIds);
+      const kept = prev.filter((r) => !removedSet.has(r.id));
+      const addedFiltered = added.filter(
+        (r) => !kept.some((k) => k.id === r.id),
+      );
+      return [...addedFiltered, ...kept].slice(0, 4);
+    });
+  }
   return (
     <FeaturedReviewsContext.Provider
-      value={{ featuredReviews, refreshFeatured }}
+      value={{ featuredReviews, refreshFeatured, applyOptimisticFeatured }}
     >
       {children}
     </FeaturedReviewsContext.Provider>

@@ -82,7 +82,7 @@ export default async function ReviewDetailPage({ params }: Props) {
             href="/review"
             className="mb-4 inline-flex items-center gap-1 text-[13px] font-medium text-[#666] no-underline hover:text-[#111]"
           >
-            ← Back to Reviews
+            ← Back
           </Link>
           <div className="rounded-2xl border border-[#eee] bg-white p-6 sm:p-8">
             <div className="mb-5 flex items-start gap-3">
@@ -143,6 +143,15 @@ export default async function ReviewDetailPage({ params }: Props) {
               <ReviewDeleteButton
                 reviewId={reviewId}
                 authorUserId={review.userId}
+                editReview={{
+                  id: review.id,
+                  content: review.content,
+                  country: review.country,
+                  shootingDate: review.shootingDate,
+                  productType: review.productType,
+                  location: review.location,
+                  directorId: review.directorId,
+                }}
               />
             </div>
 

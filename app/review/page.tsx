@@ -42,7 +42,7 @@ export default async function ReviewPage({
   const [reviews, totalCount, featuredReviews] = await Promise.all([
     prisma.review.findMany({
       where,
-      orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+      orderBy: { createdAt: 'desc' },
       skip: (currentPage - 1) * PAGE_SIZE,
       take: PAGE_SIZE,
       include: {

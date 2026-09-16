@@ -2,9 +2,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-export default function ReviewDeleteButton({ reviewId, authorUserId, }: {
+import ReviewEditButton from './review-edit-button';
+import type { EditReviewData } from '@/app/review/write/_components/review-form';
+export default function ReviewDeleteButton({ reviewId, authorUserId, editReview, }: {
     reviewId: number;
     authorUserId: string | null;
+    editReview: Omit<EditReviewData, 'requiresPassword'>;
 }) {
     const { data: session } = useSession();
     const router = useRouter();
@@ -41,7 +44,9 @@ export default function ReviewDeleteButton({ reviewId, authorUserId, }: {
             setDeleting(false);
         }
     }
-    return (<button onClick={handleDelete} disabled={deleting} style={{
+    return (<div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+      <ReviewEditButton editReview={{ ...editReview, requiresPassword: !isOwner && !isModerator }}/>
+      <button onClick={handleDelete} disabled={deleting} style={{
             background: 'none',
             border: 'none',
             cursor: 'pointer',
@@ -49,6 +54,7 @@ export default function ReviewDeleteButton({ reviewId, authorUserId, }: {
             color: '#ef4444',
             padding: 0,
         }}>
-      {deleting ? 'Deleting...' : 'Delete'}
-    </button>);
+        {deleting ? 'Deleting...' : 'Delete'}
+      </button>
+    </div>);
 }
