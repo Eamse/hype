@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, forwardRef } from 'react';
+import { useState, useEffect, useMemo, forwardRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import DatePicker from 'react-datepicker';
@@ -87,6 +87,13 @@ export default function ReviewForm() {
       .then((res) => res.json())
       .then((data) => setDirectors(Array.isArray(data) ? data : []));
   }, []);
+  const filteredDirectors = useMemo(
+    () =>
+      location
+        ? directors.filter((d) => d.location?.toLowerCase() === location)
+        : directors,
+    [directors, location],
+  );
   function handleDirectorChange(id: string) {
     setDirectorId(id);
     const selected = directors.find((d) => String(d.id) === id);
@@ -195,7 +202,7 @@ export default function ReviewForm() {
             }}
           >
             <option value="">Select</option>
-            {directors.map((d) => (
+            {filteredDirectors.map((d) => (
               <option key={d.id} value={d.id}>
                 {formatDirectorLabel(d)}
               </option>
