@@ -48,7 +48,17 @@ export default async function ReviewDetailPage({ params }: Props) {
     where: { id: reviewId },
     include: {
       images: { orderBy: { order: 'asc' } },
-      director: { select: { number: true, location: true, name: true } },
+      director: {
+        select: {
+          number: true,
+          location: true,
+          name: true,
+          products: {
+            select: { product: { select: { title: true } } },
+            take: 1,
+          },
+        },
+      },
     },
   });
   if (!review) notFound();
@@ -113,7 +123,8 @@ export default async function ReviewDetailPage({ params }: Props) {
                   <span className="text-[12px] text-[#999]">
                     {maskName(review.name)} ·{' '}
                     {getName(review.country) ?? review.country}
-                    {review.director && ` · ${review.director.name}`}
+                    {review.director &&
+                      ` · ${review.director.products[0]?.product.title ?? review.director.name}`}
                   </span>
                 </div>
                 <p className="text-[11px] text-[#bbb]">

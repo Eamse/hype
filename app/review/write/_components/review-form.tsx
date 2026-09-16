@@ -10,11 +10,13 @@ type Director = {
   number: string;
   name: string;
   location: string | null;
+  category: string;
 };
 function formatDirectorLabel(d: Director) {
+  const categoryLabel = d.category === 'snap' ? 'Snap' : 'Wedding';
   const locationLabel = d.location === 'Jeju' ? 'Jeju' : 'Seoul';
   const num = d.number.replace('#', '').split('-')[0].padStart(2, '0');
-  return `${locationLabel} ${num} - ${d.name}`;
+  return `${categoryLabel} | ${locationLabel} ${num} - ${d.name}`;
 }
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -89,16 +91,21 @@ export default function ReviewForm() {
   }, []);
   const filteredDirectors = useMemo(
     () =>
-      location
-        ? directors.filter((d) => d.location?.toLowerCase() === location)
-        : directors,
-    [directors, location],
+      directors.filter(
+        (d) =>
+          (!location || d.location?.toLowerCase() === location) &&
+          (!productType || d.category === productType),
+      ),
+    [directors, location, productType],
   );
   function handleDirectorChange(id: string) {
     setDirectorId(id);
     const selected = directors.find((d) => String(d.id) === id);
     if (selected?.location) {
       setLocation(selected.location.toLowerCase());
+    }
+    if (selected?.category) {
+      setProductType(selected.category);
     }
   }
   async function handleSubmit(e: React.FormEvent) {
@@ -165,6 +172,7 @@ export default function ReviewForm() {
             value={productType}
             onChange={(e) => {
               setProductType(e.target.value);
+              setDirectorId('');
               setErrors((prev) => ({ ...prev, productType: false }));
             }}
           >

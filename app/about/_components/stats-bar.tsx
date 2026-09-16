@@ -10,7 +10,7 @@ type Stat = {
 const STATS: Stat[] = [
   { target: 70, suffix: '+', label: 'Couples', sublabel: 'In our first year' },
   {
-    target: 16,
+    target: 18,
     suffix: '',
     label: 'Countries',
     sublabel: 'Chosen by couples worldwide',
@@ -89,7 +89,9 @@ function StatColumn({
             {stat.topLabel ?? 'x'}
           </span>
         </div>
-        <div className={`flex items-baseline gap-2 ${alignLeft ? 'self-start' : ''}`}>
+        <div
+          className={`flex items-baseline gap-2 ${alignLeft ? 'self-start' : ''}`}
+        >
           <span className="type-giant-stat font-bold italic tracking-tight">
             {value}
             {stat.suffix}
