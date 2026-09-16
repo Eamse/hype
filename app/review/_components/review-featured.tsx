@@ -1,10 +1,13 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { countryFlag } from '@/lib/country-flag';
 import { useFeaturedReviews } from './featured-reviews-context';
-function useReplayReveal(ref: React.RefObject<HTMLElement | null>) {
+function useReplayReveal(
+  ref: React.RefObject<HTMLElement | null>,
+  deps: unknown[],
+) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -28,24 +31,37 @@ function useReplayReveal(ref: React.RefObject<HTMLElement | null>) {
           }
         });
       },
-      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' },
+      { threshold: 0.1, rootMargin: '0px' },
     );
-    targets.forEach((target) => observer.observe(target));
+    targets.forEach((target) => {
+      observer.observe(target);
+      const rect = target.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        target.classList.add('visible');
+      }
+    });
     return () => {
       observer.disconnect();
       timers.forEach((timer) => clearTimeout(timer));
     };
-  }, [ref]);
+  }, deps);
 }
 export default function ReviewFeatured() {
   const { featuredReviews: reviews, refreshFeatured } = useFeaturedReviews();
   const ref = useRef<HTMLDivElement>(null);
-  useReplayReveal(ref);
   const { data: session } = useSession();
   const isModerator = session?.user?.role === 'master';
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [removed, setRemoved] = useState<Set<number>>(new Set());
-  const visibleReviews = reviews.filter((r) => !removed.has(r.id));
+  const visibleReviews = useMemo(
+    () => reviews.filter((r) => !removed.has(r.id)),
+    [reviews, removed],
+  );
+  const visibleReviewIds = useMemo(
+    () => visibleReviews.map((r) => r.id),
+    [visibleReviews],
+  );
+  useReplayReveal(ref, visibleReviewIds);
   function toggleSelect(id: number) {
     setSelected((prev) => {
       const next = new Set(prev);

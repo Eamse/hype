@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 type MagazineItem = {
@@ -12,6 +12,7 @@ export default function MagazineGrid({ items }: {
     items: MagazineItem[];
 }) {
     const gridRef = useRef<HTMLDivElement>(null);
+    const itemIds = useMemo(() => items.map((m) => m.id), [items]);
     useEffect(() => {
         const el = gridRef.current;
         if (!el)
@@ -28,8 +29,15 @@ export default function MagazineGrid({ items }: {
             });
         }, { threshold: 0.1 });
         observer.observe(el);
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+            cards.forEach((card, idx) => {
+                setTimeout(() => card.classList.add('visible'), idx * 100);
+            });
+            observer.disconnect();
+        }
         return () => observer.disconnect();
-    }, [items.length]);
+    }, itemIds);
     return (<div ref={gridRef} className="magazine-list-grid">
       {items.map((m) => (<Link key={m.id} href={`/editorial/${m.id}`} className="inquiry-step group" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div>
