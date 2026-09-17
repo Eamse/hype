@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { badRequest } from '@/lib/api-errors';
 function parseId(id: string): number | null {
     const n = Number(id);
     if (!Number.isInteger(n) || n <= 0)
@@ -20,7 +21,7 @@ export async function POST(request: NextRequest, props: {
     const { id } = await props.params;
     const reviewId = parseId(id);
     if (reviewId === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('reviews/:id/verify-password', 'invalid id');
     }
     const review = await prisma.review.findUnique({
         where: { id: reviewId },
@@ -30,7 +31,7 @@ export async function POST(request: NextRequest, props: {
         return NextResponse.json({ error: 'review not found' }, { status: 404 });
     }
     if (review.userId) {
-        return NextResponse.json({ error: '회원 작성 리뷰입니다' }, { status: 400 });
+        return badRequest('reviews/:id/verify-password', '회원 작성 리뷰입니다');
     }
     const body = await request.json();
     const password = body.password;

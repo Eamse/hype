@@ -5,6 +5,7 @@ import { isMagazineMaster } from '@/lib/magazine-auth';
 import { deleteFileFromR2 } from '@/lib/r2';
 import { sanitizeMagazineHtml } from '@/lib/magazine-sanitize';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { badRequest } from '@/lib/api-errors';
 function parseId(id: string): number | null {
     const n = Number(id);
     if (!Number.isInteger(n) || n <= 0)
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest, props: {
     const { id } = await props.params;
     const idNum = parseId(id);
     if (idNum === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('magazine/:id', 'invalid id');
     }
     const magazine = await prisma.magazine.findUnique({
         where: { id: idNum },
@@ -51,52 +52,52 @@ export async function PATCH(request: NextRequest, props: {
     const { id } = await props.params;
     const idNum = parseId(id);
     if (idNum === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('magazine/:id', 'invalid id');
     }
     let body: unknown;
     try {
         body = await request.json();
     }
     catch {
-        return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+        return badRequest('magazine/:id', 'Invalid JSON body');
     }
     if (typeof body !== 'object' || body === null) {
-        return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+        return badRequest('magazine/:id', 'Invalid request body');
     }
     const b = body as Record<string, unknown>;
     const data: Record<string, unknown> = {};
     if (b.title !== undefined) {
         if (typeof b.title !== 'string' || !b.title.trim()) {
-            return NextResponse.json({ error: 'title must be a non-empty string' }, { status: 400 });
+            return badRequest('magazine/:id', 'title must be a non-empty string');
         }
         data.title = b.title.trim();
     }
     if (b.content !== undefined) {
-        if (typeof b.content !== 'string' || !b.content.trim()) {
-            return NextResponse.json({ error: 'content must be a non-empty string' }, { status: 400 });
+        if (typeof b.content !== 'string') {
+            return badRequest('magazine/:id', 'content must be a string');
         }
         data.content = sanitizeMagazineHtml(b.content.trim());
     }
     if (b.imageUrl !== undefined) {
         if (b.imageUrl !== null && typeof b.imageUrl !== 'string') {
-            return NextResponse.json({ error: 'imageUrl must be a string or null' }, { status: 400 });
+            return badRequest('magazine/:id', 'imageUrl must be a string or null');
         }
         data.imageUrl = b.imageUrl;
     }
     if (b.published !== undefined) {
         if (typeof b.published !== 'boolean') {
-            return NextResponse.json({ error: 'published must be a boolean' }, { status: 400 });
+            return badRequest('magazine/:id', 'published must be a boolean');
         }
         data.published = b.published;
     }
     if (b.isPinned !== undefined) {
         if (typeof b.isPinned !== 'boolean') {
-            return NextResponse.json({ error: 'isPinned must be a boolean' }, { status: 400 });
+            return badRequest('magazine/:id', 'isPinned must be a boolean');
         }
         data.isPinned = b.isPinned;
     }
     if (Object.keys(data).length === 0) {
-        return NextResponse.json({ error: 'No valid fields to update' }, { status: 400 });
+        return badRequest('magazine/:id', 'No valid fields to update');
     }
     try {
         const magazine = await prisma.magazine.update({ where: { id: idNum }, data });
@@ -119,7 +120,7 @@ export async function DELETE(request: NextRequest, props: {
     const { id } = await props.params;
     const idNum = parseId(id);
     if (idNum === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('magazine/:id', 'invalid id');
     }
     const magazine = await prisma.magazine.findUnique({
         where: { id: idNum },

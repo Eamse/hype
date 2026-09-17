@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import bcrypt from 'bcryptjs';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { isStrongGuestPassword } from '@/lib/guest-password';
+import { badRequest } from '@/lib/api-errors';
 const ALLOWED_PRODUCT_TYPES = new Set(['wedding', 'snap']);
 const ALLOWED_LOCATIONS = new Set(['jeju', 'seoul']);
 export async function GET(request: NextRequest) {
@@ -12,13 +13,13 @@ export async function GET(request: NextRequest) {
     const directorId = request.nextUrl.searchParams.get('directorId');
     const page = Number(request.nextUrl.searchParams.get('page')) || 1;
     if (productType && !ALLOWED_PRODUCT_TYPES.has(productType)) {
-        return NextResponse.json({ error: 'invalid productType' }, { status: 400 });
+        return badRequest('reviews', 'invalid productType');
     }
     if (location && !ALLOWED_LOCATIONS.has(location)) {
-        return NextResponse.json({ error: 'invalid location' }, { status: 400 });
+        return badRequest('reviews', 'invalid location');
     }
     if (directorId && !Number.isInteger(Number(directorId))) {
-        return NextResponse.json({ error: 'invalid directorId' }, { status: 400 });
+        return badRequest('reviews', 'invalid directorId');
     }
     const pageSize = 12;
     const where = {
@@ -52,13 +53,13 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { content, country, shootingDate, productType, location, rating, directorId, name, password, } = body;
     if (!content || !country || !shootingDate) {
-        return NextResponse.json({ error: 'missing required fields' }, { status: 400 });
+        return badRequest('reviews', 'missing required fields');
     }
     if (!ALLOWED_PRODUCT_TYPES.has(productType)) {
-        return NextResponse.json({ error: 'invalid productType' }, { status: 400 });
+        return badRequest('reviews', 'invalid productType');
     }
     if (!ALLOWED_LOCATIONS.has(location)) {
-        return NextResponse.json({ error: 'invalid location' }, { status: 400 });
+        return badRequest('reviews', 'invalid location');
     }
     let finalUserId: string | null = null;
     let finalName: string;
@@ -69,21 +70,21 @@ export async function POST(request: NextRequest) {
     }
     else {
         if (!name || !password) {
-            return NextResponse.json({ error: 'name and password are required' }, { status: 400 });
+            return badRequest('reviews', 'name and password are required');
         }
         if (!isStrongGuestPassword(password)) {
-            return NextResponse.json({ error: 'password must be at least 8 characters and include a special character' }, { status: 400 });
+            return badRequest('reviews', 'password must be at least 8 characters and include a special character');
         }
         finalName = name;
         hashedPassword = await bcrypt.hash(password, 12);
     }
     if (rating !== undefined && rating !== null) {
         if (typeof rating !== 'number' || rating < 1 || rating > 5) {
-            return NextResponse.json({ error: 'rating must be between 1 and 5' }, { status: 400 });
+            return badRequest('reviews', 'rating must be between 1 and 5');
         }
     }
     if (directorId && !Number.isInteger(Number(directorId))) {
-        return NextResponse.json({ error: 'invalid directorId' }, { status: 400 });
+        return badRequest('reviews', 'invalid directorId');
     }
     try {
         const review = await prisma.review.create({

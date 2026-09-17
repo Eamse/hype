@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { canModifyReview } from '@/lib/review-auth';
 import { deleteFileFromR2 } from '@/lib/r2';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { badRequest } from '@/lib/api-errors';
 const ALLOWED_PRODUCT_TYPES = new Set(['wedding', 'snap']);
 const ALLOWED_LOCATIONS = new Set(['jeju', 'seoul']);
 function parseId(id: string): number | null {
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest, props: {
     const { id } = await props.params;
     const reviewId = parseId(id);
     if (reviewId === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('reviews/:id', 'invalid id');
     }
     const review = await prisma.review.findUnique({
         where: { id: reviewId },
@@ -43,7 +44,7 @@ export async function PATCH(request: NextRequest, props: {
     const { id } = await props.params;
     const reviewId = parseId(id);
     if (reviewId === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('reviews/:id', 'invalid id');
     }
     const review = await prisma.review.findUnique({ where: { id: reviewId } });
     if (!review) {
@@ -57,14 +58,14 @@ export async function PATCH(request: NextRequest, props: {
     }
     const { content, country, shootingDate, productType, location, rating, directorId, isFeatured, } = body;
     if (productType !== undefined && !ALLOWED_PRODUCT_TYPES.has(productType)) {
-        return NextResponse.json({ error: 'invalid productType' }, { status: 400 });
+        return badRequest('reviews/:id', 'invalid productType');
     }
     if (location !== undefined && !ALLOWED_LOCATIONS.has(location)) {
-        return NextResponse.json({ error: 'invalid location' }, { status: 400 });
+        return badRequest('reviews/:id', 'invalid location');
     }
     if (rating !== undefined && rating !== null) {
         if (typeof rating !== 'number' || rating < 1 || rating > 5) {
-            return NextResponse.json({ error: 'rating must be between 1 and 5' }, { status: 400 });
+            return badRequest('reviews/:id', 'rating must be between 1 and 5');
         }
     }
     if (isFeatured !== undefined) {
@@ -108,7 +109,7 @@ export async function DELETE(request: NextRequest, props: {
     const { id } = await props.params;
     const reviewId = parseId(id);
     if (reviewId === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('reviews/:id', 'invalid id');
     }
     const review = await prisma.review.findUnique({
         where: { id: reviewId },

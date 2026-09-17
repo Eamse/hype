@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { buildCommentTree } from '@/lib/comment-tree';
 import { isStrongGuestPassword } from '@/lib/guest-password';
+import { badRequest } from '@/lib/api-errors';
 function parseId(id: string): number | null {
     const n = Number(id);
     if (!Number.isInteger(n) || n <= 0)
@@ -19,7 +20,7 @@ export async function GET(request: NextRequest, props: {
     const { id } = await props.params;
     const reviewId = parseId(id);
     if (reviewId === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('reviews/:id/comments', 'invalid id');
     }
     const comments = await prisma.comment.findMany({
         where: { reviewId },
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest, props: {
     const { id } = await props.params;
     const reviewId = parseId(id);
     if (reviewId === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('reviews/:id/comments', 'invalid id');
     }
     const review = await prisma.review.findUnique({
         where: { id: reviewId },
@@ -52,7 +53,7 @@ export async function POST(request: NextRequest, props: {
     const body = await request.json();
     const { content, parentId, authorName, password } = body;
     if (!content) {
-        return NextResponse.json({ error: 'content is required' }, { status: 400 });
+        return badRequest('reviews/:id/comments', 'content is required');
     }
     let parent: {
         reviewId: number;
@@ -62,14 +63,14 @@ export async function POST(request: NextRequest, props: {
     if (parentId !== undefined && parentId !== null) {
         parentIdNum = parseId(String(parentId));
         if (parentIdNum === null) {
-            return NextResponse.json({ error: 'invalid parentId' }, { status: 400 });
+            return badRequest('reviews/:id/comments', 'invalid parentId');
         }
         parent = await prisma.comment.findUnique({
             where: { id: parentIdNum },
             select: { reviewId: true, userId: true },
         });
         if (!parent || parent.reviewId !== reviewId) {
-            return NextResponse.json({ error: 'invalid parentId' }, { status: 400 });
+            return badRequest('reviews/:id/comments', 'invalid parentId');
         }
     }
     let finalUserId: string | null = null;
@@ -81,10 +82,10 @@ export async function POST(request: NextRequest, props: {
     }
     else {
         if (!authorName || !password) {
-            return NextResponse.json({ error: 'authorName and password are required' }, { status: 400 });
+            return badRequest('reviews/:id/comments', 'authorName and password are required');
         }
         if (!isStrongGuestPassword(password)) {
-            return NextResponse.json({ error: 'password must be at least 8 characters and include a special character' }, { status: 400 });
+            return badRequest('reviews/:id/comments', 'password must be at least 8 characters and include a special character');
         }
         finalAuthorName = authorName;
         hashedPassword = await bcrypt.hash(password, 12);

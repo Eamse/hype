@@ -5,6 +5,7 @@ import { canModifyReview } from '@/lib/review-auth';
 import { uploadToR2 } from '@/lib/r2';
 import { validateAndCompressImage, ImageProcessingError } from '@/lib/validate-image';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { badRequest } from '@/lib/api-errors';
 const R2_PUBLIC_BASE_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
 function parseId(id: string): number | null {
     const n = Number(id);
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest, props: {
     const { id } = await props.params;
     const reviewId = parseId(id);
     if (reviewId === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('reviews/:id/images', 'invalid id');
     }
     const review = await prisma.review.findUnique({
         where: { id: reviewId },
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest, props: {
         formData = await request.formData();
     }
     catch {
-        return NextResponse.json({ error: 'invalid form data' }, { status: 400 });
+        return badRequest('reviews/:id/images', 'invalid form data');
     }
     const session = await auth();
     const password = formData.get('password');
@@ -46,11 +47,11 @@ export async function POST(request: NextRequest, props: {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     if (review._count.images >= 5) {
-        return NextResponse.json({ error: 'maximum 5 images allowed' }, { status: 400 });
+        return badRequest('reviews/:id/images', 'maximum 5 images allowed');
     }
     const file = formData.get('image');
     if (!(file instanceof File)) {
-        return NextResponse.json({ error: 'image file is required' }, { status: 400 });
+        return badRequest('reviews/:id/images', 'image file is required');
     }
     if (!R2_PUBLIC_BASE_URL) {
         return NextResponse.json({ error: 'Storage not configured' }, { status: 500 });
