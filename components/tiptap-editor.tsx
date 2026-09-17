@@ -349,6 +349,7 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, {
                 borderRadius: 6,
                 border: '1px solid #000',
                 background: '#fff',
+                color: '#e03131',
                 cursor: 'pointer',
                 fontSize: 12,
             }}>

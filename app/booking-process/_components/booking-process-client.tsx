@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import CtaButton from '@/components/cta-button';
 type Step = {
   icon: string;
   title: string;
@@ -233,18 +233,20 @@ export default function BookingProcessClient() {
       </div>
 
       <div className="booking-process-actions">
-        <Link
+        <CtaButton
           href="https://docs.google.com/forms/d/e/1FAIpQLSf5wIchc4qYFhPbX1VOlMiFvkNugZpeFa16ArIjuuwd5EW6UA/viewform"
-          className="booking-process-cta"
+          external
+          variant="filled"
         >
           Inquiry Now
-        </Link>
-        <Link
+        </CtaButton>
+        <CtaButton
           href="https://calendar.app.google/xekeS5Pgykh9qidHA"
-          className="booking-process-cta"
+          external
+          variant="outline"
         >
           Book Online Meeting
-        </Link>
+        </CtaButton>
       </div>
     </section>
   );

@@ -182,7 +182,7 @@ export default function SearchModal({ onClose }: {
           <button onClick={onClose} style={{
             fontSize: 14,
             fontWeight: 600,
-            color: '#666',
+            color: '#e03131',
             background: 'none',
             border: 'none',
             cursor: 'pointer',

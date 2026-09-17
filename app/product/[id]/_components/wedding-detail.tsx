@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { parseShootDetailValue } from '@/lib/package-display';
+import CtaButton from '@/components/cta-button';
 type Director = {
   id: number;
   number: string;
@@ -618,20 +619,23 @@ export default function WeddingDetail({
                 <span className="row-start-1 row-span-2 col-start-2 self-center text-[15px] font-normal text-black">
                   or
                 </span>
-                <button
+                <CtaButton
                   onClick={() => router.push('?auth=1')}
-                  className="row-start-2 col-start-1 justify-self-center w-[130px] sm:w-[142px] mt-3 mx-1 py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none bg-[#0D0D0D] text-white text-center"
+                  variant="filled"
+                  size="sm"
+                  className="row-start-2 col-start-1 justify-self-center w-[130px] sm:w-[142px] mt-3 mx-1"
                 >
                   Login / Sign up
-                </button>
-                <a
+                </CtaButton>
+                <CtaButton
                   href={INQUIRY_FORM_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="row-start-2 col-start-3 justify-self-center mt-3 mx-1 py-[9px] px-3 sm:px-[18px] rounded-[6px] text-[12px] font-medium cursor-pointer border-none no-underline bg-[#0D0D0D] text-white text-center"
+                  external
+                  variant="outline"
+                  size="sm"
+                  className="row-start-2 col-start-3 justify-self-center mt-3 mx-1"
                 >
                   Submit your Inquiry
-                </a>
+                </CtaButton>
               </div>
             </>
           ) : (
@@ -639,14 +643,16 @@ export default function WeddingDetail({
               <p className={`text-[14px] font-normal ${GRAY4} mb-4`}>
                 Ready to book or have questions?
               </p>
-              <a
+              <CtaButton
                 href={INQUIRY_FORM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full py-[14px] bg-[#0D0D0D] text-white border-none rounded-[8px] text-[14px] font-medium cursor-pointer no-underline"
+                external
+                variant="filled"
+                size="sm"
+                fullWidth
+                className="py-[14px] rounded-[8px] text-[14px]"
               >
                 Submit your Inquiry
-              </a>
+              </CtaButton>
             </>
           )}
           <p className={`text-[12px] font-normal ${GRAY4} mt-3`}>

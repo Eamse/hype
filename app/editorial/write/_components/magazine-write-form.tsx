@@ -176,7 +176,7 @@ export default function MagazineWriteForm({
                 borderRadius: 6,
                 border: '1px solid #000',
                 background: '#fff',
-                color: '#666',
+                color: '#e03131',
                 cursor: 'pointer',
                 fontSize: 13,
               }}
@@ -465,7 +465,7 @@ export default function MagazineWriteForm({
               borderRadius: 8,
               border: '1px solid #000',
               background: '#fff',
-              color: '#666',
+              color: '#e03131',
               cursor: 'pointer',
               fontSize: 14,
             }}

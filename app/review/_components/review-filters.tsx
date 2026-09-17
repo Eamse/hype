@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { useIsMobile } from '@/hooks/useIsMobile';
+import { primaryButtonStyle } from '@/lib/button-style';
 type Director = {
   id: number;
   number: string;
@@ -18,12 +19,16 @@ function formatDirectorLabel(d: Director) {
 }
 const selectStyle: React.CSSProperties = {
   width: 180,
-  padding: '8px 12px',
+  padding: '8px 32px 8px 12px',
   borderRadius: 6,
   border: '1px solid #000',
   fontSize: 13,
   color: '#000',
-  background: '#fff',
+  background:
+    '#fff url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path d="M1 1l4 4 4-4" fill="none" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>\') no-repeat right 10px center',
+  appearance: 'none',
+  WebkitAppearance: 'none',
+  MozAppearance: 'none',
   boxSizing: 'border-box',
 };
 export default function ReviewFilters({
@@ -52,7 +57,8 @@ export default function ReviewFilters({
     const params = new URLSearchParams(window.location.search);
     if (value) params.set(key, value);
     else params.delete(key);
-    if (key === 'location' || key === 'productType') params.delete('directorId');
+    if (key === 'location' || key === 'productType')
+      params.delete('directorId');
     params.delete('page');
     router.push(`${pathname}?${params.toString()}`);
   }
@@ -88,7 +94,7 @@ export default function ReviewFilters({
             flex: isMobile ? '1 1 0' : undefined,
             minWidth: 0,
             width: isMobile ? 0 : selectStyle.width,
-            padding: isMobile ? '6px 2px' : selectStyle.padding,
+            padding: isMobile ? '6px 20px 6px 4px' : selectStyle.padding,
             fontSize: isMobile ? 11 : selectStyle.fontSize,
           }}
           value={productType ?? ''}
@@ -104,7 +110,7 @@ export default function ReviewFilters({
             flex: isMobile ? '1 1 0' : undefined,
             minWidth: 0,
             width: isMobile ? 0 : selectStyle.width,
-            padding: isMobile ? '6px 2px' : selectStyle.padding,
+            padding: isMobile ? '6px 20px 6px 4px' : selectStyle.padding,
             fontSize: isMobile ? 11 : selectStyle.fontSize,
           }}
           value={location ?? ''}
@@ -120,7 +126,7 @@ export default function ReviewFilters({
             flex: isMobile ? '1 1 0' : undefined,
             minWidth: 0,
             width: isMobile ? 0 : selectStyle.width,
-            padding: isMobile ? '6px 2px' : selectStyle.padding,
+            padding: isMobile ? '6px 20px 6px 4px' : selectStyle.padding,
             fontSize: isMobile ? 11 : selectStyle.fontSize,
           }}
           value={directorId ?? ''}
@@ -136,15 +142,10 @@ export default function ReviewFilters({
       </div>
       <Link
         href="/review/write"
+        className="write-review-btn"
         style={{
-          padding: isMobile ? '10px 0' : '10px 18px',
-          background: '#000',
-          color: '#fff',
-          borderRadius: 6,
-          fontSize: 13,
-          fontWeight: 700,
-          textDecoration: 'none',
-          whiteSpace: 'nowrap',
+          ...primaryButtonStyle,
+          padding: isMobile ? '10px 0' : primaryButtonStyle.padding,
           textAlign: 'center',
           width: isMobile ? '100%' : undefined,
           boxSizing: 'border-box',

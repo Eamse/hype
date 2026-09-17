@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { ArrowRight, Mail } from 'lucide-react';
+import CtaButton from '@/components/cta-button';
 const WEDDING_FORM_URL = 'https://forms.gle/oJu6ZPBdhiLWaELDA';
 const SNAP_FORM_URL = 'https://forms.gle/3sWqu4NED5ruJEnN9';
 const CONTACT_EMAIL = 'hypepig227@gmail.com';
@@ -70,28 +71,28 @@ export default function InquiryClient() {
         We will be in touch within 1–2 business days.
       </p>
       <div className="inquiry-cta-buttons">
-        <a
+        <CtaButton
           href={WEDDING_FORM_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inquiry-btn inquiry-btn--filled inquiry-rise"
+          external
+          variant="filled"
+          className="inquiry-rise"
           data-reveal
           data-reveal-delay="440"
         >
           HYPE WEDDING
           <ArrowRight size={16} strokeWidth={2.5} />
-        </a>
-        <a
+        </CtaButton>
+        <CtaButton
           href={SNAP_FORM_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inquiry-btn inquiry-btn--outline inquiry-rise"
+          external
+          variant="outline"
+          className="inquiry-rise"
           data-reveal
           data-reveal-delay="440"
         >
           HYPE SNAP
           <ArrowRight size={16} strokeWidth={2.5} />
-        </a>
+        </CtaButton>
       </div>
 
       <div
