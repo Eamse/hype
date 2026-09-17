@@ -37,7 +37,13 @@ export default function EditorialSection({
   }, [magazines.length]);
   if (magazines.length === 0) return null;
   return (
-    <section style={{ margin: '0 auto', padding: isMobile ? 16 : 40 }}>
+    <section
+      style={{
+        maxWidth: 1600,
+        margin: '0 auto',
+        padding: isMobile ? 16 : 40,
+      }}
+    >
       <div
         style={{
           display: 'flex',
@@ -66,7 +72,7 @@ export default function EditorialSection({
             href={`/editorial/${magazine.id}`}
             className="inquiry-step group block"
           >
-            <div className="relative w-full aspect-square overflow-hidden mb-4 rounded-md">
+            <div className="relative w-full aspect-[4/5] overflow-hidden mb-4 rounded-md">
               {magazine.imageUrl ? (
                 <Image
                   src={magazine.imageUrl}

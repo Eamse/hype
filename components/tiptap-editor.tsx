@@ -203,10 +203,11 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, {
             method: 'POST',
             body: fd,
         });
-        if (!res.ok)
-            return null;
-        const data = await res.json();
-        return data.url as string;
+        const data = await res.json().catch(() => null);
+        if (!res.ok) {
+            return { url: null, error: data?.error ?? `Upload failed (${res.status})` };
+        }
+        return { url: data.url as string, error: null };
     }, []);
     const handleImagesUpload = useCallback(async (files: File[]) => {
         if (!editor || files.length === 0)
@@ -214,13 +215,13 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, {
         setUploading(true);
         try {
             const urls: string[] = [];
-            let failed = 0;
+            const errors: string[] = [];
             for (const file of files) {
-                const url = await uploadImageFile(file);
+                const { url, error } = await uploadImageFile(file);
                 if (url)
                     urls.push(url);
                 else
-                    failed += 1;
+                    errors.push(`${file.name}: ${error}`);
             }
             // editor.chain().setImage(...) 를 이미지마다 반복 호출하면 두 번째 호출부터
             // 방금 넣은 이미지 노드(선택 상태)를 대체해버려서 마지막 한 장만 남는 문제가 있었음.
@@ -231,8 +232,8 @@ const TiptapEditor = forwardRef<TiptapEditorHandle, {
             const html = urls.map((url) => `<img src="${url}" /><p></p>`).join('');
             editor.chain().focus().insertContent(isEmptyDoc ? `<p></p>${html}` : html).run();
             reportImages(editor);
-            if (failed > 0)
-                alert(`${failed} image(s) failed to upload.`);
+            if (errors.length > 0)
+                alert(`${errors.length} image(s) failed to upload:\n${errors.join('\n')}`);
         }
         finally {
             setUploading(false);
