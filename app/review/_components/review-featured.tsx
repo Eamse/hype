@@ -100,7 +100,7 @@ export default function ReviewFeatured() {
         style={{
           fontWeight: 800,
           letterSpacing: '-0.02em',
-          margin: '46px 0 10px 0',
+          margin: '46px 0 0 0',
         }}
       >
         Review

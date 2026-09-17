@@ -245,10 +245,10 @@ export default function CommentSection({ reviewId, initialComments, }: {
             {editingId === comment.id ? (<div className="mb-2 flex flex-col gap-2">
                 <textarea className={inputClass} style={{ minHeight: 60 }} value={editContent} onChange={(e) => setEditContent(e.target.value)}/>
                 <div className="flex gap-2 self-end">
-                  <button onClick={cancelEdit} className="cursor-pointer rounded-lg border border-[#ddd] bg-white px-3 py-1 text-[12px] font-medium text-[#333]">
+                  <button onClick={cancelEdit} className="cursor-pointer whitespace-nowrap rounded-lg border border-[#ddd] bg-white px-4 py-1.5 text-[13px] font-semibold text-[#e03131]">
                     Cancel
                   </button>
-                  <button onClick={() => handleSaveEdit(comment)} disabled={editSubmitting} className="cursor-pointer rounded-lg border-none bg-[#0D0D0D] px-3 py-1 text-[12px] font-medium text-white disabled:opacity-50">
+                  <button onClick={() => handleSaveEdit(comment)} disabled={editSubmitting} className="cursor-pointer whitespace-nowrap rounded-lg border-none bg-[#0D0D0D] px-4 py-1.5 text-[13px] font-semibold text-white disabled:opacity-50">
                     {editSubmitting ? 'Saving...' : 'Save'}
                   </button>
                 </div>
@@ -275,7 +275,7 @@ export default function CommentSection({ reviewId, initialComments, }: {
                 <input className={errors.replyGuestName ? inputErrorClass : inputClass} value={replyGuestName} onChange={(e) => { setReplyGuestName(e.target.value); setErrors((prev) => ({ ...prev, replyGuestName: false })); }} placeholder="Name"/>
                 <input className={errors.replyGuestPassword ? inputErrorClass : inputClass} type="password" value={replyGuestPassword} onChange={(e) => { setReplyGuestPassword(e.target.value); setErrors((prev) => ({ ...prev, replyGuestPassword: false })); }} placeholder="Password"/>
               </div>)}
-            <button onClick={() => handleSubmit(comment.id)} disabled={submitting} className="cursor-pointer self-end rounded-lg border-none bg-[#0D0D0D] px-4 py-1.5 text-[12px] font-medium text-white transition-opacity hover:opacity-85 disabled:opacity-50">
+            <button onClick={() => handleSubmit(comment.id)} disabled={submitting} className="cursor-pointer self-end whitespace-nowrap rounded-lg border-none bg-[#0D0D0D] px-4 py-1.5 text-[13px] font-semibold text-white transition-opacity hover:opacity-85 disabled:opacity-50">
               Submit
             </button>
           </div>)}
@@ -295,7 +295,7 @@ export default function CommentSection({ reviewId, initialComments, }: {
             <input className={`${errors.guestName ? inputErrorClass : inputClass} bg-white`} value={guestName} onChange={(e) => { setGuestName(e.target.value); setErrors((prev) => ({ ...prev, guestName: false })); }} placeholder="Name"/>
             <input className={`${errors.guestPassword ? inputErrorClass : inputClass} bg-white`} type="password" value={guestPassword} onChange={(e) => { setGuestPassword(e.target.value); setErrors((prev) => ({ ...prev, guestPassword: false })); }} placeholder="Password"/>
           </div>)}
-        <button onClick={() => handleSubmit(null)} disabled={submitting} className="cursor-pointer self-end rounded-lg border-none bg-[#0D0D0D] px-5 py-2 text-[13px] font-medium text-white transition-opacity hover:opacity-85 disabled:opacity-50">
+        <button onClick={() => handleSubmit(null)} disabled={submitting} className="cursor-pointer self-end whitespace-nowrap rounded-lg border-none bg-[#0D0D0D] px-4 py-1.5 text-[13px] font-semibold text-white transition-opacity hover:opacity-85 disabled:opacity-50">
           {submitting ? 'Posting...' : 'Post Comment'}
         </button>
       </div>

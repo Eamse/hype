@@ -271,6 +271,11 @@ body {
 
   /* Caption — how we started 프로필 이미지 Co-founder 캡션 (18px) */
   --type-caption: clamp(14px, 12.8px + 0.3vw, 18px);
+
+  /* CTA Button — Inquiry/Booking Process 큰 버튼(HYPE WEDDING·SNAP, Inquiry Now, Book Online Meeting) */
+  --type-cta-lg: 14px;
+  /* CTA Button Small — 상품 상세 Login/Sign up·Submit your Inquiry 버튼 */
+  --type-cta-sm: 12px;
 }
 
 /* 위 변수를 실제 className으로도 붙일 수 있게 만든 유틸리티 클래스 */
@@ -2257,26 +2262,71 @@ body {
   margin: clamp(27px, 4vw, 62px) auto 0;
 }
 
-.booking-process-cta {
-  display: block;
-  width: fit-content;
-  min-width: 260px;
-  padding: 14px 40px;
+/* ── Shared CTA button (product detail, inquiry, booking-process, contact) ── */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   border: 1.5px solid #000;
   border-radius: 4px;
-  font-size: clamp(14px, 12.8px + 0.3vw, 18px);
   font-weight: 700;
-  color: #000;
   text-decoration: none;
+  cursor: pointer;
   text-align: center;
   transition:
     background-color 0.25s ease,
     color 0.25s ease;
 }
 
-.booking-process-cta:hover {
+.cta-btn--filled {
   background-color: #000;
   color: #fff;
+}
+
+.cta-btn--filled:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.cta-btn--outline {
+  background-color: #fff;
+  color: #000;
+}
+
+.cta-btn--outline:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.cta-btn--lg {
+  padding: 12px;
+  min-width: 185px;
+  font-size: var(--type-cta-lg);
+  /* letter-spacing: 1.5px; */
+  text-transform: uppercase;
+}
+
+.cta-btn--sm {
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-size: var(--type-cta-sm);
+  font-weight: 500;
+  min-width: 130px;
+}
+
+.cta-btn--full {
+  display: flex;
+  width: 100%;
+}
+
+.write-review-btn {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.write-review-btn:hover {
+  background: #fff !important;
+  color: #000 !important;
 }
 
 .inquiry-step-row {
@@ -2409,45 +2459,6 @@ body {
 .inquiry-cta-buttons {
   display: flex;
   gap: 16px;
-}
-
-.inquiry-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 18px 40px;
-  min-width: 236px;
-  border: 1.5px solid #000;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  text-decoration: none;
-  transition:
-    background-color 0.25s ease,
-    color 0.25s ease;
-}
-
-.inquiry-btn--filled {
-  background-color: #000;
-  color: #fff;
-}
-
-.inquiry-btn--filled:hover {
-  background-color: #fff;
-  color: #000;
-}
-
-.inquiry-btn--outline {
-  background-color: #fff;
-  color: #000;
-}
-
-.inquiry-btn--outline:hover {
-  background-color: #000;
-  color: #fff;
 }
 
 .inquiry-fade {
@@ -3022,7 +3033,12 @@ body {
     transition: none !important;
   }
 }
-@media (max-width: 767px) {
+@media (max-width: 1126px) {
+  .review-featured-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+@media (max-width: 600px) {
   .review-featured-grid {
     grid-template-columns: 1fr !important;
   }

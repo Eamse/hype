@@ -56,7 +56,7 @@ export default function EditorialHeader() {
             fontWeight: 800,
             letterSpacing: '-0.02em',
             color: '#000',
-            margin: '46px 0 10px 0',
+            margin: '46px 0 0 0',
           }}
         >
           Editorial
@@ -65,7 +65,7 @@ export default function EditorialHeader() {
           className="inquiry-fade type-body"
           data-reveal
           data-reveal-delay="220"
-          style={{ color: '#555' }}
+          style={{ color: '#555', marginBottom: '10px' }}
         >
           Stories from behind the lens
         </p>

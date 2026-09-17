@@ -4,13 +4,12 @@
 
 > 급한대로 AI 토대로 작성했습니다.
 
-> 압축 파일은 노드 모듈 뺐습니다.
+> 파일은 노드 모듈, .next 뺐습니다.
 
 ## 1. 개요
 
 - **스택**: Next.js (App Router) + Prisma + PostgreSQL, 배포는 iwinv VPS에 PM2로 직접 구동 (Vercel 아님)
 - **도메인**: hypewedding.kr
-- **어드민**: `/gatekeeper-7f3k9` (경로 자체가 비밀번호 역할, URL 노출 주의)
 
 ## 2. 로컬 개발 환경
 

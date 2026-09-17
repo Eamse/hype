@@ -62,7 +62,9 @@ export default async function ReviewPage({
     }),
   ]);
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
-  const formatDirectorBadge = (director: { number: string; location: string | null } | null) => {
+  const formatDirectorBadge = (
+    director: { number: string; location: string | null } | null,
+  ) => {
     if (!director) return null;
     const locationLabel = director.location === 'Jeju' ? 'Jeju' : 'Seoul';
     const num = director.number.replace('#', '').split('-')[0].padStart(2, '0');
@@ -157,7 +159,7 @@ export default async function ReviewPage({
       <HomeFooter />
 
       <style>{`
-        @media (max-width: 1095px) {
+        @media (max-width: 1142px) {
           .review-main-grid {
             grid-template-columns: 1fr !important;
           }
