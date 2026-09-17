@@ -141,9 +141,9 @@ function StepColumn({ step, num }: { step: Step; num: number }) {
       >
         {step.title === 'Send Your Plan' ? (
           <>
-            <span style={{ display: 'block' }}>· Instagram DM & Whatsapp</span>
+            <span style={{ display: 'block', whiteSpace: 'nowrap' }}>· Instagram DM & Whatsapp</span>
             <span style={{ display: 'block' }}>· Inquiry Form</span>
-            <span style={{ display: 'block' }}>· 1:1 Online Consultation</span>
+            <span style={{ display: 'block', whiteSpace: 'nowrap' }}>· 1:1 Online Consultation</span>
           </>
         ) : step.title === 'Shoot & Final Edits' ? (
           <>

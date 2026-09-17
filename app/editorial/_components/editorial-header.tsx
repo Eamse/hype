@@ -65,7 +65,7 @@ export default function EditorialHeader() {
           className="inquiry-fade type-body"
           data-reveal
           data-reveal-delay="220"
-          style={{ color: '#555', marginBottom: '10px' }}
+          style={{ color: '#555', marginBottom: '64px' }}
         >
           Stories from behind the lens
         </p>

@@ -94,7 +94,9 @@ export default async function Home() {
                 secondsPerItem: 4.85,
             },
         ]}/>
-        <OurServiceSection showHeader={false}/>
+        <div className="home-service-align">
+          <OurServiceSection showHeader={false}/>
+        </div>
         <EditorialSection magazines={magazines}/>
       </main>
 
