@@ -1222,6 +1222,35 @@ body {
   margin-bottom: 50px;
 }
 
+.home-service-align {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.home-service-align .offer-page {
+  padding-inline: 40px;
+}
+
+.home-service-align .service-grid {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+@media (min-width: 1279px) {
+  .home-service-align .offer-header {
+    position: relative;
+  }
+
+  .home-service-align .offer-headline {
+    width: 1260px;
+    max-width: 1260px;
+    position: relative;
+    left: 50%;
+    margin: 0;
+    transform: translateX(-630px);
+  }
+}
+
 @media (min-width: 1279px) {
   .service-grid {
     grid-template-columns: repeat(4, 270px);
@@ -1339,6 +1368,7 @@ body {
   font-size: 12px;
   font-style: italic;
   color: #888;
+  text-align: left;
 }
 
 .service-col-note--accent {
@@ -2321,12 +2351,31 @@ body {
 }
 
 .write-review-btn {
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .write-review-btn:hover {
   background: #fff !important;
   color: #000 !important;
+}
+
+.cta-hover-invert-dark,
+.cta-hover-invert-light {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.cta-hover-invert-dark:hover {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+.cta-hover-invert-light:hover {
+  background: #000 !important;
+  color: #fff !important;
 }
 
 .inquiry-step-row {
