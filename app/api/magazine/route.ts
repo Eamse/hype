@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { isMagazineMaster } from '@/lib/magazine-auth';
 import { sanitizeMagazineHtml } from '@/lib/magazine-sanitize';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { badRequest } from '@/lib/api-errors';
 export async function GET() {
     try {
         const magazine = await prisma.magazine.findMany({
@@ -29,17 +30,17 @@ export async function POST(request: NextRequest) {
         body = await request.json();
     }
     catch {
-        return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+        return badRequest('magazine', 'Invalid JSON body');
     }
     if (typeof body !== 'object' || body === null) {
-        return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+        return badRequest('magazine', 'Invalid request body');
     }
     const b = body as Record<string, unknown>;
     if (typeof b.title !== 'string' || !b.title.trim()) {
-        return NextResponse.json({ error: 'title is required' }, { status: 400 });
+        return badRequest('magazine', 'title is required');
     }
-    if (typeof b.content !== 'string' || !b.content.trim()) {
-        return NextResponse.json({ error: 'content is required' }, { status: 400 });
+    if (typeof b.content !== 'string') {
+        return badRequest('magazine', 'content must be a string');
     }
     try {
         const magazine = await prisma.magazine.create({

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
+import { badRequest } from '@/lib/api-errors';
 function parseId(id: string): number | null {
     const n = Number(id);
     if (!Number.isInteger(n) || n <= 0)
@@ -20,11 +21,11 @@ export async function PATCH(request: NextRequest, props: {
     const { id } = await props.params;
     const reviewId = parseId(id);
     if (reviewId === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('reviews/:id/feature', 'invalid id');
     }
     const body = await request.json();
     if (typeof body.isFeatured !== 'boolean') {
-        return NextResponse.json({ error: 'isFeatured must be a boolean' }, { status: 400 });
+        return badRequest('reviews/:id/feature', 'isFeatured must be a boolean');
     }
     try {
         const review = await prisma.review.update({

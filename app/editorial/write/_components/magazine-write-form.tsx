@@ -94,9 +94,9 @@ export default function MagazineWriteForm({
     router.push(isEdit ? `/editorial/${magazineId}` : '/editorial');
   }
   async function handleSave() {
-    if (!title.trim() || !content.trim()) {
-      setErrors({ title: !title.trim(), content: !content.trim() });
-      alert('Please enter a title and content.');
+    if (!title.trim()) {
+      setErrors({ title: true, content: false });
+      alert('Please enter a title.');
       return;
     }
     setSubmitting(true);
@@ -234,7 +234,7 @@ export default function MagazineWriteForm({
   return (
     <div style={{ maxWidth: 640, margin: '0 auto', padding: '80px 20px 80px' }}>
       <h1 style={{ fontSize: 22, fontWeight: 700, margin: '0 0 24px' }}>
-        {isEdit ? 'Edit Magazine' : 'Write Magazine'}
+        {isEdit ? 'Edit Editorial' : 'Write Editorial'}
       </h1>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>

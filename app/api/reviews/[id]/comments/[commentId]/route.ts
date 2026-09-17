@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { canModifyReview } from '@/lib/review-auth';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
+import { badRequest } from '@/lib/api-errors';
 function parseId(id: string): number | null {
     const n = Number(id);
     if (!Number.isInteger(n) || n <= 0)
@@ -21,7 +22,7 @@ export async function PATCH(request: NextRequest, props: {
     const { commentId } = await props.params;
     const id = parseId(commentId);
     if (id === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('reviews/:id/comments/:commentId', 'invalid id');
     }
     const comment = await prisma.comment.findUnique({ where: { id } });
     if (!comment || comment.deletedAt) {
@@ -34,7 +35,7 @@ export async function PATCH(request: NextRequest, props: {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     if (!body.content) {
-        return NextResponse.json({ error: 'content is required' }, { status: 400 });
+        return badRequest('reviews/:id/comments/:commentId', 'content is required');
     }
     try {
         const updated = await prisma.comment.update({
@@ -61,7 +62,7 @@ export async function DELETE(request: NextRequest, props: {
     const { commentId } = await props.params;
     const id = parseId(commentId);
     if (id === null) {
-        return NextResponse.json({ error: 'invalid id' }, { status: 400 });
+        return badRequest('reviews/:id/comments/:commentId', 'invalid id');
     }
     const comment = await prisma.comment.findUnique({ where: { id } });
     if (!comment || comment.deletedAt) {

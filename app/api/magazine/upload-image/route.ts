@@ -4,6 +4,7 @@ import { isMagazineMaster } from '@/lib/magazine-auth';
 import { uploadToR2 } from '@/lib/r2';
 import { validateAndCompressImage, ImageProcessingError } from '@/lib/validate-image';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { badRequest } from '@/lib/api-errors';
 const R2_PUBLIC_BASE_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
 export async function POST(request: NextRequest) {
     const session = await auth();
@@ -21,11 +22,11 @@ export async function POST(request: NextRequest) {
         formData = await request.formData();
     }
     catch {
-        return NextResponse.json({ error: 'Invalid form data' }, { status: 400 });
+        return badRequest('magazine/upload-image', 'Invalid form data');
     }
     const file = formData.get('image') as File | null;
     if (!file) {
-        return NextResponse.json({ error: 'No image provided' }, { status: 400 });
+        return badRequest('magazine/upload-image', 'No image provided');
     }
     let compressed: Buffer;
     try {
