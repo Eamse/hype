@@ -435,6 +435,9 @@ export default function MagazineWriteForm({
             }}
             style={{ ...inputStyle, padding: '8px 10px' }}
           />
+          <p style={{ fontSize: 11, color: '#999', margin: '4px 0 0' }}>
+            50MB 이하 이미지만 업로드 가능합니다.
+          </p>
         </div>
 
         <label
