@@ -1,9 +1,11 @@
 'use client';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import MagazineDetailView from '@/components/magazine-detail-view';
-import TiptapEditor from '@/components/tiptap-editor';
-import { resizeImageFile, resizeImageFiles } from '@/lib/client-image-resize';
+import TiptapEditor, {
+  type TiptapEditorHandle,
+} from '@/components/tiptap-editor';
+import { resizeImageFile } from '@/lib/client-image-resize';
 const inputStyle: React.CSSProperties = {
   width: '100%',
   padding: '10px 12px',
@@ -43,104 +45,44 @@ export default function MagazineWriteForm({
 }) {
   const router = useRouter();
   const isEdit = magazineId !== undefined;
+  const editorRef = useRef<TiptapEditorHandle>(null);
   const [title, setTitle] = useState(initialTitle);
   const [content, setContent] = useState(initialContent);
+  const [contentImages, setContentImages] = useState<string[]>([]);
   const [errors, setErrors] = useState<{ title?: boolean; content?: boolean }>(
     {},
   );
   const [published, setPublished] = useState(initialPublished);
   const existingImageUrl = initialImageUrl;
-  const [existingImages, setExistingImages] = useState(initialImages);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverCleared, setCoverCleared] = useState(false);
-  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [preview, setPreview] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [deletingImageId, setDeletingImageId] = useState<number | null>(null);
-  const [dragExistingId, setDragExistingId] = useState<number | null>(null);
-  const [dragGalleryIdx, setDragGalleryIdx] = useState<number | null>(null);
+  const [dragContentIdx, setDragContentIdx] = useState<number | null>(null);
   const coverPreviewUrl = useMemo(
     () => (coverFile ? URL.createObjectURL(coverFile) : null),
     [coverFile],
   );
-  const galleryPreviewUrls = useMemo(
-    () => galleryFiles.map((f) => URL.createObjectURL(f)),
-    [galleryFiles],
-  );
   useEffect(() => {
     return () => {
       if (coverPreviewUrl) URL.revokeObjectURL(coverPreviewUrl);
-      galleryPreviewUrls.forEach((url) => URL.revokeObjectURL(url));
     };
-  }, [coverPreviewUrl, galleryPreviewUrls]);
-  async function handleDeleteExistingImage(imageId: number) {
-    if (!magazineId) return;
-    setDeletingImageId(imageId);
-    try {
-      const res = await fetch(
-        `/editorial/${magazineId}/images?imageId=${imageId}`,
-        {
-          method: 'DELETE',
-        },
-      );
-      if (res.ok) {
-        setExistingImages((prev) => prev.filter((img) => img.id !== imageId));
-      } else {
-        alert('Failed to delete image.');
-      }
-    } finally {
-      setDeletingImageId(null);
-    }
-  }
-  function moveItem<T>(arr: T[], from: number, to: number): T[] {
-    const copy = [...arr];
-    const [item] = copy.splice(from, 1);
-    copy.splice(to, 0, item);
-    return copy;
-  }
-  async function persistExistingOrder(next: ExistingImage[]) {
-    setExistingImages(next);
-    if (!magazineId) return;
-    await fetch(`/editorial/${magazineId}/images`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        order: next.map((img, i) => ({ id: img.id, order: i })),
-      }),
-    });
-  }
-  function moveExisting(idx: number, dir: -1 | 1) {
+  }, [coverPreviewUrl]);
+  function moveContentImage(idx: number, dir: -1 | 1) {
     const to = idx + dir;
-    if (to < 0 || to >= existingImages.length) return;
-    persistExistingOrder(moveItem(existingImages, idx, to));
+    if (to < 0 || to >= contentImages.length) return;
+    editorRef.current?.moveImage(idx, to);
   }
-  function moveGalleryFile(idx: number, dir: -1 | 1) {
-    const to = idx + dir;
-    if (to < 0 || to >= galleryFiles.length) return;
-    setGalleryFiles((prev) => moveItem(prev, idx, to));
+  function removeContentImage(idx: number) {
+    editorRef.current?.removeImage(idx);
   }
-  function removeGalleryFile(idx: number) {
-    setGalleryFiles((prev) => prev.filter((_, i) => i !== idx));
-  }
-  function handleExistingDrop(targetId: number) {
-    if (dragExistingId === null || dragExistingId === targetId) {
-      setDragExistingId(null);
+  function handleContentDrop(targetIdx: number) {
+    if (dragContentIdx === null || dragContentIdx === targetIdx) {
+      setDragContentIdx(null);
       return;
     }
-    const fromIdx = existingImages.findIndex((i) => i.id === dragExistingId);
-    const toIdx = existingImages.findIndex((i) => i.id === targetId);
-    if (fromIdx !== -1 && toIdx !== -1) {
-      persistExistingOrder(moveItem(existingImages, fromIdx, toIdx));
-    }
-    setDragExistingId(null);
-  }
-  function handleGalleryDrop(targetIdx: number) {
-    if (dragGalleryIdx === null || dragGalleryIdx === targetIdx) {
-      setDragGalleryIdx(null);
-      return;
-    }
-    setGalleryFiles((prev) => moveItem(prev, dragGalleryIdx, targetIdx));
-    setDragGalleryIdx(null);
+    editorRef.current?.moveImage(dragContentIdx, targetIdx);
+    setDragContentIdx(null);
   }
   function handleCancel() {
     if (
@@ -188,16 +130,15 @@ export default function MagazineWriteForm({
         const magazine = await res.json();
         id = magazine.id;
       }
-      if (coverFile || galleryFiles.length > 0) {
+      if (coverFile) {
         const fd = new FormData();
-        if (coverFile) fd.append('cover', coverFile);
-        galleryFiles.forEach((f) => fd.append('images', f));
+        fd.append('cover', coverFile);
         const imgRes = await fetch(`/editorial/${id}/images`, {
           method: 'POST',
           body: fd,
         });
         if (!imgRes.ok) {
-          alert('Saved, but image upload failed. You can try again.');
+          alert('Saved, but cover image upload failed. You can try again.');
         }
       }
       router.push(`/editorial/${id}`);
@@ -216,53 +157,67 @@ export default function MagazineWriteForm({
             backgroundColor: '#fff',
             borderBottom: '1px solid #000',
             padding: '12px 20px',
-            display: 'flex',
-            justifyContent: 'flex-end',
-            gap: 8,
           }}
         >
-          <button
-            onClick={handleCancel}
+          <div
             style={{
-              padding: '8px 16px',
-              borderRadius: 6,
-              border: 'none',
-              background: 'none',
-              color: '#666',
-              cursor: 'pointer',
-              fontSize: 13,
+              maxWidth: 800,
+              margin: '0 auto',
+              display: 'flex',
+              justifyContent: 'space-between',
+              gap: 8,
+              padding: '0 60px 0',
             }}
           >
-            Cancel
-          </button>
-          <button
-            onClick={() => setPreview(false)}
-            style={{
-              padding: '8px 16px',
-              borderRadius: 6,
-              border: '1px solid #000',
-              background: '#fff',
-              cursor: 'pointer',
-              fontSize: 13,
-            }}
-          >
-            ← Back
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={submitting}
-            style={{
-              padding: '8px 16px',
-              borderRadius: 6,
-              border: 'none',
-              background: '#000',
-              color: '#fff',
-              cursor: 'pointer',
-              fontSize: 13,
-            }}
-          >
-            {submitting ? 'Saving...' : published ? 'Publish' : 'Save Draft'}
-          </button>
+            <button
+              onClick={handleCancel}
+              style={{
+                padding: '8px 16px',
+                borderRadius: 6,
+                border: '1px solid #000',
+                background: '#fff',
+                color: '#666',
+                cursor: 'pointer',
+                fontSize: 13,
+              }}
+            >
+              Cancel
+            </button>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                onClick={() => setPreview(false)}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: 6,
+                  border: '1px solid #000',
+                  background: '#fff',
+                  cursor: 'pointer',
+                  fontSize: 13,
+                }}
+              >
+                ← Back
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={submitting}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: 6,
+                  border: 'none',
+                  background: '#000',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontSize: 13,
+                }}
+              >
+                {submitting
+                  ? 'Saving...'
+                  : published
+                    ? 'Publish'
+                    : 'Save Draft'}
+              </button>
+            </div>
+          </div>
         </div>
         <MagazineDetailView
           magazine={{
@@ -270,10 +225,7 @@ export default function MagazineWriteForm({
             content,
             imageUrl: coverPreviewUrl ?? existingImageUrl,
             createdAt: new Date(),
-            images: [
-              ...existingImages,
-              ...galleryPreviewUrls.map((url, i) => ({ id: `new-${i}`, url })),
-            ],
+            images: initialImages,
           }}
         />
       </div>
@@ -307,17 +259,133 @@ export default function MagazineWriteForm({
             }}
           >
             <TiptapEditor
+              ref={editorRef}
               content={content}
               onChange={(v) => {
                 setContent(v);
                 setErrors((prev) => ({ ...prev, content: false }));
               }}
+              onImagesChange={setContentImages}
             />
           </div>
         </div>
 
+        {contentImages.length > 0 && (
+          <div>
+            <label style={labelStyle}>Images in Content</label>
+            <p style={{ fontSize: 12, color: '#666', margin: '0 0 6px' }}>
+              {contentImages.length} image(s) in this article. Drag or use the
+              arrows to reorder, × to remove.
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 8,
+              }}
+            >
+              {contentImages.map((url, idx) => (
+                <div
+                  key={url + idx}
+                  draggable
+                  onDragStart={() => setDragContentIdx(idx)}
+                  onDragOver={(e) => e.preventDefault()}
+                  onDrop={() => handleContentDrop(idx)}
+                  style={{ position: 'relative', cursor: 'grab' }}
+                >
+                  <img
+                    src={url}
+                    alt=""
+                    style={{
+                      width: 80,
+                      height: 80,
+                      objectFit: 'cover',
+                      borderRadius: 6,
+                      border: '1px solid #000',
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeContentImage(idx)}
+                    style={{
+                      position: 'absolute',
+                      top: -6,
+                      right: -6,
+                      width: 20,
+                      height: 20,
+                      borderRadius: '50%',
+                      background: '#ef4444',
+                      color: '#fff',
+                      border: 'none',
+                      cursor: 'pointer',
+                      fontSize: 12,
+                      lineHeight: 1,
+                    }}
+                  >
+                    ×
+                  </button>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: -6,
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      display: 'flex',
+                      gap: 2,
+                    }}
+                  >
+                    <button
+                      type="button"
+                      onClick={() => moveContentImage(idx, -1)}
+                      disabled={idx === 0}
+                      style={{
+                        width: 18,
+                        height: 18,
+                        borderRadius: 4,
+                        border: '1px solid #000',
+                        background: '#fff',
+                        cursor: 'pointer',
+                        fontSize: 10,
+                        lineHeight: 1,
+                        padding: 0,
+                      }}
+                    >
+                      ←
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveContentImage(idx, 1)}
+                      disabled={idx === contentImages.length - 1}
+                      style={{
+                        width: 18,
+                        height: 18,
+                        borderRadius: 4,
+                        border: '1px solid #000',
+                        background: '#fff',
+                        cursor: 'pointer',
+                        fontSize: 10,
+                        lineHeight: 1,
+                        padding: 0,
+                      }}
+                    >
+                      →
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div>
           <label style={labelStyle}>Cover Image</label>
+          {(coverPreviewUrl || (existingImageUrl && !coverCleared)) && (
+            <p style={{ fontSize: 12, color: '#666', margin: '0 0 6px' }}>
+              {coverFile
+                ? `Uploaded: ${coverFile.name}`
+                : 'Current cover image'}
+            </p>
+          )}
           {(coverPreviewUrl || (existingImageUrl && !coverCleared)) && (
             <div style={{ position: 'relative', width: 120, marginBottom: 8 }}>
               <img
@@ -369,223 +437,6 @@ export default function MagazineWriteForm({
           />
         </div>
 
-        <div>
-          <label style={labelStyle}>Detail Images</label>
-          {existingImages.length > 0 && (
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 8,
-                marginBottom: 10,
-              }}
-            >
-              {existingImages.map((img, idx) => (
-                <div
-                  key={img.id}
-                  draggable
-                  onDragStart={() => setDragExistingId(img.id)}
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={() => handleExistingDrop(img.id)}
-                  style={{ position: 'relative', cursor: 'grab' }}
-                >
-                  <img
-                    src={img.url}
-                    alt=""
-                    style={{
-                      width: 80,
-                      height: 80,
-                      objectFit: 'cover',
-                      borderRadius: 6,
-                      border: '1px solid #000',
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteExistingImage(img.id)}
-                    disabled={deletingImageId === img.id}
-                    style={{
-                      position: 'absolute',
-                      top: -6,
-                      right: -6,
-                      width: 20,
-                      height: 20,
-                      borderRadius: '50%',
-                      background: '#ef4444',
-                      color: '#fff',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: 12,
-                      lineHeight: 1,
-                    }}
-                  >
-                    ×
-                  </button>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: -6,
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      display: 'flex',
-                      gap: 2,
-                    }}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => moveExisting(idx, -1)}
-                      disabled={idx === 0}
-                      style={{
-                        width: 18,
-                        height: 18,
-                        borderRadius: 4,
-                        border: '1px solid #000',
-                        background: '#fff',
-                        cursor: 'pointer',
-                        fontSize: 10,
-                        lineHeight: 1,
-                        padding: 0,
-                      }}
-                    >
-                      ←
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => moveExisting(idx, 1)}
-                      disabled={idx === existingImages.length - 1}
-                      style={{
-                        width: 18,
-                        height: 18,
-                        borderRadius: 4,
-                        border: '1px solid #000',
-                        background: '#fff',
-                        cursor: 'pointer',
-                        fontSize: 10,
-                        lineHeight: 1,
-                        padding: 0,
-                      }}
-                    >
-                      →
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          {galleryFiles.length > 0 && (
-            <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: 8,
-                marginBottom: 10,
-              }}
-            >
-              {galleryFiles.map((_, idx) => (
-                <div
-                  key={idx}
-                  draggable
-                  onDragStart={() => setDragGalleryIdx(idx)}
-                  onDragOver={(e) => e.preventDefault()}
-                  onDrop={() => handleGalleryDrop(idx)}
-                  style={{ position: 'relative', cursor: 'grab' }}
-                >
-                  <img
-                    src={galleryPreviewUrls[idx]}
-                    alt=""
-                    style={{
-                      width: 80,
-                      height: 80,
-                      objectFit: 'cover',
-                      borderRadius: 6,
-                      border: '1px dashed #999',
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removeGalleryFile(idx)}
-                    style={{
-                      position: 'absolute',
-                      top: -6,
-                      right: -6,
-                      width: 20,
-                      height: 20,
-                      borderRadius: '50%',
-                      background: '#ef4444',
-                      color: '#fff',
-                      border: 'none',
-                      cursor: 'pointer',
-                      fontSize: 12,
-                      lineHeight: 1,
-                    }}
-                  >
-                    ×
-                  </button>
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: -6,
-                      left: '50%',
-                      transform: 'translateX(-50%)',
-                      display: 'flex',
-                      gap: 2,
-                    }}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => moveGalleryFile(idx, -1)}
-                      disabled={idx === 0}
-                      style={{
-                        width: 18,
-                        height: 18,
-                        borderRadius: 4,
-                        border: '1px solid #000',
-                        background: '#fff',
-                        cursor: 'pointer',
-                        fontSize: 10,
-                        lineHeight: 1,
-                        padding: 0,
-                      }}
-                    >
-                      ←
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => moveGalleryFile(idx, 1)}
-                      disabled={idx === galleryFiles.length - 1}
-                      style={{
-                        width: 18,
-                        height: 18,
-                        borderRadius: 4,
-                        border: '1px solid #000',
-                        background: '#fff',
-                        cursor: 'pointer',
-                        fontSize: 10,
-                        lineHeight: 1,
-                        padding: 0,
-                      }}
-                    >
-                      →
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={async (e) => {
-              const files = Array.from(e.target.files ?? []);
-              const resized = await resizeImageFiles(files);
-              setGalleryFiles((prev) => [...prev, ...resized]);
-              e.target.value = '';
-            }}
-            style={{ ...inputStyle, padding: '8px 10px' }}
-          />
-        </div>
-
         <label
           style={{
             display: 'flex',
@@ -603,15 +454,17 @@ export default function MagazineWriteForm({
           Published (visible to everyone)
         </label>
 
-        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+        <div
+          style={{ display: 'flex', gap: 8, justifyContent: 'space-between' }}
+        >
           <button
             type="button"
             onClick={handleCancel}
             style={{
               padding: '12px 20px',
               borderRadius: 8,
-              border: 'none',
-              background: 'none',
+              border: '1px solid #000',
+              background: '#fff',
               color: '#666',
               cursor: 'pointer',
               fontSize: 14,
@@ -619,38 +472,40 @@ export default function MagazineWriteForm({
           >
             Cancel
           </button>
-          <button
-            type="button"
-            onClick={() => setPreview(true)}
-            disabled={!title.trim() && !content.trim()}
-            style={{
-              padding: '12px 20px',
-              borderRadius: 8,
-              border: '1px solid #000',
-              background: '#fff',
-              cursor: 'pointer',
-              fontSize: 14,
-            }}
-          >
-            Preview
-          </button>
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={submitting}
-            style={{
-              padding: '12px 20px',
-              borderRadius: 8,
-              border: 'none',
-              background: '#000',
-              color: '#fff',
-              cursor: 'pointer',
-              fontSize: 14,
-              fontWeight: 700,
-            }}
-          >
-            {submitting ? 'Saving...' : published ? 'Publish' : 'Save Draft'}
-          </button>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              type="button"
+              onClick={() => setPreview(true)}
+              disabled={!title.trim() && !content.trim()}
+              style={{
+                padding: '12px 20px',
+                borderRadius: 8,
+                border: '1px solid #000',
+                background: '#fff',
+                cursor: 'pointer',
+                fontSize: 14,
+              }}
+            >
+              Preview
+            </button>
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={submitting}
+              style={{
+                padding: '12px 20px',
+                borderRadius: 8,
+                border: 'none',
+                background: '#000',
+                color: '#fff',
+                cursor: 'pointer',
+                fontSize: 14,
+                fontWeight: 700,
+              }}
+            >
+              {submitting ? 'Saving...' : published ? 'Publish' : 'Save Draft'}
+            </button>
+          </div>
         </div>
       </div>
     </div>

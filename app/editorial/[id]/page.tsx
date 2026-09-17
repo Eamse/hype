@@ -35,15 +35,14 @@ export default async function MagazineDetailPage({ params }: Props) {
     });
     if (!magazine)
         notFound();
-    if (!magazine.published) {
-        const session = await auth();
-        if (!isMagazineMaster(session))
-            notFound();
-    }
+    const session = await auth();
+    const isMaster = isMagazineMaster(session);
+    if (!magazine.published && !isMaster)
+        notFound();
     return (<div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header brand="hype-wedding"/>
       <div style={{ flex: 1 }}>
-        <MagazineDetailView magazine={magazine} backHref="/editorial"/>
+        <MagazineDetailView magazine={magazine} backHref="/editorial" editHref={isMaster ? `/editorial/edit/${magazine.id}` : undefined}/>
       </div>
       <HomeFooter />
     </div>);
