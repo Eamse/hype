@@ -11,12 +11,13 @@ type MagazineDetailData = {
         url: string;
     }[];
 };
-export default function MagazineDetailView({ magazine, backHref, }: {
+export default function MagazineDetailView({ magazine, backHref, editHref, }: {
     magazine: MagazineDetailData;
     backHref?: string;
+    editHref?: string;
 }) {
     return (<div className="magazine-detail-grid">
-      
+
       <div className="magazine-detail-right">
         {backHref && (<Link href={backHref} style={{
                 fontSize: 10,
@@ -45,16 +46,36 @@ export default function MagazineDetailView({ magazine, backHref, }: {
             day: 'numeric',
         })}
         </p>
-        <h1 style={{
+        <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            gap: 16,
+            marginBottom: 40,
+        }}>
+          <h1 style={{
             fontSize: 36,
             fontWeight: 800,
             color: '#000',
             lineHeight: 1.2,
             letterSpacing: '-0.5px',
-            marginBottom: 40,
+            margin: 0,
         }}>
-          {magazine.title || 'Untitled'}
-        </h1>
+            {magazine.title || 'Untitled'}
+          </h1>
+          {editHref && (<Link href={editHref} style={{
+                    flexShrink: 0,
+                    fontSize: 12,
+                    padding: '6px 14px',
+                    borderRadius: 6,
+                    border: '1px solid #000',
+                    color: '#000',
+                    textDecoration: 'none',
+                    marginTop: 6,
+                }}>
+                Edit
+              </Link>)}
+        </div>
 
         <div style={{ borderTop: '1px solid #000', marginBottom: 40 }}/>
 

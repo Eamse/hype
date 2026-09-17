@@ -2142,6 +2142,7 @@ body {
   line-height: 2;
   color: #444;
   letter-spacing: 0.1px;
+  padding-top: 8px;
 }
 .magazine-content p,
 .ProseMirror p {
@@ -2177,12 +2178,44 @@ body {
   margin: 0 0 20px;
   padding-left: 24px;
 }
-.ProseMirror p.is-editor-empty:first-child::before {
+.ProseMirror p.is-editor-empty::before,
+.ProseMirror p.is-empty::before {
   content: attr(data-placeholder);
   color: #aaa;
   float: left;
   height: 0;
   pointer-events: none;
+}
+.ProseMirror p:has(> br.ProseMirror-trailingBreak) {
+  min-height: 1.6em;
+  padding-top: 4px;
+  border-bottom: 1px dashed #ddd;
+}
+.editor-image-wrapper {
+  position: relative;
+  display: block;
+  margin: 24px 0;
+}
+.editor-image-wrapper img {
+  margin: 0;
+}
+.editor-image-delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  display: none;
+}
+.editor-image-wrapper:hover .editor-image-delete-btn {
+  display: block;
 }
 
 .inquiry-eyebrow {
