@@ -1949,33 +1949,6 @@ body {
   }
 }
 
-.hero-carousel-swipe-hint {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.45);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  will-change: transform;
-}
-@media (max-width: 768px) {
-  .hero-carousel-swipe-hint {
-    display: none;
-  }
-}
-
 .dday-banner {
   display: inline-flex;
   flex-direction: column;

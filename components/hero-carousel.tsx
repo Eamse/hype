@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 const SWIPE_THRESHOLD = 50;
 export default function HeroCarousel({ images, children, }: {
     images: string[];
@@ -12,7 +11,7 @@ export default function HeroCarousel({ images, children, }: {
     const dragStartX = useRef<number | null>(null);
     const dragDeltaX = useRef(0);
     const isDragging = useRef(false);
-    const hintRef = useRef<HTMLDivElement>(null);
+    const wasDragged = useRef(false);
     const sectionRef = useRef<HTMLElement>(null);
     const next = useCallback(() => {
         setCurrent((p) => (p + 1) % images.length);
@@ -28,29 +27,21 @@ export default function HeroCarousel({ images, children, }: {
     }, [images.length, paused, next]);
     if (images.length === 0)
         return null;
-    const moveHintTo = (e: React.PointerEvent | React.MouseEvent) => {
-        const section = sectionRef.current;
-        const hint = hintRef.current;
-        if (!section || !hint)
-            return;
-        const rect = section.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        hint.style.transform = `translate(${x + -33}px, ${y + -35}px)`;
-    };
     const handlePointerDown = (e: React.PointerEvent) => {
         if (images.length <= 1)
             return;
         isDragging.current = true;
+        wasDragged.current = false;
         dragStartX.current = e.clientX;
         dragDeltaX.current = 0;
         setPaused(true);
     };
     const handlePointerMove = (e: React.PointerEvent) => {
-        moveHintTo(e);
         if (!isDragging.current || dragStartX.current === null)
             return;
         dragDeltaX.current = e.clientX - dragStartX.current;
+        if (Math.abs(dragDeltaX.current) > 5)
+            wasDragged.current = true;
     };
     const endDrag = () => {
         if (!isDragging.current)
@@ -66,6 +57,18 @@ export default function HeroCarousel({ images, children, }: {
         dragDeltaX.current = 0;
         setPaused(false);
     };
+    const handleClick = (e: React.MouseEvent) => {
+        if (wasDragged.current || images.length <= 1)
+            return;
+        const rect = sectionRef.current?.getBoundingClientRect();
+        if (!rect)
+            return;
+        const x = e.clientX - rect.left;
+        if (x < rect.width / 2)
+            prev();
+        else
+            next();
+    };
     return (<section ref={sectionRef} className="hero-carousel" style={{
             position: 'relative',
             width: '100%',
@@ -74,15 +77,7 @@ export default function HeroCarousel({ images, children, }: {
             touchAction: 'pan-y',
             cursor: images.length > 1 ? 'grab' : undefined,
             userSelect: 'none',
-        }} onMouseEnter={(e) => {
-            moveHintTo(e);
-            if (hintRef.current)
-                hintRef.current.style.opacity = '1';
-        }} onMouseLeave={() => {
-            endDrag();
-            if (hintRef.current)
-                hintRef.current.style.opacity = '0';
-        }} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={endDrag} onPointerCancel={endDrag}>
+        }} onMouseLeave={endDrag} onPointerDown={handlePointerDown} onPointerMove={handlePointerMove} onPointerUp={endDrag} onPointerCancel={endDrag} onClick={handleClick}>
       {images.map((url, idx) => (<div key={url} style={{
                 position: 'absolute',
                 inset: 0,
@@ -91,14 +86,7 @@ export default function HeroCarousel({ images, children, }: {
             }}>
           <Image src={url} alt={`hero-${idx}`} fill priority={idx === 0} fetchPriority={idx === 0 ? 'high' : undefined} loading={idx === 0 ? 'eager' : undefined} sizes="100vw" draggable={false} style={{ objectFit: 'cover', pointerEvents: 'none' }}/>
         </div>))}
-      
-      {images.length > 1 && (<div ref={hintRef} className="hero-carousel-swipe-hint" aria-hidden="true">
-          <ChevronLeft size={14} strokeWidth={2.5}/>
-          <ChevronRight size={14} strokeWidth={2.5}/>
-        </div>)}
-
-      
-      {images.length > 1 && (<div style={{
+      {images.length > 1 && (<div onClick={(e) => e.stopPropagation()} style={{
                 position: 'absolute',
                 left: '50%',
                 bottom: 20,
@@ -123,7 +111,7 @@ export default function HeroCarousel({ images, children, }: {
         </div>)}
 
       
-      {children && (<div style={{
+      {children && (<div onClick={(e) => e.stopPropagation()} style={{
                 position: 'absolute',
                 left: '50%',
                 bottom: 60,
