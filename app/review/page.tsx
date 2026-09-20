@@ -122,7 +122,7 @@ export default async function ReviewPage({
               }}
               className="review-main-grid"
             >
-              <div>
+              <div style={{ minWidth: 0 }}>
                 <Suspense fallback={null}>
                   <ReviewFilters
                     productType={productType}
