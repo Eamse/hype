@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { encrypt } from '@/lib/encryption';
+import { sendVerificationEmail } from '@/lib/auth-emails';
+import { getSiteUrl } from '@/lib/site-url';
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req);
     if (!checkRateLimit(`signup:${ip}`, 5, 10 * 60 * 1000)) {
@@ -91,6 +93,9 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: true, message: 'If this email is already registered, please sign in instead.' }, { status: 200 });
         }
         await prisma.user.create({ data: { email: normalizedEmail, ...data } });
+        sendVerificationEmail(normalizedEmail, getSiteUrl(req)).catch((e) => {
+            console.error('[signup] failed to send verification email:', e);
+        });
         return NextResponse.json({ success: true, message: 'Account created successfully' }, { status: 201 });
     }
     catch (error) {
