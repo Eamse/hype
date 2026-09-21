@@ -55,12 +55,24 @@ export default function SignupPage() {
     });
     const [phoneValue, setPhoneValue] = useState('');
     const [errors, setErrors] = useState<Errors>({});
-    const [signupComplete, setSignupComplete] = useState(false);
+    const [sendingVerification, setSendingVerification] = useState(false);
+    const [verificationSent, setVerificationSent] = useState(false);
+    const [emailVerified, setEmailVerified] = useState(false);
+    const [verifyChecking, setVerifyChecking] = useState(false);
+    const [verifyError, setVerifyError] = useState('');
+    const [resendMessage, setResendMessage] = useState('');
+    const [submitError, setSubmitError] = useState('');
     function handleCredentialChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
         setCredentials((prev) => ({ ...prev, [name]: value }));
         if (errors[name as keyof Errors]) {
             setErrors((prev) => ({ ...prev, [name]: undefined }));
+        }
+        if (name === 'email' && (verificationSent || emailVerified)) {
+            setVerificationSent(false);
+            setEmailVerified(false);
+            setVerifyError('');
+            setResendMessage('');
         }
     }
     function handleFieldChange(name: string, value: string | boolean) {
@@ -104,8 +116,57 @@ export default function SignupPage() {
             e.termsAgreement = 'You must agree to the Terms of Service.';
         return e;
     }
+    function isValidEmail(value: string) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+    async function handleSendVerification() {
+        if (!isValidEmail(credentials.email)) {
+            setErrors((prev) => ({ ...prev, email: 'Enter a valid email first.' }));
+            return;
+        }
+        setSendingVerification(true);
+        setVerifyError('');
+        setResendMessage('');
+        try {
+            await fetch('/api/auth/resend-verification', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: credentials.email }),
+            });
+            if (verificationSent) setResendMessage('Verification email resent.');
+            setVerificationSent(true);
+        }
+        finally {
+            setSendingVerification(false);
+        }
+    }
+    async function handleCheckVerified() {
+        setVerifyChecking(true);
+        setVerifyError('');
+        try {
+            const res = await fetch('/api/auth/check-verified', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: credentials.email }),
+            });
+            const data = await res.json();
+            if (!data.verified) {
+                setVerifyError("You haven't verified your email yet. Please check your inbox (and spam folder) and click the verification link first.");
+                return;
+            }
+            setEmailVerified(true);
+        }
+        finally {
+            setVerifyChecking(false);
+        }
+    }
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        setSubmitError('');
+        if (!emailVerified) {
+            setSubmitError('Please verify your email before creating an account.');
+            return;
+        }
         const validationErrors = validate();
         if (Object.keys(validationErrors).length > 0) {
             setErrors(validationErrors);
@@ -134,27 +195,12 @@ export default function SignupPage() {
             setErrors({ [field]: message });
             return;
         }
-        setSignupComplete(true);
-    }
-    if (signupComplete) {
-        return (<div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
-        <div className="bg-white w-full max-w-md rounded-2xl shadow-sm p-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-3">
-            Check your email
-          </h1>
-          <p className="text-sm text-gray-600 leading-relaxed mb-2">
-            We&apos;ve sent a verification link to{' '}
-            <span className="font-semibold text-gray-900">{credentials.email}</span>.
-            Please click the link to complete your signup.
-          </p>
-          <Link href="/" className="inline-block mt-4 bg-gray-900 text-white rounded-lg py-2.5 px-6 text-sm font-medium">
-            Back to Home
-          </Link>
-          <p className="text-xs text-gray-400 mt-6">
-            Didn&apos;t get the email? Please check your spam folder.
-          </p>
-        </div>
-      </div>);
+        await signIn('credentials', {
+            email: credentials.email,
+            password: credentials.password,
+            redirect: false,
+        });
+        window.location.href = '/';
     }
     return (<div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
       <div className="bg-white w-full max-w-2xl rounded-2xl shadow-sm p-8">
@@ -177,8 +223,27 @@ export default function SignupPage() {
             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
               Email <span className="text-red-500">*</span>
             </label>
-            <input type="email" name="email" value={credentials.email} onChange={handleCredentialChange} placeholder="email@example.com" className={`w-full border rounded-lg px-3 py-2 text-sm outline-none ${errors.email ? 'border-red-400' : 'border-gray-200 focus:border-gray-900'}`}/>
+            <div className="flex gap-2">
+              <input type="email" name="email" value={credentials.email} onChange={handleCredentialChange} disabled={emailVerified} placeholder="email@example.com" className={`flex-1 border rounded-lg px-3 py-2 text-sm outline-none disabled:bg-gray-100 disabled:text-gray-500 ${errors.email ? 'border-red-400' : 'border-gray-200 focus:border-gray-900'}`}/>
+              {!emailVerified && (<button type="button" onClick={handleSendVerification} disabled={sendingVerification} className="shrink-0 border border-gray-900 text-gray-900 rounded-lg px-4 text-sm font-medium whitespace-nowrap disabled:opacity-50">
+                  {sendingVerification ? 'Sending...' : verificationSent ? 'Resend' : 'Send Verification'}
+                </button>)}
+            </div>
             {errors.email && (<p className="text-xs text-red-500">{errors.email}</p>)}
+            {emailVerified ? (<p className="text-xs text-green-600">✓ Email verified</p>) : verificationSent && (<div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
+                <p className="text-xs text-gray-600 leading-relaxed">
+                  Verification link sent to <span className="font-semibold text-gray-900">{credentials.email}</span>.
+                  Click the link in the email, then press the button below.
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  Didn&apos;t get it? Please check your spam folder.
+                </p>
+                {resendMessage && (<p className="text-xs text-green-600 mt-1">{resendMessage}</p>)}
+                {verifyError && (<p className="text-xs text-red-500 mt-1">{verifyError}</p>)}
+                <button type="button" onClick={handleCheckVerified} disabled={verifyChecking} className="w-full bg-gray-900 text-white rounded-lg py-2 text-xs font-semibold mt-2 disabled:opacity-50">
+                  {verifyChecking ? 'Checking...' : "I've verified my email"}
+                </button>
+              </div>)}
           </div>
 
           
@@ -221,7 +286,8 @@ export default function SignupPage() {
 
             
           </div>
-          <button type="submit" className="w-full bg-gray-900 text-white rounded-lg py-2.5 text-sm font-semibold mt-2 hover:bg-gray-700 transition-colors">
+          {submitError && (<p className="text-xs text-red-500 text-center -mb-2">{submitError}</p>)}
+          <button type="submit" disabled={!emailVerified} className="w-full bg-gray-900 text-white rounded-lg py-2.5 text-sm font-semibold mt-2 hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
             Create Account
           </button>
         </form>

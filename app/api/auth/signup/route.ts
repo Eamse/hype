@@ -3,8 +3,6 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { encrypt } from '@/lib/encryption';
-import { sendVerificationEmail } from '@/lib/auth-emails';
-import { getSiteUrl } from '@/lib/site-url';
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req);
     if (!checkRateLimit(`signup:${ip}`, 5, 10 * 60 * 1000)) {
@@ -65,6 +63,12 @@ export async function POST(req: NextRequest) {
         }, { status: 400 });
     }
     const normalizedEmail = email.toLowerCase().trim();
+    const verification = await prisma.emailVerification.findUnique({
+        where: { email: normalizedEmail },
+    });
+    if (!verification || !verification.verified || verification.expires < new Date()) {
+        return NextResponse.json({ success: false, message: 'Please verify your email first' }, { status: 400 });
+    }
     try {
         const hashedPassword = await bcrypt.hash(password, 12);
         const data = {
@@ -81,6 +85,7 @@ export async function POST(req: NextRequest) {
             termsAgreedAt: new Date(),
             isOnboarded: true,
             password: hashedPassword,
+            emailVerified: new Date(),
         };
         const existing = await prisma.user.findUnique({
             where: { email: normalizedEmail },
@@ -93,9 +98,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ success: true, message: 'If this email is already registered, please sign in instead.' }, { status: 200 });
         }
         await prisma.user.create({ data: { email: normalizedEmail, ...data } });
-        sendVerificationEmail(normalizedEmail, getSiteUrl()).catch((e) => {
-            console.error('[signup] failed to send verification email:', e);
-        });
+        await prisma.emailVerification.delete({ where: { email: normalizedEmail } }).catch(() => {});
         return NextResponse.json({ success: true, message: 'Account created successfully' }, { status: 201 });
     }
     catch (error) {
