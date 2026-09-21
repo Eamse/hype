@@ -31,6 +31,6 @@ export async function POST(request: NextRequest) {
     if (!user.password) {
         return NextResponse.json({ ok: true, googleOnly: true });
     }
-    await sendPasswordResetEmail(email, user.id, getSiteUrl(request));
+    await sendPasswordResetEmail(email, user.id, getSiteUrl());
     return NextResponse.json({ ok: true, googleOnly: false });
 }
