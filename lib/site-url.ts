@@ -1,4 +1,3 @@
-export function getSiteUrl(request?: { nextUrl: { origin: string } }): string {
-    if (request) return request.nextUrl.origin;
+export function getSiteUrl(): string {
     return process.env.NEXT_PUBLIC_SITE_URL ?? 'https://hypewedding.kr';
 }

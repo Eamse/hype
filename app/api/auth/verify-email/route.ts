@@ -5,7 +5,7 @@ import { getSiteUrl } from '@/lib/site-url';
 export async function GET(request: NextRequest) {
     const token = request.nextUrl.searchParams.get('token');
     const email = request.nextUrl.searchParams.get('email');
-    const siteUrl = getSiteUrl(request);
+    const siteUrl = getSiteUrl();
     if (!token || !email) {
         return NextResponse.redirect(`${siteUrl}/verify-email?status=error`);
     }

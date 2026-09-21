@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     const user = await prisma.user.findUnique({ where: { email } });
     // 계정 존재 여부를 노출하지 않기 위해 실제로 존재/미인증인 경우에만 발송하되 응답은 항상 동일.
     if (user && user.password && !user.emailVerified) {
-        await sendVerificationEmail(email, getSiteUrl(request));
+        await sendVerificationEmail(email, getSiteUrl());
     }
     return NextResponse.json({ ok: true });
 }
