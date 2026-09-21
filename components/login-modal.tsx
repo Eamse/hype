@@ -181,6 +181,16 @@ export default function LoginModal({ onClose }: {
               </a>
             </div>
 
+            <a href="/forgot-password" style={{
+            display: 'block',
+            textAlign: 'center',
+            fontSize: 12,
+            color: '#666',
+            textDecoration: 'underline',
+        }}>
+              Forgot your password?
+            </a>
+
             <div style={{
             display: 'flex',
             alignItems: 'center',
