@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { parsePhoneNumber } from 'react-phone-number-input';
@@ -36,6 +36,14 @@ function AppleIcon() {
       <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.34.07 2.27.74 3.04.8 1.15-.23 2.25-.93 3.47-.84 1.48.12 2.59.7 3.32 1.79-3.04 1.82-2.32 5.79.41 6.9-.57 1.56-1.3 3.1-2.24 4.23zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
     </svg>);
 }
+const DRAFT_KEY = 'signup-draft';
+type Draft = {
+    credentials: { email: string; password: string; passwordConfirm: string };
+    userInfo: UserInfoValues;
+    phoneValue: string;
+    verificationSent: boolean;
+    emailVerified: boolean;
+};
 export default function SignupPage() {
     const [credentials, setCredentials] = useState({
         email: '',
@@ -62,6 +70,25 @@ export default function SignupPage() {
     const [verifyError, setVerifyError] = useState('');
     const [resendMessage, setResendMessage] = useState('');
     const [submitError, setSubmitError] = useState('');
+    useEffect(() => {
+        const raw = sessionStorage.getItem(DRAFT_KEY);
+        if (!raw) return;
+        try {
+            const draft: Draft = JSON.parse(raw);
+            setCredentials(draft.credentials);
+            setUserInfo(draft.userInfo);
+            setPhoneValue(draft.phoneValue);
+            setVerificationSent(draft.verificationSent);
+            setEmailVerified(draft.emailVerified);
+        }
+        catch {
+            sessionStorage.removeItem(DRAFT_KEY);
+        }
+    }, []);
+    useEffect(() => {
+        const draft: Draft = { credentials, userInfo, phoneValue, verificationSent, emailVerified };
+        sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    }, [credentials, userInfo, phoneValue, verificationSent, emailVerified]);
     function handleCredentialChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
         setCredentials((prev) => ({ ...prev, [name]: value }));
@@ -200,6 +227,7 @@ export default function SignupPage() {
             password: credentials.password,
             redirect: false,
         });
+        sessionStorage.removeItem(DRAFT_KEY);
         window.location.href = '/';
     }
     return (<div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
