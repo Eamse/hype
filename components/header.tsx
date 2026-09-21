@@ -560,12 +560,6 @@ function HeaderInner({ brand = 'hype-wedding' }: {
                     src: '/icons/sns/tiktok.svg',
                     size: 36,
                 },
-                {
-                    href: 'https://www.xiaohongshu.com/user/profile/68bd1504000000001900e6ce',
-                    label: 'Xiaohongshu',
-                    src: '/xiaohounshu.png',
-                    size: 36,
-                },
             ].map(({ href, label, src, size }) => (<a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} style={{
                     display: 'flex',
                     alignItems: 'center',
