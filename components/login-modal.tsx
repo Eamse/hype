@@ -22,7 +22,9 @@ export default function LoginModal({ onClose }: {
             redirect: false,
         });
         if (result?.error) {
-            setError('Please check your ID and password.');
+            setError(result.error === 'EmailNotVerified'
+                ? 'Please verify your email before logging in. Check your inbox (and spam folder) for the verification link.'
+                : 'Please check your ID and password.');
         }
         else {
             onClose();
