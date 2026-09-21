@@ -17,10 +17,17 @@ function emailWrapper(title: string, bodyHtml: string): string {
 
 export async function sendVerificationEmail(email: string, siteUrl: string) {
     const token = generateToken();
-    await prisma.verificationToken.create({
-        data: {
-            identifier: email,
+    await prisma.emailVerification.upsert({
+        where: { email },
+        create: {
+            email,
             token,
+            verified: false,
+            expires: new Date(Date.now() + VERIFICATION_EXPIRES_MS),
+        },
+        update: {
+            token,
+            verified: false,
             expires: new Date(Date.now() + VERIFICATION_EXPIRES_MS),
         },
     });
@@ -30,7 +37,7 @@ export async function sendVerificationEmail(email: string, siteUrl: string) {
         'Verify your email — HYPE WEDDING',
         emailWrapper(
             'Verify your email',
-            `<p style="font-size: 14px; color: #333; line-height: 1.6;">Please confirm your email address to finish setting up your account.</p>
+            `<p style="font-size: 14px; color: #333; line-height: 1.6;">Please confirm your email address to continue signing up.</p>
        <a href="${link}" style="display: inline-block; margin-top: 16px; padding: 12px 24px; background: #000; color: #fff; text-decoration: none; border-radius: 6px; font-size: 14px;">Verify Email</a>
        <p style="font-size: 12px; color: #999; margin-top: 16px;">This link expires in 24 hours.</p>`,
         ),

@@ -110,6 +110,17 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+// 회원가입 폼 제출 전, 이메일 입력란 아래에서 먼저 진행하는 이메일 인증용.
+// User 생성 전 단계라 User와 무관하게 email 자체로 인증 여부를 추적함.
+model EmailVerification {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  token     String   @unique
+  verified  Boolean  @default(false)
+  expires   DateTime
+  createdAt DateTime @default(now())
+}
+
 // 비밀번호 찾기(재설정)용 — 이메일+비밀번호로 가입한 계정만 해당 (구글 전용 계정은 User.password가 null)
 model PasswordResetToken {
   id        String   @id @default(cuid())
