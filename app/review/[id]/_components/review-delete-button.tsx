@@ -18,14 +18,14 @@ export default function ReviewDeleteButton({ reviewId, authorUserId, editReview,
     if (!canManage)
         return null;
     async function handleDelete() {
-        if (!window.confirm('Delete this review? This cannot be undone.'))
-            return;
         let password: string | null = null;
         if (!isOwner && !isModerator) {
             password = window.prompt('Please enter the password you used when posting.');
             if (password === null)
                 return;
         }
+        if (!window.confirm('Delete this review? This cannot be undone.'))
+            return;
         setDeleting(true);
         try {
             const res = await fetch(`/api/reviews/${reviewId}`, {
