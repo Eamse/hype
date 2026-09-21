@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { parsePhoneNumber } from 'react-phone-number-input';
 import UserInfoFields, { type UserInfoValues, type UserInfoErrors, } from '@/components/user-info-fields';
@@ -10,6 +9,20 @@ type Errors = UserInfoErrors & {
     password?: string;
     passwordConfirm?: string;
 };
+function mapServerErrorToField(message: string): keyof Errors {
+    if (message === 'Invalid email') return 'email';
+    if (message.startsWith('Password must')) return 'password';
+    if (message === 'Invalid birthYear') return 'birthYear';
+    if (message === 'Invalid birthMonth') return 'birthMonth';
+    if (message === 'Invalid birthDay') return 'birthDay';
+    if (message === 'Terms agreement is required') return 'termsAgreement';
+    if (message === 'Invalid gender value') return 'gender';
+    if (message === 'Invalid field: firstName') return 'firstName';
+    if (message === 'Invalid field: lastName') return 'lastName';
+    if (message === 'Invalid field: country') return 'country';
+    if (message === 'Invalid field: phoneCountryCode' || message === 'Invalid field: phone') return 'phone';
+    return 'email';
+}
 function GoogleIcon() {
     return (<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -24,7 +37,6 @@ function AppleIcon() {
     </svg>);
 }
 export default function SignupPage() {
-    const router = useRouter();
     const [credentials, setCredentials] = useState({
         email: '',
         password: '',
@@ -43,6 +55,7 @@ export default function SignupPage() {
     });
     const [phoneValue, setPhoneValue] = useState('');
     const [errors, setErrors] = useState<Errors>({});
+    const [signupComplete, setSignupComplete] = useState(false);
     function handleCredentialChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
         setCredentials((prev) => ({ ...prev, [name]: value }));
@@ -116,19 +129,36 @@ export default function SignupPage() {
         });
         if (!res.ok) {
             const data = await res.json();
-            setErrors({ email: data.message });
+            const message: string = data.message ?? 'Something went wrong.';
+            const field = mapServerErrorToField(message);
+            setErrors({ [field]: message });
             return;
         }
-        await signIn('credentials', {
-            email: credentials.email,
-            password: credentials.password,
-            redirect: false,
-        });
-        router.push('/');
+        setSignupComplete(true);
+    }
+    if (signupComplete) {
+        return (<div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
+        <div className="bg-white w-full max-w-md rounded-2xl shadow-sm p-8 text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-3">
+            Check your email
+          </h1>
+          <p className="text-sm text-gray-600 leading-relaxed mb-2">
+            We&apos;ve sent a verification link to{' '}
+            <span className="font-semibold text-gray-900">{credentials.email}</span>.
+            Please click the link to complete your signup.
+          </p>
+          <Link href="/" className="inline-block mt-4 bg-gray-900 text-white rounded-lg py-2.5 px-6 text-sm font-medium">
+            Back to Home
+          </Link>
+          <p className="text-xs text-gray-400 mt-6">
+            Didn&apos;t get the email? Please check your spam folder.
+          </p>
+        </div>
+      </div>);
     }
     return (<div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
       <div className="bg-white w-full max-w-2xl rounded-2xl shadow-sm p-8">
-        
+
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-1">
             Create account
