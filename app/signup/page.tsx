@@ -66,12 +66,13 @@ export default function SignupPage() {
     const [sendingVerification, setSendingVerification] = useState(false);
     const [verificationSent, setVerificationSent] = useState(false);
     const [emailVerified, setEmailVerified] = useState(false);
+    const [code, setCode] = useState('');
     const [verifyChecking, setVerifyChecking] = useState(false);
     const [verifyError, setVerifyError] = useState('');
     const [resendMessage, setResendMessage] = useState('');
     const [submitError, setSubmitError] = useState('');
     useEffect(() => {
-        const raw = sessionStorage.getItem(DRAFT_KEY);
+        const raw = localStorage.getItem(DRAFT_KEY);
         if (!raw) return;
         try {
             const draft: Draft = JSON.parse(raw);
@@ -82,12 +83,12 @@ export default function SignupPage() {
             setEmailVerified(draft.emailVerified);
         }
         catch {
-            sessionStorage.removeItem(DRAFT_KEY);
+            localStorage.removeItem(DRAFT_KEY);
         }
     }, []);
     useEffect(() => {
         const draft: Draft = { credentials, userInfo, phoneValue, verificationSent, emailVerified };
-        sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     }, [credentials, userInfo, phoneValue, verificationSent, emailVerified]);
     function handleCredentialChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
@@ -155,11 +156,16 @@ export default function SignupPage() {
         setVerifyError('');
         setResendMessage('');
         try {
-            await fetch('/api/auth/resend-verification', {
+            const res = await fetch('/api/auth/resend-verification', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: credentials.email }),
             });
+            if (!res.ok) {
+                const data = await res.json().catch(() => null);
+                setVerifyError(data?.error ?? 'Failed to send verification email. Please try again.');
+                return;
+            }
             if (verificationSent) setResendMessage('Verification email resent.');
             setVerificationSent(true);
         }
@@ -167,18 +173,22 @@ export default function SignupPage() {
             setSendingVerification(false);
         }
     }
-    async function handleCheckVerified() {
+    async function handleVerifyCode() {
+        if (!code.trim()) {
+            setVerifyError('Enter the code from your email.');
+            return;
+        }
         setVerifyChecking(true);
         setVerifyError('');
         try {
-            const res = await fetch('/api/auth/check-verified', {
+            const res = await fetch('/api/auth/verify-code', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: credentials.email }),
+                body: JSON.stringify({ email: credentials.email, code: code.trim() }),
             });
             const data = await res.json();
             if (!data.verified) {
-                setVerifyError("You haven't verified your email yet. Please check your inbox (and spam folder) and click the verification link first.");
+                setVerifyError('Incorrect or expired code. Please check your inbox (and spam folder), or resend the code.');
                 return;
             }
             setEmailVerified(true);
@@ -227,7 +237,7 @@ export default function SignupPage() {
             password: credentials.password,
             redirect: false,
         });
-        sessionStorage.removeItem(DRAFT_KEY);
+        localStorage.removeItem(DRAFT_KEY);
         window.location.href = '/';
     }
     return (<div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
@@ -260,17 +270,20 @@ export default function SignupPage() {
             {errors.email && (<p className="text-xs text-red-500">{errors.email}</p>)}
             {emailVerified ? (<p className="text-xs text-green-600">✓ Email verified</p>) : verificationSent && (<div className="border border-gray-200 rounded-lg p-3 bg-gray-50">
                 <p className="text-xs text-gray-600 leading-relaxed">
-                  Verification link sent to <span className="font-semibold text-gray-900">{credentials.email}</span>.
-                  Click the link in the email, then press the button below.
+                  A verification code was sent to <span className="font-semibold text-gray-900">{credentials.email}</span>.
+                  Enter it below.
                 </p>
                 <p className="text-xs text-gray-400 mt-1">
                   Didn&apos;t get it? Please check your spam folder.
                 </p>
                 {resendMessage && (<p className="text-xs text-green-600 mt-1">{resendMessage}</p>)}
+                <div className="flex gap-2 mt-2">
+                  <input type="text" maxLength={6} value={code} onChange={(e) => { setCode(e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase()); setVerifyError(''); }} placeholder="A1B2C3" className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-gray-900 tracking-widest text-center uppercase"/>
+                  <button type="button" onClick={handleVerifyCode} disabled={verifyChecking} className="shrink-0 bg-gray-900 text-white rounded-lg px-4 text-sm font-semibold disabled:opacity-50">
+                    {verifyChecking ? 'Checking...' : 'Verify'}
+                  </button>
+                </div>
                 {verifyError && (<p className="text-xs text-red-500 mt-1">{verifyError}</p>)}
-                <button type="button" onClick={handleCheckVerified} disabled={verifyChecking} className="w-full bg-gray-900 text-white rounded-lg py-2 text-xs font-semibold mt-2 disabled:opacity-50">
-                  {verifyChecking ? 'Checking...' : "I've verified my email"}
-                </button>
               </div>)}
           </div>
 

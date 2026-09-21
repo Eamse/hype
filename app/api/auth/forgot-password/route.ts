@@ -31,6 +31,12 @@ export async function POST(request: NextRequest) {
     if (!user.password) {
         return NextResponse.json({ ok: true, googleOnly: true });
     }
-    await sendPasswordResetEmail(email, user.id, getSiteUrl());
+    try {
+        await sendPasswordResetEmail(email, user.id, getSiteUrl());
+    }
+    catch (e) {
+        console.error('[auth/forgot-password] failed to send email:', e);
+        return NextResponse.json({ error: 'Failed to send reset email. Please try again.' }, { status: 500 });
+    }
     return NextResponse.json({ ok: true, googleOnly: false });
 }

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { sendVerificationEmail } from '@/lib/auth-emails';
-import { getSiteUrl } from '@/lib/site-url';
 import { badRequest } from '@/lib/api-errors';
 
 export async function POST(request: NextRequest) {
@@ -28,7 +27,13 @@ export async function POST(request: NextRequest) {
     });
     // 이미 비밀번호가 설정된(가입 완료된) 계정이면 인증 메일을 다시 보낼 필요 없음.
     if (!existingAccount || !existingAccount.password) {
-        await sendVerificationEmail(email, getSiteUrl());
+        try {
+            await sendVerificationEmail(email);
+        }
+        catch (e) {
+            console.error('[auth/resend-verification] failed to send email:', e);
+            return NextResponse.json({ error: 'Failed to send verification email. Please try again.' }, { status: 500 });
+        }
     }
     return NextResponse.json({ ok: true });
 }
