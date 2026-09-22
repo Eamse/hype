@@ -59,11 +59,17 @@ export async function POST(request: NextRequest, props: {
     }
     const url = `${R2_PUBLIC_BASE_URL}/${filename}`;
     const thumbUrl = `${R2_PUBLIC_BASE_URL}/${thumbFilename}`;
-    const count = await prisma.productImage.count({ where: { productId } });
-    const image = await prisma.productImage.create({
-        data: { productId, url, thumbUrl, order: count },
-    });
-    return NextResponse.json(image, { status: 201 });
+    try {
+        const count = await prisma.productImage.count({ where: { productId } });
+        const image = await prisma.productImage.create({
+            data: { productId, url, thumbUrl, order: count },
+        });
+        return NextResponse.json(image, { status: 201 });
+    }
+    catch (e) {
+        console.error('[POST /api/products/:id/images]', e);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
 }
 export async function DELETE(request: NextRequest, props: {
     params: Promise<{
@@ -82,15 +88,21 @@ export async function DELETE(request: NextRequest, props: {
     if (!Number.isInteger(imageId) || imageId <= 0) {
         return NextResponse.json({ error: 'Invalid imageId' }, { status: 400 });
     }
-    const image = await prisma.productImage.findUnique({
-        where: { id: imageId },
-    });
-    if (!image || image.productId !== productId) {
-        return NextResponse.json({ error: 'Image not found' }, { status: 404 });
+    try {
+        const image = await prisma.productImage.findUnique({
+            where: { id: imageId },
+        });
+        if (!image || image.productId !== productId) {
+            return NextResponse.json({ error: 'Image not found' }, { status: 404 });
+        }
+        await deleteFileFromR2(image.url).catch(() => { });
+        await prisma.productImage.delete({ where: { id: imageId } });
+        return NextResponse.json({ ok: true });
     }
-    await deleteFileFromR2(image.url).catch(() => { });
-    await prisma.productImage.delete({ where: { id: imageId } });
-    return NextResponse.json({ ok: true });
+    catch (e) {
+        console.error('[DELETE /api/products/:id/images]', e);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
 }
 export async function PATCH(request: NextRequest, props: {
     params: Promise<{
@@ -111,12 +123,18 @@ export async function PATCH(request: NextRequest, props: {
     if (!Number.isInteger(imageId) || imageId <= 0) {
         return NextResponse.json({ error: 'Invalid imageId' }, { status: 400 });
     }
-    const image = await prisma.productImage.findUnique({
-        where: { id: imageId },
-    });
-    if (!image || image.productId !== productId) {
-        return NextResponse.json({ error: 'Image not found' }, { status: 404 });
+    try {
+        const image = await prisma.productImage.findUnique({
+            where: { id: imageId },
+        });
+        if (!image || image.productId !== productId) {
+            return NextResponse.json({ error: 'Image not found' }, { status: 404 });
+        }
+        await prisma.productImage.update({ where: { id: imageId }, data: { order } });
+        return NextResponse.json({ ok: true });
     }
-    await prisma.productImage.update({ where: { id: imageId }, data: { order } });
-    return NextResponse.json({ ok: true });
+    catch (e) {
+        console.error('[PATCH /api/products/:id/images]', e);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
 }

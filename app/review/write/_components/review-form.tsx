@@ -117,8 +117,9 @@ export default function ReviewForm({
     !editReview.verifiedPassword;
   useEffect(() => {
     fetch('/api/directors')
-      .then((res) => res.json())
-      .then((data) => setDirectors(Array.isArray(data) ? data : []));
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => setDirectors(Array.isArray(data) ? data : []))
+      .catch(() => setDirectors([]));
   }, []);
   const filteredDirectors = useMemo(
     () =>
