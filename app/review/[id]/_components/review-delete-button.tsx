@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import ReviewEditButton from './review-edit-button';
 import type { EditReviewData } from '@/app/review/write/_components/review-form';
+import { promptGuestPassword } from '@/lib/guest-password-prompt';
 export default function ReviewDeleteButton({ reviewId, authorUserId, editReview, }: {
     reviewId: number;
     authorUserId: string | null;
@@ -20,7 +21,7 @@ export default function ReviewDeleteButton({ reviewId, authorUserId, editReview,
     async function handleDelete() {
         let password: string | null = null;
         if (!isOwner && !isModerator) {
-            password = window.prompt('Please enter the password you used when posting.');
+            password = promptGuestPassword();
             if (password === null)
                 return;
         }

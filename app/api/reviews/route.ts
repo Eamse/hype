@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { isStrongGuestPassword } from '@/lib/guest-password';
 import { badRequest } from '@/lib/api-errors';
+import { stripPassword } from '@/lib/review-queries';
 const ALLOWED_PRODUCT_TYPES = new Set(['wedding', 'snap']);
 const ALLOWED_LOCATIONS = new Set(['jeju', 'seoul']);
 export async function GET(request: NextRequest) {
@@ -36,7 +37,7 @@ export async function GET(request: NextRequest) {
             include: { images: true },
         });
         const totalCount = await prisma.review.count({ where });
-        const safeReviews = reviews.map(({ password: _password, ...r }) => r);
+        const safeReviews = reviews.map(stripPassword);
         return NextResponse.json({ reviews: safeReviews, totalCount, page, pageSize });
     }
     catch (e) {
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
                 directorId: directorId ? Number(directorId) : null,
             },
         });
-        const { password: _password, ...safeReview } = review;
+        const safeReview = stripPassword(review);
         return NextResponse.json(safeReview, { status: 201 });
     }
     catch (e) {

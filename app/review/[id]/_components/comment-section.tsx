@@ -3,6 +3,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import BulkActions from '@/components/admin/bulk-actions';
 import { isStrongGuestPassword, GUEST_PASSWORD_HINT } from '@/lib/guest-password';
+import { promptGuestPassword } from '@/lib/guest-password-prompt';
 type CommentNode = {
     id: number;
     content: string;
@@ -151,7 +152,7 @@ export default function CommentSection({ reviewId, initialComments, }: {
         const isOwner = session?.user?.id === comment.userId;
         let password: string | null = null;
         if (!isOwner && !isModerator) {
-            password = window.prompt('Please enter the password you used when posting.');
+            password = promptGuestPassword();
             if (password === null)
                 return;
         }
@@ -193,7 +194,7 @@ export default function CommentSection({ reviewId, initialComments, }: {
         const isOwner = session?.user?.id === comment.userId;
         let password: string | null = null;
         if (!isOwner && !isModerator) {
-            password = window.prompt('Please enter the password you used when posting.');
+            password = promptGuestPassword();
             if (password === null)
                 return;
         }
@@ -209,13 +210,25 @@ export default function CommentSection({ reviewId, initialComments, }: {
         await loadComments();
     }
     async function handleBulkDelete() {
-        await Promise.all([...selectedIds].map((id) => fetch(`/api/reviews/${reviewId}/comments/${id}`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password: null }),
-        })));
+        const results = await Promise.all([...selectedIds].map(async (id) => {
+            try {
+                const res = await fetch(`/api/reviews/${reviewId}/comments/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: null }),
+                });
+                return res.ok;
+            }
+            catch {
+                return false;
+            }
+        }));
+        const failedCount = results.filter((ok) => !ok).length;
         setSelectedIds(new Set());
         await loadComments();
+        if (failedCount > 0) {
+            alert(`${failedCount} comment(s) failed to delete. Please try again.`);
+        }
     }
     function renderComment(comment: CommentNode, depth: number) {
         const canManage = session?.user?.id === comment.userId || isModerator || !comment.userId;

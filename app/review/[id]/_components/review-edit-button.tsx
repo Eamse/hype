@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ReviewForm, {
   type EditReviewData,
 } from '@/app/review/write/_components/review-form';
+import { promptGuestPassword } from '@/lib/guest-password-prompt';
 
 export default function ReviewEditButton({
   editReview,
@@ -16,20 +17,29 @@ export default function ReviewEditButton({
 
   async function handleEditClick() {
     if (editReview.requiresPassword) {
-      const password = window.prompt(
-        'Please enter the password you used when posting.',
-      );
+      const password = promptGuestPassword();
       if (password === null) return;
-      const res = await fetch(
-        `/api/reviews/${editReview.id}/verify-password`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password }),
-        },
-      );
-      const data = await res.json();
-      if (!data.valid) {
+      let data: { valid?: boolean; error?: string } | null = null;
+      try {
+        const res = await fetch(
+          `/api/reviews/${editReview.id}/verify-password`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password }),
+          },
+        );
+        data = await res.json();
+        if (!res.ok && res.status !== 401) {
+          alert(data?.error ?? 'Something went wrong. Please try again.');
+          return;
+        }
+      }
+      catch {
+        alert('Something went wrong. Please try again.');
+        return;
+      }
+      if (!data?.valid) {
         alert('Incorrect password.');
         return;
       }
