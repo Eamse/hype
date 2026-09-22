@@ -68,12 +68,21 @@ export default function AccountClient() {
     const [deletePassword, setDeletePassword] = useState('');
     const [deleteError, setDeleteError] = useState('');
     const [deleting, setDeleting] = useState(false);
+    const [loadError, setLoadError] = useState('');
     useEffect(() => {
         fetch('/api/user/me')
-            .then((res) => res.json())
+            .then((res) => {
+            if (!res.ok)
+                throw new Error('Failed to load account info');
+            return res.json();
+        })
             .then((data: UserData) => {
             setUser(data);
             setForm(data);
+            setLoading(false);
+        })
+            .catch(() => {
+            setLoadError('Failed to load account info. Please refresh the page.');
             setLoading(false);
         });
     }, []);
@@ -159,6 +168,11 @@ export default function AccountClient() {
     }
     if (loading)
         return null;
+    if (loadError) {
+        return (<div style={{ maxWidth: 640, margin: '0 auto', padding: '40px 24px 120px', textAlign: 'center', color: '#666' }}>
+        {loadError}
+      </div>);
+    }
     return (<div style={{ maxWidth: 640, margin: '0 auto', padding: '40px 24px 120px' }}>
       <h1 style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 8 }}>
         Personal Information
