@@ -5,6 +5,7 @@ import { canModifyReview } from '@/lib/review-auth';
 import { deleteFileFromR2 } from '@/lib/r2';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { badRequest } from '@/lib/api-errors';
+import { stripPassword } from '@/lib/review-queries';
 const ALLOWED_PRODUCT_TYPES = new Set(['wedding', 'snap']);
 const ALLOWED_LOCATIONS = new Set(['jeju', 'seoul']);
 function parseId(id: string): number | null {
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest, props: {
     if (!review) {
         return NextResponse.json({ error: 'review not found' }, { status: 404 });
     }
-    const { password: _password, ...safeReview } = review;
+    const safeReview = stripPassword(review);
     return NextResponse.json(safeReview);
 }
 export async function PATCH(request: NextRequest, props: {
@@ -90,7 +91,7 @@ export async function PATCH(request: NextRequest, props: {
                 ...(isFeatured !== undefined && { isFeatured }),
             },
         });
-        const { password: _password, ...safeReview } = updated;
+        const safeReview = stripPassword(updated);
         return NextResponse.json(safeReview);
     }
     catch (e) {

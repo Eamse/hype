@@ -55,9 +55,23 @@ export default function MagazineManageList({ initialMagazines, }: {
         }
     }
     async function handleBulkDelete() {
-        await Promise.all([...selectedIds].map((id) => fetch(`/api/magazine/${id}`, { method: 'DELETE' })));
-        setMagazines((prev) => prev.filter((m) => !selectedIds.has(m.id)));
+        const ids = [...selectedIds];
+        const results = await Promise.all(ids.map(async (id) => {
+            try {
+                const res = await fetch(`/api/magazine/${id}`, { method: 'DELETE' });
+                return { id, ok: res.ok };
+            }
+            catch {
+                return { id, ok: false };
+            }
+        }));
+        const succeededIds = new Set(results.filter((r) => r.ok).map((r) => r.id));
+        const failedCount = results.length - succeededIds.size;
+        setMagazines((prev) => prev.filter((m) => !succeededIds.has(m.id)));
         clearSelection();
+        if (failedCount > 0) {
+            alert(`${failedCount} post(s) failed to delete. Please try again.`);
+        }
     }
     if (magazines.length === 0) {
         return <p style={{ fontSize: 13, color: '#000' }}>No posts yet.</p>;

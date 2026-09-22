@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
+import { stripPassword } from '@/lib/review-queries';
 export async function GET() {
     const session = await auth();
     if (!session?.user?.id) {
@@ -11,6 +12,6 @@ export async function GET() {
         orderBy: { createdAt: 'desc' },
         include: { images: true },
     });
-    const safeReviews = reviews.map(({ password: _password, ...r }) => r);
+    const safeReviews = reviews.map(stripPassword);
     return NextResponse.json(safeReviews);
 }
