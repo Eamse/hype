@@ -12,7 +12,13 @@ export async function POST(request: NextRequest) {
     if (!session?.user?.id) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
-    const body = await request.json();
+    let body: Record<string, any>;
+    try {
+        body = await request.json();
+    }
+    catch {
+        return NextResponse.json({ message: 'Invalid request body' }, { status: 400 });
+    }
     const { firstName, middleName, lastName, birthYear, birthMonth, birthDay, gender, country, phoneCountryCode, phone, termsAgreement, } = body;
     const user = await prisma.user.findUnique({
         where: { id: session.user.id },

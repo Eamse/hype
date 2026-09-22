@@ -23,7 +23,13 @@ export async function PATCH(request: NextRequest, props: {
     if (reviewId === null) {
         return badRequest('reviews/:id/feature', 'invalid id');
     }
-    const body = await request.json();
+    let body: Record<string, any>;
+    try {
+        body = await request.json();
+    }
+    catch {
+        return badRequest('reviews/:id/feature', 'invalid JSON body');
+    }
     if (typeof body.isFeatured !== 'boolean') {
         return badRequest('reviews/:id/feature', 'isFeatured must be a boolean');
     }

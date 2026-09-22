@@ -9,7 +9,13 @@ export async function POST(req: NextRequest) {
     if (!checkRateLimit(`signup:${ip}`, 5, 10 * 60 * 1000)) {
         return NextResponse.json({ message: 'Too many requests' }, { status: 429 });
     }
-    const body = await req.json();
+    let body: Record<string, any>;
+    try {
+        body = await req.json();
+    }
+    catch {
+        return NextResponse.json({ success: false, message: 'Invalid request body' }, { status: 400 });
+    }
     const { email, firstName, middleName, lastName, birthYear, birthMonth, birthDay, password, gender, country, phoneCountryCode, phone, termsAgreement, } = body;
     if (typeof email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         return NextResponse.json({ success: false, message: 'Invalid email' }, { status: 400 });

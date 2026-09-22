@@ -67,7 +67,7 @@ function AppleIcon() {
 }
 const DRAFT_KEY = 'signup-draft';
 type Draft = {
-  credentials: { email: string; password: string; passwordConfirm: string };
+  credentials: { email: string };
   userInfo: UserInfoValues;
   phoneValue: string;
   verificationSent: boolean;
@@ -105,7 +105,7 @@ export default function SignupPage() {
     if (!raw) return;
     try {
       const draft: Draft = JSON.parse(raw);
-      setCredentials(draft.credentials);
+      setCredentials((prev) => ({ ...prev, email: draft.credentials.email }));
       setUserInfo(draft.userInfo);
       setPhoneValue(draft.phoneValue);
       setVerificationSent(draft.verificationSent);
@@ -116,7 +116,7 @@ export default function SignupPage() {
   }, []);
   useEffect(() => {
     const draft: Draft = {
-      credentials,
+      credentials: { email: credentials.email },
       userInfo,
       phoneValue,
       verificationSent,

@@ -51,7 +51,13 @@ export async function PATCH(request: NextRequest, props: {
     if (!review) {
         return NextResponse.json({ error: 'review not found' }, { status: 404 });
     }
-    const body = await request.json();
+    let body: Record<string, any>;
+    try {
+        body = await request.json();
+    }
+    catch {
+        return badRequest('reviews/:id', 'invalid JSON body');
+    }
     const session = await auth();
     const allowed = await canModifyReview(review, session, body.password);
     if (!allowed) {

@@ -114,10 +114,19 @@ export async function PATCH(request: NextRequest, props: {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const { id } = await props.params;
     const productId = parseId(id);
-    const body = await request.json();
+    let body: Record<string, any>;
+    try {
+        body = await request.json();
+    }
+    catch {
+        return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
     const order = body.order;
     if (productId === null)
         return NextResponse.json({ error: 'Invalid ID' }, { status: 400 });
+    if (!Number.isInteger(order) || order < 0) {
+        return NextResponse.json({ error: 'Invalid order' }, { status: 400 });
+    }
     const imageIdParam = request.nextUrl.searchParams.get('imageId');
     const imageId = imageIdParam !== null ? Number(imageIdParam) : NaN;
     if (!Number.isInteger(imageId) || imageId <= 0) {

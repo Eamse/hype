@@ -28,7 +28,13 @@ export async function PATCH(request: NextRequest, props: {
     if (!comment || comment.deletedAt) {
         return NextResponse.json({ error: 'comment not found' }, { status: 404 });
     }
-    const body = await request.json();
+    let body: Record<string, any>;
+    try {
+        body = await request.json();
+    }
+    catch {
+        return badRequest('reviews/:id/comments/:commentId', 'invalid JSON body');
+    }
     const session = await auth();
     const allowed = await canModifyReview(comment, session, body.password);
     if (!allowed) {
@@ -36,6 +42,9 @@ export async function PATCH(request: NextRequest, props: {
     }
     if (!body.content) {
         return badRequest('reviews/:id/comments/:commentId', 'content is required');
+    }
+    if (typeof body.content !== 'string' || body.content.length > 2000) {
+        return badRequest('reviews/:id/comments/:commentId', 'content must be 2000 characters or fewer');
     }
     try {
         const updated = await prisma.comment.update({

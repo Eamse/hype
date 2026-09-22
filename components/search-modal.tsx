@@ -101,12 +101,13 @@ export default function SearchModal({ onClose }: {
         }
         startTransition(() => setLoading(true));
         const timer = setTimeout(() => {
-            fetch('/api/search?q=' + query)
-                .then((res) => res.json())
+            fetch('/api/search?q=' + encodeURIComponent(query))
+                .then((res) => (res.ok ? res.json() : []))
                 .then((data) => {
-                setResults(data);
+                setResults(Array.isArray(data) ? data : []);
                 setLoading(false);
-            });
+            })
+                .catch(() => setLoading(false));
         }, 300);
         return () => clearTimeout(timer);
     }, [query]);

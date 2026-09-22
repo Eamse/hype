@@ -50,8 +50,9 @@ export default function ReviewFilters({
     if (productType) params.set('category', productType);
     const qs = params.toString();
     fetch(`/api/directors${qs ? `?${qs}` : ''}`)
-      .then((res) => res.json())
-      .then((data) => setDirectors(Array.isArray(data) ? data : []));
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => setDirectors(Array.isArray(data) ? data : []))
+      .catch(() => setDirectors([]));
   }, [location, productType]);
   function updateParam(key: string, value: string) {
     const params = new URLSearchParams(window.location.search);

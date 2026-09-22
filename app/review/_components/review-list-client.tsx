@@ -159,30 +159,58 @@ export default function ReviewListClient({ reviews, totalCount }: {
     const listRef = useRef<HTMLDivElement>(null);
     useReplayReveal(listRef, [visibleReviewIdsKey]);
     async function handleBulkDelete() {
-        await Promise.all([...selectedIds].map((id) => fetch(`/api/reviews/${id}`, {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password: null }),
-        })));
-        setDeleted((prev) => new Set([...prev, ...selectedIds]));
+        const ids = [...selectedIds];
+        const results = await Promise.all(ids.map(async (id) => {
+            try {
+                const res = await fetch(`/api/reviews/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: null }),
+                });
+                return { id, ok: res.ok };
+            }
+            catch {
+                return { id, ok: false };
+            }
+        }));
+        const succeededIds = results.filter((r) => r.ok).map((r) => r.id);
+        const failedCount = results.length - succeededIds.length;
+        setDeleted((prev) => new Set([...prev, ...succeededIds]));
         clearSelection();
         router.refresh();
+        if (failedCount > 0) {
+            alert(`${failedCount} review(s) failed to delete. Please try again.`);
+        }
     }
-    function handleSetFeatured(isFeatured: boolean) {
+    async function handleSetFeatured(isFeatured: boolean) {
         const ids = [...selectedIds];
+        clearSelection();
+        const results = await Promise.all(ids.map(async (id) => {
+            try {
+                const res = await fetch(`/api/reviews/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ isFeatured }),
+                });
+                return { id, ok: res.ok };
+            }
+            catch {
+                return { id, ok: false };
+            }
+        }));
+        const succeededIds = results.filter((r) => r.ok).map((r) => r.id);
+        const failedCount = results.length - succeededIds.length;
         setFeatured((prev) => {
             const next = new Map(prev);
-            ids.forEach((id) => next.set(id, isFeatured));
+            succeededIds.forEach((id) => next.set(id, isFeatured));
             return next;
         });
-        const selectedReviews = visibleReviews.filter((r) => ids.includes(r.id));
-        applyOptimisticFeatured(isFeatured ? selectedReviews : [], isFeatured ? [] : ids);
-        clearSelection();
-        Promise.all(ids.map((id) => fetch(`/api/reviews/${id}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ isFeatured }),
-        }))).then(() => refreshFeatured());
+        const selectedReviews = visibleReviews.filter((r) => succeededIds.includes(r.id));
+        applyOptimisticFeatured(isFeatured ? selectedReviews : [], isFeatured ? [] : succeededIds);
+        refreshFeatured();
+        if (failedCount > 0) {
+            alert(`${failedCount} review(s) failed to update. Please try again.`);
+        }
     }
     return (<div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginBottom: 32 }}>
       <p style={{
