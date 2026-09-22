@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 import { encrypt } from '@/lib/encryption';
+import { signIn } from '@/auth';
 export async function POST(req: NextRequest) {
     const ip = getClientIp(req);
     if (!checkRateLimit(`signup:${ip}`, 5, 10 * 60 * 1000)) {
@@ -99,6 +100,14 @@ export async function POST(req: NextRequest) {
         }
         await prisma.user.create({ data: { email: normalizedEmail, ...data } });
         await prisma.emailVerification.delete({ where: { email: normalizedEmail } }).catch(() => {});
+        // 계정 생성과 같은 요청 안에서 바로 로그인시켜서, 클라이언트가 별도로
+        // signIn()을 호출하며 추가 왕복(CSRF+콜백)을 발생시키지 않게 함.
+        try {
+            await signIn('credentials', { email: normalizedEmail, password, redirect: false });
+        }
+        catch (e) {
+            console.error('[signup] auto sign-in failed:', e);
+        }
         return NextResponse.json({ success: true, message: 'Account created successfully' }, { status: 201 });
     }
     catch (error) {
