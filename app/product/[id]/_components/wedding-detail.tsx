@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { parseShootDetailValue } from '@/lib/package-display';
@@ -182,10 +182,13 @@ export default function WeddingDetail({
   const pkgNumLabel = ['Photographer', regionLabel, paddedNumber]
     .filter(Boolean)
     .join(' ');
-  const activePkgs = packages.filter((p) => p.directorId === activeDirectorId);
+  const activePkgs = useMemo(
+    () => packages.filter((p) => p.directorId === activeDirectorId),
+    [packages, activeDirectorId],
+  );
   useEffect(() => {
     onActiveImagesChange?.(activePkgs[0]?.images ?? []);
-  }, [activeDirectorId]);
+  }, [activePkgs, onActiveImagesChange]);
   const activePackage =
     activePkgs.find((p) => p.id === activePackageId) ?? activePkgs[0];
   const allInclusions = activePackage?.inclusions ?? [];

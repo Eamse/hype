@@ -50,10 +50,19 @@ export async function POST(request: NextRequest, props: {
         return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
     const session = await auth();
-    const body = await request.json();
+    let body: Record<string, any>;
+    try {
+        body = await request.json();
+    }
+    catch {
+        return badRequest('reviews/:id/comments', 'invalid JSON body');
+    }
     const { content, parentId, authorName, password } = body;
     if (!content) {
         return badRequest('reviews/:id/comments', 'content is required');
+    }
+    if (typeof content !== 'string' || content.length > 2000) {
+        return badRequest('reviews/:id/comments', 'content must be 2000 characters or fewer');
     }
     let parent: {
         reviewId: number;

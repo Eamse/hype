@@ -32,12 +32,7 @@ export const uploadToR2 = async (urlOrKey: string, buffer: Buffer) => {
         Body: buffer,
         ContentType: 'image/webp',
     });
-    try {
-        await s3Client.send(commend);
-    }
-    catch (error) {
-        throw error;
-    }
+    await s3Client.send(commend);
 };
 export const deleteFileFromR2 = async (urlOrKey: string) => {
     if (!urlOrKey)

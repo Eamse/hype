@@ -35,7 +35,13 @@ export async function PATCH(request: NextRequest) {
     if (!session?.user.id) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    const body = await request.json();
+    let body: Record<string, any>;
+    try {
+        body = await request.json();
+    }
+    catch {
+        return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
     const { firstName, middleName, lastName, gender, country, phoneCountryCode, phone, birthYear, birthMonth, birthDay, password, confirmPassword, currentPassword, } = body;
     const strFields: Record<string, unknown> = {
         firstName,

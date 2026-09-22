@@ -51,10 +51,19 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Too many requests' }, { status: 429 });
     }
     const session = await auth();
-    const body = await request.json();
+    let body: Record<string, any>;
+    try {
+        body = await request.json();
+    }
+    catch {
+        return badRequest('reviews', 'invalid JSON body');
+    }
     const { content, country, shootingDate, productType, location, rating, directorId, name, password, } = body;
     if (!content || !country || !shootingDate) {
         return badRequest('reviews', 'missing required fields');
+    }
+    if (typeof content !== 'string' || content.length > 5000) {
+        return badRequest('reviews', 'content must be 5000 characters or fewer');
     }
     if (!ALLOWED_PRODUCT_TYPES.has(productType)) {
         return badRequest('reviews', 'invalid productType');

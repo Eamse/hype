@@ -77,19 +77,30 @@ export default function ReviewFeatured() {
         : new Set(visibleReviews.map((r) => r.id)),
     );
   }
-  function handleUnfeatureSelected() {
+  async function handleUnfeatureSelected() {
     const ids = [...selected];
-    setRemoved((prev) => new Set([...prev, ...ids]));
     setSelected(new Set());
-    Promise.all(
-      ids.map((id) =>
-        fetch(`/api/reviews/${id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ isFeatured: false }),
-        }),
-      ),
-    ).then(() => refreshFeatured());
+    const results = await Promise.all(
+      ids.map(async (id) => {
+        try {
+          const res = await fetch(`/api/reviews/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ isFeatured: false }),
+          });
+          return { id, ok: res.ok };
+        } catch {
+          return { id, ok: false };
+        }
+      }),
+    );
+    const succeededIds = results.filter((r) => r.ok).map((r) => r.id);
+    const failedCount = results.length - succeededIds.length;
+    setRemoved((prev) => new Set([...prev, ...succeededIds]));
+    refreshFeatured();
+    if (failedCount > 0) {
+      alert(`${failedCount} review(s) failed to unfeature. Please try again.`);
+    }
   }
   return (
     <div ref={ref} style={{ marginBottom: 48 }}>

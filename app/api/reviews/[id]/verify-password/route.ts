@@ -33,7 +33,13 @@ export async function POST(request: NextRequest, props: {
     if (review.userId) {
         return badRequest('reviews/:id/verify-password', '회원 작성 리뷰입니다');
     }
-    const body = await request.json();
+    let body: Record<string, any>;
+    try {
+        body = await request.json();
+    }
+    catch {
+        return badRequest('reviews/:id/verify-password', 'invalid JSON body');
+    }
     const password = body.password;
     if (typeof password !== 'string' || !review.password) {
         return NextResponse.json({ valid: false }, { status: 401 });
