@@ -71,10 +71,9 @@ function InfoMark({ text }: {
                 fontWeight: 400,
                 lineHeight: 1.4,
                 padding: '8px 10px',
-                borderRadius: 6,
+                borderRadius: 3,
                 whiteSpace: 'nowrap',
                 zIndex: 10,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
             }}>
           {text}
         </span>)}
@@ -169,9 +168,8 @@ export default function DashboardPanel({ onNavigation, isMobile, }: {
             
             <div style={{
                 background: '#000',
-                borderRadius: 16,
+                borderRadius: 4,
                 padding: '24px',
-                boxShadow: '0 4px 20px rgba(172,172,172,0.3)',
             }}>
               <p style={{
                 fontSize: 11,
@@ -203,9 +201,8 @@ export default function DashboardPanel({ onNavigation, isMobile, }: {
             <div style={{
                 background: '#fff',
                 border: '1px solid #000',
-                borderRadius: 16,
+                borderRadius: 4,
                 padding: '24px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
             }}>
               <p style={{
                 fontSize: 11,
@@ -233,9 +230,8 @@ export default function DashboardPanel({ onNavigation, isMobile, }: {
             <div style={{
                 background: '#fff',
                 border: '1px solid #000',
-                borderRadius: 16,
+                borderRadius: 4,
                 padding: '24px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
             }}>
               <p style={{
                 fontSize: 11,
@@ -263,9 +259,8 @@ export default function DashboardPanel({ onNavigation, isMobile, }: {
             <div style={{
                 background: '#fff',
                 border: '1px solid #000',
-                borderRadius: 16,
+                borderRadius: 4,
                 padding: '24px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
             }}>
               <p style={{
                 fontSize: 11,
@@ -300,9 +295,8 @@ export default function DashboardPanel({ onNavigation, isMobile, }: {
             <div style={{
                 background: '#fff',
                 border: '1px solid #000',
-                borderRadius: 16,
+                borderRadius: 4,
                 padding: '24px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                 minHeight: 280,
             }}>
               <p style={{
@@ -422,7 +416,7 @@ export default function DashboardPanel({ onNavigation, isMobile, }: {
                 fontSize: 12,
                 padding: '6px 8px',
                 border: '1px solid #000',
-                borderRadius: 6,
+                borderRadius: 3,
                 color: '#000',
             }}/>
                   <span style={{ fontSize: 12, color: '#000' }}>~</span>
@@ -430,14 +424,14 @@ export default function DashboardPanel({ onNavigation, isMobile, }: {
                 fontSize: 12,
                 padding: '6px 8px',
                 border: '1px solid #000',
-                borderRadius: 6,
+                borderRadius: 3,
                 color: '#000',
             }}/>
                   <button onClick={runSearch} disabled={searching} style={{
                 fontSize: 12,
                 fontWeight: 700,
                 padding: '7px 14px',
-                borderRadius: 6,
+                borderRadius: 3,
                 border: 'none',
                 background: '#5a5a5a',
                 color: '#fff',
@@ -484,9 +478,8 @@ export default function DashboardPanel({ onNavigation, isMobile, }: {
             <div style={{
                 background: '#fff',
                 border: '1px solid #000',
-                borderRadius: 16,
+                borderRadius: 4,
                 padding: '24px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
                 minHeight: 280,
             }}>
               <p style={{
@@ -542,7 +535,7 @@ export default function DashboardPanel({ onNavigation, isMobile, }: {
                         width: 40,
                         height: 40,
                         flexShrink: 0,
-                        borderRadius: 8,
+                        borderRadius: 3,
                         overflow: 'hidden',
                         background: '#ebebeb',
                         position: 'relative',
@@ -581,9 +574,8 @@ export default function DashboardPanel({ onNavigation, isMobile, }: {
           <div style={{
                 background: '#fff',
                 border: '1px solid #000',
-                borderRadius: 16,
+                borderRadius: 4,
                 padding: '24px',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
             }}>
             <p style={{
                 fontSize: 11,
@@ -624,9 +616,8 @@ export default function DashboardPanel({ onNavigation, isMobile, }: {
           <div style={{
                 background: '#fff',
                 border: '1px solid #000',
-                borderRadius: 16,
+                borderRadius: 4,
                 overflow: 'hidden',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
             }}>
             <div style={{
                 padding: '20px 24px',
@@ -824,11 +815,10 @@ function VisitorChart({ data }: {
                 color: '#fff',
                 fontSize: 11,
                 padding: '6px 10px',
-                borderRadius: 6,
+                borderRadius: 3,
                 whiteSpace: 'nowrap',
                 pointerEvents: 'none',
                 zIndex: 10,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
             }}>
           {`${hovered.d.date.split('-')[1]}/${hovered.d.date.split('-')[2]} · 방문자 ${hovered.d.activeUsers}명 · 조회 ${hovered.d.pageViews}회`}
         </div>)}

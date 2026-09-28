@@ -1,20 +1,16 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import React from 'react';
 import Link from 'next/link';
 import { type Section } from './types';
 import DashboardPanel from './dashboard-panel';
 import HeroPanel from './hero-panel';
-import ProductPanel from './product-panel';
 import UserPanel from './user-panel';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AccountsPanel from './accounts-panel';
 import MyAccountPanel from './my-account-panel';
-import WeddingPhotographerPanel from './wedding-photographer-panel';
-import AddonPanel from './addon-panel';
-import InclusionPanel from './inclusion-panel';
-import PartnerPanel from './partner-panel';
 import AuditLogPanel from './audit-log-panel';
+import ProductFullPanel from './product-full-panel';
 import { ADMIN_PANEL_PATH } from '@/lib/admin-paths';
 const IconDashboard = () => (<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
     <rect x="3" y="3" width="7" height="7" rx="1"/>
@@ -58,29 +54,6 @@ const IconUsers = () => (<svg width="15" height="15" viewBox="0 0 24 24" fill="n
     <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
     <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
   </svg>);
-const MANAGE_SECTIONS: Section[] = [
-    'wedding-photographers',
-    'inclusions',
-    'addons',
-    'partners-hmu',
-    'partners-dress',
-    'partners-suit',
-    'partners-bouquet',
-    'partners-videographer',
-];
-const MANAGE_ITEMS: {
-    id: Section;
-    label: string;
-}[] = [
-    { id: 'wedding-photographers', label: 'Directors' },
-    { id: 'inclusions', label: 'Inclusions' },
-    { id: 'addons', label: 'Addons' },
-    { id: 'partners-hmu', label: 'Hair & Makeup' },
-    { id: 'partners-dress', label: 'Dress' },
-    { id: 'partners-suit', label: 'Suit' },
-    { id: 'partners-bouquet', label: 'Bouquet' },
-    { id: 'partners-videographer', label: 'Videographer' },
-];
 const MENU: {
     id: Section;
     label: string;
@@ -91,12 +64,12 @@ const MENU: {
     { id: 'hero-snap', label: 'Hero · Snap', icon: <IconImage /> },
     {
         id: 'Photographers',
-        label: 'Photographers',
+        label: 'Photographers (Wedding)',
         icon: <IconCamera />,
     },
     {
         id: 'Casual Photoshoot',
-        label: 'Casual Photoshoot',
+        label: 'Casual Photoshoot (Snap)',
         icon: <IconMapPin />,
     },
     { id: 'users', label: 'Members', icon: <IconUsers /> },
@@ -117,19 +90,36 @@ export default function AdminPage() {
     } | null>(null);
     const [isMobile, setIsMobile] = useState(false);
     const [isMobileOpen, setIsMobileOpen] = useState(false);
-    const [manageOpen, setManageOpen] = useState(() => MANAGE_SECTIONS.includes(active as Section));
-    const prevActive = useRef(active);
-    useEffect(() => {
-        if (prevActive.current !== active) {
-            prevActive.current = active;
-            if (MANAGE_SECTIONS.includes(active as Section))
-                setManageOpen(true);
-        }
-    }, [active]);
+    const [sessionExpired, setSessionExpired] = useState(false);
     const logout = async () => {
         await fetch('/api/admin/logout', { method: 'POST' }).catch(() => null);
         router.replace('/gatekeeper-7f3k9');
     };
+    useEffect(() => {
+        // 어드민 세션(JWT 쿠키)이 만료된 채로 등록/수정 등을 시도하면 API가 401을 주는데,
+        // 각 패널이 이걸 그냥 "저장 실패"처럼 일반 에러로 보여줘서 원인을 알 수 없었음.
+        // 모든 /api/admin/* 요청을 가로채서 401이면 세션 만료 모달을 띄우도록 함.
+        const originalFetch = window.fetch;
+        window.fetch = async (...args) => {
+            const response = await originalFetch(...args);
+            const input = args[0];
+            const url = typeof input === 'string'
+                ? input
+                : input instanceof Request
+                    ? input.url
+                    : input.toString();
+            if (response.status === 401 &&
+                url.includes('/api/admin/') &&
+                !url.includes('/api/admin/login') &&
+                !url.includes('/api/admin/me')) {
+                setSessionExpired(true);
+            }
+            return response;
+        };
+        return () => {
+            window.fetch = originalFetch;
+        };
+    }, []);
     useEffect(() => {
         fetch('/api/admin/me')
             .then((res) => res.json())
@@ -156,8 +146,7 @@ export default function AdminPage() {
         }}>
       <style>{`
         @keyframes spin { to { transform: rotate(360deg) } }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        input:focus { border-color: #a0a0a0 !important; box-shadow: 0 0 0 3px rgba(160,160,160,0.18) !important; }
+        input:focus { border-color: #888 !important; }
         button:disabled { opacity: 0.4; cursor: not-allowed; }
         .admin-menu-btn:hover { background: rgba(160,160,160,0.12) !important; }
         ::-webkit-scrollbar { width: 4px; }
@@ -167,11 +156,9 @@ export default function AdminPage() {
 
       
       <header style={{
-            height: 64,
-            backgroundColor: 'rgba(255,255,255,0.7)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            borderBottom: '1px solid rgba(160,160,160,0.2)',
+            height: 56,
+            backgroundColor: '#fff',
+            borderBottom: '1px solid #e0e0e0',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -216,14 +203,14 @@ export default function AdminPage() {
           </span>
         </div>
         <button onClick={logout} style={{
-            fontSize: 13,
-            color: '#eee',
+            fontSize: 12,
+            color: '#fff',
             display: 'flex',
             alignItems: 'center',
             gap: 6,
-            padding: '8px 18px',
-            border: '1px solid rgba(122,122,122,0.25)',
-            borderRadius: 8,
+            padding: '7px 14px',
+            border: 'none',
+            borderRadius: 3,
             background: '#000',
             cursor: 'pointer',
             fontWeight: 600,
@@ -241,12 +228,10 @@ export default function AdminPage() {
         }}>
         
         <aside style={{
-            width: 240,
-            backgroundColor: 'rgba(255,255,255,0.95)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            borderRight: '1px solid rgba(160,160,160,0.2)',
-            padding: '24px 0',
+            width: 220,
+            backgroundColor: '#fff',
+            borderRight: '1px solid #e0e0e0',
+            padding: '20px 0',
             flexShrink: 0,
             display: isMobile && !isMobileOpen ? 'none' : 'flex',
             flexDirection: 'column',
@@ -256,7 +241,6 @@ export default function AdminPage() {
                 left: 0,
                 height: '100dvh',
                 zIndex: 100,
-                boxShadow: '4px 0 20px rgba(0,0,0,0.15)',
             }),
         }}>
           {isMobile && (<div style={{
@@ -293,10 +277,10 @@ export default function AdminPage() {
             </div>)}
           {admin && (<div style={{
                 margin: '0 16px 24px',
-                padding: '14px 16px',
-                background: 'rgba(255,255,255,0.6)',
-                borderRadius: 10,
-                border: '1px solid rgba(160,160,160,0.25)',
+                padding: '12px 14px',
+                background: '#f5f5f5',
+                borderRadius: 3,
+                border: '1px solid #e0e0e0',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 10,
@@ -348,85 +332,6 @@ export default function AdminPage() {
             height: 1,
             background: 'rgba(140,140,140,0.15)',
         }}/>
-          <button className="admin-menu-btn" onClick={() => setManageOpen((v) => !v)} style={{
-            width: '100%',
-            textAlign: 'left',
-            padding: '14px 16px',
-            background: MANAGE_SECTIONS.includes(active as Section)
-                ? 'rgba(160,160,160,0.08)'
-                : 'transparent',
-            border: 'none',
-            borderLeft: `2px solid ${MANAGE_SECTIONS.includes(active as Section) ? '#a0a0a0' : 'transparent'}`,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            transition: 'all 0.15s',
-        }}>
-            <span style={{
-            color: MANAGE_SECTIONS.includes(active as Section)
-                ? '#a0a0a0'
-                : '#969696',
-            display: 'flex',
-        }}>
-              <IconSettings />
-            </span>
-            <span style={{
-            fontSize: 14,
-            fontWeight: MANAGE_SECTIONS.includes(active as Section)
-                ? 600
-                : 400,
-            color: MANAGE_SECTIONS.includes(active as Section)
-                ? '#252525'
-                : '#5e5e5e',
-            flex: 1,
-        }}>
-              Manage
-            </span>
-            <span style={{ fontSize: 10, color: '#969696', marginRight: 4 }}>
-              {manageOpen ? '▲' : '▼'}
-            </span>
-          </button>
-          {manageOpen && (<div style={{
-                background: 'rgba(140,140,140,0.04)',
-                borderLeft: '1px solid rgba(140,140,140,0.15)',
-                marginLeft: 16,
-                marginRight: 8,
-            }}>
-              {MANAGE_ITEMS.map((m) => {
-                const isActive = m.id === active;
-                return (<button key={m.id} className="admin-menu-btn" onClick={() => setActive(m.id)} style={{
-                        width: '100%',
-                        textAlign: 'left',
-                        padding: '11px 16px',
-                        background: isActive
-                            ? 'rgba(160,160,160,0.15)'
-                            : 'transparent',
-                        border: 'none',
-                        borderLeft: `2px solid ${isActive ? '#a0a0a0' : 'transparent'}`,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 8,
-                        transition: 'all 0.15s',
-                    }}>
-                    <span style={{
-                        width: 6,
-                        height: 6,
-                        borderRadius: '50%',
-                        background: isActive ? '#a0a0a0' : '#bdbdbd',
-                        flexShrink: 0,
-                    }}/>
-                    <span style={{
-                        fontSize: 13,
-                        fontWeight: isActive ? 600 : 400,
-                        color: isActive ? '#252525' : '#5e5e5e',
-                    }}>
-                      {m.label}
-                    </span>
-                  </button>);
-            })}
-            </div>)}
 
           
           {MENU.filter((m) => m.id !== 'accounts' || admin?.role === 'master').map((m, i) => {
@@ -509,32 +414,56 @@ export default function AdminPage() {
         <main style={{
             flex: 1,
             overflowY: 'auto',
-            padding: '36px 44px',
+            padding: '24px 32px',
         }}>
-          <div style={{
-            height: 1,
-            background: 'linear-gradient(90deg, transparent, #a0a0a0, #c1c1c1, #a0a0a0, transparent)',
-            marginBottom: 36,
-            opacity: 0.6,
-        }}/>
           {active === 'dashboard' && (<DashboardPanel onNavigation={setActive} isMobile={isMobile}/>)}
           {active === 'hero-wedding' && <HeroPanel brand="wedding"/>}
           {active === 'hero-snap' && <HeroPanel brand="snap"/>}
-          {active === 'wedding-photographers' && <WeddingPhotographerPanel />}
-          {active === 'inclusions' && <InclusionPanel />}
-          {active === 'addons' && <AddonPanel />}
-          {active === 'partners-hmu' && <PartnerPanel role="hmu"/>}
-          {active === 'partners-dress' && <PartnerPanel role="dress"/>}
-          {active === 'partners-suit' && <PartnerPanel role="suit"/>}
-          {active === 'partners-bouquet' && <PartnerPanel role="bouquet"/>}
-          {active === 'partners-videographer' && <PartnerPanel role="videographer"/>}
-          {active === 'Photographers' && (<ProductPanel category="Photographers"/>)}
-          {active === 'Casual Photoshoot' && (<ProductPanel category="Casual Photoshoot"/>)}
+          {active === 'Photographers' && (<ProductFullPanel fixedCategory="wedding"/>)}
+          {active === 'Casual Photoshoot' && (<ProductFullPanel fixedCategory="snap"/>)}
           {active === 'users' && <UserPanel />}
           {active === 'accounts' && <AccountsPanel />}
           {active === 'audit-log' && <AuditLogPanel />}
           {active === 'my-account' && <MyAccountPanel />}
         </main>
       </div>
+
+      {sessionExpired && (<div style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.4)',
+            zIndex: 400,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        }}>
+          <div style={{
+            background: '#fff',
+            borderRadius: 4,
+            padding: '32px 28px',
+            width: 320,
+            textAlign: 'center',
+        }}>
+            <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>
+              세션이 종료되었습니다.
+            </p>
+            <p style={{ fontSize: 12, color: '#999', marginBottom: 20 }}>
+              보안을 위해 일정 시간이 지나면 자동으로 로그아웃돼요. 다시 로그인해주세요.
+            </p>
+            <button onClick={() => router.replace('/gatekeeper-7f3k9')} style={{
+            padding: '10px 0',
+            width: '100%',
+            background: '#000',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 3,
+            fontSize: 13,
+            fontWeight: 600,
+            cursor: 'pointer',
+        }}>
+              다시 로그인
+            </button>
+          </div>
+        </div>)}
     </div>);
 }

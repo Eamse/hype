@@ -225,6 +225,7 @@ model Package {
   locations          String // "3 sites"
   locationsDetail    String?
   originalPhotos     String // "800+"
+  originalPhotosDetail String?
   retouched          Int
   retouchedDetail    String?
   thumbnailUrl       String?

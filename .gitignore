@@ -44,6 +44,8 @@ scripts/.price-diff-report.json
 *.db
 *.db-shm
 *.db-wal
+*.sql
+!prisma/migrations/**/*.sql
 
 # claude / docs
 AGENTS.md

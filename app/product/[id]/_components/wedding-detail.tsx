@@ -47,6 +47,7 @@ type Package = {
   locations: string;
   locationsDetail: string | null;
   originalPhotos: string;
+  originalPhotosDetail: string | null;
   retouched: number;
   retouchedDetail: string | null;
   director: Director;
@@ -105,6 +106,8 @@ export default function WeddingDetail({
   directors,
   packages,
   onActiveImagesChange,
+  previewMode,
+  previewPrices,
 }: {
   productId: number;
   title: string;
@@ -119,6 +122,10 @@ export default function WeddingDetail({
       thumbUrl: string | null;
     }[],
   ) => void;
+  // 어드민 등록/수정 폼의 "미리보기" 단계에서, 아직 저장되지 않은 입력값을 실제 DB
+  // 조회 없이 그대로 보여주기 위한 프리뷰 전용 옵션. 실제 서비스 페이지에서는 사용 안 함.
+  previewMode?: boolean;
+  previewPrices?: Record<number, { priceSNS: number; priceNoSNS: number }>;
 }) {
   const router = useRouter();
   const { data: session } = useSession();
@@ -130,8 +137,9 @@ export default function WeddingDetail({
         priceNoSNS: number;
       }
     >
-  >({});
+  >(previewMode ? (previewPrices ?? {}) : {});
   useEffect(() => {
+    if (previewMode) return;
     if (!session) {
       setPrices({});
       return;
@@ -152,7 +160,7 @@ export default function WeddingDetail({
         if (e.name !== 'AbortError') console.error(e);
       });
     return () => controller.abort();
-  }, [session, productId]);
+  }, [session, productId, previewMode]);
   const firstDirectorId = directors[0]?.id ?? null;
   const [activeDirectorId, setActiveDirectorId] = useState<number | null>(
     firstDirectorId,
@@ -268,7 +276,7 @@ export default function WeddingDetail({
         {
           label: 'Original Photos',
           value: activePackage.originalPhotos,
-          detail: null,
+          detail: activePackage.originalPhotosDetail,
         },
       ]
     : [];
@@ -520,7 +528,7 @@ export default function WeddingDetail({
           </div>
         )}
 
-        {activePackage && priceCount > 0 && session && (
+        {activePackage && priceCount > 0 && (session || previewMode) && (
           <div className={`border-t ${BORDER}`}>
             <div
               className={`grid ${priceCount === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}
