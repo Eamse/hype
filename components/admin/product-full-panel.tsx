@@ -114,7 +114,7 @@ function ImageUploadField({
               cursor: 'pointer',
             }}
           >
-            + 이미지 업로드
+            + 이미지 업로드 (50MB 이하)
           </label>
         </div>
         {children}
@@ -377,9 +377,14 @@ function emptyDirector(): DirectorForm {
 
 const PKG_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
+const MAX_UPLOAD_IMAGE_SIZE = 50 * 1024 * 1024;
+
 async function uploadImage(
   file: File,
 ): Promise<{ url: string; thumbUrl: string | null }> {
+  if (file.size > MAX_UPLOAD_IMAGE_SIZE) {
+    throw new Error('이미지 용량이 너무 커요. 50MB 이하로 업로드해주세요.');
+  }
   const resized = await resizeImageFile(file);
   const formData = new FormData();
   formData.append('image', resized);
@@ -507,6 +512,7 @@ export default function ProductFullPanel({
   const [listLoading, setListLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   const productDropdownRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -725,7 +731,7 @@ export default function ProductFullPanel({
       setThumbnail({ ...result, uploading: false });
     } catch (e) {
       setThumbnail(null);
-      alert(e instanceof Error ? e.message : '업로드 실패');
+      setUploadError(e instanceof Error ? e.message : '업로드에 실패했습니다.');
     }
   }
   // 여러 파일을 동시에 업로드할 때 각 슬롯을 배열 인덱스가 아니라 고유 id로 식별해야
@@ -737,13 +743,28 @@ export default function ProductFullPanel({
   ) {
     for (const file of Array.from(files)) {
       const slotId = nextId();
-      const pkg = directors[dirIndex].packages[pkgIndex];
-      updatePackage(dirIndex, pkgIndex, {
-        images: [
-          ...pkg.images,
-          { _id: slotId, url: '', thumbUrl: null, uploading: true },
-        ],
-      });
+      // pkg.images를 바깥 클로저(directors)에서 읽으면 이전 반복에서 추가한
+      // 슬롯이 아직 반영 안 된 스냅샷이라, 여러 파일을 한 번에 선택하면 뒤에
+      // 추가된 파일이 앞서 추가된 자리를 덮어써버림 — 항상 최신 prev를 써야 함
+      setDirectors((prev) =>
+        prev.map((d, i) => {
+          if (i !== dirIndex) return d;
+          return {
+            ...d,
+            packages: d.packages.map((p, j) =>
+              j === pkgIndex
+                ? {
+                    ...p,
+                    images: [
+                      ...p.images,
+                      { _id: slotId, url: '', thumbUrl: null, uploading: true },
+                    ],
+                  }
+                : p,
+            ),
+          };
+        }),
+      );
       try {
         const result = await uploadImage(file);
         setDirectors((prev) =>
@@ -783,7 +804,9 @@ export default function ProductFullPanel({
             };
           }),
         );
-        alert(e instanceof Error ? e.message : '업로드 실패');
+        setUploadError(
+          e instanceof Error ? e.message : '업로드에 실패했습니다.',
+        );
       }
     }
   }
@@ -1244,6 +1267,44 @@ export default function ProductFullPanel({
         <p style={{ color: '#c0392b', fontSize: 13, marginBottom: 16 }}>
           {error}
         </p>
+      )}
+      {uploadError && (
+        <div
+          onClick={() => setUploadError(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.4)',
+            zIndex: 300,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: '#fff',
+              borderRadius: 4,
+              padding: '32px 28px',
+              width: 320,
+              textAlign: 'center',
+            }}
+          >
+            <p style={{ fontSize: 15, fontWeight: 700, marginBottom: 8 }}>
+              이미지를 업로드하지 못했어요.
+            </p>
+            <p style={{ fontSize: 12, color: '#999', marginBottom: 20 }}>
+              {uploadError}
+            </p>
+            <button
+              onClick={() => setUploadError(null)}
+              style={{ ...btnStyle('#000', '#fff'), width: '100%' }}
+            >
+              확인
+            </button>
+          </div>
+        </div>
       )}
       {showDeleteConfirm && (
         <div
