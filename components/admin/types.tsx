@@ -12,7 +12,7 @@ export type Product = {
     }[];
     order: number;
 };
-export type Section = 'dashboard' | 'hero-wedding' | 'hero-snap' | 'wedding-photographers' | 'Photographers' | 'Casual Photoshoot' | 'users' | 'accounts' | 'my-account' | 'addons' | 'inclusions' | 'partners-hmu' | 'partners-dress' | 'partners-suit' | 'partners-bouquet' | 'partners-videographer' | 'audit-log';
+export type Section = 'dashboard' | 'hero-wedding' | 'hero-snap' | 'Photographers' | 'Casual Photoshoot' | 'users' | 'accounts' | 'my-account' | 'audit-log';
 export type Account = {
     id: string;
     loginId: string;
@@ -30,33 +30,32 @@ export const INCLUSIONS = [
 export function btnStyle(bg: string, color: string, border?: string): React.CSSProperties {
     const isPrimary = bg === '#000';
     return {
-        padding: '8px 18px',
-        borderRadius: 8,
+        padding: '7px 14px',
+        borderRadius: 3,
         fontSize: 12,
         fontWeight: 600,
         background: isPrimary ? '#000' : bg,
         color: isPrimary ? '#fff' : color,
         cursor: 'pointer',
-        border: border ? `1px solid ${border}` : 'none',
+        border: border ? `1px solid ${border}` : isPrimary ? 'none' : '1px solid #ccc',
         whiteSpace: 'nowrap' as const,
-        boxShadow: isPrimary ? '0 2px 8px rgba(172,172,172,0.3)' : 'none',
-        letterSpacing: '0.3px',
+        letterSpacing: '0.2px',
     };
 }
 export const labelStyle: React.CSSProperties = {
     display: 'block',
     fontSize: 10,
     fontWeight: 700,
-    color: '#acacac',
-    marginBottom: 6,
+    color: '#888',
+    marginBottom: 5,
     textTransform: 'uppercase',
-    letterSpacing: '1.5px',
+    letterSpacing: '0.5px',
 };
 export const inputStyle: React.CSSProperties = {
     width: '100%',
-    padding: '10px 12px',
-    borderRadius: 8,
-    border: '1px solid #000',
+    padding: '8px 10px',
+    borderRadius: 3,
+    border: '1px solid #ccc',
     fontSize: 13,
     outline: 'none',
     color: '#000',

@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 export default function LoginModal({ onClose }: {
     onClose: () => void;
@@ -9,6 +9,22 @@ export default function LoginModal({ onClose }: {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [emptyFields, setEmptyFields] = useState<{ email?: boolean; password?: boolean }>({});
+    useEffect(() => {
+        // 포커스가 입력창 밖에 있을 때 Backspace를 누르면 일부 브라우저가 이걸 "뒤로가기"로
+        // 처리해서, URL 변경 없이 떠 있던 이 모달이 페이지 이동과 함께 통째로 사라져버림
+        function blockUnfocusedBackspace(e: KeyboardEvent) {
+            if (e.key !== 'Backspace')
+                return;
+            const el = document.activeElement;
+            const isEditable = el instanceof HTMLInputElement ||
+                el instanceof HTMLTextAreaElement ||
+                (el instanceof HTMLElement && el.isContentEditable);
+            if (!isEditable)
+                e.preventDefault();
+        }
+        document.addEventListener('keydown', blockUnfocusedBackspace);
+        return () => document.removeEventListener('keydown', blockUnfocusedBackspace);
+    }, []);
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (!email || !password) {
