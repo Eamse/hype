@@ -699,7 +699,15 @@ export default function ProductFullPanel({
         if (i !== dirIndex) return d;
         const letter =
           PKG_LETTERS[d.packages.length] ?? String(d.packages.length + 1);
-        return { ...d, packages: [...d.packages, emptyPackage(letter)] };
+
+        const sourcePkg = d.packages[activePackage[dirIndex] ?? 0];
+        const newPkg = {
+          ...emptyPackage(letter),
+          addons: sourcePkg
+            ? sourcePkg.addons.map((a) => ({ ...a, _id: nextId() }))
+            : emptyPackage(letter).addons,
+        };
+        return { ...d, packages: [...d.packages, newPkg] };
       }),
     );
     setActivePackage((prev) => ({
