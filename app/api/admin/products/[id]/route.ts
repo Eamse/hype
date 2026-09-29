@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getAdminId } from '@/lib/admin-auth';
 import { logFieldChanges } from '@/lib/audit-log';
+import { renumberDirectors } from '@/lib/admin/product-full-service';
 export async function PATCH(request: NextRequest, { params }: {
     params: Promise<{
         id: string;
@@ -30,6 +31,9 @@ export async function PATCH(request: NextRequest, { params }: {
         });
         if (before) {
             await logFieldChanges(adminId, 'Product', productId, before, product);
+        }
+        if (typeof order === 'number' && Number.isFinite(order)) {
+            await renumberDirectors(productId, order);
         }
         return NextResponse.json(product);
     }

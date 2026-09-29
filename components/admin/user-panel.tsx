@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import ExcelJS from 'exceljs';
 import { inputStyle } from './types';
 import Flag from 'react-world-flags';
 type User = {
@@ -27,6 +28,43 @@ export default function UserPanel() {
             .then((data) => setUsers(Array.isArray(data) ? data : []))
             .finally(() => setLoading(false));
     }, [query]);
+    async function handleExportExcel() {
+        const workbook = new ExcelJS.Workbook();
+        const sheet = workbook.addWorksheet('Members');
+        sheet.columns = [
+            { header: 'Provider', key: 'provider', width: 12 },
+            { header: 'Email', key: 'email', width: 28 },
+            { header: 'Name', key: 'name', width: 16 },
+            { header: 'Gender', key: 'gender', width: 10 },
+            { header: 'Nationality', key: 'country', width: 12 },
+            { header: 'Phone', key: 'phone', width: 18 },
+            { header: 'Birth', key: 'birth', width: 14 },
+            { header: 'Joined At', key: 'joinedAt', width: 14 },
+        ];
+        sheet.getRow(1).font = { bold: true };
+        for (const user of users) {
+            sheet.addRow({
+                provider: user.provider === 'google' ? 'Google' : 'Email',
+                email: user.email,
+                name: user.name ?? '',
+                gender: user.gender ?? '',
+                country: user.country ?? '',
+                phone: user.phoneCountryCode && user.phone ? `${user.phoneCountryCode} ${user.phone}` : '',
+                birth: user.birthYear && user.birthMonth && user.birthDay
+                    ? `${user.birthYear}.${user.birthMonth}.${user.birthDay}`
+                    : '',
+                joinedAt: new Date(user.createdAt).toLocaleDateString('ko-KR'),
+            });
+        }
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `members_${new Date().toISOString().slice(0, 10)}.xlsx`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
     return (<div style={{ padding: '32px 24px' }}>
       
       <div style={{
@@ -46,7 +84,22 @@ export default function UserPanel() {
             {users.length}명
           </span>
         </h2>
-        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="이메일 또는 이름 검색" style={{ ...inputStyle, width: 240, fontSize: 13 }}/>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="이메일 또는 이름 검색" style={{ ...inputStyle, width: 240, fontSize: 13 }}/>
+          <button onClick={handleExportExcel} disabled={users.length === 0} style={{
+            padding: '0 14px',
+            fontSize: 13,
+            fontWeight: 600,
+            color: '#333',
+            background: '#f0f0f0',
+            border: '1px solid #ccc',
+            borderRadius: 3,
+            cursor: users.length === 0 ? 'not-allowed' : 'pointer',
+            whiteSpace: 'nowrap',
+        }}>
+            엑셀 다운로드
+          </button>
+        </div>
       </div>
 
       
