@@ -723,6 +723,32 @@ export default function ProductFullPanel({
       ),
     }));
   }
+  function movePackage(dirIndex: number, pkgIndex: number, dir: -1 | 1) {
+    let moved = false;
+    setDirectors((prev) =>
+      prev.map((d, i) => {
+        if (i !== dirIndex) return d;
+        const next = moveItem(d.packages, pkgIndex, dir);
+        if (next === d.packages) return d;
+        moved = true;
+        // "Package A" 같은 기본 이름을 그대로 쓰던 패키지만 새 위치에 맞게
+        // 이름을 다시 붙임 — 관리자가 직접 커스텀한 이름은 그대로 둠
+        const renamed = next.map((p, idx) => {
+          if (!/^Package [A-F]$/.test(p.name)) return p;
+          const letter = PKG_LETTERS[idx] ?? String(idx + 1);
+          return { ...p, name: `Package ${letter}` };
+        });
+        return { ...d, packages: renamed };
+      }),
+    );
+    if (moved) {
+      setActivePackage((prev) =>
+        (prev[dirIndex] ?? 0) === pkgIndex
+          ? { ...prev, [dirIndex]: pkgIndex + dir }
+          : prev,
+      );
+    }
+  }
 
   async function handleThumbnailUpload(file: File) {
     setThumbnail({ url: '', thumbUrl: null, uploading: true });
@@ -1630,6 +1656,28 @@ export default function ProductFullPanel({
                 }}
               >
                 {p.name}
+                {i > 0 && (
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      movePackage(curDirIndex, i, -1);
+                    }}
+                    style={{ marginLeft: 8, color: '#ccc' }}
+                  >
+                    ◀
+                  </span>
+                )}
+                {i < curDir.packages.length - 1 && (
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      movePackage(curDirIndex, i, 1);
+                    }}
+                    style={{ marginLeft: 6, color: '#ccc' }}
+                  >
+                    ▶
+                  </span>
+                )}
                 <span
                   onClick={(e) => {
                     e.stopPropagation();

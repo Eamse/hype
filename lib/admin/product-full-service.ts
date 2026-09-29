@@ -4,11 +4,11 @@ import type { FullDirectorInput, FullProductInput } from './product-full-types';
 
 type Tx = Prisma.TransactionClient;
 
-// Addon/Inclusion/Partner는 재사용하지 않고 패키지마다 매번 새로 생성하기로 함(README 논의 참고).
+// Addon/Inclusion/Partner는 재사용하지 않고 패키지마다 매번 새로 생성하기로 함(README 논의 참고)
 // Package를 지워도 Prisma의 onDelete: Cascade는 PackageAddon/PackageInclusion/PackagePartner
-// "조인 테이블" 행만 지우고, 그 대상인 Addon/Inclusion/Partner 본체는 지우지 않는다(cascade 방향이 반대).
+// "조인 테이블" 행만 지우고, 그 대상인 Addon/Inclusion/Partner 본체는 지우지 않음(cascade 방향이 반대)
 // 그래서 전체 교체(PUT) 시엔 지우기 전에 연결된 id를 먼저 모아뒀다가, 조인 테이블이 사라진 뒤 명시적으로 같이 지워야
-// 매 수정마다 고아 레코드가 계속 쌓이는 걸 막을 수 있다.
+// 매 수정마다 고아 레코드가 계속 쌓이는 걸 막을 수 있음
 async function deleteDirectorTree(tx: Tx, directorIds: number[]) {
   if (directorIds.length === 0) return;
   const packages = await tx.package.findMany({
@@ -154,17 +154,10 @@ async function createDirectors(
   }
 }
 
-// ProductImage(폴백 갤러리, 패키지 이미지가 하나도 없을 때만 상세페이지에서 대신 쓰임)는
-// 이 등록 폼에서 관리하지 않음 — 새 플로우는 항상 패키지 이미지가 있어야 저장 가능해서 폴백이
-// 켜질 일이 없고, 기존(구) 방식으로 등록된 상품을 이 화면으로 불러와 수정하더라도 그 상품의
-// 폴백 갤러리를 그대로 보존하기 위해 create/replace 양쪽 다 건드리지 않는다.
 export async function createFullProduct(
   data: FullProductInput,
 ): Promise<number> {
   return prisma.$transaction(async (tx) => {
-    // order는 @default(0)이라, 지정하지 않으면 새 상품이 그 섹션의 기존 0번 상품과
-    // 같은 순위로 묶여 목록 맨 위쪽(정렬 동률 시 createdAt asc)에 끼어들어가 버린다.
-    // 같은 섹션의 최대 order 다음 값으로 넣어서 항상 목록 맨 끝에 추가되게 한다.
     const last = await tx.product.findFirst({
       where: { section: data.section },
       orderBy: { order: 'desc' },
