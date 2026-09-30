@@ -32,19 +32,30 @@ export default function ImageGallery({ mainImageUrl, mainBlurDataUrl, images, }:
             : []),
         ...images,
     ];
+    // 브라우저 캐시에 이미 있는 이미지는 <img>의 onLoad가 첫 페인트 전에 거의
+    // 즉시 발동해서, opacity transition이 애니메이션할 시간도 없이 블러가 한
+    // 프레임 번쩍였다가 뚝 끊기듯 원본으로 바뀌어 보임 — 그래서 렌더 전에
+    // 캐시 여부를 동기적으로 확인해서, 캐시된 이미지는 블러 자체를 건너뜀
+    function isCached(url: string): boolean {
+        if (typeof window === 'undefined') return false;
+        const probe = new window.Image();
+        probe.src = url;
+        return probe.complete;
+    }
     const [selected, setSelected] = useState<string | null>(allImages[0]?.url ?? null);
     const [selectedBlur, setSelectedBlur] = useState<string | null>(allImages[0]?.blurDataUrl ?? null);
-    const [mainLoaded, setMainLoaded] = useState(false);
+    const [mainLoaded, setMainLoaded] = useState(() => allImages[0] ? isCached(allImages[0].url) : false);
     const trackRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
-        setSelected(allImages[0]?.url ?? null);
-        setSelectedBlur(allImages[0]?.blurDataUrl ?? null);
-        setMainLoaded(false);
+        const first = allImages[0];
+        setSelected(first?.url ?? null);
+        setSelectedBlur(first?.blurDataUrl ?? null);
+        setMainLoaded(first ? isCached(first.url) : false);
     }, [mainImageUrl, images]);
     function selectImage(img: { url: string; blurDataUrl?: string | null }) {
         setSelected(img.url);
         setSelectedBlur(img.blurDataUrl ?? null);
-        setMainLoaded(false);
+        setMainLoaded(isCached(img.url));
     }
     function scrollByStep(dir: -1 | 1) {
         const el = trackRef.current;
