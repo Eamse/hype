@@ -362,7 +362,7 @@ export default function WeddingDetail({
                   ))}
                 </div>
               </div>
-              <p className={`text-[11px] font-normal ${GRAY3} italic mt-2`}>
+              <p className="text-[11px] font-normal text-[#666] italic mt-2">
                 Click each studio&apos;s Instagram account to view their
                 portfolio.
               </p>
@@ -396,7 +396,7 @@ export default function WeddingDetail({
                   {inclusionNotes.map(({ inclusion }) => (
                     <p
                       key={inclusion.id}
-                      className={`italic text-[11px] font-normal ${GRAY3} leading-[1.5]`}
+                      className="italic text-[11px] font-normal text-[#666] leading-[1.5]"
                     >
                       {inclusion.name}
                     </p>
@@ -521,7 +521,7 @@ export default function WeddingDetail({
                 )}
               </div>
             ))}
-            <p className={`text-[11px] font-normal ${GRAY3} italic mt-[10px]`}>
+            <p className="text-[11px] font-normal text-[#666] italic mt-[10px]">
               * Add-ons are NOT included in the total price. Additional charges
               will apply.
             </p>
@@ -599,13 +599,13 @@ export default function WeddingDetail({
               className={`py-3 px-4 sm:px-6 bg-[#FAFAFA] border-t ${BORDER}`}
             >
               <p
-                className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
+                className="text-[11px] font-normal text-[#666] italic leading-[1.6] mb-[3px] last:mb-0"
               >
                 * Final price is subject to change based on current USD exchange
                 rate and does NOT include add-ons.
               </p>
               <p
-                className={`text-[11px] font-normal ${GRAY3} italic leading-[1.6] mb-[3px] last:mb-0`}
+                className="text-[11px] font-normal text-[#666] italic leading-[1.6] mb-[3px] last:mb-0"
               >
                 * SNS Upload: Hype Pig (Hype Wedding, Hype Snap) SNS,
                 Photographer SNS
