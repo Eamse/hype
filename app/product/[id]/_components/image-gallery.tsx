@@ -30,10 +30,19 @@ export default function ImageGallery({ mainImageUrl, images, }: {
         ...images,
     ];
     const [selected, setSelected] = useState<string | null>(allImages[0]?.url ?? null);
+    const [selectedThumb, setSelectedThumb] = useState<string | null>(allImages[0]?.thumbUrl ?? null);
+    const [mainLoaded, setMainLoaded] = useState(false);
     const trackRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         setSelected(allImages[0]?.url ?? null);
+        setSelectedThumb(allImages[0]?.thumbUrl ?? null);
+        setMainLoaded(false);
     }, [mainImageUrl, images]);
+    function selectImage(img: { url: string; thumbUrl?: string | null }) {
+        setSelected(img.url);
+        setSelectedThumb(img.thumbUrl ?? null);
+        setMainLoaded(false);
+    }
     function scrollByStep(dir: -1 | 1) {
         const el = trackRef.current;
         if (!el)
@@ -53,7 +62,7 @@ export default function ImageGallery({ mainImageUrl, images, }: {
           </button>
 
           <div ref={trackRef} className="hide-scroll flex flex-row gap-2 overflow-auto lg:flex-col lg:flex-1 lg:min-h-0" style={{ paddingLeft: 3, paddingRight: 3 }}>
-            {allImages.map((img) => (<button key={img.id} onClick={() => setSelected(img.url)} className="shrink-0 rounded-lg overflow-hidden relative cursor-pointer bg-none p-0" style={{
+            {allImages.map((img) => (<button key={img.id} onClick={() => selectImage(img)} className="shrink-0 rounded-lg overflow-hidden relative cursor-pointer bg-none p-0" style={{
                     width: 64,
                     height: 64,
                 }}>
@@ -68,7 +77,16 @@ export default function ImageGallery({ mainImageUrl, images, }: {
 
       
       <div className="relative overflow-hidden bg-white mx-auto w-[90%] lg:mx-0 lg:w-[calc(100%-80px)]">
-        {selected ? (<Image src={selected} alt="product" width={900} height={1200} unoptimized priority style={{ width: '100%', height: 'auto' }}/>) : (<div className="w-full" style={{
+        {selected ? (<>
+            {selectedThumb && (<Image src={selectedThumb} alt="" width={900} height={1200} unoptimized aria-hidden style={{
+                    width: '100%', height: 'auto',
+                    filter: 'blur(16px)', transform: 'scale(1.1)', opacity: mainLoaded ? 0 : 1, transition: 'opacity 0.2s ease-out',
+                }}/>)}
+            <Image key={selected} src={selected} alt="product" width={900} height={1200} unoptimized priority onLoad={() => setMainLoaded(true)} style={{
+                    width: '100%', height: 'auto', position: selectedThumb ? 'absolute' : 'static', inset: 0,
+                    opacity: selectedThumb && !mainLoaded ? 0 : 1, transition: 'opacity 0.2s ease-in',
+                }}/>
+          </>) : (<div className="w-full" style={{
                 aspectRatio: '3/4',
                 background: 'linear-gradient(110deg, rgb(236, 236, 236) 8%, rgb(221, 221, 221) 18%, rgb(236, 236, 236) 33%) 0% 0% / 200% 100%',
             }}/>)}
