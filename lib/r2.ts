@@ -31,6 +31,9 @@ export const uploadToR2 = async (urlOrKey: string, buffer: Buffer) => {
         Key: key,
         Body: buffer,
         ContentType: 'image/webp',
+        // 업로드 파일명에 매번 랜덤 UUID가 붙어 URL이 절대 재사용되지 않으므로,
+        // 오래(1년) 캐싱해도 내용이 바뀐 뒤 옛 버전이 보이는 문제가 생기지 않음
+        CacheControl: 'public, max-age=31536000, immutable',
     });
     await s3Client.send(commend);
 };
