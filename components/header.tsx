@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
 import LoginModal from '@/components/login-modal';
 import SearchModal from '@/components/search-modal';
-import ComingSoonModal from './coming-soon-modal';
 import HeaderActionButtons from '@/components/header-action-buttons';
 import { useSession, signOut } from 'next-auth/react';
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -14,13 +13,11 @@ const BRANDS = {
         label: 'HYPE WEDDING',
         description: 'Wedding Photography',
         href: '/',
-        comingSoon: false,
     },
     'hype-snap': {
         label: 'HYPE SNAP',
         description: 'Casual Photoshoot',
         href: '/hype-snap',
-        comingSoon: true,
     },
 } as const;
 type Brand = keyof typeof BRANDS;
@@ -180,7 +177,6 @@ function HeaderInner({ brand = 'hype-wedding' }: {
     const [menuOpen, setMenuOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [toast, setToast] = useState(false);
-    const [comingSoonBrand, setComingSoonBrand] = useState<Brand | null>(null);
     const { data: session } = useSession();
     const isMobile = useIsMobile(1055);
     const [hoveredNav, setHoveredNav] = useState<string | null>(null);
@@ -261,19 +257,14 @@ function HeaderInner({ brand = 'hype-wedding' }: {
                 {i > 0 && (<span style={{ color: '#000', fontSize: 14, fontWeight: 300 }}>
                     |
                   </span>)}
-                <Link href={BRANDS[b].href} onClick={(e) => {
-                if (BRANDS[b].comingSoon) {
-                    e.preventDefault();
-                    setComingSoonBrand(b);
-                }
-            }} style={{
+                <Link href={BRANDS[b].href} style={{
                 fontSize: isMobile ? 13 : 16,
                 fontWeight: 800,
                 letterSpacing: '1px',
                 textTransform: 'uppercase',
                 color: brand === b ? '#000' : '#bbb',
                 textDecoration: 'none',
-                cursor: BRANDS[b].comingSoon ? 'default' : 'pointer',
+                cursor: 'pointer',
             }}>
                   {BRANDS[b].label}
                 </Link>
@@ -573,7 +564,6 @@ function HeaderInner({ brand = 'hype-wedding' }: {
         </div>)}
 
       {searchOpen && <SearchModal onClose={() => setSearchOpen(false)}/>}
-      {comingSoonBrand && (<ComingSoonModal brand={comingSoonBrand} onClose={() => setComingSoonBrand(null)}/>)}
 
       {loginOpen && (<LoginModal onClose={() => {
                 setLoginOpen(false);
