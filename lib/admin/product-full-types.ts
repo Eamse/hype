@@ -9,6 +9,7 @@ const ALLOWED_PARTNER_ROLES = new Set(['hmu', 'dress', 'suit', 'bouquet', 'video
 export interface FullPackageImageInput {
     originalUrl: string;
     thumbUrl?: string | null;
+    blurDataUrl?: string | null;
     order: number;
 }
 

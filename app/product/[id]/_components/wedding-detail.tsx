@@ -63,6 +63,7 @@ type Package = {
     webUrl: string;
     originalUrl: string;
     thumbUrl: string | null;
+    blurDataUrl: string | null;
   }[];
 };
 const INQUIRY_FORM_URL =
@@ -120,6 +121,7 @@ export default function WeddingDetail({
       webUrl: string;
       originalUrl: string;
       thumbUrl: string | null;
+      blurDataUrl: string | null;
     }[],
   ) => void;
   // 어드민 등록/수정 폼의 "미리보기" 단계에서, 아직 저장되지 않은 입력값을 실제 DB

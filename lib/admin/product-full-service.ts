@@ -127,6 +127,7 @@ async function createDirectors(
               webUrl: img.originalUrl,
               originalUrl: img.originalUrl,
               thumbUrl: img.thumbUrl || null,
+              blurDataUrl: img.blurDataUrl || null,
               order: img.order,
             })),
           },

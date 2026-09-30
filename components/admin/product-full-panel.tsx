@@ -257,6 +257,7 @@ type ImgSlot = {
   _id?: string;
   url: string;
   thumbUrl: string | null;
+  blurDataUrl?: string | null;
   uploading?: boolean;
 };
 type AddonForm = {
@@ -381,7 +382,7 @@ const MAX_UPLOAD_IMAGE_SIZE = 50 * 1024 * 1024;
 
 async function uploadImage(
   file: File,
-): Promise<{ url: string; thumbUrl: string | null }> {
+): Promise<{ url: string; thumbUrl: string | null; blurDataUrl?: string | null }> {
   if (file.size > MAX_UPLOAD_IMAGE_SIZE) {
     throw new Error('이미지 용량이 너무 커요. 50MB 이하로 업로드해주세요.');
   }
@@ -893,6 +894,7 @@ export default function ProductFullPanel({
             .map((i, order) => ({
               originalUrl: i.url,
               thumbUrl: i.thumbUrl,
+              blurDataUrl: i.blurDataUrl,
               order,
             })),
           addons: p.addons
@@ -1841,6 +1843,7 @@ function buildPreviewWeddingData(
             webUrl: img.url,
             originalUrl: img.url,
             thumbUrl: img.thumbUrl,
+            blurDataUrl: img.blurDataUrl ?? null,
           })),
       };
     }),
@@ -1926,6 +1929,7 @@ function ProductPreviewOverlay({
                 id: img.id,
                 url: img.originalUrl,
                 thumbUrl: img.thumbUrl,
+                blurDataUrl: img.blurDataUrl,
                 order,
               }))}
             />

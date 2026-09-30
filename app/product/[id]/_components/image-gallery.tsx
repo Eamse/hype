@@ -8,10 +8,12 @@ type ProductImage = {
     id: number;
     url: string;
     thumbUrl?: string | null;
+    blurDataUrl?: string | null;
     order: number;
 };
-export default function ImageGallery({ mainImageUrl, images, }: {
+export default function ImageGallery({ mainImageUrl, mainBlurDataUrl, images, }: {
     mainImageUrl: string | null;
+    mainBlurDataUrl?: string | null;
     images: ProductImage[];
 }) {
     const isMobile = useIsMobile(1024);
@@ -22,6 +24,7 @@ export default function ImageGallery({ mainImageUrl, images, }: {
                     id: 0,
                     url: mainImageUrl,
                     thumbUrl: null,
+                    blurDataUrl: mainBlurDataUrl ?? null,
                     description: '',
                     order: -1,
                 },
@@ -30,17 +33,17 @@ export default function ImageGallery({ mainImageUrl, images, }: {
         ...images,
     ];
     const [selected, setSelected] = useState<string | null>(allImages[0]?.url ?? null);
-    const [selectedThumb, setSelectedThumb] = useState<string | null>(allImages[0]?.thumbUrl ?? null);
+    const [selectedBlur, setSelectedBlur] = useState<string | null>(allImages[0]?.blurDataUrl ?? null);
     const [mainLoaded, setMainLoaded] = useState(false);
     const trackRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         setSelected(allImages[0]?.url ?? null);
-        setSelectedThumb(allImages[0]?.thumbUrl ?? null);
+        setSelectedBlur(allImages[0]?.blurDataUrl ?? null);
         setMainLoaded(false);
     }, [mainImageUrl, images]);
-    function selectImage(img: { url: string; thumbUrl?: string | null }) {
+    function selectImage(img: { url: string; blurDataUrl?: string | null }) {
         setSelected(img.url);
-        setSelectedThumb(img.thumbUrl ?? null);
+        setSelectedBlur(img.blurDataUrl ?? null);
         setMainLoaded(false);
     }
     function scrollByStep(dir: -1 | 1) {
@@ -78,13 +81,13 @@ export default function ImageGallery({ mainImageUrl, images, }: {
       
       <div className="relative overflow-hidden bg-white mx-auto w-[90%] lg:mx-0 lg:w-[calc(100%-80px)]">
         {selected ? (<>
-            {selectedThumb && (<Image src={selectedThumb} alt="" width={900} height={1200} unoptimized aria-hidden style={{
+            {selectedBlur && (<img src={selectedBlur} alt="" aria-hidden style={{
                     width: '100%', height: 'auto',
                     filter: 'blur(16px)', transform: 'scale(1.1)', opacity: mainLoaded ? 0 : 1, transition: 'opacity 0.2s ease-out',
                 }}/>)}
             <Image key={selected} src={selected} alt="product" width={900} height={1200} unoptimized priority onLoad={() => setMainLoaded(true)} style={{
-                    width: '100%', height: 'auto', position: selectedThumb ? 'absolute' : 'static', inset: 0,
-                    opacity: selectedThumb && !mainLoaded ? 0 : 1, transition: 'opacity 0.2s ease-in',
+                    width: '100%', height: 'auto', position: selectedBlur ? 'absolute' : 'static', inset: 0,
+                    opacity: selectedBlur && !mainLoaded ? 0 : 1, transition: 'opacity 0.2s ease-in',
                 }}/>
           </>) : (<div className="w-full" style={{
                 aspectRatio: '3/4',

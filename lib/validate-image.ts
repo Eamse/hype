@@ -43,6 +43,15 @@ export class ImageProcessingError extends Error {
         this.status = status;
     }
 }
+export const BLUR_RESIZE_WIDTH = 16;
+export const BLUR_WEBP_QUALITY = 40;
+export async function generateBlurDataUrl(buffer: Buffer): Promise<string> {
+    const blurBuf = await sharp(buffer, SHARP_OPTIONS)
+        .resize(BLUR_RESIZE_WIDTH)
+        .webp({ quality: BLUR_WEBP_QUALITY })
+        .toBuffer();
+    return `data:image/webp;base64,${blurBuf.toString('base64')}`;
+}
 export async function validateAndCompressImage(file: File, options: {
     resize?: number;
     quality?: number;
