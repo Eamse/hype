@@ -6,7 +6,7 @@ import ComingSoon from '@/components/coming-soon';
 import { withProductNumbers } from '@/lib/product-number';
 import ProductSections from '../_components/product-sections';
 import HomeFooter from '../_components/home-footer';
-const COMING_SOON = true;
+const COMING_SOON = false;
 export default async function HypeSnapPage() {
     if (COMING_SOON) {
         return <ComingSoon brand="hype-snap"/>;
