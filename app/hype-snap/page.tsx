@@ -2,15 +2,10 @@ export const dynamic = 'force-dynamic';
 import { prisma } from '@/lib/prisma';
 import Header from '@/components/header';
 import HeroCarousel from '@/components/hero-carousel';
-import ComingSoon from '@/components/coming-soon';
 import { withProductNumbers } from '@/lib/product-number';
 import ProductSections from '../_components/product-sections';
 import HomeFooter from '../_components/home-footer';
-const COMING_SOON = false;
 export default async function HypeSnapPage() {
-    if (COMING_SOON) {
-        return <ComingSoon brand="hype-snap"/>;
-    }
     const [jejuRaw, seoulRaw, heroRow] = await Promise.all([
         prisma.product.findMany({
             where: { section: 'Casual Photoshoot in Jeju' },
