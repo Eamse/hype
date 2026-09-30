@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { resizeImageFile } from '@/lib/client-image-resize';
 import { btnStyle, labelStyle, inputStyle } from './types';
+import { moveItem } from '@/lib/admin/reorder';
 import ImageGallery from '@/app/product/[id]/_components/image-gallery';
 import WeddingDetail from '@/app/product/[id]/_components/wedding-detail';
 
@@ -35,14 +36,6 @@ let idSeq = 0;
 function nextId(): string {
   idSeq += 1;
   return `id-${idSeq}`;
-}
-
-function moveItem<T>(list: T[], index: number, dir: -1 | 1): T[] {
-  const target = index + dir;
-  if (target < 0 || target >= list.length) return list;
-  const next = [...list];
-  [next[index], next[target]] = [next[target], next[index]];
-  return next;
 }
 
 // 관리자가 "@handle" 대신 인스타그램 프로필 URL을 그대로 붙여넣는 경우, URL에서
@@ -257,6 +250,7 @@ type ImgSlot = {
   _id?: string;
   url: string;
   thumbUrl: string | null;
+  blurDataUrl?: string | null;
   uploading?: boolean;
 };
 type AddonForm = {
@@ -381,7 +375,7 @@ const MAX_UPLOAD_IMAGE_SIZE = 50 * 1024 * 1024;
 
 async function uploadImage(
   file: File,
-): Promise<{ url: string; thumbUrl: string | null }> {
+): Promise<{ url: string; thumbUrl: string | null; blurDataUrl?: string | null }> {
   if (file.size > MAX_UPLOAD_IMAGE_SIZE) {
     throw new Error('이미지 용량이 너무 커요. 50MB 이하로 업로드해주세요.');
   }
@@ -893,6 +887,7 @@ export default function ProductFullPanel({
             .map((i, order) => ({
               originalUrl: i.url,
               thumbUrl: i.thumbUrl,
+              blurDataUrl: i.blurDataUrl,
               order,
             })),
           addons: p.addons
@@ -1841,6 +1836,7 @@ function buildPreviewWeddingData(
             webUrl: img.url,
             originalUrl: img.url,
             thumbUrl: img.thumbUrl,
+            blurDataUrl: img.blurDataUrl ?? null,
           })),
       };
     }),
@@ -1926,6 +1922,7 @@ function ProductPreviewOverlay({
                 id: img.id,
                 url: img.originalUrl,
                 thumbUrl: img.thumbUrl,
+                blurDataUrl: img.blurDataUrl,
                 order,
               }))}
             />

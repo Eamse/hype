@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { uploadToR2 } from '@/lib/r2';
 import { getAdminId } from '@/lib/admin-auth';
-import { validateAndCompressImage, ImageProcessingError, DEFAULT_RESIZE_WIDTH, DEFAULT_WEBP_QUALITY, THUMBNAIL_RESIZE_WIDTH, THUMBNAIL_WEBP_QUALITY, } from '@/lib/validate-image';
+import { validateAndCompressImage, generateBlurDataUrl, ImageProcessingError, DEFAULT_RESIZE_WIDTH, DEFAULT_WEBP_QUALITY, THUMBNAIL_RESIZE_WIDTH, THUMBNAIL_WEBP_QUALITY, } from '@/lib/validate-image';
 
 const R2_PUBLIC_BASE_URL = process.env.R2_PUBLIC_BASE_URL ?? '';
 
@@ -32,11 +32,13 @@ export async function POST(request: NextRequest) {
 
     let originalBuf: Buffer;
     let thumbBuf: Buffer;
+    let blurDataUrl: string;
     try {
         [originalBuf, thumbBuf] = await Promise.all([
             validateAndCompressImage(file, { resize: DEFAULT_RESIZE_WIDTH, quality: DEFAULT_WEBP_QUALITY }),
             validateAndCompressImage(file, { resize: THUMBNAIL_RESIZE_WIDTH, quality: THUMBNAIL_WEBP_QUALITY }),
         ]);
+        blurDataUrl = await generateBlurDataUrl(thumbBuf);
     }
     catch (e) {
         const status = e instanceof ImageProcessingError ? e.status : 500;
@@ -57,5 +59,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
         url: `${R2_PUBLIC_BASE_URL}/${originalFilename}`,
         thumbUrl: `${R2_PUBLIC_BASE_URL}/${thumbFilename}`,
+        blurDataUrl,
     }, { status: 201 });
 }

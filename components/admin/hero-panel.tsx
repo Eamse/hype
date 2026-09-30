@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { resizeImageFile } from '@/lib/client-image-resize';
+import { moveItem } from '@/lib/admin/reorder';
 const MAX_HERO = 6;
 export default function HeroPanel({ brand }: {
     brand: 'wedding' | 'snap';
@@ -66,6 +67,26 @@ export default function HeroPanel({ brand }: {
         }
         finally {
             setUploading(false);
+        }
+    }
+    async function handleMove(index: number, dir: -1 | 1) {
+        const reordered = moveItem(images, index, dir);
+        if (reordered === images)
+            return;
+        const prev = images;
+        setImages(reordered);
+        try {
+            const res = await fetch('/api/images', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: heroKey, urls: reordered }),
+            });
+            if (!res.ok)
+                throw new Error('Reorder failed');
+        }
+        catch (e) {
+            setImages(prev);
+            setError(e instanceof Error ? e.message : 'Reorder failed');
         }
     }
     async function handleDelete(index: number) {
@@ -161,6 +182,25 @@ export default function HeroPanel({ brand }: {
                 }}>
               {url && typeof url === 'string' ? (<>
                   {URL.canParse(url) && (<Image src={url} alt={`hero-${i}`} fill sizes="200px" quality={20} style={{ objectFit: 'cover' }}/>)}
+                  <span style={{
+                        position: 'absolute',
+                        top: 6,
+                        left: 6,
+                        minWidth: 18,
+                        height: 18,
+                        padding: '0 4px',
+                        borderRadius: 9,
+                        background: 'rgba(0,0,0,0.6)',
+                        color: '#fff',
+                        fontSize: 10,
+                        fontWeight: 700,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backdropFilter: 'blur(4px)',
+                    }}>
+                    {i + 1}
+                  </span>
                   <button onClick={() => handleDelete(i)} style={{
                         position: 'absolute',
                         top: 6,
@@ -180,6 +220,48 @@ export default function HeroPanel({ brand }: {
                     }}>
                     ×
                   </button>
+                  <div style={{
+                        position: 'absolute',
+                        bottom: 6,
+                        right: 6,
+                        display: 'flex',
+                        gap: 4,
+                    }}>
+                    <button onClick={() => handleMove(i, -1)} disabled={i === 0} style={{
+                        width: 22,
+                        height: 22,
+                        borderRadius: '50%',
+                        background: 'rgba(0,0,0,0.6)',
+                        color: '#fff',
+                        fontSize: 11,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: i === 0 ? 'default' : 'pointer',
+                        opacity: i === 0 ? 0.35 : 1,
+                        border: 'none',
+                        backdropFilter: 'blur(4px)',
+                    }}>
+                      ▲
+                    </button>
+                    <button onClick={() => handleMove(i, 1)} disabled={i === images.length - 1} style={{
+                        width: 22,
+                        height: 22,
+                        borderRadius: '50%',
+                        background: 'rgba(0,0,0,0.6)',
+                        color: '#fff',
+                        fontSize: 11,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: i === images.length - 1 ? 'default' : 'pointer',
+                        opacity: i === images.length - 1 ? 0.35 : 1,
+                        border: 'none',
+                        backdropFilter: 'blur(4px)',
+                    }}>
+                      ▼
+                    </button>
+                  </div>
                 </>) : (<div style={{
                         width: '100%',
                         height: '100%',

@@ -8,6 +8,7 @@ type ProductImage = {
     id: number;
     url: string;
     thumbUrl: string | null;
+    blurDataUrl?: string | null;
     order: number;
 };
 export default function ProductGalleryLayout({ product, section, isPackageProduct, weddingData, }: {
@@ -15,6 +16,7 @@ export default function ProductGalleryLayout({ product, section, isPackageProduc
         id: number;
         title: string;
         imageUrl: string | null;
+        blurDataUrl?: string | null;
         images: ProductImage[];
     };
     section?: string;
@@ -31,6 +33,7 @@ export default function ProductGalleryLayout({ product, section, isPackageProduc
         webUrl: string;
         originalUrl: string;
         thumbUrl: string | null;
+        blurDataUrl: string | null;
     }[]>(initialPackageImages);
     const hasPackageImages = packageImages.length > 0;
     const galleryImages: ProductImage[] = hasPackageImages
@@ -38,15 +41,17 @@ export default function ProductGalleryLayout({ product, section, isPackageProduc
             id: img.id,
             url: img.originalUrl,
             thumbUrl: img.thumbUrl,
+            blurDataUrl: img.blurDataUrl,
             order,
         }))
         : product.images;
     const galleryMainUrl = hasPackageImages ? null : product.imageUrl;
+    const galleryMainBlur = hasPackageImages ? null : product.blurDataUrl;
     return (<div className="grid grid-cols-1 lg:grid-cols-2">
       
       <div className="hide-scroll lg:sticky lg:top-14 lg:h-[calc(100vh-56px)] lg:overflow-y-auto p-5 mb-6 lg:mb-0 lg:pl-16 lg:pt-0 lg:pb-8">
         <BackButton />
-        <ImageGallery mainImageUrl={galleryMainUrl} images={galleryImages}/>
+        <ImageGallery mainImageUrl={galleryMainUrl} mainBlurDataUrl={galleryMainBlur} images={galleryImages}/>
       </div>
 
       

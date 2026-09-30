@@ -109,6 +109,37 @@ export async function POST(request: NextRequest) {
     await writeImages(key, current);
     return NextResponse.json({ key, imageUrl });
 }
+export async function PATCH(request: NextRequest) {
+    const adminId = await getAdminId(request);
+    if (!adminId)
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    let body: unknown;
+    try {
+        body = await request.json();
+    }
+    catch {
+        return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+    }
+    const { key, urls } = (body ?? {}) as { key?: unknown; urls?: unknown };
+    if (typeof key !== 'string' || !key) {
+        return NextResponse.json({ error: 'key is required' }, { status: 400 });
+    }
+    if (!KEY_RE.test(key)) {
+        return NextResponse.json({ error: 'Invalid key' }, { status: 400 });
+    }
+    if (!Array.isArray(urls) || !urls.every((u) => typeof u === 'string')) {
+        return NextResponse.json({ error: 'urls must be an array of strings' }, { status: 400 });
+    }
+    const current = await readImages(key);
+    // 순서 변경 전용 엔드포인트이므로 추가/삭제는 허용하지 않고, 기존 URL 집합과 동일할 때만 허용
+    const sameSet = current.length === urls.length &&
+        [...current].sort().every((u, i) => u === [...urls].sort()[i]);
+    if (!sameSet) {
+        return NextResponse.json({ error: 'urls must match the existing image set' }, { status: 400 });
+    }
+    await writeImages(key, urls);
+    return NextResponse.json({ ok: true });
+}
 export async function DELETE(request: NextRequest) {
     const adminId = await getAdminId(request);
     if (!adminId)
